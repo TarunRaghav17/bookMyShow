@@ -1,4 +1,4 @@
-<carousel [interval]="3000" indicators="false" [isAnimated]="true">
+<!-- <carousel [interval]="3000" indicators="false" [isAnimated]="true">
     <slide>
         <div class="img_container_carsolue">
             <img src="assets/images/movies_carousel_img1.avif" alt="first slide" style="display: block; width: 100%;">
@@ -25,4 +25,34 @@
 
         </div>
     </slide> -->
-</carousel>
+<!-- </carousel> -->
+
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+
+        <div class="carousel-item active">
+            <div class="carousel-image-container">
+                <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
+                <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
+                <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="carousel-image-container">
+                <img class="carousel-image left" src="assets/images/movies_carousel_img2.avif" alt="Image 2">
+                <img class="carousel-image center" src="assets/images/movies_carousel_img1.avif" alt="Image 1">
+                <img class="carousel-image right" src="assets/images/movies_carousel_img2.avif" alt="Image 3">
+            </div>
+        </div>
+
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

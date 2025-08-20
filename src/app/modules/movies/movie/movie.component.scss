@@ -1,0 +1,51 @@
+.carousel-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-image {
+  min-width: 70%;
+  height: 150px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.carousel-image.left,
+.carousel-image.right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the image */
+
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.carousel-image.left {
+  left: 87%; /* Move the left image off-screen */
+  transform: translateY(-50%); /* Slightly rotate the left image */
+}
+
+.carousel-image.right {
+  right: 87%; /* Move the right image off-screen */
+  transform: translateY(-50%) rotateY(-10deg); /* Slightly rotate the right image */
+}
+
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item.active {
+  transition: transform 0.5s ease;
+}
+
+/* Optional: Controls for Carousel Navigation */
+.carousel-control-prev,
+.carousel-control-next {
+  z-index: 1; /* Ensure controls are clickable on top of the carousel */
+}
+.carousel-item.active .carousel-image.center {
+  opacity: 1; /* Fully visible in the center */
+  transform: translateY(0) rotateY(0);
+
+  /* Center image has no rotation */
+}
