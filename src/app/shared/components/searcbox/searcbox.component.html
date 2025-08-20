@@ -3,8 +3,77 @@
         <span class="input-group-text">
             <i class="fa fa-search"></i>
         </span>
-        <input type="text" class="form-control border-start-0" id="username"
-            placeholder="Search for Movies, Events, Plays, Sports and Activities" required="">
-
+        <span class="form-control border-start-0" id="username" (click)="open(content)" required="">Search for Movies,
+            Events, Plays, Sports and Activities</span>
     </div>
 </form>
+<!-- Large modal -->
+<ng-template #content let-modal class="search_item_box">
+    <header class="py-3 mb-3 ">
+        <div class="container-fluid d-flex  justify-content-between align-items-center gap-3 align-items-center">
+            <div class="blank_container col-4">
+
+            </div>
+            <div class="input_container col-4">
+                <form class="w-100 me-3" role="search">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                </form>
+            </div>
+            <div class="close_icon_container col-4">
+                <p class="text-end px-4" (click)=" close()">x</p>
+            </div>
+
+        </div>
+    </header>
+    <div class="filter_container  ">
+        <div class="main_box_filter d-flex align-items-center ">
+            <div class="icon_box">
+                <button class="arrow-btn" (click)="prev()" [disabled]="currentIndex === 0">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="main_filter_text">
+                <div class="filter_text d-flex gap-3">
+                    @for ( item of getVisibleFilters(); track $index) {
+                    <span>
+                        <a>{{ item }}</a>
+                    </span>
+                    }
+
+                </div>
+            </div>
+            <div class="icon_box">
+                <button class="arrow-btn" (click)="next()"
+                    [disabled]="currentIndex + visibleCount >= eventsFilters.length">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </button>
+            </div>
+
+
+
+        </div>
+
+        <div class="trending_serach_list">
+            <p class="m-0">TRENDING SEARCHES</p>
+        </div>
+        <div class="movies_list">
+            <div class="">
+                <span class="movie_name">War 2</span>
+            </div>
+            <span class="movie_icon">
+                <i class="fa fa-film" aria-hidden="true"></i>
+            </span>
+        </div>
+        <div class="movies_list">
+            <div class="">
+                <span class="movie_name">Race 2</span>
+            </div>
+            <span class="movie_icon">
+                <i class="fa fa-film" aria-hidden="true"></i>
+            </span>
+        </div>
+    </div>
+
+
+
+</ng-template>

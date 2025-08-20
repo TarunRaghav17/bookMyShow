@@ -1,8 +1,11 @@
+<!-- Top-Header  -->
+
+
 <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
         <div class="col-md-3 mb-2 mb-md-0 d-flex">
             <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                <img src="assets/images/logo_bookMyShow.webp" alt="" class="logo">
+                <img src="assets/images/logo.png" alt="" class="logo">
             </a>
             <div class="d-flex align-items-center">
                 <app-searcbox></app-searcbox>
@@ -11,8 +14,9 @@
         </div>
 
         <div class="col-md-4 text-end d-flex justify-content-center">
-            <span class="dropdown_city_text"> City <i class="fa fa-angle-down ms-2" aria-hidden="true"></i></span>
-            <button class="badge  ms-3">Sign in</button>
+            <span class="dropdown_city_text" (click)="open(content)"> {{selectedCity || 'City'}} <i
+                    class="fa fa-angle-down ms-2" aria-hidden="true"></i></span>
+            <button class="badge  ms-3" (click)="openLoginModal()">Sign in</button>
             <span class="ms-3">
                 <i class="fa fa-bars" aria-hidden="true" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
                     aria-controls="offcanvasExample">
@@ -26,44 +30,61 @@
         </div>
     </header>
 </div>
+
+
+<!-- Sub Headers -->
+
 <div class="container-fluid main_conatiner_sub_header">
     <div class="container">
         <div class="sub_header">
             <div class="sub_header_left">
-                <div class="sc-1or3vea-19 links">
-                    <a href="" class="sc-1or3vea-20 fsiaZi">Movies</a>
-                    <a href="" class="sc-1or3vea-20 fsiaZi">Stream</a>
-                    <a href="" class="sc-1or3vea-20 fsiaZi">Events</a>
-                    <a href="" class="sc-1or3vea-20 fsiaZi">Plays</a>
-                    <a href="" class="sc-1or3vea-20 fsiaZi">Sports</a>
-                    <a href="" class="sc-1or3vea-20 fsiaZi">Activities</a>
+                <div class=" sub_heder_left_links">
+
+                    <a [routerLink]="['explore/movies']">Movies</a>
+                    <a>Stream</a>
+                    <a>Events</a>
+                    <a>Plays</a>
+                    <a>Sports</a>
+                    <a>Activities</a>
                 </div>
             </div>
             <div class="sub_header_right">
-                <div class="sc-1or3vea-19 links">
-                    <a href="" class="sc-1or3vea-21 hxCjFQ">ListYourShow</a>
-                    <a href="" class="sc-1or3vea-21 hxCjFQ">Corporates</a>
-                    <a href="" class="sc-1or3vea-21 hxCjFQ">Offers</a>
-                    <a href="" class="sc-1or3vea-21 hxCjFQ">GiftCards</a>
+                <div class=" sub_heder_right_links">
+                    <a>ListYourShow</a>
+                    <a>Corporates</a>
+                    <a>Offers</a>
+                    <a>GiftCards</a>
                 </div>
             </div>
-
-
         </div>
     </div>
-
 </div>
+@if(service._profileHeader()){
+<div class="sub_profile_header">
+    <div class="col-6">
+        <div class="sub_header_profile_cotainer">
+            <div class="sub_header_left">
+                <a [routerLink]="['my-profile/your-order']">Your Orders</a>
+                <a [routerLink]="['my-profile/edit']">Profile</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
 
 
 
 
 
+<!-- SideBar Offcanvas  -->
 <div class="offcanvas offcanvas-end p-0" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header px-2">
         <div class="full_with d-flex justify-content-between align-items-center">
             <div class="hey_text">
                 <h5 class="offcanvas-title fw-bold" id="offcanvasExampleLabel">Hey!</h5>
-                <span class="edit_profile">Edit-Profile <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                <span class="edit_profile" routerLink="my-profile" data-bs-toggle="offcanvas"
+                    (click)="editProfile()">Edit-Profile <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </span>
             </div>
             <div class="user_icon">
@@ -75,13 +96,13 @@
         <div class="unlock_special_offer_box border-top">
             <div height="40px" width="40px" class="unlock_special_offer_img" style="background: none;">
                 <img alt="rewards" width="40px" height="40px" class="sc-eykeme-1 iVbwwW"
-                    src="https://assets-in.bmscdn.com/webin/movies/superstar/rewards_login.png" style="opacity: 1;">
+                    src="assets/images/rewards_login.png" style="opacity: 1;">
             </div>
             <p class="unlock_special_offer_text m-0">Unlock special offers &amp; great benefits</p>
-            <button class="unlock_special_offer_button">Login / Register</button>
+            <button class="unlock_special_offer_button" (click)="openLoginModal()" data-bs-toggle="offcanvas">Login /
+                Register</button>
         </div>
         <div class="main_sidebar_data ">
-
             <div class="d-flex flex-column grow-2 py-2">
                 <a href="" class="d-flex justify-content-between align-items-center info_conatiner">
                     <div class="d-flex gap-2 align-items-center">
@@ -89,7 +110,7 @@
 
                         <div class="info_text">
                             <p class="m-0">Get tickets on Whatsapp/SMS!</p>
-                            <span class="">Add your Mobile Number</span>
+                            <span>Add your Mobile Number</span>
                         </div>
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
@@ -126,3 +147,60 @@
 
     </div>
 </div>
+
+
+
+<!-- City-Dropdown-modal  -->
+
+
+<ng-template #content let-modal>
+    <div class="modal-header d-block">
+        <div class="input-group has-validation ">
+            <span class="input-group-text">
+                <i class="fa fa-search"></i>
+            </span>
+            <input type="text" class="form-control border-start-0" name="search-city" placeholder="Search for cities"
+                required="">
+        </div>
+        <span class="detect_my_location_text text-danger mt-2"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
+            Detect my location</span>
+    </div>
+    <div class="modal-body p-0">
+        <p class="text-center mt-1">Popular Cities</p>
+
+        <div class="py-2 d-flex gap-2 px-3">
+
+            @for (item of cityData; track $index) {
+
+            <div class="main-view-city-container d-flex " (click)=" selectCity(item.city_name,modal)">
+                <div class="flex_direction d-flex flex-column justify-content-center align-items-center">
+                    <img [src]="item.img" alt="" class="img-fluid city_section">
+                    <p class="p-0 m-0">{{item.city_name}}</p>
+                </div>
+            </div>
+            }
+
+
+        </div>
+        <div class="main_container">
+            @if (citiesJson) {
+            <p class="text-center mt-1">Other Cities</p>
+            }
+            <div class="other_cities_list px-3" [ngClass]="{'other_cities_list': citiesJson}">
+
+                <div class="list_cities py-2">
+                    @for (item of citiesJson; track $index) {
+                    <p class="m-0" (click)="selectCity(item.name,modal)"> {{item.name}}</p>
+                    }
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="modal-footer text-center d-block">
+        <a class="view_city" (click)="viewAllCities()"> {{viewCitiesText}} </a>
+    </div>
+</ng-template>

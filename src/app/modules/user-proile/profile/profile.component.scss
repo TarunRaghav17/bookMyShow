@@ -1,0 +1,128 @@
+.upload_image_box {
+  height: 96px;
+  padding: 18px 64px;
+  border-radius: 4px 4px 0px 0px;
+  background: linear-gradient(
+    98.18deg,
+    rgb(43, 49, 72) 2.87%,
+    rgb(136, 63, 85) 59.96%,
+    rgb(235, 78, 98) 98.36%
+  );
+}
+
+.upload_image_box .top_container {
+  position: relative;
+  top: 30px;
+}
+.circle {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 70px;
+  height: 70px;
+  display: flex;
+}
+.dropzone {
+  width: 100px;
+  height: 80px;
+  border: 1px dashed #999;
+  border-radius: 3px;
+  background-color: #999;
+  text-align: center;
+}
+.dropzone p {
+  position: relative;
+  bottom: 52px;
+  right: 3px;
+  font-size: small;
+  font-weight: 600;
+  color: #d4cfcf;
+}
+
+.upload-icon {
+  margin: 25px 2px 2px 2px;
+  cursor: pointer;
+}
+
+.upload-input {
+  position: relative;
+  top: -62px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.second_section {
+  padding: 30px;
+}
+.second_section_heading {
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  color: rgb(51, 51, 51);
+}
+.verified_tag {
+  font-weight: 400;
+  font-size: small;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(0, 102, 22);
+  border-radius: 2px;
+  padding: 1px 4px;
+  vertical-align: middle;
+  background: rgb(201, 248, 211);
+}
+.edit_Icons i,
+.edit_Icons span {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  color: rgb(220, 53, 75);
+}
+.mobile_section {
+  width: calc(100%);
+  max-width: calc(100%);
+  display: flex;
+  justify-content: space-between;
+}
+.add_mobile_number {
+  padding: 8px 16px;
+  border-radius: 4px;
+  background: rgb(255, 228, 155);
+}
+.mobile_section .lable_mobile {
+  width: calc(100% - 80%);
+  max-width: calc(100% - 80%);
+}
+.mobile_section .add_mobile_number {
+  width: calc(100% - 20%);
+  max-width: calc(100% - 20%);
+}
+.add_mobile_number a {
+  text-decoration: none;
+  color: rgb(220, 53, 75);
+}
+.add_mobile_number span {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: rgb(51, 51, 51);
+  margin-top: 2px;
+}
+.input_box {
+  width: calc(100%);
+  max-width: calc(100%);
+  display: flex;
+  margin-top: 20px;
+}
+.input_box .title_text {
+  width: calc(100% - 70%);
+  max-width: calc(100% - 70%);
+}
+.input_box .input_field {
+  width: calc(100% - 30%);
+  max-width: calc(100% - 30%);
+}

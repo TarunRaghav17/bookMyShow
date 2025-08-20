@@ -1,0 +1,55 @@
+<div class="container-fluid p-4">
+    <div class="d-flex justify-content-around">
+        <img src="assets/images/logo_bookMyShow.webp" height="60px" alt="">
+    </div>
+
+    @if (!openSignuForm) {
+    <form [formGroup]="userLogin">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter your email"
+                formControlName="email">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter your password"
+                formControlName="password">
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+
+            <button type="button" class="btn btn-info text-white col-12" [disabled]="userLogin.invalid"
+                (click)="onloginSubmit()">Login</button>
+            <span>Don't have an account? <a href="javascript:void(0)" (click)="openFormSignup()">Signup</a></span>
+        </div>
+    </form>
+    }
+    @if (openSignuForm) {
+    <form [formGroup]="userSignUp">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter your email"
+                formControlName="email">
+
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter your password"
+                formControlName="password">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword2"
+                placeholder="Enter your Confirm-password" formControlName="confirmPassword">
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+
+            <button type="button" class="btn btn-info text-white col-12" [disabled]="userSignUp.invalid"
+                (click)="onSignupSubmit()">Register</button>
+            <span>Already have an account? <a href="javascript:void(0)" (click)="openFormSignup()">Signin</a></span>
+        </div>
+    </form>
+    }
+
+</div>

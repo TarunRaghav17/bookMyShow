@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MoviesRoutingModule } from './movies-routing.module';
 import { MovieComponent } from './movie/movie.component';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 
 @NgModule({
@@ -11,7 +12,8 @@ import { MovieComponent } from './movie/movie.component';
   ],
   imports: [
     CommonModule,
-    MoviesRoutingModule
+    MoviesRoutingModule,
+    CarouselModule
   ]
 })
 export class MoviesModule { }
