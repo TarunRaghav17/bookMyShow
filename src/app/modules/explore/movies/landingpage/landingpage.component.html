@@ -1,0 +1,115 @@
+<carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000" indicators="false"
+    [isAnimated]="true">
+    <div class="carousel-inner">
+
+        <slide class="carousel-item active">
+            <div class="carousel-image-container">
+                <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
+                <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
+                <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
+            </div>
+        </slide>
+        <slide class="carousel-item">
+            <div class="carousel-image-container">
+                <img class="carousel-image left" src="assets/images/movies_carousel_img2.avif" alt="Image 2">
+                <img class="carousel-image center" src="assets/images/movies_carousel_img1.avif" alt="Image 1">
+                <img class="carousel-image right" src="assets/images/movies_carousel_img2.avif" alt="Image 3">
+            </div>
+        </slide>
+
+
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</carousel>
+
+
+<!-- Movies Section  -->
+
+<div class="conatiner-fluid mt-5 d-flex justify-content-center ">
+    <div class="col-8 py-3 d-flex ">
+        <div class="col-3">
+            <h4>Filters</h4>
+            <div>
+                <div class="app_filter_box mt-4">
+                    <app-filter-accordian></app-filter-accordian>
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <h4>Movies in {{commonService._selectCity()}}</h4>
+            <div class="mt-4 d-flex gap-3 language_text py-2">
+                <span>
+                    Hindi
+                </span>
+                <span>
+                    English
+                </span>
+            </div>
+            <div class="d-flex justify-content-between py-3 px-3 mt-3 comming_soon_bar bg-white align-items-center shadow-sm"
+                style="background: transparent;">
+                <h4>Coming Soon</h4>
+                <a class="explore_text">Explore upcoming movies <i class="fa fa-angle-right ms-1"
+                        aria-hidden="true"></i></a>
+            </div>
+            <div class="col-12 py-3">
+                <div class="d-flex justify-content-center g-0">
+
+                    <div class="main_box_crasoule">
+                        <div class="main_filter_card overflow-hidden">
+                            <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start">
+                                <ng-container *ngFor="let item of dummyMoviesdata; let $index = index"
+                                    class="overflow-hidden w-50">
+                                    <div class="col" style="max-width: 200px;min-width:200px ">
+                                        <div class="card shadow-sm">
+                                            <div class="img_container rounded-4">
+                                                <img [src]="item.Poster" [alt]="item.Poster">
+
+                                            </div>
+                                            <div class="card-body rounded-bottom bg-dark">
+                                                <div class="d-flex gap-2">
+                                                    <span>
+                                                        <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
+                                                    </span>
+                                                    <span class="text-white">
+                                                        1.5M likes
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="bottom_text_movie_card py-3 px-4">
+                                            <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
+                                            <span class="m-0">{{item.Genre}}</span>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>

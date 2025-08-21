@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { movies } from '../../../../../db';
+import { movies } from '../../../../../../db';
+
 @Component({
   selector: 'app-home',
   standalone: false,
@@ -42,5 +43,6 @@ export class HomeComponent {
       this.getVisibleMovieCard();
     }
   }
+
 
 }

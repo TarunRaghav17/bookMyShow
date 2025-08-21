@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './shared/components/header/header.component';
@@ -9,6 +8,8 @@ import { SearcboxComponent } from './shared/components/searcbox/searcbox.compone
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserAuthComponent } from './auth/user-auth/user-auth.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ErrorpageComponent } from './shared/components/erorpage/errorpage.component';
+import { FilterAccordianComponent } from './shared/components/filter-accordian/filter-accordian.component';
 
 @NgModule({
   declarations: [
@@ -17,9 +18,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FooterComponent,
     SearcboxComponent,
     UserAuthComponent,
-
+    ErrorpageComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent],
   providers: [],
   bootstrap: [AppComponent],
 })

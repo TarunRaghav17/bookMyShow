@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeModule } from './modules/home/home.module';
+
 import { UserProfileModule } from './modules/user-proile/user-profile.module';
+import { ErrorpageComponent } from './shared/components/erorpage/errorpage.component';
 
 const routes: Routes = [
   {
@@ -11,18 +12,17 @@ const routes: Routes = [
   },
   {
     path: 'explore',
-    loadChildren: () =>
-      import('./modules/home/home.module').then((m) => HomeModule),
-  },
-  {
-    path: 'explore/movies',
-    loadChildren: () => import('./modules/movies/movies.module').then((m) => m.MoviesModule)
+    loadChildren: () => import('./modules/explore/explore.module').then((m) => m.ExploreModule)
   },
   {
     path: 'my-profile',
     loadChildren: () =>
       import('./modules/user-proile/user-profile.module').then((m) => UserProfileModule),
   },
+  {
+    path: '**',
+    component: ErrorpageComponent
+  }
 ];
 
 @NgModule({

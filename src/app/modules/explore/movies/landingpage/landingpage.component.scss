@@ -11,6 +11,7 @@
   min-width: 70%;
   height: 150px;
   transition: transform 0.5s ease, opacity 0.5s ease;
+  height: 300px;
 }
 
 .carousel-image.left,
@@ -48,4 +49,44 @@
   transform: translateY(0) rotateY(0);
 
   /* Center image has no rotation */
+}
+.language_text span {
+  border: 1px solid black;
+  border-radius: 20%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 16px;
+  padding: 1px 12px 0px;
+  height: 32px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(204, 204, 204);
+  opacity: 1;
+  color: rgb(220, 53, 88);
+}
+.comming_soon_bar {
+  background: transparent;
+  border: 0;
+  font-size: 100%;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  vertical-align: baseline;
+}
+.explore_text {
+  margin: 0px;
+  text-decoration: none;
+  word-break: break-word;
+  color: rgb(220, 53, 88);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.43;
+}
+.img_container img {
+  min-width: 100%;
+  max-height: 250px;
+}
+.app_filter_box {
+  padding: 0px 50px 0px 0px;
 }

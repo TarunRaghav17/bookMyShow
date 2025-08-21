@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MovieComponent } from './movie.component';
+import { MovieComponent } from './landingpage.component';
 
 describe('MovieComponent', () => {
   let component: MovieComponent;
@@ -10,7 +10,7 @@ describe('MovieComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [MovieComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(MovieComponent);
     component = fixture.componentInstance;

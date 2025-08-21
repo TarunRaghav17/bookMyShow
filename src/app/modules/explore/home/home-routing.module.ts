@@ -5,10 +5,10 @@ import { HomeComponent } from './landingpage/landingpage.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home/delhi',
+    redirectTo: 'delhi',
     pathMatch: 'full',
   },
-  { path: 'home/delhi', component: HomeComponent },
+  { path: 'delhi', component: HomeComponent },
   { path: 'home/:city', component: HomeComponent },
 ];
 

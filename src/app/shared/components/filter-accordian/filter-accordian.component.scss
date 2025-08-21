@@ -1,0 +1,32 @@
+.accordian_box {
+  padding: 15px 16px 15px 11px;
+  border-radius: 3px;
+  background-color: white;
+}
+.accordian_box span {
+  font-size: 13px;
+  color: rgb(102, 102, 102);
+  cursor: pointer;
+}
+.filter_text {
+  padding: 0px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.43;
+  background-color: transparent;
+}
+.filter_button_box {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.toggleFilter {
+  transition: 3s;
+}
+.tranform_icon {
+  transform: rotate(180deg);
+}
+.text_changColor {
+  color: rgb(220, 53, 88);
+}
