@@ -1,0 +1,23 @@
+.main_card_carousel {
+  background: rgb(69, 68, 63);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  max-height: 330px;
+  margin: 0px 12px;
+}
+.side_hedding_container h1 {
+  color: white;
+}
+.side_hedding_container h4 {
+  color: white;
+  font-weight: 400;
+}
+.contact_today_btn {
+  color: rgb(235, 78, 98);
+  background: white;
+  border: none;
+  text-decoration: none;
+  padding: 5px 13px;
+}

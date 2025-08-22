@@ -10,7 +10,7 @@ export const movies = [
     Writer: 'Jeff Nathanson (screenplay by), Brenda Chapman (story), Irene Mecchi (characters), Jonathan Roberts (characters), Linda Woolverton (characters)',
     Actors: 'Chiwetel Ejiofor, John Oliver, James Earl Jones, John Kani',
     Plot: 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
-    Language: 'English',
+    Language: ['English'],
     City: [
       { CityName: 'Delhi' },
       { CityName: 'Faridabad' },

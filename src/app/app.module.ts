@@ -10,6 +10,9 @@ import { UserAuthComponent } from './auth/user-auth/user-auth.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorpageComponent } from './shared/components/erorpage/errorpage.component';
 import { FilterAccordianComponent } from './shared/components/filter-accordian/filter-accordian.component';
+import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
+import { CarouselModule } from "ngx-bootstrap/carousel";
+
 
 @NgModule({
   declarations: [
@@ -19,8 +22,9 @@ import { FilterAccordianComponent } from './shared/components/filter-accordian/f
     SearcboxComponent,
     UserAuthComponent,
     ErrorpageComponent,
+
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule],
   providers: [],
   bootstrap: [AppComponent],
 })

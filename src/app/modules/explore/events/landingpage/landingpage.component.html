@@ -1,38 +1,3 @@
-<carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000" indicators="false"
-    [isAnimated]="true">
-    <div class="carousel-inner">
-
-        <slide class="carousel-item active">
-            <div class="carousel-image-container">
-
-                <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
-                <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
-                <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
-            </div>
-        </slide>
-        <slide class="carousel-item">
-            <div class="carousel-image-container">
-                <img class="carousel-image left" src="assets/images/movies_carousel_img2.avif" alt="Image 2">
-                <img class="carousel-image center" src="assets/images/movies_carousel_img1.avif" alt="Image 1">
-                <img class="carousel-image right" src="assets/images/movies_carousel_img2.avif" alt="Image 3">
-            </div>
-        </slide>
-
-
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</carousel>
-
-
-<!-- Movies Section  -->
-
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
         <div class="main_container_box d-flex justify-content-center ">
@@ -42,7 +7,7 @@
                         <h4>Filters</h4>
                     </div>
                     <div class="col-9">
-                        <h4 class="fs-4 fw-500 m-0">Movies in {{commonService._selectCity()}}</h4>
+                        <h4 class="fs-4 fw-500 m-0">Events in {{commonService._selectCity()}}</h4>
                     </div>
                 </div>
                 <div class="filter_cards_container d-flex justify-content-between py-4">
@@ -75,17 +40,15 @@
 
                                 <div class="main_box_crasoule">
                                     <div class="main_filter_card overflow-hidden">
-                                        <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start ">
+                                        <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start">
                                             <ng-container *ngFor="let item of dummyMoviesdata; let $index = index"
                                                 class="overflow-hidden w-50">
                                                 <div class="col" style="max-width: 200px;min-width:200px ">
-
                                                     <div class="card shadow-sm">
-
-                                                        <a class="img_container rounded-4 border"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-');}/${item.imdbID}`]">
+                                                        <div class="img_container rounded-4">
                                                             <img [src]="item.Poster" [alt]="item.Poster">
-                                                        </a>
+
+                                                        </div>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">
                                                                 <span>

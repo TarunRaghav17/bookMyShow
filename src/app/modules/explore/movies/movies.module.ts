@@ -6,11 +6,13 @@ import { MovieComponent } from './landingpage/landingpage.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
 import { FilterAccordianComponent } from "../../../shared/components/filter-accordian/filter-accordian.component";
+import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.component';
 
 
 @NgModule({
   declarations: [
-    MovieComponent
+    MovieComponent,
+    UpcommingMoviesComponent
   ],
   imports: [
     CommonModule,

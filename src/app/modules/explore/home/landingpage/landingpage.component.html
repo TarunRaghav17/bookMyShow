@@ -1,180 +1,199 @@
 <!-- crousel -->
-<carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000" indicators="false"
-    [isAnimated]="true">
-    <div class="carousel-inner">
+<div class="conatiner-fluid">
+    <div class="row g-0">
+        <carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000"
+            indicators="false" [isAnimated]="true">
+            <div class="carousel-inner">
 
-        <slide class="carousel-item active">
-            <div class="carousel-image-container">
-                <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
-                <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
-                <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
-            </div>
-        </slide>
-        <slide class="carousel-item">
-            <div class="carousel-image-container">
-                <img class="carousel-image left" src="assets/images/movies_carousel_img2.avif" alt="Image 2">
-                <img class="carousel-image center" src="assets/images/movies_carousel_img1.avif" alt="Image 1">
-                <img class="carousel-image right" src="assets/images/movies_carousel_img2.avif" alt="Image 3">
-            </div>
-        </slide>
-        <slide class="carousel-item active">
-            <div class="carousel-image-container">
-                <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
-                <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
-                <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
-            </div>
-        </slide>
+                <slide class="carousel-item active">
+                    <div class="carousel-image-container">
 
 
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</carousel>
-
-
-
-<!-- Movies Section  -->
-
-<div class="conatiner-fluid mt-5 d-flex justify-content-center ">
-    <div class="col-9 py-3 ">
-        <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center px-5">
-            <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
-            <a class="seeall_txt" [routerLink]="['/explore/movies']">See All <i class="fa fa-angle-right ms-1"
-                    aria-hidden="true"></i>
-            </a>
-        </div>
-
-
-
-        <div class="col-12 py-3">
-            <div class="d-flex justify-content-center g-0">
-
-                <div class="main_box_crasoule d-flex align-items-center">
-                    <div class="icon_box d-flex justify-content-end me-3">
-                        @if(pageNo > 0){
-                        <button class="arrow-btn" (click)="prev()">
-                            <i class="fa fa-angle-left" aria-hidden="true"></i>
-                        </button>
-                        }
+                        <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
+                        <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
+                        <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
                     </div>
-                    <div class="main_filter_card overflow-hidden ">
-                        <div class="filter_text d-flex gap-3 ">
-                            <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
-                                class="overflow-hidden w-50">
-                                <div class="col">
-                                    <div class="card shadow-sm">
-                                        <div class="img_container">
-                                            <img [src]="item.Poster" [alt]="item.Poster">
-
-                                        </div>
-                                        <div class="card-body rounded-bottom bg-dark">
-                                            <div class="d-flex gap-2">
-                                                <span>
-                                                    <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
-                                                </span>
-                                                <span class="text-white">
-                                                    1.5M likes
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="bottom_text_movie_card">
-                                        <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
-                                        <span class="m-0">{{item.Genre}}</span>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </div>
+                </slide>
+                <slide class="carousel-item">
+                    <div class="carousel-image-container">
+                        <img class="carousel-image left" src="assets/images/movies_carousel_img2.avif" alt="Image 2">
+                        <img class="carousel-image center" src="assets/images/movies_carousel_img1.avif" alt="Image 1">
+                        <img class="carousel-image right" src="assets/images/movies_carousel_img2.avif" alt="Image 3">
                     </div>
-                    <div class="icon_box d-flex justify-content-start ms-3">
-                        @if (end < originalMovies.length) { <button class="arrow-btn" (click)="next()">
-                            <i class=" fa fa-angle-right" aria-hidden="true"></i>
-                            </button>
-                            }
+                </slide>
+                <slide class="carousel-item active">
+                    <div class="carousel-image-container">
+                        <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
+                        <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
+                        <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
                     </div>
+                </slide>
 
 
-
-                </div>
             </div>
-        </div>
-        <div class=" d-flex justify-content-center my-5 py-4 ">
-            <img src="assets/images/stream-leadin-web-collection-202210241242.avif" alt="render" class="img-fluid">
-        </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </carousel>
 
     </div>
 </div>
 
 
-<div class="conatiner-fluid mt-5 d-flex justify-content-center ">
-    <div class="col-9 py-3 ">
-        <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center px-5">
-            <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
-            <a class="seeall_txt">See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
-            </a>
-        </div>
+<!-- Movies Section  -->
+
+<div class="conatiner-fluid ">
+    <div class="row g-0">
+        <div class="main_conatiner_box mt-5 d-flex justify-content-center ">
+            <div class="col-9 py-3 ">
+                <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center ">
+                    <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
+                    <a class="seeall_txt" [routerLink]="['/explore/movies']">See All <i class="fa fa-angle-right ms-1"
+                            aria-hidden="true"></i>
+                    </a>
+                </div>
 
 
 
-        <div class="col-12 py-3">
-            <div class="d-flex justify-content-center g-0">
+                <div class="col-12 py-3">
+                    <div class="d-flex justify-content-center g-0">
+                        <div class="main_box_crasoule d-flex align-items-center">
+                            <div class="icon_box d-flex justify-content-end me-3">
+                                @if(pageNo > 0){
+                                <button class="arrow-btn" (click)="prev()">
+                                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                </button>
+                                }
+                            </div>
+                            <div class="main_filter_card overflow-hidden ">
+                                <div class="filter_text d-flex gap-3 ">
+                                    <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
+                                        class="overflow-hidden w-50">
+                                        <div class="col">
+                                            <div class="card shadow-sm">
+                                                <div class="img_container">
+                                                    <img [src]="item.Poster" [alt]="item.Poster">
 
-                <div class="main_box_crasoule d-flex align-items-center">
-                    <div class="icon_box d-flex justify-content-end me-3">
-                        @if(pageNo > 0){
-                        <button class="arrow-btn" (click)="prev()">
-                            <i class="fa fa-angle-left" aria-hidden="true"></i>
-                        </button>
-                        }
-                    </div>
-                    <div class="main_filter_card overflow-hidden ">
-                        <div class="filter_text d-flex gap-3 ">
-                            <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
-                                class="overflow-hidden w-50">
-                                <div class="col">
-                                    <div class="card shadow-sm">
-                                        <div class="img_container">
-                                            <img [src]="item.Poster" [alt]="item.Poster">
-
-                                        </div>
-                                        <div class="card-body rounded-bottom bg-dark">
-                                            <div class="d-flex gap-2">
-                                                <span>
-                                                    <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
-                                                </span>
-                                                <span class="text-white">
-                                                    1.5M likes
-                                                </span>
+                                                </div>
+                                                <div class="card-body rounded-bottom bg-dark">
+                                                    <div class="d-flex gap-2">
+                                                        <span>
+                                                            <i class="fa fa-thumbs-up text-success"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                        <span class="text-white">
+                                                            1.5M likes
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bottom_text_movie_card">
+                                                <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
+                                                <span class="m-0">{{item.Genre}}</span>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="bottom_text_movie_card">
-                                        <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
-                                        <span class="m-0">{{item.Genre}}</span>
-                                    </div>
+                                    </ng-container>
                                 </div>
-                            </ng-container>
+                            </div>
+                            <div class="icon_box d-flex justify-content-start ms-3">
+                                @if (end < originalMovies.length) { <button class="arrow-btn" (click)="next()">
+                                    <i class=" fa fa-angle-right" aria-hidden="true"></i>
+                                    </button>
+                                    }
+                            </div>
+
+
+
                         </div>
                     </div>
-                    <div class="icon_box d-flex justify-content-start ms-3">
-                        @if (end < originalMovies.length) { <button class="arrow-btn" (click)="next()">
-                            <i class=" fa fa-angle-right" aria-hidden="true"></i>
-                            </button>
-                            }
-                    </div>
-
-
-
                 </div>
+                <div class=" d-flex justify-content-center my-5 py-4 ">
+                    <img src="assets/images/stream-leadin-web-collection-202210241242.avif" alt="render"
+                        class="img-fluid">
+                </div>
+
             </div>
         </div>
 
-
     </div>
+
+</div>
+
+
+<div class="conatiner-fluid ">
+    <div class="row g-0">
+        <div class="main_conatiner_box mt-5 d-flex justify-content-center ">
+            <div class="col-9 py-3 ">
+                <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center ">
+                    <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
+                    <a class="seeall_txt">See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+
+
+                <div class="col-12 py-3">
+                    <div class="d-flex justify-content-center g-0">
+
+                        <div class="main_box_crasoule d-flex align-items-center">
+                            <div class="icon_box d-flex justify-content-end me-3">
+                                @if(pageNo > 0){
+                                <button class="arrow-btn" (click)="prev()">
+                                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                </button>
+                                }
+                            </div>
+                            <div class="main_filter_card overflow-hidden ">
+                                <div class="filter_text d-flex gap-3 ">
+                                    <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
+                                        class="overflow-hidden w-50">
+                                        <div class="col">
+                                            <div class="card shadow-sm">
+                                                <div class="img_container">
+                                                    <img [src]="item.Poster" [alt]="item.Poster">
+
+                                                </div>
+                                                <div class="card-body rounded-bottom bg-dark">
+                                                    <div class="d-flex gap-2">
+                                                        <span>
+                                                            <i class="fa fa-thumbs-up text-success"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                        <span class="text-white">
+                                                            1.5M likes
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="bottom_text_movie_card">
+                                                <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
+                                                <span class="m-0">{{item.Genre}}</span>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div class="icon_box d-flex justify-content-start ms-3">
+                                @if (end < originalMovies.length) { <button class="arrow-btn" (click)="next()">
+                                    <i class=" fa fa-angle-right" aria-hidden="true"></i>
+                                    </button>
+                                    }
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 </div>

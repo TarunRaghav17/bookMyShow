@@ -1,0 +1,58 @@
+.bg-custom {
+  background: linear-gradient(
+      90deg,
+      rgb(26, 26, 26) 24.97%,
+      rgb(26, 26, 26) 38.3%,
+      rgba(26, 26, 26, 0.04) 97.47%,
+      rgb(26, 26, 26) 100%
+    ),
+    url("https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/war-2-et00356501-1755672553.jpg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  border-radius: 8px;
+}
+.book_ticket_button {
+  border: 1px solid rgb(248, 68, 100);
+  color: rgb(255, 255, 255);
+  background-color: rgb(248, 68, 100);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 8px;
+  padding: 10px 40px;
+}
+.share_btn {
+  display: flex;
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 17px;
+  font-weight: 500;
+  height: 48px;
+  width: 120px;
+  background-color: rgba(34, 34, 34, 0.8);
+  opacity: 0.8;
+  padding: 0px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.top_bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.top_bar.show {
+  transform: translateY(0);
+}
+.popup_continue {
+  background: rgb(235, 78, 98);
+  color: rgb(255, 255, 255);
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+  display: grid;
+}
