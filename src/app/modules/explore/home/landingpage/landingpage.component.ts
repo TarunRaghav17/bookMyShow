@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { movies } from '../../../../../../db';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,7 @@ export class HomeComponent {
   itemsperpage = 6;
   start = 0
   end = 0
-  constructor() {
+  constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
     this.getVisibleMovieCard()
   }

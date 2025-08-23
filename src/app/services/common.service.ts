@@ -7,6 +7,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 export class CommonService {
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
+  _selectedCategory=signal<string>('')
   _profileHeader = signal<any>(false)
 
   constructor() {

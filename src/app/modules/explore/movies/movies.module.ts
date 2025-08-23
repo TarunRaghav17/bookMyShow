@@ -11,14 +11,14 @@ import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.co
 
 @NgModule({
   declarations: [
-    MovieComponent,
+    // MovieComponent,
     UpcommingMoviesComponent
   ],
   imports: [
     CommonModule,
     MoviesRoutingModule,
     CarouselModule,
-    TruncatePipe,
+    // TruncatePipe,
     FilterAccordianComponent
   ]
 })

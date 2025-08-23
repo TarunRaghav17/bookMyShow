@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { IExploreListComponent } from '../../shared/components/i-explore-list/i-explore-list.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,13 @@ const routes: Routes = [
   }, {
     path: 'events',
     loadChildren: () => import('./events/events.module').then((m) => m.EventsModule)
+  },
+
+  {
+    path:`:category-:city`,
+    // component:IExploreListComponent
+    loadChildren:()=>import('../i-home/i-home.module').then(m=>m.IHomeModule)
+
   }
 ];
 

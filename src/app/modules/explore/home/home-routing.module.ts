@@ -3,13 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './landingpage/landingpage.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'delhi',
-    pathMatch: 'full',
-  },
-  { path: 'delhi', component: HomeComponent },
-  { path: 'home/:city', component: HomeComponent },
+  // {
+  //   path: '',
+  //   redirectTo: 'delhi',
+  //   pathMatch: 'full',
+  // },
+  // { path: 'delhi', component: HomeComponent },
+  { path: ':city', component: HomeComponent },
 ];
 
 @NgModule({

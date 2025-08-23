@@ -4,12 +4,11 @@ import { MovieComponent } from './landingpage/landingpage.component';
 import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.component';
 
 const routes: Routes = [
-  {
-    path: '', redirectTo: '', pathMatch: 'full'
-  },
-  { path: '', component: MovieComponent },
+ 
+  // { path: ':city', component: MovieComponent },
   { path: 'upcoming-movies', component: UpcommingMoviesComponent },
-];
+ {
+    path: '', redirectTo: '', pathMatch: 'full'},]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

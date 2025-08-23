@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { movies } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 
@@ -8,7 +8,7 @@ import { CommonService } from '../../../../services/common.service';
   templateUrl: './landingpage.component.html',
   styleUrl: './landingpage.component.scss'
 })
-export class MovieComponent {
+export class MovieComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
   dummyMoviesdatafiltered: any[] = []
   originalMovies = movies
@@ -16,6 +16,10 @@ export class MovieComponent {
 
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
+  }
+
+  ngOnDestroy(){
+this.commonService._selectedCategory.set('')
   }
 
 }
