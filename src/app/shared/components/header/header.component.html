@@ -7,8 +7,8 @@
             <div class="col-8 ">
                 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
                     <div class="col-md-3 mb-2 mb-md-0 d-flex">
-                        <a href="/" class="d-inline-flex link-body-emphasis text-decoration-none">
-                            <img src="assets/images/logo.png" alt="" class="logo">
+                        <a  class="d-inline-flex link-body-emphasis text-decoration-none  " [routerLink]="[`/explore/home/${service._selectCity().toLowerCase()}`]">
+                            <img src="assets/images/logo.png" alt="" class="logo  ">
                         </a>
                         <div class="d-flex align-items-center">
                             <app-searcbox></app-searcbox>
@@ -50,9 +50,11 @@
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
 
-                            <a [routerLink]="['explore/movies']">Movies</a>
+                            <a [routerLink]="[`/explore/movies-${service._selectCity()}`]" (click)="service._selectedCategory.set('Movies')"
+                             [ngStyle]="{'font-weight':'Movies'==service._selectedCategory()? 'bold':''}">Movies</a>
                             <a>Stream</a>
-                            <a [routerLink]="['explore/events']">Events</a>
+                            <a [routerLink]="[`explore/events-${service._selectCity()}`]" 
+                            (click)="service._selectedCategory.set('Events')" [ngStyle]="{'font-weight':'Events'== service._selectedCategory()? 'bold':''}">Events</a>
                             <a>Plays</a>
                             <a>Sports</a>
                             <a>Activities</a>

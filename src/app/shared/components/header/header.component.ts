@@ -34,7 +34,8 @@ export class HeaderComponent implements OnInit {
   city = false;
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-  constructor(private modalService: NgbModal, public service: CommonService, private route: Router) {
+  constructor(private modalService: NgbModal, public service: CommonService, private router: Router) {
+    
 
     this.cityData = cities;
     this.selectedCity = this.service._selectCity()
@@ -43,6 +44,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     // Open modal Without City Selected 
     this.showProfileheader = this.service._profileHeader()
+    
     if (!this.selectedCity) {
       this.open(this.content)
     }
@@ -84,6 +86,8 @@ export class HeaderComponent implements OnInit {
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity))
     if (modalRef) {
       modalRef.close()
+      let newRoute=this.router.url.split('-')[0]+'-'+this.service._selectCity().toLowerCase() 
+      this.router.navigate([newRoute])
     }
   }
 
