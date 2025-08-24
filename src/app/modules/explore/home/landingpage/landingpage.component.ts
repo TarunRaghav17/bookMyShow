@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { movies } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 
@@ -8,7 +8,7 @@ import { CommonService } from '../../../../services/common.service';
   templateUrl: './landingpage.component.html',
   styleUrl: './landingpage.component.scss',
 })
-export class HomeComponent {
+export class HomeComponent{
   dummyMoviesdata: any[] = [];
   dummyMoviesdatafiltered: any[] = []
   originalMovies = movies
@@ -22,14 +22,11 @@ export class HomeComponent {
   }
 
 
-
   getVisibleMovieCard() {
     this.start = this.itemsperpage * this.pageNo;
     this.end = this.start + this.itemsperpage
     this.dummyMoviesdatafiltered = this.originalMovies.slice(this.start, this.end);
   }
-
-
 
   next() {
     if (this.end < this.originalMovies.length) {

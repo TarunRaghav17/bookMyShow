@@ -83,7 +83,7 @@
                                                     <div class="card shadow-sm">
 
                                                         <a class="img_container rounded-4 border"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-');}/${item.imdbID}`]">
+                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-').toLowerCase()}/${item.imdbID}`]">
                                                             <img [src]="item.Poster" [alt]="item.Poster">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">

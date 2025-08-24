@@ -238,14 +238,14 @@
     font-weight: 400;
     line-height: 20px;
     letter-spacing: 0.2px;
-    -webkit-line-clamp: none">This movie is rated “A” and is only for viewers above 18. Please carry a valid ID/Age
+    ">This movie is rated “A” and is only for viewers above 18. Please carry a valid ID/Age
             Proof
             to the theatre.
             If you are denied entry due to age or ID issues, you will not get a refund.</p>
 
     </div>
     <div class="p-3 d-grid">
-        <button class="popup_continue">Continue</button>
+        <button class="popup_continue" (click)="close();open(langFormatModal)">Continue</button>
     </div>
 
 
@@ -254,3 +254,39 @@
 
 
 </ng-template>
+
+
+<!-- ---------------inzDev start----------- -->
+<ng-template #langFormatModal let-modal>
+
+    <div class="p-2">
+        <div class="border">
+            <p class="border">War 2</p>
+        <h5 class="m-0 border">lang format modal</h5>
+        </div>
+        
+
+
+        <p class="" style="color: rgb(102, 102, 102);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: 0.2px;
+    ">This movie is rated “A” and is only for viewers above 18. Please carry a valid ID/Age
+            Proof
+            to the theatre.
+            If you are denied entry due to age or ID issues, you will not get a refund.</p>
+
+    </div>
+    <div class="p-3 d-grid">
+        <button class="popup_continue" (click)="navigateToBuyTicket()">book now</button>
+    </div>
+
+
+
+
+
+
+</ng-template>
+
+<!-- ---------------inzDev end----------- -->

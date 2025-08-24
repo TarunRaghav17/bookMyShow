@@ -86,17 +86,38 @@ export class HeaderComponent implements OnInit {
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity))
     if (modalRef) {
       modalRef.close()
+      if(this.service._selectedCategory()){
       let newRoute=this.router.url.split('-')[0]+'-'+this.service._selectCity().toLowerCase() 
       this.router.navigate([newRoute])
+        
+      }
+      else{
+        this.router.navigate([`/explore/home/${this.service._selectCity().toLowerCase()}`])
+      }
+   
+
     }
   }
 
+isSelected(categroy:string):boolean{
+  let res=categroy === this.service._selectedCategory()
+  
+  return res
 
+}
 
   editProfile() {
 
   }
-
+async fetchLocation() {
+  try {
+    const location = await this.service.getCurrentLocation();
+    console.log("Your location:", location);
+  } catch (error:any) {
+    console.error(error.message);
+  }
+}
 
 
 }
+

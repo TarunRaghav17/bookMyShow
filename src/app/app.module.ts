@@ -13,6 +13,7 @@ import { FilterAccordianComponent } from './shared/components/filter-accordian/f
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
 import { IExploreListComponent } from './shared/components/i-explore-list/i-explore-list.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -25,7 +26,7 @@ import { IExploreListComponent } from './shared/components/i-explore-list/i-expl
     ErrorpageComponent,
 
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule,NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule],
   providers: [],
   bootstrap: [AppComponent],
 })

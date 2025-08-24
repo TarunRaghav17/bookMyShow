@@ -1,7 +1,8 @@
 import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonService } from '../../../services/common.service';
 @Component({
   selector: 'app-movies-details',
   imports: [NgbModule],
@@ -9,7 +10,9 @@ import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './movies-details.component.scss'
 })
 export class MoviesDetailsComponent {
-  constructor(private location: Location, private modalService: NgbModal) { }
+  constructor(private location: Location, private modalService: NgbModal, public commonService:CommonService,
+    private router: Router) { }
+  private modalRef?:NgbModalRef |null=null
   movieDetails: any = {}
   ngOnInit() {
     const state = this.location.getState();
@@ -25,13 +28,28 @@ export class MoviesDetailsComponent {
     this.showHeader = window.scrollY >= (section[0] as HTMLElement).offsetTop;
   }
 
+
   open(content: TemplateRef<any>) {
-    this.modalService.open(content, {
+   this.modalRef= this.modalService.open(content, {
       modalDialogClass: 'book-ticekt-dialog',
       ariaLabelledBy: 'modal-basic-title',
       centered: true
     });
 
+  }
+
+  close(){
+    if(this.modalRef){
+      console.log('close called')
+      this.modalRef.close()
+      this.modalRef=null
+    }
+  }
+
+  navigateToBuyTicket(){
+    this.modalRef?.close()
+    // console.log(this.router.url.split('/'))
+    this.router.navigate([`/movies/${this.commonService._selectCity().toLowerCase()}/war2/buytickets/123`])
   }
 
 }

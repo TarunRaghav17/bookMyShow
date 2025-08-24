@@ -3,11 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './landingpage/landingpage.component';
 
 const routes: Routes = [
-  // {
-  //   path: '',
-  //   redirectTo: 'delhi',
-  //   pathMatch: 'full',
-  // },
+  {
+    path: '',
+    // redirectTo: 'delhi',
+    pathMatch: 'full',component: HomeComponent
+  },
   // { path: 'delhi', component: HomeComponent },
   { path: ':city', component: HomeComponent },
 ];

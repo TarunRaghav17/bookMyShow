@@ -5,6 +5,7 @@ import { UserProfileModule } from './modules/user-proile/user-profile.module';
 import { ErrorpageComponent } from './shared/components/erorpage/errorpage.component';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ListYourShowModule } from './modules/list-your-show/list-your-show.module';
+import { IExploreListComponent } from './shared/components/i-explore-list/i-explore-list.component';
 
 const routes: Routes = [
   {
@@ -28,6 +29,12 @@ const routes: Routes = [
   },
   {
     path: 'movies/:city/:name/:id', component: MoviesDetailsComponent
+
+
+  },
+  {
+    path: 'movies/:city/:name/buytickets/:id', component: IExploreListComponent
+    
 
   },
   {

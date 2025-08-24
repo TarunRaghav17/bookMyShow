@@ -50,11 +50,11 @@
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
 
-                            <a [routerLink]="[`/explore/movies-${service._selectCity()}`]" (click)="service._selectedCategory.set('Movies')"
-                             [ngStyle]="{'font-weight':'Movies'==service._selectedCategory()? 'bold':''}">Movies</a>
+                            <a [routerLink]="[`/explore/movies-${service._selectCity()}`]" (click)="service.setSelectedCategory('Movies')"
+                             [ngStyle]="{'font-weight':isSelected('Movies')?'bold':''}">Movies</a>
                             <a>Stream</a>
                             <a [routerLink]="[`explore/events-${service._selectCity()}`]" 
-                            (click)="service._selectedCategory.set('Events')" [ngStyle]="{'font-weight':'Events'== service._selectedCategory()? 'bold':''}">Events</a>
+                            (click)="service.setSelectedCategory('Events')" [ngStyle]="{'font-weight':isSelected('Events')?'bold':''}">Events</a>
                             <a>Plays</a>
                             <a>Sports</a>
                             <a>Activities</a>
@@ -176,7 +176,7 @@
             <input type="text" class="form-control border-start-0" name="search-city" placeholder="Search for cities"
                 required="">
         </div>
-        <span class="detect_my_location_text text-danger mt-2"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
+        <span class="detect_my_location_text text-danger mt-2" (click)="(fetchLocation())"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
             Detect my location</span>
     </div>
     <div class="modal-body p-0">

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-i-explore-list',
-  standalone: false,
+  standalone: true,
   templateUrl: './i-explore-list.component.html',
   styleUrl: './i-explore-list.component.scss'
 })

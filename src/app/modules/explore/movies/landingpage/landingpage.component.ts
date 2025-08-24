@@ -19,7 +19,7 @@ export class MovieComponent implements OnDestroy {
   }
 
   ngOnDestroy(){
-this.commonService._selectedCategory.set('')
+this.commonService.setSelectedCategory(null)
   }
 
 }
