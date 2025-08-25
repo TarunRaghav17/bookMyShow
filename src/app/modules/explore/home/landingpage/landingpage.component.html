@@ -74,7 +74,7 @@
                                 <div class="filter_text d-flex gap-3 ">
                                     <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
                                         class="overflow-hidden w-50">
-                                        <div class="col"  [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title)
+                                        <div class="col" [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title)
                                         .split(' ').join('-');}/${item.imdbID}`]" [ngStyle]="{'cursor':'pointer'}">
                                             <div class="card shadow-sm">
                                                 <div class="img_container">
@@ -153,7 +153,7 @@
                                 <div class="filter_text d-flex gap-3 ">
                                     <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
                                         class="overflow-hidden w-50">
-                                        <div class="col"  [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title)
+                                        <div class="col" [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title)
                                         .split(' ').join('-');}/${item.imdbID}`]" [ngStyle]="{'cursor':'pointer'}">
                                             <div class="card shadow-sm">
                                                 <div class="img_container">

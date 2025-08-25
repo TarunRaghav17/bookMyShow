@@ -1,1 +1,1 @@
-export enum Environment {}
+export enum Environment { }

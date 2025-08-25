@@ -7,7 +7,8 @@
             <div class="col-8 ">
                 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between">
                     <div class="col-md-3 mb-2 mb-md-0 d-flex">
-                        <a  class="d-inline-flex link-body-emphasis text-decoration-none  " [routerLink]="[`/explore/home/${service._selectCity().toLowerCase()}`]">
+                        <a class="d-inline-flex link-body-emphasis text-decoration-none  "
+                            [routerLink]="[`/explore/home/${commonService._selectCity().toLowerCase()}`]">
                             <img src="assets/images/logo.png" alt="" class="logo  ">
                         </a>
                         <div class="d-flex align-items-center">
@@ -50,11 +51,13 @@
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
 
-                            <a [routerLink]="[`/explore/movies-${service._selectCity()}`]" (click)="service.setSelectedCategory('Movies')"
-                             [ngStyle]="{'font-weight':isSelected('Movies')?'bold':''}">Movies</a>
+                            <a [routerLink]="[`/explore/movies-${commonService._selectCity()}`]"
+                                (click)="commonService.setSelectedCategory('Movies')"
+                                [ngStyle]="{'font-weight':isSelected('Movies')?'bold':''}">Movies</a>
                             <a>Stream</a>
-                            <a [routerLink]="[`explore/events-${service._selectCity()}`]" 
-                            (click)="service.setSelectedCategory('Events')" [ngStyle]="{'font-weight':isSelected('Events')?'bold':''}">Events</a>
+                            <a [routerLink]="[`explore/events-${commonService._selectCity()}`]"
+                                (click)="commonService.setSelectedCategory('Events')"
+                                [ngStyle]="{'font-weight':isSelected('Events')?'bold':''}">Events</a>
                             <a>Plays</a>
                             <a>Sports</a>
                             <a>Activities</a>
@@ -73,7 +76,7 @@
         </div>
     </div>
 </div>
-@if(service._profileHeader()){
+@if(commonService._profileHeader()){
 <div class="sub_profile_header">
     <div class="col-6">
         <div class="sub_header_profile_cotainer">
@@ -176,7 +179,8 @@
             <input type="text" class="form-control border-start-0" name="search-city" placeholder="Search for cities"
                 required="">
         </div>
-        <span class="detect_my_location_text text-danger mt-2" (click)="(fetchLocation())"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
+        <span class="detect_my_location_text text-danger mt-2" (click)="(fetchLocation())"> <i
+                class="fa fa-map-marker me-2" aria-hidden="true"></i>
             Detect my location</span>
     </div>
     <div class="modal-body p-0">

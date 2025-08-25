@@ -13,7 +13,8 @@ import { FilterAccordianComponent } from './shared/components/filter-accordian/f
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
 import { IExploreListComponent } from './shared/components/i-explore-list/i-explore-list.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+// import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 
 
 @NgModule({
@@ -26,8 +27,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     ErrorpageComponent,
 
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule,NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule, HttpClientModule],
+  providers: [provideHttpClient(withFetch())],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
