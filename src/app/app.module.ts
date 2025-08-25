@@ -12,6 +12,7 @@ import { ErrorpageComponent } from './shared/components/erorpage/errorpage.compo
 import { FilterAccordianComponent } from './shared/components/filter-accordian/filter-accordian.component';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 
 
 @NgModule({
@@ -24,8 +25,8 @@ import { CarouselModule } from "ngx-bootstrap/carousel";
     ErrorpageComponent,
 
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule, HttpClientModule],
+  providers: [provideHttpClient(withFetch())],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -12,10 +12,12 @@ import {
   NgbModalOptions,
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
-import { cities, citiesJson } from '../../../../../db';
+import { cities } from '../../../../../db';
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
 import { Router } from '@angular/router';
+import { ApiService } from '../../../services/api.service';
+import { URLConstant } from '../../../apiUrls/url';
 export class NgbdModalContent {
   activeModal = inject(NgbActiveModal);
 }
@@ -34,15 +36,15 @@ export class HeaderComponent implements OnInit {
   city = false;
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-  constructor(private modalService: NgbModal, public service: CommonService, private route: Router) {
+  constructor(private modalService: NgbModal, public commonService: CommonService, private route: Router, private apiService: ApiService) {
 
-    this.cityData = cities;
-    this.selectedCity = this.service._selectCity()
+    this.selectedCity = this.commonService._selectCity()
   }
 
   ngOnInit(): void {
+    this.getAllPopularCity()
     // Open modal Without City Selected 
-    this.showProfileheader = this.service._profileHeader()
+    this.showProfileheader = this.commonService._profileHeader()
     if (!this.selectedCity) {
       this.open(this.content)
     }
@@ -54,13 +56,20 @@ export class HeaderComponent implements OnInit {
       modalDialogClass: 'dialog',
       ariaLabelledBy: 'modal-basic-title',
     });
-
   }
 
   viewAllCities() {
     this.showCities = !this.showCities;
-    this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
-    this.citiesJson = this.showCities ? citiesJson : null;
+    this.apiService.get(URLConstant.CITY.ALL_CITY).subscribe((res) => {
+      this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
+      this.citiesJson = this.showCities ? res : null;
+    })
+  }
+
+  getAllPopularCity() {
+    this.apiService.get(URLConstant.CITY.POPULAR_CITY).subscribe((res) => {
+      this.cityData = res;
+    })
   }
 
 
@@ -79,8 +88,8 @@ export class HeaderComponent implements OnInit {
 
 
   selectCity(city: any, modalRef: NgbModalRef) {
-    this.service._selectCity.set(city)
-    this.selectedCity = this.service._selectCity()
+    this.commonService._selectCity.set(city)
+    this.selectedCity = this.commonService._selectCity()
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity))
     if (modalRef) {
       modalRef.close()

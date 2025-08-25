@@ -1,54 +1,128 @@
 <div class="container-fluid p-4">
     <div class="d-flex justify-content-around">
-        <img src="assets/images/logo_bookMyShow.webp" height="60px" alt="">
+        <img src="assets/svg/bookmyshow-logo-vector.svg" height="60px" alt="">
     </div>
 
     @if (!openSignuForm) {
     <form [formGroup]="userLogin">
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter your email"
-                formControlName="email">
-        </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter your password"
-                formControlName="password">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" formControlName="username" placeholder="Enter your username">
+            <small class="text-danger" *ngIf="userLogin.get('username')?.touched && userLogin.get('username')?.invalid">
+                Username is required
+            </small>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <div class="mb-3 position-relative">
+            <label class="form-label">Password</label>
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
+                placeholder="Enter your password">
 
-            <button type="button" class="btn btn-info text-white col-12" [disabled]="userLogin.invalid"
-                (click)="onloginSubmit()">Login</button>
-            <span>Don't have an account? <a href="javascript:void(0)" (click)="openFormSignup()">Signup</a></span>
+            <small class="text-danger"
+                *ngIf="userLogin.get('password')?.touched && userLogin.get('password')?.hasError('required')">
+                Password is required
+            </small>
+            <small class="text-danger" *ngIf="userLogin.get('password')?.hasError('minlength')">
+                Password must be at least 6 characters
+            </small>
+
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="togglePassword()"
+                id="togglePassword">
+            </i>
         </div>
+
+
+        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="userLogin.invalid"
+            (click)="onloginSubmit()">Login</button>
+
+        <p class="text-center">Don't have an account?
+            <a href="javascript:void(0)" (click)="openFormSignup()">Signup</a>
+        </p>
     </form>
     }
     @if (openSignuForm) {
     <form [formGroup]="userSignUp">
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter your email"
-                formControlName="email">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" formControlName="name" placeholder="Enter full name">
+            <small class="text-danger" *ngIf="userSignUp.get('name')?.touched && userSignUp.get('name')?.invalid">
+                Name is required
+            </small>
+        </div>
 
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-control" formControlName="username" placeholder="Choose a username">
+            <small class="text-danger"
+                *ngIf="userSignUp.get('username')?.touched && userSignUp.get('username')?.invalid">
+                Username is required
+            </small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" formControlName="email" placeholder="Enter your email">
+            <small class="text-danger"
+                *ngIf="userSignUp.get('email')?.touched && userSignUp.get('email')?.hasError('required')">
+                Email is required
+            </small>
+            <small class="text-danger" *ngIf="userSignUp.get('email')?.hasError('email')">
+                Invalid email format
+            </small>
         </div>
         <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Enter your password"
-                formControlName="password">
+            <label class="form-label" for="roleName" name="">Role</label>
+            <select class="form-control" formControlName="roleName" id="roleName" name="roleName">
+                <option selected>Select Role....</option>
+                <option value="USER">User</option>
+                <option value="ADMIN">Admin</option>
+            </select>
+
+            <small class="text-danger"
+                *ngIf="userSignUp.get('roleName')?.touched && userSignUp.get('roleName')?.hasError('required')">
+                Role is required
+            </small>
+
         </div>
+
         <div class="mb-3">
-            <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword2"
-                placeholder="Enter your Confirm-password" formControlName="confirmPassword">
+            <label class="form-label">Phone Number</label>
+            <input type="number" class="form-control" formControlName="phoneNumber"
+                placeholder="Enter 10-digit phone number">
+            <small class="text-danger"
+                *ngIf="userSignUp.get('phoneNumber')?.touched && userSignUp.get('phoneNumber')?.hasError('required')">
+                Phone number is required
+            </small>
+            <small class="text-danger" *ngIf="userSignUp.get('phoneNumber')?.hasError('pattern')">
+                Phone number must be exactly 10 digits
+            </small>
         </div>
 
-        <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+        <div class="mb-3 position-relative">
+            <label class="form-label">Password</label>
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
+                placeholder="Enter your password">
 
-            <button type="button" class="btn btn-info text-white col-12" [disabled]="userSignUp.invalid"
-                (click)="onSignupSubmit()">Register</button>
-            <span>Already have an account? <a href="javascript:void(0)" (click)="openFormSignup()">Signin</a></span>
+            <small class="text-danger"
+                *ngIf="userLogin.get('password')?.touched && userLogin.get('password')?.hasError('required')">
+                Password is required
+            </small>
+            <small class="text-danger" *ngIf="userLogin.get('password')?.hasError('minlength')">
+                Password must be at least 6 characters
+            </small>
+
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="togglePassword()"
+                id="togglePassword">
+            </i>
         </div>
+
+
+        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="userSignUp.invalid"
+            (click)="onSignupSubmit()">Register</button>
+
+        <p class="text-center">Already have an account?
+            <a href="javascript:void(0)" (click)="openFormSignup()">Signin</a>
+        </p>
     </form>
     }
 

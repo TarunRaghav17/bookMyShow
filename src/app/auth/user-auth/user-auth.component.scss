@@ -1,0 +1,13 @@
+/* Position the eye icon inside the input */
+#togglePassword {
+  position: absolute;
+  right: 15px;
+  top: 38px;
+  cursor: pointer;
+  color: #6c757d; /* Bootstrap gray */
+  transition: 0.3s;
+}
+
+#togglePassword:hover {
+  color: #000; /* darker on hover */
+}
