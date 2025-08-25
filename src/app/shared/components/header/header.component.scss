@@ -5,6 +5,7 @@
   font-size: 14px;
   cursor: pointer;
   margin-top: 3px;
+  text-transform:capitalize
 }
 .badge {
   border: none;
@@ -229,6 +230,7 @@ span {
   margin: 0;
   padding: 0;
   font-size: medium;
+  cursor:pointer
 }
 .dialog {
   max-width: 800px;

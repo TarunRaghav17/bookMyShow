@@ -14,6 +14,22 @@ export class MoviesDetailsComponent {
     private router: Router) { }
   private modalRef?:NgbModalRef |null=null
   movieDetails: any = {}
+
+
+langFormatData:any=[
+  {lang:'TAMIL',
+  format:['2D','4DX','IMAX 2D','ICE']
+  },
+  {
+    lang:'ENGLISH',
+    format:['2D','4DX','IMAX 2D','ICE']
+
+  },
+  {
+    lang:'HINDI',
+    format:['2D','4DX','IMAX 2D','ICE']
+  }
+]
   ngOnInit() {
     const state = this.location.getState();
     this.movieDetails = state
@@ -46,8 +62,9 @@ export class MoviesDetailsComponent {
     }
   }
 
-  navigateToBuyTicket(){
+  navigateToBuyTicket(langFormat:any){
     this.modalRef?.close()
+    this.commonService.setLanguageFormat(langFormat)
     // console.log(this.router.url.split('/'))
     this.router.navigate([`/movies/${this.commonService._selectCity().toLowerCase()}/war2/buytickets/123`])
   }

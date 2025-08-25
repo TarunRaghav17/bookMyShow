@@ -12,9 +12,9 @@ export const movies = [
     Plot: 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
     Language: ['English'],
     City: [
-      { CityName: 'Delhi' },
-      { CityName: 'Faridabad' },
-      { CityName: 'Kroalbag' }
+      { city_name: 'Delhi' },
+      { city_name: 'Faridabad' },
+      { city_name: 'Kroalbag' }
     ],
     Awards: 'N/A',
     Poster:
@@ -487,18 +487,37 @@ export const movies = [
 export const cities = [
   {
     id: 1, city_name: 'Mumbai',
-    img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/mumbai-selected.png'
+    img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/mumbai.png',
+    selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/mumbai-selected.png'
   },
-  { id: 2, city_name: 'Delhi', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/ncr.png' },
-  { id: 3, city_name: 'Bengaluru', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/bang.png' },
-  { id: 4, city_name: 'Hyderabad', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/hyd.png' },
-  { id: 5, city_name: 'Chennai', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/chen.png' },
-  { id: 6, city_name: 'Kolkata', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/kolk.png' },
-  { id: 7, city_name: 'Pune', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/pune.png' },
-  { id: 8, city_name: 'Ahmedabad', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/ahd.png' },
-  { id: 9, city_name: 'Kochi', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/koch.png' },
-  { id: 10, city_name: 'Chandigarh', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/chd.png' },
+  {
+    id: 2, city_name: 'Delhi', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/ncr.png',
+    selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/ncr-selected.png',
+  },
+  { id: 3, city_name: 'Bengaluru', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/bang.png', 
+    selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/bang-selected.png' },
+  { id: 4, city_name: 'Hyderabad', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/hyd.png',
+     selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/hyd-selected.png' },
+  { id: 5, city_name: 'Chennai', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/chen.png',
+     selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/chen-selected.png' },
+  { id: 6, city_name: 'Kolkata', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/kolk.png', 
+    selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/kolk-selected.png' },
+  { id: 7, city_name: 'Pune', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/pune.png', 
+    selectedImg: 'http://assets-in.bmscdn.com/m6/images/common-modules/regions/pune-selected.png' },
+  { id: 8, city_name: 'Ahmedabad', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/ahd.png', 
+    selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/ahd-selected.png' },
+  { id: 9, city_name: 'Kochi', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/koch.png'
+    , selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/koch-selected.png' },
+  { id: 10, city_name: 'Chandigarh', img: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/chd.png', 
+    selectedImg: 'https://assets-in.bmscdn.com/m6/images/common-modules/regions/chd-selected.png' },
 ];
+
+
+
+
+
+
+
 export const citiesJson = [
   { id: 1, name: "Mumbai" },
   { id: 2, name: "Delhi" },

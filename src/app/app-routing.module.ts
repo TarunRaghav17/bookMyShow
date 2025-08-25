@@ -6,6 +6,7 @@ import { ErrorpageComponent } from './shared/components/erorpage/errorpage.compo
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ListYourShowModule } from './modules/list-your-show/list-your-show.module';
 import { IExploreListComponent } from './shared/components/i-explore-list/i-explore-list.component';
+import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets.component';
 
 const routes: Routes = [
   {
@@ -33,7 +34,7 @@ const routes: Routes = [
 
   },
   {
-    path: 'movies/:city/:name/buytickets/:id', component: IExploreListComponent
+    path: 'movies/:city/:name/buytickets/:id', component: BuyTicketsComponent
     
 
   },

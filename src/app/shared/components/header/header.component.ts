@@ -29,7 +29,7 @@ export class NgbdModalContent {
 })
 export class HeaderComponent implements OnInit {
   @ViewChild('content', { static: true }) content!: TemplateRef<any>;
-  cityData: any[] = [];
+  cityData: any[] = cities;
   citiesJson: any = null;
   showCities = false;
   selectedCity: any;
@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
   showProfileheader: any;
   constructor(private modalService: NgbModal, public commonService: CommonService, private router: Router, private apiService: ApiService) {
 
-    this.selectedCity = this.commonService._selectCity()
+    // this.selectedCity = this.commonService._selectCity()
   }
 
   ngOnInit(): void {
@@ -92,7 +92,8 @@ export class HeaderComponent implements OnInit {
     this.selectedCity = this.commonService._selectCity()
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity))
     if (modalRef) {
-      modalRef.close()
+      this.closeModal(modalRef)
+      // modalRef.close()
       if (this.commonService._selectedCategory()) {
         let newRoute = this.router.url.split('-')[0] + '-' + this.commonService._selectCity().toLowerCase()
         this.router.navigate([newRoute])
@@ -103,6 +104,13 @@ export class HeaderComponent implements OnInit {
       }
 
 
+    }
+  }
+
+
+  closeModal(modalRef:NgbModalRef){
+    if(modalRef){
+      modalRef.close()
     }
   }
 
@@ -120,6 +128,8 @@ export class HeaderComponent implements OnInit {
     try {
       const location = await this.commonService.getCurrentLocation();
       console.log("Your location:", location);
+      this.commonService.setSelectedCity(location)
+      this.modalService.dismissAll()
     } catch (error: any) {
       console.error(error.message);
     }

@@ -14,19 +14,40 @@ export class CommonService {
   selectedCategory = (sessionStorage.getItem('selectedCategory'))
   _selectedCategory = signal<string | null>(this.selectedCategory ? JSON.parse(this.selectedCategory) : null)
 
+  selectedLangFormat=sessionStorage.getItem('selectedLangFormat')
+  _selectedLangFormat=signal<any>(this.selectedLangFormat? JSON.parse(this.selectedLangFormat) : null)
+
   // --------------inz-end-------------------
   _profileHeader = signal<any>(false);
   roles: any[] = ['User', 'Admin']
   constructor(private http: HttpClient) {
   }
 
-  getCityNameByLocation(lat: number, lon: number) {
+
+
+  
+
+ 
+
+// -----------inz-start-------------------
+
+ getCityNameByLocation(lat: number, lon: number) {
 
     return this.http.get<any>(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
   }
 
 
+setLanguageFormat(langFormat:any){
+  console.log('func caled')
+  this._selectedLangFormat.set(langFormat)
+  sessionStorage.setItem('selectedLangFormat',JSON.stringify(langFormat))
+}
 
+
+setSelectedCity(city: any) {
+  this._selectCity.set(city.toLowerCase())
+  sessionStorage.setItem('selectedCity', JSON.stringify(this._selectCity()))
+}
   setSelectedCategory(category: string | null) {
     this._selectedCategory.set(category)
     sessionStorage.setItem('selectedCategory', JSON.stringify(category))
@@ -60,7 +81,7 @@ export class CommonService {
   }
 
 
-
+// ------------inz-end-------------------
 }
 
 
