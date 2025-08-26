@@ -8,11 +8,11 @@ import { SearcboxComponent } from './shared/components/searcbox/searcbox.compone
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserAuthComponent } from './auth/user-auth/user-auth.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ErrorpageComponent } from './shared/components/erorpage/errorpage.component';
-import { FilterAccordianComponent } from './shared/components/filter-accordian/filter-accordian.component';
+import { FilterAccordionComponent } from './shared/components/filter-accordion/filter-accordion.component';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { ErrorpageComponent } from './shared/components/errorpage/errorpage.component';
 
 
 @NgModule({
@@ -22,10 +22,10 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
     FooterComponent,
     SearcboxComponent,
     UserAuthComponent,
-    ErrorpageComponent,
+    ErrorpageComponent
 
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, FilterAccordianComponent, MoviesDetailsComponent, CarouselModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
   providers: [provideHttpClient(withFetch())],
   bootstrap: [AppComponent],
 })

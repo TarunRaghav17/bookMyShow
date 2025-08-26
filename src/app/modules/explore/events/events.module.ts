@@ -3,19 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { EventsRoutingModule } from './events-routing.module';
 import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
-import { FilterAccordianComponent } from '../../../shared/components/filter-accordian/filter-accordian.component';
-import { LandingpageComponent } from './landingpage/landingpage.component';
+import { eventsLandingpageComponent } from './events-landingpage/events-landingpage.component';
+import { fiLocale } from 'ngx-bootstrap/chronos';
+import { FilterAccordionComponent } from '../../../shared/components/filter-accordion/filter-accordion.component';
 
 @NgModule({
   declarations: [
-    LandingpageComponent,
-
+    eventsLandingpageComponent
   ],
   imports: [
     CommonModule,
     EventsRoutingModule,
-    FilterAccordianComponent,
-    TruncatePipe
+    TruncatePipe,
+    FilterAccordionComponent
 
 
   ]

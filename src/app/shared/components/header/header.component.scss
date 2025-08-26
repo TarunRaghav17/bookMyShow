@@ -1,11 +1,13 @@
 .logo {
   height: 60px;
 }
+
 .dropdown_city_text {
   font-size: 14px;
   cursor: pointer;
   margin-top: 3px;
 }
+
 .badge {
   border: none;
   background: rgb(235, 78, 98);
@@ -16,17 +18,20 @@
   letter-spacing: 0.2px;
   padding: 5px 10px;
 }
+
 .fa-bars,
 .fa-circle_header {
   color: rgb(170, 170, 170);
   font-size: large;
   cursor: pointer;
 }
+
 .sub_header {
   padding: 0px;
   width: 100%;
   background: rgb(245, 245, 245);
 }
+
 .sub_profile_header {
   display: flex;
   justify-content: space-around;
@@ -34,6 +39,7 @@
   width: 100%;
   background: rgb(204, 204, 204);
 }
+
 .sub_header_profile_cotainer .sub_header_left a {
   padding: 10px 12px;
   color: rgb(0, 0, 0);
@@ -45,16 +51,19 @@
   text-decoration: none;
   cursor: pointer;
 }
+
 .main_conatiner_sub_header {
   padding: 10px;
   background: rgb(245, 245, 245);
 }
+
 .sub_header {
   width: calc(100%);
   max-width: calc(100%);
   display: flex;
   justify-content: space-between;
 }
+
 .sub_header_left .links,
 .sub_header_right .links {
   font-size: 14px;
@@ -77,6 +86,7 @@
   padding: 0px 10px;
   text-decoration: none;
 }
+
 .sub_header_right .sub_heder_right_links a {
   font-size: 12px;
   font-weight: 400;
@@ -87,6 +97,7 @@
   padding: 0px 12px;
   text-decoration: none;
 }
+
 //side bar
 .edit_profile {
   font-size: 12px;
@@ -96,6 +107,7 @@
   color: rgb(102, 102, 102);
   padding-right: 2px;
 }
+
 .unlock_special_offer_box {
   display: flex;
   align-items: center;
@@ -106,6 +118,7 @@
   justify-content: space-between;
   z-index: 1;
 }
+
 .unlock_special_offer_box .unlock_special_offer_text {
   color: rgb(116, 126, 170);
   font-size: 14px;
@@ -114,6 +127,7 @@
   letter-spacing: 0.2px;
   padding: 0px 16px;
 }
+
 .unlock_special_offer_box .unlock_special_offer_button {
   display: flex;
   justify-content: space-between;
@@ -132,9 +146,11 @@
   cursor: pointer;
   height: auto;
 }
+
 .user_icon .fa-user-circle {
   font-size: xx-large;
 }
+
 // user login image
 
 // .user_icon {
@@ -149,6 +165,7 @@
   padding: 8px 16px;
   height: 60px;
 }
+
 .info_text p,
 span {
   color: rgb(51, 51, 51);
@@ -157,12 +174,14 @@ span {
   line-height: 20px;
   letter-spacing: 0.2px;
 }
+
 .main_sidebar_data {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 91%;
 }
+
 .main_sidebar_data a {
   text-decoration: none;
 }
@@ -176,6 +195,7 @@ span {
   border-top: 1px solid rgb(242, 242, 242);
   border-bottom: 1px solid rgb(242, 242, 242);
 }
+
 .button_section {
   width: 100%;
   z-index: 99;
@@ -183,6 +203,7 @@ span {
   flex: 0 0 auto;
   box-shadow: rgba(0, 0, 0, 0.2) 0px -1px 13px 0px;
 }
+
 .button_sign_out {
   justify-content: center;
   display: flex;
@@ -204,6 +225,7 @@ span {
 .fa-search {
   color: rgb(170, 170, 170);
 }
+
 .input-group .input-group-text {
   border-radius: 5px 0px 0px 5px !important;
 }
@@ -230,6 +252,7 @@ span {
   padding: 0;
   font-size: medium;
 }
+
 .dialog {
   max-width: 800px;
   min-width: 600px;
@@ -246,19 +269,23 @@ span {
   line-height: 20px;
   letter-spacing: 0.2px;
 }
+
 .city_section {
   max-height: 60px;
   max-width: fit-content;
 }
+
 .other_cities_list {
   height: 160px;
   overflow-y: auto;
 }
+
 .list_cities {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   justify-content: center;
 }
+
 .list_cities p {
   justify-content: space-between;
   align-items: center;
@@ -276,9 +303,11 @@ span {
   text-overflow: ellipsis;
   max-width: 100px;
 }
+
 .list_cities p:hover {
   color: rgb(59, 59, 59);
 }
+
 .active {
   background-color: rgb(0, 102, 192);
 }

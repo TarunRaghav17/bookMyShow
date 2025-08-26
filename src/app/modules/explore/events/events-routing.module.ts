@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingpageComponent } from './landingpage/landingpage.component';
+import { eventsLandingpageComponent } from './events-landingpage/events-landingpage.component';
 
 const routes: Routes = [
   {
     path: '', redirectTo: '', pathMatch: 'full'
   },
-  { path: '', component: LandingpageComponent },
+  { path: '', component: eventsLandingpageComponent },
 ];
 
 @NgModule({

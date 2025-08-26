@@ -8,6 +8,4 @@ export class URLConstant {
         POPULAR_CITY: "/api/api/cities/popular"
     }
 
-
-
 }

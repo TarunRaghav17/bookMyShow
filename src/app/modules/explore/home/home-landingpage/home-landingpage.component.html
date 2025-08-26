@@ -1,4 +1,5 @@
 <!-- crousel -->
+
 <div class="conatiner-fluid">
     <div class="row g-0">
         <carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000"
@@ -53,7 +54,7 @@
             <div class="col-9 py-3 ">
                 <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center ">
                     <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
-                    <a class="seeall_txt" [routerLink]="['/explore/movies']">See All <i class="fa fa-angle-right ms-1"
+                    <a class="seeAll_txt" [routerLink]="['/explore/movies']">See All <i class="fa fa-angle-right ms-1"
                             aria-hidden="true"></i>
                     </a>
                 </div>
@@ -72,13 +73,12 @@
                             </div>
                             <div class="main_filter_card overflow-hidden ">
                                 <div class="filter_text d-flex gap-3 ">
-                                    <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
-                                        class="overflow-hidden w-50">
+                                    @for (item of moviesFilteredData; track $index) {
+                                    <ng-container class="overflow-hidden w-50">
                                         <div class="col">
                                             <div class="card">
                                                 <div class="img_container">
                                                     <img [src]="item.Poster" [alt]="item.Poster">
-
                                                 </div>
                                                 <div class="card-body rounded-bottom bg-dark">
                                                     <div class="d-flex gap-2">
@@ -98,17 +98,16 @@
                                             </div>
                                         </div>
                                     </ng-container>
+                                    }
                                 </div>
                             </div>
                             <div class="icon_box d-flex justify-content-start ms-3">
-                                @if (end < originalMovies.length) { <button class="arrow-btn" (click)="next()">
+                                @if (end < originalMovies.length) {
+                                     <button class="arrow-btn" (click)="next()">
                                     <i class=" fa fa-angle-right" aria-hidden="true"></i>
                                     </button>
                                     }
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
@@ -116,14 +115,13 @@
                     <img src="assets/images/stream-leadin-web-collection-202210241242.avif" alt="render"
                         class="img-fluid">
                 </div>
-
             </div>
         </div>
-
     </div>
-
 </div>
 
+
+<!-- next section -->
 
 <div class="conatiner-fluid ">
     <div class="row g-0">
@@ -131,12 +129,9 @@
             <div class="col-9 py-3 ">
                 <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center ">
                     <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
-                    <a class="seeall_txt">See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                    <a class="seeAll_txt">See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                     </a>
                 </div>
-
-
-
                 <div class="col-12 py-3">
                     <div class="d-flex justify-content-center g-0">
 
@@ -150,13 +145,12 @@
                             </div>
                             <div class="main_filter_card overflow-hidden ">
                                 <div class="filter_text d-flex gap-3 ">
-                                    <ng-container *ngFor="let item of dummyMoviesdatafiltered; let $index = index"
-                                        class="overflow-hidden w-50">
+                                    @for (item of moviesFilteredData; track $index) {
+                                    <ng-container class="overflow-hidden w-50">
                                         <div class="col">
                                             <div class="card shadow-sm">
                                                 <div class="img_container">
                                                     <img [src]="item.Poster" [alt]="item.Poster">
-
                                                 </div>
                                                 <div class="card-body rounded-bottom bg-dark">
                                                     <div class="d-flex gap-2">
@@ -176,6 +170,7 @@
                                             </div>
                                         </div>
                                     </ng-container>
+                                    }
                                 </div>
                             </div>
                             <div class="icon_box d-flex justify-content-start ms-3">
@@ -184,16 +179,10 @@
                                     </button>
                                     }
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
-
 </div>

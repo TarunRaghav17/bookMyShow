@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MoviesRoutingModule } from './movies-routing.module';
-import { MovieComponent } from './landingpage/landingpage.component';
+import { MovieComponent } from './movies-landingpage/movies-landingpage.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
-import { FilterAccordianComponent } from "../../../shared/components/filter-accordian/filter-accordian.component";
 import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.component';
+import { FilterAccordionComponent } from '../../../shared/components/filter-accordion/filter-accordion.component';
 
 
 @NgModule({
@@ -19,7 +19,7 @@ import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.co
     MoviesRoutingModule,
     CarouselModule,
     TruncatePipe,
-    FilterAccordianComponent
+    FilterAccordionComponent
   ]
 })
 export class MoviesModule { }

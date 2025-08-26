@@ -9,7 +9,7 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
-  openSignuForm: boolean = false;
+  openSignupForm: boolean = false;
   showPassword: boolean = false;
 
   constructor(private service: ApiService) {
@@ -35,13 +35,11 @@ export class UserAuthComponent implements OnInit {
 
 
   onloginSubmit() {
-
     if (this.userLogin.valid) {
       const data = this.userLogin.value;
       this.service.post(URLConstant.USER.LOGIN, data).subscribe((res) => {
-        console.log(res)
+        // console.log(res)
         localStorage.setItem('token', res.token);
-
         this.userLogin.reset();
       });
     }
@@ -50,23 +48,20 @@ export class UserAuthComponent implements OnInit {
 
   onSignupSubmit() {
     if (this.userSignUp.valid) {
-      console.log(this.userSignUp.value)
+      // console.log(this.userSignUp.value)
       const data = this.userSignUp.value;
       this.service.post(URLConstant.USER.REGISTER, data).subscribe((res) => {
-        console.log("Signup Data:", res);
-
+        // console.log("Signup Data:", res);
         this.userSignUp.reset();
       })
     }
   }
-
-
 
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
 
   openFormSignup() {
-    this.openSignuForm = !this.openSignuForm;
+    this.openSignupForm = !this.openSignupForm;
   }
 }

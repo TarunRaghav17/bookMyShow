@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { movies } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
+import { movies } from '../../../../../../db';
 
 @Component({
-  selector: 'app-movie',
+  selector: 'app-events-landingpage',
   standalone: false,
-  templateUrl: './landingpage.component.html',
-  styleUrl: './landingpage.component.scss'
+  templateUrl: './events-landingpage.component.html',
+  styleUrl: './events-landingpage.component.scss'
 })
-export class MovieComponent {
+export class eventsLandingpageComponent {
   dummyMoviesdata: any[] = [];
   dummyMoviesdatafiltered: any[] = []
   originalMovies = movies

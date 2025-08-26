@@ -1,9 +1,8 @@
-.seeall_txt {
+.seeAll_txt {
   margin: 0px;
   text-decoration: none;
   word-break: break-word;
   color: rgb(220, 53, 88);
-
   font-size: 14px;
   font-weight: normal;
   line-height: 1.43;
@@ -64,7 +63,6 @@
 .top_recommanded_movie_text {
   padding: 0px 70px 0px 65px;
 }
-
 .arrow-btn {
   border: none;
   border-radius: 50%;
@@ -75,10 +73,8 @@
   padding: 8px 12px;
   font-size: 13px;
   margin-left: 5px;
-
   cursor: pointer;
 }
-
 .arrow-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;

@@ -96,8 +96,6 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-
-
   editProfile() {
 
   }

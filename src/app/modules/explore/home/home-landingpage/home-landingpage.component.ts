@@ -4,15 +4,15 @@ import { movies } from '../../../../../../db';
 @Component({
   selector: 'app-home',
   standalone: false,
-  templateUrl: './landingpage.component.html',
-  styleUrl: './landingpage.component.scss',
+  templateUrl: './home-landingpage.component.html',
+  styleUrl: './home-landingpage.component.scss',
 })
 export class HomeComponent {
   dummyMoviesdata: any[] = [];
-  dummyMoviesdatafiltered: any[] = []
+  moviesFilteredData: any[] = []
   originalMovies = movies
   pageNo = 0;
-  itemsperpage = 6;
+  itemsPerPage = 6;
   start = 0
   end = 0
   constructor() {
@@ -20,15 +20,11 @@ export class HomeComponent {
     this.getVisibleMovieCard()
   }
 
-
-
   getVisibleMovieCard() {
-    this.start = this.itemsperpage * this.pageNo;
-    this.end = this.start + this.itemsperpage
-    this.dummyMoviesdatafiltered = this.originalMovies.slice(this.start, this.end);
+    this.start = this.itemsPerPage * this.pageNo;
+    this.end = this.start + this.itemsPerPage
+    this.moviesFilteredData = this.originalMovies.slice(this.start, this.end);
   }
-
-
 
   next() {
     if (this.end < this.originalMovies.length) {

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HomeRoutingModule } from './home-routing.module';
-import { HomeComponent } from './landingpage/landingpage.component';
+import { HomeComponent } from './home-landingpage/home-landingpage.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
 

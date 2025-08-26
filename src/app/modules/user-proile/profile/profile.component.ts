@@ -10,7 +10,6 @@ import { CommonService } from '../../../services/common.service';
 })
 export class ProfileComponent implements OnInit, OnDestroy {
 
-
   constructor(private service: CommonService) {
 
   }
@@ -31,9 +30,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // console.log(this.service._profileHeader().show
-
     this.service._profileHeader.set(true)
-
   }
 
   ngOnDestroy() {

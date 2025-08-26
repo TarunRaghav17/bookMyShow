@@ -15,7 +15,6 @@ export class YourOrderComponent {
     this.service._profileHeader.set(true)
 
   }
-
   ngOnDestroy() {
     this.service._profileHeader.set(false)
   }

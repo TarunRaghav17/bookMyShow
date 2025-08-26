@@ -2,13 +2,13 @@ import { CommonModule, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-filter-accordian',
+  selector: 'app-filter-accordion',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './filter-accordian.component.html',
-  styleUrl: './filter-accordian.component.scss',
+  templateUrl: './filter-accordion.component.html',
+  styleUrl: './filter-accordion.component.scss',
 })
-export class FilterAccordianComponent {
+export class FilterAccordionComponent {
   filterShowButtons: boolean = false;
 
 

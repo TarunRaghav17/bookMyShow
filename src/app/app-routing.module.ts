@@ -2,9 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { UserProfileModule } from './modules/user-proile/user-profile.module';
-import { ErrorpageComponent } from './shared/components/erorpage/errorpage.component';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ListYourShowModule } from './modules/list-your-show/list-your-show.module';
+import { ErrorpageComponent } from './shared/components/errorpage/errorpage.component';
 
 const routes: Routes = [
   {
