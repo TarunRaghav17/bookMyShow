@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home-landingpage/home-landingpage.component';
+import { HomeLandingPageComponent } from './home-landingpage/home-landingpage.component';
 
 const routes: Routes = [
   {
@@ -8,8 +8,8 @@ const routes: Routes = [
     redirectTo: 'delhi',
     pathMatch: 'full',
   },
-  { path: 'delhi', component: HomeComponent },
-  { path: 'home/:city', component: HomeComponent },
+  { path: 'delhi', component: HomeLandingPageComponent },
+  { path: 'home/:city', component: HomeLandingPageComponent },
 ];
 
 @NgModule({

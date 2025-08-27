@@ -56,3 +56,160 @@
   padding: 8px;
   display: grid;
 }
+/* General */
+.movie-title {
+  font-weight: bold;
+  font-size: 36px;
+}
+
+.poster-img-container {
+  position: relative;
+}
+
+.cinema-badge {
+  position: absolute;
+  bottom: 5px;
+  left: 95px;
+  font-size: 14px;
+  color: #fff;
+}
+
+/* Rating box */
+.rating-box {
+  background-color: #333;
+  max-width: 446px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.rating-content {
+  margin: 16px 0 0;
+  gap: 12px;
+  display: flex;
+  align-items: center;
+  padding: 12px 24px;
+  justify-content: space-between;
+}
+
+.rating-star {
+  color: rgb(242, 115, 133);
+  font-size: 23px;
+}
+
+.rating-score,
+.rating-votes {
+  font-size: 18px;
+}
+
+.rating-arrow {
+  color: gray;
+}
+
+.rate-btn {
+  padding: 8px 12px;
+  background-color: white;
+  border-radius: 8px;
+  margin-left: auto;
+  border: none;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  cursor: pointer;
+}
+
+/* Tags */
+.movie-formats {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: 16px;
+  width: 488px;
+}
+
+.format-tags,
+.language-tags {
+  font-weight: 400;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #e5e5e5;
+  color: #000;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-top: 8px;
+  font-size: 16px;
+}
+
+.format-tags {
+  width: 322px;
+}
+
+.language-tags {
+  width: 157px;
+}
+
+/* Meta Info */
+.movie-meta {
+  display: flex;
+  align-items: center;
+  margin-top: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  font-size: 16px;
+  gap: 5px;
+}
+
+.dot-separator i {
+  font-size: 4px;
+}
+
+/* Cast & Crew */
+.section-title {
+  letter-spacing: 0.2px;
+  color: #000;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.cast-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cast-img {
+  border-radius: 100px;
+  width: 120px;
+}
+
+.cast-name {
+  margin: 0;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.cast-role {
+  margin: 0;
+  font-weight: 400;
+  color: #666;
+}
+
+/* About Section */
+.about-text {
+  font-size: 17px;
+  font-weight: 400;
+}
+
+/* Modal */
+.content-warning {
+  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+}

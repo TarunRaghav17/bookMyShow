@@ -20,7 +20,7 @@
             <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
                 placeholder="Enter your password">
             @if(userLogin.get('password')?.touched && userLogin.get('password')?.hasError('required'))
-            { <small class="text-danger" *ngIf="">
+            { <small class="text-danger">
                 Password is required
             </small>
             }
@@ -39,8 +39,8 @@
         <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="userLogin.invalid"
             (click)="onloginSubmit()">Login</button>
 
-        <p class="text-center">Don't have an account?
-            <a href="javascript:void(0)" (click)="openFormSignup()">Signup</a>
+        <p class="text-center changeRouteFormPage">Don't have an account?
+            <a (click)="openFormSignup()">Signup</a>
         </p>
     </form>
     }
@@ -104,7 +104,7 @@
             </small>
             }
             @if(userSignUp.get('phoneNumber')?.hasError('pattern')){
-            <small class="text-danger" *ngIf="">
+            <small class="text-danger">
                 Phone number must be exactly 10 digits
             </small>
             }
@@ -132,9 +132,9 @@
         <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="userSignUp.invalid"
             (click)="onSignupSubmit()">Register</button>
 
-        <p class="text-center">Already have an account?
-            <!-- what is javascript:void(0) -->
-            <a href="javascript:void(0)" (click)="openFormSignup()">Signin</a>
+        <p class="text-center changeRouteFormPage">Already have an account?
+
+            <a (click)="openFormSignup()">Login</a>
         </p>
     </form>
     }

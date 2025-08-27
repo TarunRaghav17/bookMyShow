@@ -12,12 +12,10 @@ import {
   NgbModalOptions,
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
-import { cities } from '../../../../../db';
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
-import { Router } from '@angular/router';
-import { ApiService } from '../../../services/api.service';
-import { URLConstant } from '../../../apiUrls/url';
+
+import { DomSanitizer } from '@angular/platform-browser';
 export class NgbdModalContent {
   activeModal = inject(NgbActiveModal);
 }
@@ -28,7 +26,7 @@ export class NgbdModalContent {
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild('content', { static: true }) content!: TemplateRef<any>;
+  @ViewChild('cityModal', { static: true }) content!: TemplateRef<any>;
   cityData: any[] = [];
   citiesJson: any = null;
   showCities = false;
@@ -36,7 +34,9 @@ export class HeaderComponent implements OnInit {
   city = false;
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-  constructor(private modalService: NgbModal, public commonService: CommonService, private route: Router, private apiService: ApiService) {
+  constructor(private modalService: NgbModal, public commonService: CommonService,
+    private sanitizer: DomSanitizer
+  ) {
 
     this.selectedCity = this.commonService._selectCity()
   }
@@ -46,12 +46,12 @@ export class HeaderComponent implements OnInit {
     // Open modal Without City Selected 
     this.showProfileheader = this.commonService._profileHeader()
     if (!this.selectedCity) {
-      this.open(this.content)
+      this.openCityModal(this.content)
     }
 
   }
 
-  open(content: TemplateRef<any>) {
+  openCityModal(content: TemplateRef<any>) {
     this.modalService.open(content, {
       modalDialogClass: 'dialog',
       ariaLabelledBy: 'modal-basic-title',
@@ -60,14 +60,21 @@ export class HeaderComponent implements OnInit {
 
   viewAllCities() {
     this.showCities = !this.showCities;
-    this.apiService.get(URLConstant.CITY.ALL_CITY).subscribe((res) => {
-      this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
-      this.citiesJson = this.showCities ? res : null;
-    })
+    console.log(this.showCities)
+    if (this.showCities) {
+      this.commonService.getAllCities().subscribe((res) => {
+        console.log(res)
+
+        this.citiesJson = this.showCities ? res : null;
+      })
+    }
+    this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
+
   }
 
   getAllPopularCity() {
-    this.apiService.get(URLConstant.CITY.POPULAR_CITY).subscribe((res) => {
+    this.commonService.getPopularCities().subscribe((res) => {
+      console.log(res)
       this.cityData = res;
     })
   }
@@ -99,7 +106,14 @@ export class HeaderComponent implements OnInit {
   editProfile() {
 
   }
-
+  // Formating image
+  getImageFromBase64(base64string: string): any {
+    if (base64string) {
+      let imageType = base64string;
+      const fullBase64String = `data:${imageType};base64,${base64string}`;
+      return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
+    }
+  }
 
 
 }

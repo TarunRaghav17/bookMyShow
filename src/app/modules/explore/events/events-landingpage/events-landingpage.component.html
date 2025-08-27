@@ -28,8 +28,8 @@
                                     English
                                 </span>
                             </div>
-                            <div class="d-flex justify-content-between py-4 px-3 rounded-2 comming_soon_bar bg-white align-items-center shadow-sm"
-                                style="background: transparent;">
+                            <div
+                                class="d-flex justify-content-between py-4 px-3 rounded-2 comming_soon_bar bg-white align-items-center shadow-sm">
                                 <h4 class="fs-5 fw-500 m-0">Coming Soon</h4>
                                 <a class="explore_text" [routerLink]="['upcoming-movies']">Explore upcoming movies <i
                                         class="fa fa-angle-right ms-1" aria-hidden="true"></i></a>
@@ -41,8 +41,8 @@
                                 <div class="main_box_crasoule">
                                     <div class="main_filter_card overflow-hidden">
                                         <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start">
-                                            <ng-container *ngFor="let item of dummyMoviesdata; let $index = index"
-                                                class="overflow-hidden w-50">
+                                            @for (item of dummyMoviesdata; track $index) {
+                                            <ng-container class="overflow-hidden w-50">
                                                 <div class="col" style="max-width: 200px;min-width:200px ">
                                                     <div class="card shadow-sm">
                                                         <div class="img_container rounded-4">
@@ -67,6 +67,9 @@
                                                     </div>
                                                 </div>
                                             </ng-container>
+
+                                            }
+
                                         </div>
                                     </div>
 

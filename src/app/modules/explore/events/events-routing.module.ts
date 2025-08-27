@@ -3,9 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { eventsLandingpageComponent } from './events-landingpage/events-landingpage.component';
 
 const routes: Routes = [
-  {
-    path: '', redirectTo: '', pathMatch: 'full'
-  },
   { path: '', component: eventsLandingpageComponent },
 ];
 

@@ -8,9 +8,9 @@ import { CommonService } from '../../../../services/common.service';
   templateUrl: './movies-landingpage.component.html',
   styleUrl: './movies-landingpage.component.scss'
 })
-export class MovieComponent {
+export class MovieLandingPageComponent {
   dummyMoviesdata: any[] = [];
-  // dummyMoviesdatafiltered: any[] = []
+
   originalMovies = movies
 
   constructor(public commonService: CommonService) {

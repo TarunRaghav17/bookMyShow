@@ -7,12 +7,12 @@ import { movies } from '../../../../../../db';
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
 })
-export class HomeComponent {
+export class HomeLandingPageComponent {
   dummyMoviesdata: any[] = [];
   moviesFilteredData: any[] = []
   originalMovies = movies
   pageNo = 0;
-  itemsPerPage = 6;
+  itemsPerCards = 6;
   start = 0
   end = 0
   constructor() {
@@ -21,8 +21,8 @@ export class HomeComponent {
   }
 
   getVisibleMovieCard() {
-    this.start = this.itemsPerPage * this.pageNo;
-    this.end = this.start + this.itemsPerPage
+    this.start = this.itemsPerCards * this.pageNo;
+    this.end = this.start + this.itemsPerCards
     this.moviesFilteredData = this.originalMovies.slice(this.start, this.end);
   }
 

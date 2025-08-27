@@ -12,7 +12,7 @@ export class FilterAccordionComponent {
   filterShowButtons: boolean = false;
 
 
-  toggleAccoridan(): void {
+  toggleAccordion(): void {
     this.filterShowButtons = !this.filterShowButtons
   }
 

@@ -2,12 +2,12 @@ import { Component, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-searcbox',
+  selector: 'app-searchBox',
   standalone: false,
-  templateUrl: './searcbox.component.html',
-  styleUrls: ['./searcbox.component.scss']
+  templateUrl: './searchBox.component.html',
+  styleUrls: ['./searchBox.component.scss']
 })
-export class SearcboxComponent {
+export class SearchBoxComponent {
   currentIndex: number = 0;
   visibleCount: number = 6;
 
@@ -16,22 +16,22 @@ export class SearcboxComponent {
 
   constructor(private modalService: NgbModal) { }
 
-  open(content: TemplateRef<any>) {
+  openModal(content: TemplateRef<any>) {
     this.modalRef = this.modalService.open(content, {
       modalDialogClass: 'searchbox',
       ariaLabelledBy: 'modal-basic-title',
     });
   }
 
-  close() {
+  closeModal() {
     if (this.modalRef) {
       this.modalRef.close();
     }
   }
 
-
+  getvisiblefiltred: any
   getVisibleFilters() {
-    return this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
+    this.getvisiblefiltred = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
   }
 
   next() {

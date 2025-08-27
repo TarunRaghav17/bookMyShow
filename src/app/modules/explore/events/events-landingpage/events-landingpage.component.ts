@@ -10,10 +10,7 @@ import { movies } from '../../../../../../db';
 })
 export class eventsLandingpageComponent {
   dummyMoviesdata: any[] = [];
-  dummyMoviesdatafiltered: any[] = []
   originalMovies = movies
-
-
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
   }

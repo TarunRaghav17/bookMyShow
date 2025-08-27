@@ -3,12 +3,14 @@
         <span class="input-group-text">
             <i class="fa fa-search"></i>
         </span>
-        <span class="form-control border-start-0" id="username" (click)="open(content)" required="">Search for Movies,
+        <span class="form-control border-start-0" id="username" (click)="openModal(searchFilterModal)"
+            required="">Search for
+            Movies,
             Events, Plays, Sports and Activities</span>
     </div>
 </form>
 <!-- Large modal -->
-<ng-template #content let-modal class="search_item_box">
+<ng-template #searchFilterModal let-modal class="search_item_box">
     <header class="py-3 mb-3 ">
         <div class="container-fluid d-flex  justify-content-between align-items-center gap-3 align-items-center">
             <div class="blank_container col-4">
@@ -20,7 +22,7 @@
                 </form>
             </div>
             <div class="close_icon_container col-4">
-                <p class="text-end px-4" (click)=" close()">x</p>
+                <p class="text-end px-4" (click)=" closeModal()">x</p>
             </div>
 
         </div>
@@ -34,7 +36,7 @@
             </div>
             <div class="main_filter_text">
                 <div class="filter_text d-flex gap-3">
-                    @for ( item of getVisibleFilters(); track $index) {
+                    @for ( item of getvisiblefiltred; track $index) {
                     <span>
                         <a>{{ item }}</a>
                     </span>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { URLConstant } from '../../apiUrls/url';
 import { ApiService } from '../../services/api.service';
+import { AuthService } from '../auth-service.service';
 @Component({
   selector: 'app-user-auth',
   standalone: false,
@@ -12,7 +12,7 @@ export class UserAuthComponent implements OnInit {
   openSignupForm: boolean = false;
   showPassword: boolean = false;
 
-  constructor(private service: ApiService) {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit(): void { }
@@ -37,8 +37,7 @@ export class UserAuthComponent implements OnInit {
   onloginSubmit() {
     if (this.userLogin.valid) {
       const data = this.userLogin.value;
-      this.service.post(URLConstant.USER.LOGIN, data).subscribe((res) => {
-        // console.log(res)
+      this.authService.userLogin(data).subscribe((res) => {
         localStorage.setItem('token', res.token);
         this.userLogin.reset();
       });
@@ -48,10 +47,8 @@ export class UserAuthComponent implements OnInit {
 
   onSignupSubmit() {
     if (this.userSignUp.valid) {
-      // console.log(this.userSignUp.value)
       const data = this.userSignUp.value;
-      this.service.post(URLConstant.USER.REGISTER, data).subscribe((res) => {
-        // console.log("Signup Data:", res);
+      this.authService.userSignup(data).subscribe((res) => {
         this.userSignUp.reset();
       })
     }
