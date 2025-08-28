@@ -4,7 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserProfileModule } from './modules/user-proile/user-profile.module';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ListYourShowModule } from './modules/list-your-show/list-your-show.module';
-import { ErrorpageComponent } from './shared/components/errorpage/errorpage.component';
+import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+
 
 const routes: Routes = [
   {
@@ -27,12 +28,12 @@ const routes: Routes = [
       import('./modules/list-your-show/list-your-show.module').then((m) => ListYourShowModule),
   },
   {
-    path: 'movies/:city/:name/:id', component: MoviesDetailsComponent
+    path: 'movies/:city/:id', component: MoviesDetailsComponent
 
   },
   {
     path: '**',
-    component: ErrorpageComponent
+    component: ErrorPageComponent
   }
 ];
 

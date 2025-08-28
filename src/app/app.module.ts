@@ -11,8 +11,9 @@ import { FilterAccordionComponent } from './shared/components/filter-accordion/f
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
 import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
-import { ErrorpageComponent } from './shared/components/errorpage/errorpage.component';
+
 import { SearchBoxComponent } from './shared/components/searchBox/searchBox.component';
+import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { SearchBoxComponent } from './shared/components/searchBox/searchBox.comp
     HeaderComponent,
     FooterComponent,
     UserAuthComponent,
-    ErrorpageComponent,
+    ErrorPageComponent,
     SearchBoxComponent
 
   ],
