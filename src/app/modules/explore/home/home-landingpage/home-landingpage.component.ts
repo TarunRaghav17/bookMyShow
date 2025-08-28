@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { movies } from '../../../../../../db';
+import { AuthService } from '../../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,7 @@ import { movies } from '../../../../../../db';
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
 })
-export class HomeLandingPageComponent {
+export class HomeLandingPageComponent implements OnInit {
   dummyMoviesdata: any[] = [];
   moviesFilteredData: any[] = []
   originalMovies = movies
@@ -15,11 +16,15 @@ export class HomeLandingPageComponent {
   itemsPerCards = 6;
   start = 0
   end = 0
-  constructor() {
+  constructor(private authService: AuthService) {
     this.dummyMoviesdata = movies;
+
     this.getVisibleMovieCard()
   }
-
+  ngOnInit(): void {
+    let userDetails = this.authService.userTokenDataSignal()
+    console.log(userDetails)
+  }
   getVisibleMovieCard() {
     this.start = this.itemsPerCards * this.pageNo;
     this.end = this.start + this.itemsPerCards

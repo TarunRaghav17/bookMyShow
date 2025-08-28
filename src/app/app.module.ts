@@ -26,7 +26,8 @@ import { ErrorPageComponent } from './shared/components/error-page/error-page.co
     SearchBoxComponent
 
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
+  imports: [BrowserModule,
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
   providers: [provideHttpClient(withFetch())],
   bootstrap: [AppComponent],
 })

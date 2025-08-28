@@ -38,7 +38,9 @@ export class UserAuthComponent implements OnInit {
     if (this.userLogin.valid) {
       const data = this.userLogin.value;
       this.authService.userLogin(data).subscribe((res) => {
-        localStorage.setItem('token', res.token);
+        alert(res.message)
+        localStorage.setItem('token', res.content);
+
         this.userLogin.reset();
         this.activeModal.close(UserAuthComponent)
       });
@@ -63,4 +65,8 @@ export class UserAuthComponent implements OnInit {
   openFormSignup() {
     this.openSignupForm = !this.openSignupForm;
   }
+
+
+
+
 }

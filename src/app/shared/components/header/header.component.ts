@@ -15,6 +15,7 @@ import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
 
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from '../../../auth/auth-service.service';
 export class NgbdModalContent {
   activeModal = inject(NgbActiveModal);
 }
@@ -33,7 +34,10 @@ export class HeaderComponent implements OnInit {
   city = false;
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-  constructor(private modalService: NgbModal, public commonService: CommonService,
+  constructor(
+    private modalService: NgbModal,
+    public commonService: CommonService,
+    private authService: AuthService,
     private sanitizer: DomSanitizer
   ) {
 
@@ -108,6 +112,10 @@ export class HeaderComponent implements OnInit {
       const fullBase64String = `data:${imageType};base64,${base64string}`;
       return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
     }
+  }
+
+  logout() {
+    this.authService.logout()
   }
 
 

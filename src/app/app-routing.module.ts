@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+import { AuthGuard } from './auth/gaurds/auth.gaurd';
 
 
 const routes: Routes = [
@@ -21,8 +22,12 @@ const routes: Routes = [
       import('./modules/user-proile/user-profile.module').then((m) => m.UserProfileModule),
   },
   {
+    path: 'list-your-show',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./modules/list-your-show/list-your-show.module').then((m) => m.ListYourShowModule)
+  },
+  {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
-
   },
   {
     path: '**',
