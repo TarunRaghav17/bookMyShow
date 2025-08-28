@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../auth-service.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-user-auth',
   standalone: false,
@@ -12,7 +13,7 @@ export class UserAuthComponent implements OnInit {
   openSignupForm: boolean = false;
   showPassword: boolean = false;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private activeModal: NgbActiveModal) {
   }
 
   ngOnInit(): void { }
@@ -29,7 +30,7 @@ export class UserAuthComponent implements OnInit {
       Validators.required,
       Validators.pattern(/^[0-9]{10}$/)
     ]),
-    roleName: new FormControl(null, Validators.required),
+    roleName: new FormControl("USER", Validators.required),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
@@ -40,6 +41,7 @@ export class UserAuthComponent implements OnInit {
       this.authService.userLogin(data).subscribe((res) => {
         localStorage.setItem('token', res.token);
         this.userLogin.reset();
+        this.activeModal.close(UserAuthComponent)
       });
     }
   }
@@ -50,6 +52,7 @@ export class UserAuthComponent implements OnInit {
       const data = this.userSignUp.value;
       this.authService.userSignup(data).subscribe((res) => {
         this.userSignUp.reset();
+        this.activeModal.close(UserAuthComponent)
       })
     }
   }

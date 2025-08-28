@@ -60,10 +60,8 @@ export class HeaderComponent implements OnInit {
 
   viewAllCities() {
     this.showCities = !this.showCities;
-    console.log(this.showCities)
     if (this.showCities) {
       this.commonService.getAllCities().subscribe((res) => {
-        console.log(res)
 
         this.citiesJson = this.showCities ? res : null;
       })
@@ -87,9 +85,7 @@ export class HeaderComponent implements OnInit {
     };
     const modalRef = this.modalService.open(UserAuthComponent, modalOptions);
     modalRef.result.then((result) => {
-      console.log('Modal closed with result:', result);
     }, (reason) => {
-      console.log('Modal dismissed with reason:', reason);
     });
   }
 
