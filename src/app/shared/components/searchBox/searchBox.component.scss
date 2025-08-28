@@ -11,10 +11,7 @@
   color: rgb(170, 170, 170);
   font-size: small;
 }
-.fa-close {
-  font-size: large;
-  font-weight: 400;
-}
+
 .close_icon_container p {
   font-weight: 400;
   font-size: 25px;
@@ -22,13 +19,8 @@
 }
 
 input {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  flex: 1 1 auto;
   font-size: 14px;
   font-weight: 400;
-  line-height: 20px;
   letter-spacing: 0.2px;
   color: rgb(26, 26, 26);
   border: 1px solid rgb(238, 238, 238);

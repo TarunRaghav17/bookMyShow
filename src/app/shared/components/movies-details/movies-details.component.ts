@@ -1,5 +1,4 @@
-import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, HostListener, TemplateRef } from '@angular/core';
 import { Location } from '@angular/common';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({

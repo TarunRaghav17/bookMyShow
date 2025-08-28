@@ -1,6 +1,5 @@
 import {
   Component,
-  computed,
   inject,
   OnInit,
   TemplateRef,
@@ -84,8 +83,8 @@ export class HeaderComponent implements OnInit {
       centered: true,
     };
     const modalRef = this.modalService.open(UserAuthComponent, modalOptions);
-    modalRef.result.then((result) => {
-    }, (reason) => {
+    modalRef.result.then(() => {
+    }, () => {
     });
   }
 

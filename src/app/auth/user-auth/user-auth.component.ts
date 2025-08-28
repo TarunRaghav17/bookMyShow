@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
 import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
@@ -50,7 +49,7 @@ export class UserAuthComponent implements OnInit {
   onSignupSubmit() {
     if (this.userSignUp.valid) {
       const data = this.userSignUp.value;
-      this.authService.userSignup(data).subscribe((res) => {
+      this.authService.userSignup(data).subscribe(() => {
         this.userSignUp.reset();
         this.activeModal.close(UserAuthComponent)
       })
