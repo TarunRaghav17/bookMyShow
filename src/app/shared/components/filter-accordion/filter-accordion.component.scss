@@ -37,6 +37,7 @@
 }
 .text_changColor {
   color: rgb(220, 53, 88);
+
 }
 .filter_button_box span {
   background-color: white;
@@ -45,4 +46,9 @@
   color: rgb(220, 53, 88);
   padding: 5px;
   cursor: pointer;
+}
+.selectedText {
+  background-color: rgb(235, 78, 98) !important;
+  color: white !important;
+  border-color:rgb(235, 78, 98) !important;
 }
