@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeModule } from './modules/home/home.module';
+
+import { UserProfileModule } from './modules/user-proile/user-profile.module';
+import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
+import { ListYourShowModule } from './modules/list-your-show/list-your-show.module';
+import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+
 
 const routes: Routes = [
   {
@@ -10,13 +15,30 @@ const routes: Routes = [
   },
   {
     path: 'explore',
-    loadChildren: () =>
-      import('./modules/home/home.module').then((m) => HomeModule),
+    loadChildren: () => import('./modules/explore/explore.module').then((m) => m.ExploreModule)
   },
+  {
+    path: 'my-profile',
+    loadChildren: () =>
+      import('./modules/user-proile/user-profile.module').then((m) => UserProfileModule),
+  },
+  {
+    path: 'list-your-show',
+    loadChildren: () =>
+      import('./modules/list-your-show/list-your-show.module').then((m) => ListYourShowModule),
+  },
+  {
+    path: 'movies/:city/:id', component: MoviesDetailsComponent
+
+  },
+  {
+    path: '**',
+    component: ErrorPageComponent
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

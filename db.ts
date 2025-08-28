@@ -7,12 +7,15 @@ export const movies = [
     Runtime: '118 min',
     Genre: 'Animation, Adventure, Drama, Family, Musical',
     Director: 'Jon Favreau',
-    Writer:
-      'Jeff Nathanson (screenplay by), Brenda Chapman (story), Irene Mecchi (characters), Jonathan Roberts (characters), Linda Woolverton (characters)',
+    Writer: 'Jeff Nathanson (screenplay by), Brenda Chapman (story), Irene Mecchi (characters), Jonathan Roberts (characters), Linda Woolverton (characters)',
     Actors: 'Chiwetel Ejiofor, John Oliver, James Earl Jones, John Kani',
     Plot: 'After the murder of his father, a young lion prince flees his kingdom only to learn the true meaning of responsibility and bravery.',
-    Language: 'English',
-    Country: 'USA',
+    Language: ['English'],
+    City: [
+      { CityName: 'Delhi' },
+      { CityName: 'Faridabad' },
+      { CityName: 'Kroalbag' }
+    ],
     Awards: 'N/A',
     Poster:
       'https://m.media-amazon.com/images/M/MV5BMjIwMjE1Nzc4NV5BMl5BanBnXkFtZTgwNDg4OTA1NzM@._V1_SX300.jpg',
@@ -480,3 +483,5 @@ export const movies = [
       'https://m.media-amazon.com/images/M/MV5BMTU2NjA1ODgzMF5BMl5BanBnXkFtZTgwMTM2MTI4MjE@._V1_SX300.jpg',
   },
 ];
+
+

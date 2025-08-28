@@ -1,0 +1,17 @@
+#togglePassword {
+  position: absolute;
+  right: 15px;
+  top: 38px;
+  cursor: pointer;
+  color: #6c757d;
+  transition: 0.3s;
+}
+
+#togglePassword:hover {
+  color: #000;
+}
+.changeRouteFormPage a {
+  color: rgb(16, 98, 240);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
