@@ -16,7 +16,6 @@
   font-size: 14px;
   font-weight: normal;
   line-height: 1.43;
-  background-color: transparent;
 }
 .filter_button_box {
   padding: 10px;
@@ -25,23 +24,25 @@
   gap: 3px;
   background-color: white;
 }
-.toggleFilter button {
-  transition: 3s;
-  word-break: break-word;
-  color: rgb(220, 53, 75);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.43;
-}
+// .toggleFilter button {
+//   transition: 3s;
+//   word-break: break-word;
+//   color: rgb(220, 53, 75);
+//   font-size: 14px;
+//   font-weight: 400;
+//   line-height: 1.43;
+// }
 .tranform_icon {
   transform: rotate(180deg);
 }
 .text_changColor {
   color: rgb(220, 53, 88);
 }
-.filter_button_box button {
+.filter_button_box span {
   background-color: white;
   border: 1px solid rgb(229, 229, 229);
   margin: 2px;
+  color: rgb(220, 53, 88);
   padding: 5px;
+  cursor: pointer;
 }

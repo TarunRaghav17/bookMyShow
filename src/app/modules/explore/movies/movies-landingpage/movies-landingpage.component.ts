@@ -10,11 +10,16 @@ import { CommonService } from '../../../../services/common.service';
 })
 export class MovieLandingPageComponent {
   dummyMoviesdata: any[] = [];
-
-  originalMovies = movies
-
+  selectedFilters: any[] = []
+  topFiltersArray: any[] = ['Hindi', 'English', 'Gujrati', 'Marathi', 'Malayalam', 'Punjabi', 'Telugu'];
+  originalMovies = movies;
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
   }
+
+  handleEventFilter(filter: any) {
+    this.selectedFilters.push(filter)
+  }
+
 
 }

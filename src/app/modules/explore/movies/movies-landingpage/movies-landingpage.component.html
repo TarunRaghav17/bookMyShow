@@ -51,19 +51,21 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion></app-filter-accordion>
+                                <app-filter-accordion (filterEvent)="handleEventFilter($event)"></app-filter-accordion>
                             </div>
                         </div>
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
-                            <div class="d-flex gap-3 language_text py-2 flex-wrap">
-                                <span>
-                                    Hindi
+                            <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                                @for (item of topFiltersArray; track $index) {
+                                <span [ngClass]="{selectedText: selectedFilters.includes(item)}">
+                                    {{item}}
                                 </span>
-                                <span>
-                                    English
-                                </span>
+                                }
+
+
+
                             </div>
                             <div
                                 class="d-flex justify-content-between py-4 px-3 rounded-2 comming_soon_bar bg-white align-items-center shadow-sm">
