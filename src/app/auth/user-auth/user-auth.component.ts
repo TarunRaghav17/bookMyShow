@@ -38,9 +38,7 @@ export class UserAuthComponent implements OnInit {
     if (this.userLogin.valid) {
       const data = this.userLogin.value;
       this.authService.userLogin(data).subscribe((res) => {
-        alert(res.message)
         localStorage.setItem('token', res.content);
-
         this.userLogin.reset();
         this.activeModal.close(UserAuthComponent)
       });

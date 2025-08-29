@@ -14,6 +14,7 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
 
 import { SearchBoxComponent } from './shared/components/searchBox/searchBox.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ErrorPageComponent } from './shared/components/error-page/error-page.co
     FooterComponent,
     UserAuthComponent,
     ErrorPageComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+    TheatreListComponent
 
   ],
   imports: [BrowserModule,

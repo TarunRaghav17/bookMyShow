@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
-import { AuthGuard } from './auth/gaurds/auth.gaurd';
+import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 
 
 const routes: Routes = [
@@ -28,6 +28,10 @@ const routes: Routes = [
   },
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
+
+  },
+  {
+    path: ':city/cinemas', component: TheatreListComponent
   },
   {
     path: '**',

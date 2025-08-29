@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   selector: 'app-filter-accordion',
@@ -9,6 +11,8 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './filter-accordion.component.scss',
 })
 export class FilterAccordionComponent {
+
+  constructor(public router: Router, public commonService: CommonService) { }
 
   @Output() filterEvent = new EventEmitter<string>()
   filters = [
@@ -40,6 +44,16 @@ export class FilterAccordionComponent {
   applyFilter(filter: string) {
     this.filterEvent.emit(filter)
 
+  }
+
+
+
+
+  handleNavigate() {
+    // let url = this.router.url.split('/')
+    let newUrl = `/${this.commonService._selectCity()}/cinemas`
+    this.router.navigate([newUrl])
+    console.log(newUrl)
   }
 }
 
