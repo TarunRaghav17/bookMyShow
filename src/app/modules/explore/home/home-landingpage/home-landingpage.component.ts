@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { movies } from '../../../../../../db';
-import { AuthService } from '../../../../auth/auth-service.service';
+
 
 @Component({
   selector: 'app-home',
@@ -16,14 +16,13 @@ export class HomeLandingPageComponent implements OnInit {
   itemsPerCards = 6;
   start = 0
   end = 0
-  constructor(private authService: AuthService) {
+  constructor() {
     this.dummyMoviesdata = movies;
 
     this.getVisibleMovieCard()
   }
   ngOnInit(): void {
-    let userDetails = this.authService.userTokenDataSignal()
-    console.log(userDetails)
+
   }
   getVisibleMovieCard() {
     this.start = this.itemsPerCards * this.pageNo;
