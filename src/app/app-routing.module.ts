@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'list-your-show',
-    canActivate: [AuthGuard],
+
     loadChildren: () => import('./modules/list-your-show/list-your-show.module').then((m) => m.ListYourShowModule)
   },
   {
