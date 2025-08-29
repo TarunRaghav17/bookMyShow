@@ -73,7 +73,7 @@ export class HeaderComponent implements OnInit {
 
   getAllPopularCity() {
     this.commonService.getPopularCities().subscribe((res) => {
-      console.log(res)
+
       this.cityData = res;
     })
   }

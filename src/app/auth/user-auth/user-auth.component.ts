@@ -33,7 +33,6 @@ export class UserAuthComponent implements OnInit {
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
-
   onloginSubmit() {
     if (this.userLogin.valid) {
       const data = this.userLogin.value;
@@ -44,7 +43,6 @@ export class UserAuthComponent implements OnInit {
       });
     }
   }
-
 
   onSignupSubmit() {
     if (this.userSignUp.valid) {

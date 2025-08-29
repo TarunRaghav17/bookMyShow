@@ -10,11 +10,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterAccordionComponent } from './shared/components/filter-accordion/filter-accordion.component';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
-import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 
 import { SearchBoxComponent } from './shared/components/searchBox/searchBox.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
+import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 
 
 @NgModule({
@@ -30,7 +31,11 @@ import { TheatreListComponent } from './shared/components/theatre-list/theatre-l
   ],
   imports: [BrowserModule,
     AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
-  providers: [provideHttpClient(withFetch())],
+  providers: [provideHttpClient(withFetch()), {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

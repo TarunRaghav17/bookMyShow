@@ -9,7 +9,6 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   { path: 'delhi', component: HomeLandingPageComponent },
-  { path: 'home/:city', component: HomeLandingPageComponent },
 ];
 
 @NgModule({

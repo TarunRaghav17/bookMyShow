@@ -14,11 +14,13 @@ export class CommonService {
   baseUrl = environment.baseUrl
 
   getAllCities(): Observable<any> {
-    return this.http.get(`http://172.31.252.101:8080/bookmyshow/city/all`)
+    return this.http.get(`${this.baseUrl}/city/all`)
   }
   getPopularCities(): Observable<any> {
-    return this.http.get(`http://172.31.252.101:8080/bookmyshow/city/popular`)
+    return this.http.get(`${this.baseUrl}/city/popular`)
   }
-
+  getAllVenues(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/venue/getAll`)
+  }
 
 }

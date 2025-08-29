@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { movies } from '../../../../../../db';
 
 
@@ -8,7 +8,7 @@ import { movies } from '../../../../../../db';
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
 })
-export class HomeLandingPageComponent implements OnInit {
+export class HomeLandingPageComponent {
   dummyMoviesdata: any[] = [];
   moviesFilteredData: any[] = []
   originalMovies = movies
@@ -21,28 +21,21 @@ export class HomeLandingPageComponent implements OnInit {
 
     this.getVisibleMovieCard()
   }
-  ngOnInit(): void {
-
-  }
   getVisibleMovieCard() {
     this.start = this.itemsPerCards * this.pageNo;
     this.end = this.start + this.itemsPerCards
     this.moviesFilteredData = this.originalMovies.slice(this.start, this.end);
   }
-
   next() {
     if (this.end < this.originalMovies.length) {
       this.pageNo++;
       this.getVisibleMovieCard();
     }
   }
-
   prev() {
     if (this.start > 0) {
       this.pageNo--;
       this.getVisibleMovieCard();
     }
   }
-
-
 }

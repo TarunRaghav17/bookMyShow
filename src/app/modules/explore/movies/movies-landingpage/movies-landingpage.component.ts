@@ -26,6 +26,4 @@ export class MovieLandingPageComponent {
     this.selectedFilters.push(filter)
   }
 
-
-
 }
