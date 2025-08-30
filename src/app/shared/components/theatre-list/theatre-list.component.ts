@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
+import { cinemas } from '../../../../../db';
 
 
 @Component({
@@ -8,26 +9,17 @@ import { CommonService } from '../../../services/common.service';
   templateUrl: './theatre-list.component.html',
   styleUrl: './theatre-list.component.scss'
 })
-export class TheatreListComponent implements OnInit {
-
-  ngOnInit(): void {
-    this.getAllVenuesData()
-  }
-
-  // selectedCity: any
+export class TheatreListComponent {
   cinemaData: any[] = []
-
+  selectedCategory: any;
+  browseBy: string;
+  selecetedCity: any;
   constructor(public commonService: CommonService) {
+    this.selectedCategory = this.commonService._selectedCategory();
+    this.browseBy = this.commonService._selectedCategory() === 'Movies' ? 'Cinemas in' : 'Venues For';
+    this.selecetedCity = this.commonService._selectCity();
+    this.cinemaData = cinemas
   }
-  // this.selectedCity = this.commonService._selectCity()
-
-  getAllVenuesData() {
-    this.commonService.getAllVenues().subscribe((res) => {
-      this.cinemaData = res
-    })
-  }
-
-
 }
 
 

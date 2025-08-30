@@ -12,7 +12,12 @@ import { CommonService } from '../../../services/common.service';
 })
 export class FilterAccordionComponent {
 
-  constructor(public router: Router, public commonService: CommonService) { }
+  selectedCategory: any;
+  browseBy: any
+  constructor(public router: Router, public commonService: CommonService) {
+    this.selectedCategory = this.commonService._selectedCategory();
+    this.browseBy = this.commonService._selectedCategory() === 'Movies' ? 'Cinemas' : 'Venues';
+  }
 
   @Output() filterEvent = new EventEmitter<string>()
   filters = [
@@ -45,5 +50,10 @@ export class FilterAccordionComponent {
     let newUrl = `/${this.commonService._selectCity()}/cinemas`
     this.router.navigate([newUrl])
   }
+  
+
+
+  
 }
+
 

@@ -3,17 +3,17 @@ import { CommonService } from '../../../../services/common.service';
 import { movies } from '../../../../../../db';
 
 @Component({
-  selector: 'app-events-landingpage',
+  selector: 'app-plays-landing-page',
   standalone: false,
-  templateUrl: './events-landingpage.component.html',
-  styleUrl: './events-landingpage.component.scss'
+  templateUrl: './plays-landing-page.component.html',
+  styleUrl: './plays-landing-page.component.scss'
 })
-export class EventsLandingPageComponent {
+export class PlaysLandingPageComponent {
   dummyMoviesdata: any[] = [];
   originalMovies = movies
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
-    this.commonService._selectedCategory.set('Events');
+    this.commonService._selectedCategory.set('Plays');
   }
 
 }

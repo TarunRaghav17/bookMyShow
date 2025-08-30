@@ -23,10 +23,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.preview = reader.result;
       this.base64String = (reader.result as string).split(',')[1];
 
-
     }
   }
-
   ngOnInit(): void {
     this.service._profileHeader.set(true)
   }

@@ -63,7 +63,6 @@ export class HeaderComponent implements OnInit {
     this.showCities = !this.showCities;
     if (this.showCities) {
       this.commonService.getAllCities().subscribe((res) => {
-
         this.citiesJson = this.showCities ? res : null;
       })
     }

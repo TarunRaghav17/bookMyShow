@@ -10,6 +10,7 @@ export class CommonService {
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
+  _selectedCategory = signal<any>('');
 
   baseUrl = environment.baseUrl
 
@@ -19,8 +20,8 @@ export class CommonService {
   getPopularCities(): Observable<any> {
     return this.http.get(`${this.baseUrl}/city/popular`)
   }
-  getAllVenues(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/venue/getAll`)
-  }
+  // getAllVenues(): Observable<any> {
+  //   return this.http.get(`${this.baseUrl}/venue/getAll`)
+  // }
 
 }

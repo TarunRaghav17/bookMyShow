@@ -20,6 +20,7 @@ export class MovieLandingPageComponent {
   constructor(public commonService: CommonService, public router: Router) {
     this.dummyMoviesdata = movies;
     this.selectedCity = this.commonService._selectCity()
+    this.commonService._selectedCategory.set('Movies');
   }
 
   handleEventFilter(filter: any) {
