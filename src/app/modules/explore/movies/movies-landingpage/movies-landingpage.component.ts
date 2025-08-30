@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { movies } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 
@@ -8,7 +8,7 @@ import { CommonService } from '../../../../services/common.service';
   templateUrl: './movies-landingpage.component.html',
   styleUrl: './movies-landingpage.component.scss'
 })
-export class MovieLandingPageComponent {
+export class MovieLandingPageComponent implements OnInit {
   dummyMoviesdata: any[] = [];
   filters: any[] = [
     {
@@ -49,83 +49,64 @@ export class MovieLandingPageComponent {
       type: "Language",
       data: []
     },
-    // {
-    //    type: "Genres",
-    //   data: []
-    // },
-    //  {
-    //   type: "Formats",
-    //   data: []
-    // }
+    {
+       type: "Genres",
+      data: []
+    },
+     {
+      type: "Formats",
+      data: []
+    }
   ]
   topFiltersArray: any[] = [
-    { text: "Hindi", index: 0, },
-    { text: "English", index: 1 },
-    { text: "Gujrati", index: 2 },
-    { text: "Marathi", index: 3 },
-    { text: "Malayalam", index: 4 },
-    { text: "Punjabi", index: 5 },
-    { text: "Telugu", index: 6 }
+    
   ]
   originalMovies = movies;
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
   }
 
-  handleEventFilter(filter: any) {
-  //   console.log(filter)
-  // this.selectedFilters.map((item:any)=>{
-  //   if(item.type==filter.type){
-  //     item.data.push(filter.filterName )
-  //   }
-
-  // })
 
 
-  // this.selectedFilters.sort((a,b)=>
-  //   a.index-b.index
-  // )
+ngOnInit():void{
+ this.topFiltersArray=this.filters.filter((item:any)=> {
+    if(item.type=='Language') return item.data.filter((i:any)=>i)
+    } )
+  
+  
+}
 
-
-  // this.topFiltersArray.push(filter.filterName)
-  // this.topFiltersArray.sort((a,b)=>
-  //   a.index-b.index
-  // )
-
-  // console.log(this.topFiltersArray)
-
-
-  // }
-
-
-
-// make selected filter appear background red
+handleEventFilter(filter: any) {
+  // make selected filter appear background red
   this.filters.filter((item:any)=>{
     if(item.type== filter.type){
       item.data.filter((i:any)=>{
         if(i.text==filter.filterName.text){
           i.selected=!i.selected
         }
-
+        
       })
     }
     
   }
 )
-
-
-let filterType=this.selectedFilters.filter((item:any)=>{
+// push selected filter in selectedFiltersArray
+let filterType:any[]=this.selectedFilters.filter((item:any)=>
   item.type==filter.type
-})
-// if(filterType){
-//   filterType.data.push(filter.filterName)
-
-// }
-console.log(filterType)
-
-
-this.topFiltersArray.push(filter.filterName)
-console.log(this.filters)
+)
+    if(filterType){
+      let alreayExist=filterType[0].data.filter((i:any)=>i.text== filter.filterName.text)
+      if(alreayExist.length==0){
+        filterType[0].data.push(filter.filterName)
+        return filterType[0].data.sort((a:any,b:any)=>a.index-b.index)
+      }
+      else{
+        filterType[0].data=filterType[0].data.filter((i:any)=>i.text!=filter.filterName.text)
+        
+      }
+      
+    }
+    
   }
   
     

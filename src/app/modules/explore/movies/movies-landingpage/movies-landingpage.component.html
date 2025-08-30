@@ -59,10 +59,25 @@
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
                             <div class="d-flex gap-2 language_text py-2 flex-wrap">
-                                @for (item of topFiltersArray; track $index) {
-                                <span [ngClass]="{selectedText: item.selected}">
-                                    {{item.text}}
-                                </span>
+                                @for (item of selectedFilters; track $index) {
+                                    @for(i of item.data;track $index){
+
+
+                                    <!-- @if(!item.selected){ -->
+                                        
+                                        <span [ngClass]="{selectedText: i.selected}">
+                                            {{i.text}}
+                                        </span>
+                                    }
+                                    <!-- } -->
+                                }
+                                 @for (item of topFiltersArray[0].data; track $index) {
+                                    @if(!item.selected){
+                                        
+                                        <span [ngClass]="{selectedText: item.selected}">
+                                            {{item.text}}
+                                        </span>
+                                    }
                                 }
 
 

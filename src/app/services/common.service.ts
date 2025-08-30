@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 export class CommonService {
   constructor(private http: HttpClient) { }
   city = sessionStorage.getItem("selectedCity");
-  _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
+  _selectCity = signal<any>(this.city ? JSON.parse(this.city) : 'NOida');
   _profileHeader = signal<any>(false);
 
   baseUrl = environment.baseUrl
