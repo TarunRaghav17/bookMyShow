@@ -23,7 +23,8 @@ import { ErrorPageComponent } from './shared/components/error-page/error-page.co
     FooterComponent,
     UserAuthComponent,
     ErrorPageComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+   
 
   ],
   imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
