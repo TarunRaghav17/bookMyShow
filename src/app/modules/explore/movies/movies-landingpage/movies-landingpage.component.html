@@ -3,10 +3,8 @@
 <carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000" indicators="false"
     [isAnimated]="true">
     <div class="carousel-inner">
-
         <slide class="carousel-item active">
             <div class="carousel-image-container">
-
                 <img class="carousel-image left" src="assets/images/movies_carousel_img1.avif" alt="Image 2">
                 <img class="carousel-image center" src="assets/images/movies_carousel_img2.avif" alt="Image 1">
                 <img class="carousel-image right" src="assets/images/movies_carousel_img1.avif" alt="Image 3">
@@ -19,8 +17,6 @@
                 <img class="carousel-image right" src="assets/images/movies_carousel_img2.avif" alt="Image 3">
             </div>
         </slide>
-
-
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -39,8 +35,8 @@
     <div class="row g-0">
         <div class="main_container_box d-flex justify-content-center ">
             <div class="col-8">
-                <div class="top_heading_movies  d-flex justify-content-between">
-                    <div class="col-3">
+                <div class="top_heading_movies d-flex justify-content-between">
+                    <div class="col-3 px-2">
                         <h4>Filters</h4>
                     </div>
                     <div class="col-9">
@@ -53,7 +49,9 @@
                             <div class="app_filter_box ">
                                 <app-filter-accordion (filterEvent)="handleEventFilter($event)"></app-filter-accordion>
                             </div>
+
                         </div>
+
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
@@ -63,9 +61,6 @@
                                     {{item}}
                                 </span>
                                 }
-
-
-
                             </div>
                             <div
                                 class="d-flex justify-content-between py-4 px-3 rounded-2 comming_soon_bar bg-white align-items-center shadow-sm">
@@ -84,7 +79,7 @@
                                                 <div class="col card_container">
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-');}/${item.imdbID}`]">
+                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${item.imdbID}`]">
                                                             <img [src]="item.Poster" [alt]="item.Poster">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">

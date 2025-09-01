@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
     const user = this.authService.userDetailsSignal();
 
     if (!user) {
-      this.router.navigate(['/explore/home/delhi']);
+      this.router.navigate(['/']);
       return false;
     }
     return true;

@@ -5,13 +5,13 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class MovieServiceService {
+export class MovieService {
 
-  constructor(private http:HttpClient) {}
-  
+  constructor(private http: HttpClient) { }
+
   base_url = 'http://172.31.252.101:8080/bookmyshow'
 
-  getAllMovies():Observable<any>{
+  getAllMovies(): Observable<any> {
     return this.http.get(`${this.base_url}`)
   }
 }

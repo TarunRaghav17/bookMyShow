@@ -13,7 +13,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
-
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from '../../../auth/auth-service.service';
 export class NgbdModalContent {

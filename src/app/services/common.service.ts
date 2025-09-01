@@ -11,15 +11,18 @@ export class CommonService {
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
   searchSubject = new Subject<string>();
+  _selectedCategory = signal<any>('');
 
   baseUrl = environment.baseUrl
 
   getAllCities(): Observable<any> {
-    return this.http.get(`http://172.31.252.101:8080/bookmyshow/city/all`)
+    return this.http.get(`${this.baseUrl}/city/all`)
   }
   getPopularCities(): Observable<any> {
-    return this.http.get(`http://172.31.252.101:8080/bookmyshow/city/popular`)
+    return this.http.get(`${this.baseUrl}/city/popular`)
   }
-
+  // getAllVenues(): Observable<any> {
+  //   return this.http.get(`${this.baseUrl}/venue/getAll`)
+  // }
 
 }

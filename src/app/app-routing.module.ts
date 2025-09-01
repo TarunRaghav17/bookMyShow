@@ -3,9 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
-import { AuthGuard } from './auth/gaurds/auth.gaurd';
+import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets.component';
 import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout.component';
+import { AuthGuard } from './auth/gaurds/auth.guard';
 
 
 const routes: Routes = [
@@ -26,11 +27,15 @@ const routes: Routes = [
   },
   {
     path: 'list-your-show',
-    canActivate: [AuthGuard],
+
     loadChildren: () => import('./modules/list-your-show/list-your-show.module').then((m) => m.ListYourShowModule)
   },
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
+
+  },
+  {
+    path: ':city/cinemas', component: TheatreListComponent
   },
   {
     path: 'movies/:city/:name/buytickets/:id', component: BuyTicketsComponent

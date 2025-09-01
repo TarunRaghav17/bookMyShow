@@ -7,7 +7,7 @@
             <div class="col-8 ">
                 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-between">
                     <div class="col-3 mb-2 mb-0 d-flex">
-                        <a class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <a [routerLink]="['/']" class="d-inline-flex link-body-emphasis text-decoration-none">
                             <img src="assets/images/logo.png" alt="" class="logo">
                         </a>
                         <div class="d-flex align-items-center">
@@ -61,11 +61,10 @@
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
                             <a [routerLink]="['explore/movies']">Movies</a>
-                            <a>Stream</a>
                             <a [routerLink]="['explore/events']">Events</a>
-                            <a>Plays</a>
-                            <a>Sports</a>
-                            <a>Activities</a>
+                            <a [routerLink]="['explore/plays']">Plays</a>
+                            <a [routerLink]="['explore/sports']">Sports</a>
+                            <a [routerLink]="['explore/activities']">Activities</a>
                             @if (authService.userDetailsSignal()?.role =='ADMIN') {
                             <a [routerLink]="['admin-dashboard']">Users</a>
                             }

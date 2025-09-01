@@ -485,3 +485,49 @@ export const movies = [
 ];
 
 
+export const cinemas = [
+
+  {
+    title: "PVR: Elante, Chandigarh",
+    location: "Chandigarh, India"
+  },
+  {
+    title: "PVR: Inox, Chandigarh",
+    location: "Chandigarh, India"
+  },
+  {
+    title: "PVR: City Centre, Chandigarh",
+    location: "Chandigarh, India"
+  },
+  {
+    title: "PVR: Drive-in, Ahmedabad",
+    location: "Ahmedabad, India"
+  },
+  {
+    title: "INOX: Fun Republic, Mumbai",
+    location: "Mumbai, India"
+  },
+  {
+    title: "PVR: Mall of India, Noida",
+    location: "Noida, India"
+  },
+  {
+    title: "INOX: Cyberhub, Gurgaon",
+    location: "Gurgaon, India"
+  },
+  {
+    title: "PVR: Saket, Delhi",
+    location: "Delhi, India"
+  },
+  {
+    title: "INOX: Lower Parel, Mumbai",
+    location: "Mumbai, India"
+  },
+  {
+    title: "PVR: Phoenix Marketcity, Pune",
+    location: "Pune, India"
+  }
+]
+
+
+

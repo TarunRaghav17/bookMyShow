@@ -6,9 +6,8 @@
   cursor: pointer;
   white-space: nowrap;
   border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 12px;
-  height: 30px;
+  padding: 1px 12px 0px;
+  height: 32px;
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(204, 204, 204);
   opacity: 1;
@@ -16,7 +15,6 @@
 }
 .comming_soon_bar {
   background: transparent;
-  border: 0;
   font-size: 100%;
   font-weight: 400;
   vertical-align: baseline;
@@ -35,14 +33,10 @@
   max-height: 250px;
 }
 .app_filter_box {
-  margin: 10px;
-  padding: 0px 35px 0px 0px;
+  margin: 9px;
+  padding-right: 35px;
 }
 .card_container {
   max-width: 200px;
   min-width: 200px;
-}
-.selectedText {
-  background-color: red;
-  color: white;
 }

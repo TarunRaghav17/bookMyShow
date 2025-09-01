@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { movies } from '../../../../../../db';
+import { CommonService } from '../../../../services/common.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upcomming-movies',
@@ -7,5 +10,20 @@ import { Component } from '@angular/core';
   styleUrl: './upcomming-movies.component.scss'
 })
 export class UpcommingMoviesComponent {
+    dummyMoviesdata: any[] = [];
+    selectedFilters: any[] = []
+    selectedCity: any = null
+    topFiltersArray: any[] = ['Hindi', 'English', 'Gujrati', 'Marathi', 'Malayalam', 'Punjabi', 'Telugu'];
+    originalMovies = movies;
+  
+    constructor(public commonService: CommonService, public router: Router) {
+      this.dummyMoviesdata = movies;
+      this.selectedCity = this.commonService._selectCity()
+      this.commonService._selectedCategory.set('Movies');
+    }
+  
+    handleEventFilter(filter: any) {
+      this.selectedFilters.push(filter)
+    }
 
 }
