@@ -22,7 +22,8 @@ import { ErrorPageComponent } from './shared/components/error-page/error-page.co
     HeaderComponent,
     FooterComponent,
     ErrorPageComponent,
-    SearchBoxComponent
+    SearchBoxComponent,
+
 
   ],
   imports: [BrowserModule,

@@ -1,0 +1,215 @@
+<div class="container-fluid px-5 py-3 bg-white">
+
+  <!-- Movie Title -->
+  <div class=" bg-white  border-bottom py-3">
+    <h4 class="fs-1">Coolie - (Tamil)</h4>
+    <span class="text-muted small border rounded-pill px-2">Movie runtime: 2h 49m</span>
+    <span class="text-muted small border rounded-pill px-2 ms-2">A</span>
+    <span class="text-muted small bg-light text-dark  rounded-pill px-2 border ms-2">Action</span>
+    <span class="text-muted small bg-light text-dark  rounded-pill px-2 border ms-2">Thriller</span>
+  </div>
+
+
+  <div class="d-flex align-items-center justify-content-between mb-3 border-bottom  bg-white" style="height:80px">
+    <!-- Date Selector -->
+    <div class="d-flex align-items-center gap-1  " style="font-size: 12px;">
+      <div class="text-center px-3 py-1  rounded  fw-bold text-light "
+        style="height: 72px;width:60px;background-color:rgb(235, 78, 98);border-color: rgb(235, 78, 98);">
+        <div>TUE</div>
+        <div style="font-weight: bold; font-size:18px ;">26</div>
+        <div>AUG</div>
+      </div>
+      <div class="text-center px-3 py-1  rounded  fw-bold text-muted " style="height: 72px; width:60px;">
+        <div>TUE</div>
+        <div class="text-dark" style="font-weight: bold; font-size:18px ;">26</div>
+        <div>AUG</div>
+      </div>
+      <div class="text-center px-3 py-1  rounded  fw-bold text-muted " style="height: 72px; width:60px;">
+        <div>TUE</div>
+        <div class="text-dark" style="font-weight: bold; font-size:18px ;">26</div>
+        <div>AUG</div>
+      </div>
+
+
+      <!-- repeat more dates -->
+    </div>
+
+    <!-- Filters -->
+    <div class="d-flex   h-100">
+
+      <div class="dropdown  border-start ">
+        <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
+          data-bs-toggle="dropdown">Tamil - 2D</button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Tamil - 2D</a></li>
+          <li><a class="dropdown-item" href="#">Tamil - 3D</a></li>
+        </ul>
+      </div>
+
+      <div class="dropdown  border-start">
+        <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
+          data-bs-toggle="dropdown">Price Range</button>
+        <ul class="dropdown-menu ">
+          <li><a class="dropdown-item" href="#">₹100 - ₹200</a></li>
+          <li><a class="dropdown-item" href="#">₹200 - ₹400</a></li>
+        </ul>
+      </div>
+      <div class="dropdown  border-start">
+        <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
+          data-bs-toggle="dropdown">Special Formats</button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">IMAX</a></li>
+          <li><a class="dropdown-item" href="#">4DX</a></li>
+        </ul>
+      </div>
+      <div class="dropdown border-start ">
+        <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
+          data-bs-toggle="dropdown">Preferred Time</button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Morning</a></li>
+          <li><a class="dropdown-item" href="#">Afternoon</a></li>
+        </ul>
+      </div>
+
+      <!-- search vala  -->
+      <div class="dropdown  border-start">
+        <button class="btn btn-light bg-white dropdown-toggle w-100 h-100" data-bs-toggle="dropdown">Price
+          Range</button>
+        <ul class="dropdown-menu ">
+          <li><a class="dropdown-item" href="#">₹100 - ₹200</a></li>
+          <li><a class="dropdown-item" href="#">₹200 - ₹400</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Theatre List -->
+
+
+  <div class="mb-4  bg-white">
+    <!-- Theatre 1 -->
+    <div routerLink="/movies/:city/seat-layout/:movieId/:theatreId/:showId/:date" class="border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height: 7rem;">
+
+
+
+      <div class="d-flex flex-column  " style="width:25rem">
+        <div class="fw-semibold   d-flex align-items-center justify-content-center gap-3">
+          <img
+            src="https://play-lh.googleusercontent.com/FWnYQ8Bwljw9z1SxBeAJ0ahIB7wJ8A2RrjhITKGwMsy2m28bSNYvuk5xfU_eM_YLcysl=w240-h480-rw"
+            alt="cinema" class="border" style="width:10%; border-radius:20%;" />
+
+          The Vijay Park Multiplex: Injambakkam ECR 4K Atmos
+        </div>
+
+
+
+        <!-- beverages icon -->
+        <div class="d-flex gap-2 mt-2 align-items-center ">
+
+          <div class="on_hover ">
+
+            <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/fnb-v1.png" alt=""
+              style="width:4rem;" />
+          </div>
+
+          <div class="on_hover ">
+
+            <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/mticket-v1.png" alt=""
+              style="width:5rem;" />
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="d-flex flex-wrap  gap-2">
+        <div class="">
+
+          <button class="bg-white d-flex text-muted flex-column justify-content-start align-items-center"
+            style="width:107px;height:40px; font-size: 12px;font-weight: 700;border: 1px solid rgb(31, 173, 62);border-left: 4px solid rgb(31, 173, 62);">
+            11:00 AM<br><small style="font-size: 9px;">4K DOLBY</small></button>
+          <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
+        </div>
+
+        <div class="">
+
+          <button class="bg-white d-flex text-muted flex-column justify-content-start align-items-center"
+            style="width:107px;height:40px; font-size: 12px;font-weight: 700;border: 1px solid rgb(31, 173, 62);border-left: 4px solid rgb(31, 173, 62);">
+            11:00 AM<br><small style="font-size: 9px;">4K DOLBY</small></button>
+          <p class="small text-muted mt-1" style="font-size: 12px;">Cancellable</p>
+        </div>
+        <div class="">
+
+          <button class="bg-white d-flex text-muted flex-column justify-content-start align-items-center"
+            style="width:107px;height:40px; font-size: 12px;font-weight: 700;border: 1px solid rgb(31, 173, 62);border-left: 4px solid rgb(31, 173, 62);">
+            11:00 AM<br><small style="font-size: 9px;">4K DOLBY</small></button>
+          <p class="small text-muted mt-1" style="font-size: 12px;">Cancellable</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Theatre 2 -->
+   <div class="border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height: 7rem;">
+
+
+
+      <div class="d-flex flex-column  " style="width:25rem">
+        <div class="fw-semibold   d-flex align-items-center justify-content-center gap-3">
+          <img
+            src="https://play-lh.googleusercontent.com/FWnYQ8Bwljw9z1SxBeAJ0ahIB7wJ8A2RrjhITKGwMsy2m28bSNYvuk5xfU_eM_YLcysl=w240-h480-rw"
+            alt="cinema" class="border" style="width:10%; border-radius:20%;" />
+
+          The Vijay Park Multiplex: Injambakkam ECR 4K Atmos
+        </div>
+
+
+
+        <!-- beverages icon -->
+        <div class="d-flex gap-2 mt-2 align-items-center ">
+
+          <div class="on_hover ">
+
+            <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/fnb-v1.png" alt=""
+              style="width:4rem;" />
+          </div>
+
+          <div class="on_hover ">
+
+            <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/mticket-v1.png" alt=""
+              style="width:5rem;" />
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="d-flex flex-wrap  gap-2">
+
+
+        <div class="">
+
+          <button class="bg-white d-flex text-muted flex-column justify-content-start align-items-center"
+            style="width:107px;height:40px; font-size: 12px;font-weight: 700;border: 1px solid rgb(31, 173, 62);border-left: 4px solid rgb(31, 173, 62);">
+            11:00 AM<br><small style="font-size: 9px;">4K DOLBY</small></button>
+          <p class="small text-muted mt-1" style="font-size: 12px;">Cancellable</p>
+        </div>
+        <div class="">
+
+          <button class="bg-white d-flex text-muted flex-column justify-content-start align-items-center"
+            style="width:107px;height:40px; font-size: 12px;font-weight: 700;border: 1px solid rgb(31, 173, 62);border-left: 4px solid rgb(31, 173, 62);">
+            11:00 AM<br><small style="font-size: 9px;">4K DOLBY</small></button>
+          <p class="small text-muted mt-1" style="font-size: 12px;">Cancellable</p>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- Add more theatres in same structure -->
+  </div>
+
+
+</div>
+ 

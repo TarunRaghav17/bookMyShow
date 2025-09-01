@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-auth',
@@ -41,8 +42,8 @@ export class UserAuthComponent implements OnInit {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe((res) => {
         alert(res.message);
-        localStorage.setItem('token', res.content);
-        this.authService.userDetailsSignal.set(this.authService.decodeToken(res.content));
+        localStorage.setItem('token', res.data.token);
+        this.authService.userDetailsSignal.set(this.authService.decodeToken(res.data.token));
         this.loginForm.reset();
         this.activeModal.close(UserAuthComponent);
       });

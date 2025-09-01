@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { AuthGuard } from './auth/gaurds/auth.gaurd';
+import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets.component';
+import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout.component';
 
 
 const routes: Routes = [
@@ -29,6 +31,13 @@ const routes: Routes = [
   },
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
+  },
+  {
+    path: 'movies/:city/:name/buytickets/:id', component: BuyTicketsComponent
+  },
+  {
+    path: 'movies/:city/seat-layout/:movieId/:theatreId/:showId/:date',
+    component: SeatLayoutComponent
   },
   {
     path: '**',
