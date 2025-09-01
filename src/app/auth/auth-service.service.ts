@@ -9,45 +9,43 @@ import { jwtDecode } from "jwt-decode";
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
-  userTokenDataSignal = signal<any>(
-    this.islogdeIn()
-  )
-  base_url = environment.baseUrl
-
-  userLogin(obj: any): Observable<any> {
-
-    return this.http.post<any>(`${this.base_url}/auth/login`, obj)
+  constructor(private http: HttpClient) {
   }
 
-  userSignup(data: any): Observable<any> {
-    return this.http.post<any>(`${this.base_url}/auth/register`, data)
+  baseUrl = environment.baseUrl;
+
+  // Holds decoded user details from token
+  userDetailsSignal = signal<any>(this.getUserFromToken());
+
+
+
+
+  login(credentials: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials);
   }
 
-
-  isLoggedInToken(): boolean {
-    return !!localStorage.getItem('token');
-
+  signup(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/register`, data);
   }
+
 
   logout(): void {
     localStorage.removeItem('token');
+    this.userDetailsSignal.set(null);
   }
 
-  islogdeIn() {
-    const userToken: any = localStorage.getItem('token')
-    let userDetails: any = this.getLoggedInUserDetails(userToken)
-    return userDetails
-
+  getUserFromToken() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    return this.decodeToken(token);
   }
 
-  getLoggedInUserDetails(token: any) {
+
+  decodeToken(token: string) {
     try {
       const userDetails: any = jwtDecode(token);
-      console.log("userDetails", JSON.stringify(userDetails))
       return userDetails;
     } catch (error) {
-      console.error("Invalid token", error);
       return null;
     }
   }

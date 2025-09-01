@@ -31,13 +31,15 @@ export class HeaderComponent implements OnInit {
   citiesJson: any = null;
   showCities = false;
   selectedCity: any;
+  searchText: string = '';
   city = false;
+  filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
   constructor(
     private modalService: NgbModal,
     public commonService: CommonService,
-    private authService: AuthService,
+    public authService: AuthService,
     private sanitizer: DomSanitizer
   ) {
 
@@ -46,7 +48,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllPopularCity()
-    // Open modal Without City Selected 
+    this.searchCityData()
     this.showProfileheader = this.commonService._profileHeader()
     if (!this.selectedCity) {
       this.openCityModal(this.content)
@@ -63,19 +65,11 @@ export class HeaderComponent implements OnInit {
 
   viewAllCities() {
     this.showCities = !this.showCities;
-    if (this.showCities) {
-      this.commonService.getAllCities().subscribe((res) => {
-
-        this.citiesJson = this.showCities ? res : null;
-      })
-    }
     this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
-
   }
 
   getAllPopularCity() {
     this.commonService.getPopularCities().subscribe((res) => {
-      console.log(res)
       this.cityData = res;
     })
   }
@@ -118,5 +112,23 @@ export class HeaderComponent implements OnInit {
     this.authService.logout()
   }
 
+
+
+  searchCityData() {
+    this.commonService.getAllCities().subscribe((res) => {
+      this.citiesJson = res
+    })
+
+  }
+  onSearchChange(value: string) {
+    const searchValue = value.toLowerCase();
+    this.filteredCities = this.citiesJson.filter((city: any) =>
+      city.name.toLowerCase().includes(searchValue)
+    );
+  }
+  clearSearch() {
+    this.searchText = '';
+    this.filteredCities = [];
+  }
 
 }

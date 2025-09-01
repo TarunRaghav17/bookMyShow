@@ -1,139 +1,111 @@
 <div class="container-fluid p-4">
-    <div class="d-flex justify-content-around">
-        <img src="assets/svg/bookmyshow-logo-vector.svg" height="60px" alt="">
+    <div class="d-flex justify-content-around"> <img src="assets/svg/bookmyshow-logo-vector.svg" height="60px" alt="">
     </div>
 
     @if (!openSignupForm) {
-    <form [formGroup]="userLogin">
+    <form [formGroup]="loginForm">
         <div class="mb-3">
             <label class="form-label">Username</label>
             <input type="text" class="form-control" formControlName="username" placeholder="Enter your username">
-            @if(userLogin.get('username')?.touched && userLogin.get('username')?.invalid){
-            <small class="text-danger">
-                Username is required
-            </small>
+            @if(loginForm.get('username')?.touched && loginForm.get('username')?.invalid){
+            <small class="text-danger">Username is required</small>
             }
         </div>
 
         <div class="mb-3 position-relative">
             <label class="form-label">Password</label>
-            <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
-                placeholder="Enter your password">
-            @if(userLogin.get('password')?.touched && userLogin.get('password')?.hasError('required'))
-            { <small class="text-danger">
-                Password is required
-            </small>
+
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input"
+                formControlName="password" placeholder="Enter your password">
+
+            <!-- eye icon inside input -->
+            <i class="fa password-toggle-icon" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                (click)="togglePassword()"></i>
+
+            @if(loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')) {
+            <small class="text-danger">Password is required</small>
             }
-            @if(userLogin.get('password')?.hasError('minlength'))
-            {
-            <small class="text-danger">
-                Password must be at least 6 characters
-            </small>
+            @if(loginForm.get('password')?.hasError('minlength')) {
+            <small class="text-danger">Password must be at least 6 characters</small>
             }
-            <i class="fa" ngClass="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="togglePassword()"
-                id="togglePassword">
-            </i>
         </div>
 
 
-        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="userLogin.invalid"
-            (click)="onloginSubmit()">Login</button>
+        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="loginForm.invalid"
+            (click)="onLoginSubmit()">Login</button>
 
         <p class="text-center changeRouteFormPage">Don't have an account?
-            <a (click)="openFormSignup()">Signup</a>
+            <a (click)="toggleSignupForm()">Signup</a>
         </p>
     </form>
     }
+
     @if (openSignupForm) {
-    <form [formGroup]="userSignUp">
+    <form [formGroup]="signupForm">
         <div class="mb-3">
             <label class="form-label">Full Name</label>
             <input type="text" class="form-control" formControlName="name" placeholder="Enter full name">
-
-            @if(userSignUp.get('name')?.touched && userSignUp.get('name')?.invalid){
-            <small class="text-danger">
-                Name is required
-            </small>
+            @if(signupForm.get('name')?.touched && signupForm.get('name')?.invalid){
+            <small class="text-danger">Name is required</small>
             }
         </div>
-
         <div class="mb-3">
             <label class="form-label">Username</label>
             <input type="text" class="form-control" formControlName="username" placeholder="Choose a username">
-            @if(userSignUp.get('username')?.touched && userSignUp.get('username')?.invalid){
-            <small class="text-danger">
-                Username is required
-            </small>
+            @if(signupForm.get('username')?.touched && signupForm.get('username')?.invalid){
+            <small class="text-danger">Username is required</small>
             }
         </div>
 
         <div class="mb-3">
             <label class="form-label">Email</label>
             <input type="email" class="form-control" formControlName="email" placeholder="Enter your email">
-            @if(userSignUp.get('email')?.touched && userSignUp.get('email')?.hasError('required')){
-            <small class="text-danger">
-                Email is required
-            </small>
+            @if(signupForm.get('email')?.touched && signupForm.get('email')?.hasError('required')){
+            <small class="text-danger">Email is required</small>
             }
-            @if(userSignUp.get('email')?.hasError('email')){
-            <small class="text-danger">
-                Invalid email format
-            </small>
+            @if(signupForm.get('email')?.hasError('email')){
+            <small class="text-danger">Invalid email format</small>
             }
         </div>
-        <!-- <div class="mb-3">
-            <label class="form-label" for="roleName" name="">Role</label>
-            <input type="text" class="form-control" id="roleName" name="roleName" formControlName="roleName"
-                placeholder="Enter roleName" value="USER">
 
-            @if(userSignUp.get('roleName')?.touched && userSignUp.get('roleName')?.hasError('required')){
-            <small class="text-danger">
-                Role is required
-            </small>
-            }
-        </div> -->
         <div class="mb-3">
             <label class="form-label">Phone Number</label>
             <input type="text" class="form-control" formControlName="phoneNumber"
                 placeholder="Enter 10-digit phone number">
-            @if(userSignUp.get('phoneNumber')?.touched && userSignUp.get('phoneNumber')?.hasError('required')){
-            <small class="text-danger">
-                Phone number is required
-            </small>
+            @if(signupForm.get('phoneNumber')?.touched && signupForm.get('phoneNumber')?.hasError('required')){
+            <small class="text-danger">Phone number is required</small>
             }
-            @if(userSignUp.get('phoneNumber')?.hasError('pattern')){
-            <small class="text-danger">
-                Phone number must be exactly 10 digits
-            </small>
+            @if(signupForm.get('phoneNumber')?.hasError('pattern')){
+            <small class="text-danger">Phone number must be exactly 10 digits</small>
             }
         </div>
 
         <div class="mb-3 position-relative">
             <label class="form-label">Password</label>
-            <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
-                placeholder="Enter your password">
-            @if(userLogin.get('password')?.touched && userLogin.get('password')?.hasError('required')){
-            <small class="text-danger">
-                Password is required
-            </small>
-            }
-            @if(userLogin.get('password')?.hasError('minlength')){
-            <small class="text-danger">
-                Password must be at least 6 characters
-            </small>
 
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input"
+                formControlName="password" placeholder="Enter your password">
+
+            <!-- eye icon inside input -->
+            <i class="fa password-toggle-icon" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                (click)="togglePassword()"></i>
+
+            @if(loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')) {
+            <small class="text-danger">Password is required</small>
             }
-            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" (click)="togglePassword()"
-                id="togglePassword">
-            </i>
+            @if(loginForm.get('password')?.hasError('minlength')) {
+            <small class="text-danger">Password must be at least 6 characters</small>
+            }
         </div>
-        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="userSignUp.invalid"
+
+
+        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="signupForm.invalid"
             (click)="onSignupSubmit()">Register</button>
 
         <p class="text-center changeRouteFormPage">Already have an account?
-
-            <a (click)="openFormSignup()">Login</a>
+            <a (click)="toggleSignupForm()">Login</a>
         </p>
     </form>
     }
+
 </div>

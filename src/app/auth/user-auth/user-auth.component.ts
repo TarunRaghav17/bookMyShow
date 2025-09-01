@@ -1,27 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-user-auth',
-  standalone: false,
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './user-auth.component.html',
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
+
   openSignupForm: boolean = false;
   showPassword: boolean = false;
 
-  constructor(private authService: AuthService, private activeModal: NgbActiveModal) {
-  }
-
+  constructor(private authService: AuthService, private activeModal: NgbActiveModal) { }
   ngOnInit(): void { }
-  userLogin = new FormGroup({
+
+  loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
-  userSignUp = new FormGroup({
+  signupForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -34,27 +37,25 @@ export class UserAuthComponent implements OnInit {
   });
 
 
-  onloginSubmit() {
-    if (this.userLogin.valid) {
-      const data = this.userLogin.value;
-      this.authService.userLogin(data).subscribe((res) => {
-        alert(res.message)
+  onLoginSubmit() {
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe((res) => {
+        alert(res.message);
         localStorage.setItem('token', res.content);
-
-        this.userLogin.reset();
-        this.activeModal.close(UserAuthComponent)
+        this.authService.userDetailsSignal.set(this.authService.decodeToken(res.content));
+        this.loginForm.reset();
+        this.activeModal.close(UserAuthComponent);
       });
     }
   }
 
 
   onSignupSubmit() {
-    if (this.userSignUp.valid) {
-      const data = this.userSignUp.value;
-      this.authService.userSignup(data).subscribe(() => {
-        this.userSignUp.reset();
-        this.activeModal.close(UserAuthComponent)
-      })
+    if (this.signupForm.valid) {
+      this.authService.signup(this.signupForm.value).subscribe(() => {
+        this.signupForm.reset();
+        this.activeModal.close(UserAuthComponent);
+      });
     }
   }
 
@@ -62,11 +63,8 @@ export class UserAuthComponent implements OnInit {
     this.showPassword = !this.showPassword;
   }
 
-  openFormSignup() {
+  toggleSignupForm() {
     this.openSignupForm = !this.openSignupForm;
   }
-
-
-
 
 }

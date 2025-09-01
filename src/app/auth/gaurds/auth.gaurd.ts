@@ -1,4 +1,3 @@
-// auth.guard.ts
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../auth-service.service';
@@ -8,13 +7,19 @@ import { AuthService } from '../auth-service.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) { }
 
   canActivate(): boolean {
-    if (this.authService.userTokenDataSignal()) {
-      return true;
+    const user = this.authService.userDetailsSignal();
+
+    if (!user) {
+      this.router.navigate(['/explore/home/delhi']);
+      return false;
     }
-    this.router.navigate(['/explore/home/delhi']); // Redirect to login page
-    return false;
+    return true;
   }
 }
+
