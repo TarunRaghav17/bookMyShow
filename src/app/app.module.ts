@@ -16,6 +16,7 @@ import { SearchBoxComponent } from './shared/components/searchBox/searchBox.comp
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
+import { EventsdetailsComponent } from './shared/components/eventsdetails/eventsdetails.component';
 
 
 @NgModule({
@@ -25,10 +26,10 @@ import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
     FooterComponent,
     ErrorPageComponent,
     SearchBoxComponent,
-    TheatreListComponent
+    TheatreListComponent,
   ],
   imports: [BrowserModule,
-    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent],
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsdetailsComponent],
   providers: [provideHttpClient(withFetch()), {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,

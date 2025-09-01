@@ -1,0 +1,29 @@
+.book_now_btn {
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: 0.2px;
+  background: rgb(235, 78, 98);
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+  width: auto;
+  height: 52px;
+  min-width: 132px;
+  border-radius: 12px;
+}
+.img_bottom_txt {
+  background-color: rgb(43, 49, 72);
+  margin: 0px 8px 4px 0px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  word-break: break-word;
+  color: rgb(255, 255, 255);
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
