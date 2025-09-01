@@ -126,11 +126,10 @@
     </div>
     <div class="offcanvas-body p-0">
 
-        @if(authService.userDetailsSignal() == null) {
+        @if(!authService.userDetailsSignal()) {
         <div class="unlock_special_offer_box border-top">
             <div height="40px" width="40px" class="unlock_special_offer_img bg-none ">
-                <img alt="rewards" width="40px" height="40px" class="sc-eykeme-1 iVbwwW"
-                    src="assets/images/rewards_login.png">
+                <img alt="rewards" width="40px" height="40px" src="assets/images/rewards_login.png">
             </div>
             <p class="unlock_special_offer_text m-0">Unlock special offers &amp; great benefits</p>
             <button class="unlock_special_offer_button" (click)="openLoginModal()" data-bs-toggle="offcanvas">Login /

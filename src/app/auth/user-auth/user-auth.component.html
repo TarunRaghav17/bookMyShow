@@ -63,7 +63,7 @@
             @if(signupForm.get('email')?.touched && signupForm.get('email')?.hasError('required')){
             <small class="text-danger">Email is required</small>
             }
-            @if(signupForm.get('email')?.hasError('email')){
+            @if(signupForm.get('email')?.hasError('pattern')){
             <small class="text-danger">Invalid email format</small>
             }
         </div>
