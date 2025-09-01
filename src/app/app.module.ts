@@ -21,13 +21,13 @@ import { ErrorPageComponent } from './shared/components/error-page/error-page.co
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    UserAuthComponent,
     ErrorPageComponent,
     SearchBoxComponent,
-   
+
 
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
+  imports: [BrowserModule,
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent],
   providers: [provideHttpClient(withFetch())],
   bootstrap: [AppComponent],
 })

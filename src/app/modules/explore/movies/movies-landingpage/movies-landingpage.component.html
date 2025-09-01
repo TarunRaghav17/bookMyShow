@@ -51,19 +51,21 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion></app-filter-accordion>
+                                <app-filter-accordion (filterEvent)="handleEventFilter($event)"></app-filter-accordion>
                             </div>
                         </div>
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
-                            <div class="d-flex gap-3 language_text py-2 flex-wrap">
-                                <span>
-                                    Hindi
+                            <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                                @for (item of topFiltersArray; track $index) {
+                                <span [ngClass]="{selectedText: selectedFilters.includes(item)}">
+                                    {{item}}
                                 </span>
-                                <span>
-                                    English
-                                </span>
+                                }
+
+
+
                             </div>
                             <div
                                 class="d-flex justify-content-between py-4 px-3 rounded-2 comming_soon_bar bg-white align-items-center shadow-sm">
@@ -79,7 +81,7 @@
                                         <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start ">
                                             @for (item of dummyMoviesdata; track $index) {
                                             <ng-container class="overflow-hidden w-50">
-                                                <div class="col" style="max-width: 200px;min-width:200px ">
+                                                <div class="col card_container">
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4"
                                                             [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-');}/${item.imdbID}`]">

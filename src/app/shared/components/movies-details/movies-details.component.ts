@@ -1,5 +1,5 @@
-import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, HostListener, TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
@@ -62,7 +62,7 @@ export class MoviesDetailsComponent {
     }
   }
 
-  navigateToBuyTicket(langFormat: any) {
+  navigateToBuyTicket() {
     this.modalRef?.close()
     // this.commonService.setLanguageFormat(langFormat)
     // console.log(this.router.url.split('/'))

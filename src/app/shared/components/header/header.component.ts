@@ -1,6 +1,5 @@
 import {
   Component,
-  computed,
   inject,
   OnInit,
   TemplateRef,
@@ -16,6 +15,7 @@ import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
 
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthService } from '../../../auth/auth-service.service';
 export class NgbdModalContent {
   activeModal = inject(NgbActiveModal);
 }
@@ -31,10 +31,15 @@ export class HeaderComponent implements OnInit {
   citiesJson: any = null;
   showCities = false;
   selectedCity: any;
+  searchText: string = '';
   city = false;
+  filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-  constructor(private modalService: NgbModal, public commonService: CommonService,
+  constructor(
+    private modalService: NgbModal,
+    public commonService: CommonService,
+    public authService: AuthService,
     private sanitizer: DomSanitizer
   ) {
 
@@ -43,7 +48,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllPopularCity()
-    // Open modal Without City Selected 
+    this.searchCityData()
     this.showProfileheader = this.commonService._profileHeader()
     if (!this.selectedCity) {
       this.openCityModal(this.content)
@@ -60,19 +65,11 @@ export class HeaderComponent implements OnInit {
 
   viewAllCities() {
     this.showCities = !this.showCities;
-    if (this.showCities) {
-      this.commonService.getAllCities().subscribe((res) => {
-
-        this.citiesJson = this.showCities ? res : null;
-      })
-    }
     this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
-
   }
 
   getAllPopularCity() {
     this.commonService.getPopularCities().subscribe((res) => {
-      console.log(res)
       this.cityData = res;
     })
   }
@@ -84,8 +81,8 @@ export class HeaderComponent implements OnInit {
       centered: true,
     };
     const modalRef = this.modalService.open(UserAuthComponent, modalOptions);
-    modalRef.result.then((result) => {
-    }, (reason) => {
+    modalRef.result.then(() => {
+    }, () => {
     });
   }
 
@@ -111,5 +108,27 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  logout() {
+    this.authService.logout()
+  }
+
+
+
+  searchCityData() {
+    this.commonService.getAllCities().subscribe((res) => {
+      this.citiesJson = res
+    })
+
+  }
+  onSearchChange(value: string) {
+    const searchValue = value.toLowerCase();
+    this.filteredCities = this.citiesJson.filter((city: any) =>
+      city.name.toLowerCase().includes(searchValue)
+    );
+  }
+  clearSearch() {
+    this.searchText = '';
+    this.filteredCities = [];
+  }
 
 }

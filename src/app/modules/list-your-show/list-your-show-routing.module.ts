@@ -1,14 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LandingpageComponent } from './landingpage/landingpage.component';
+import { ListYourShowLandingPageComponent } from './list-your-show-landing-page/list-your-show-landing-page.component';
 
 const routes: Routes = [
-  {
-    path: '', redirectTo: '', pathMatch: 'full'
-  },
-  {
-    path: '', component: LandingpageComponent
-  }
+  { path: '', component: ListYourShowLandingPageComponent }
 ];
 
 @NgModule({

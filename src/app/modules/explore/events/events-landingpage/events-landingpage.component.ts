@@ -8,7 +8,7 @@ import { movies } from '../../../../../../db';
   templateUrl: './events-landingpage.component.html',
   styleUrl: './events-landingpage.component.scss'
 })
-export class eventsLandingpageComponent {
+export class EventsLandingPageComponent {
   dummyMoviesdata: any[] = [];
   originalMovies = movies
   constructor(public commonService: CommonService) {

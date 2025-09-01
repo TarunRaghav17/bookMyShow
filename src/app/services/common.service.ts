@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 @Injectable({
@@ -10,6 +10,7 @@ export class CommonService {
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
+  searchSubject = new Subject<string>();
 
   baseUrl = environment.baseUrl
 

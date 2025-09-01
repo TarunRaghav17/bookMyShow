@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { UserProfileModule } from './modules/user-proile/user-profile.module';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
-import { ListYourShowModule } from './modules/list-your-show/list-your-show.module';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+import { AuthGuard } from './auth/gaurds/auth.gaurd';
 import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets.component';
 import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout.component';
 
@@ -21,17 +20,17 @@ const routes: Routes = [
   },
   {
     path: 'my-profile',
+    canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./modules/user-proile/user-profile.module').then((m) => UserProfileModule),
+      import('./modules/user-proile/user-profile.module').then((m) => m.UserProfileModule),
   },
   {
     path: 'list-your-show',
-    loadChildren: () =>
-      import('./modules/list-your-show/list-your-show.module').then((m) => ListYourShowModule),
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./modules/list-your-show/list-your-show.module').then((m) => m.ListYourShowModule)
   },
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
-
   },
   {
     path: 'movies/:city/:name/buytickets/:id', component: BuyTicketsComponent

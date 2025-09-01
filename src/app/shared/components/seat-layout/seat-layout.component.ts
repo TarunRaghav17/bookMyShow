@@ -34,7 +34,7 @@ interface Seat {
   styleUrl: './seat-layout.component.scss'
 })
 export class SeatLayoutComponent {
-@ViewChild('seatCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('seatCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D;
 
   // UI/config
@@ -234,7 +234,7 @@ export class SeatLayoutComponent {
 
       const catRows = [...new Set(this.seats.filter(s => s.categoryId === cat.id).map(s => s.row))];
 
-      catRows.forEach((row, index) => {
+      catRows.forEach((row) => {
         const firstInRow = this.seats.find(s => s.categoryId === cat.id && s.row === row)!;
         ctx.textAlign = 'left';
         ctx.fillStyle = 'black';
@@ -301,116 +301,116 @@ export class SeatLayoutComponent {
   }
 
   // ----- Interaction -----
-// onCanvasClick(evt: MouseEvent, noOfSeats: number = 2) {
-//   const rect = this.canvasRef.nativeElement.getBoundingClientRect();
-//   const x = evt.clientX - rect.left - this.offsetX;
-//   const y = evt.clientY - rect.top - this.offsetY;
+  // onCanvasClick(evt: MouseEvent, noOfSeats: number = 2) {
+  //   const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+  //   const x = evt.clientX - rect.left - this.offsetX;
+  //   const y = evt.clientY - rect.top - this.offsetY;
 
-//   const hit = this.seats.find(
-//     s => x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h
-//   );
+  //   const hit = this.seats.find(
+  //     s => x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h
+  //   );
 
-//   if (!hit) return;
-//    // ---- RESET PREVIOUS SELECTION ----
-//   this.seats.forEach(s => {
-//     if (s.status === 'selected') {
-//       s.status = 'available';
-//     }
-//   });
-//   this.selectedSeats = [];
-//   if (hit.status === 'booked') return;
+  //   if (!hit) return;
+  //    // ---- RESET PREVIOUS SELECTION ----
+  //   this.seats.forEach(s => {
+  //     if (s.status === 'selected') {
+  //       s.status = 'available';
+  //     }
+  //   });
+  //   this.selectedSeats = [];
+  //   if (hit.status === 'booked') return;
 
-//   // If already selected -> unselect
-//   if (hit.status === 'selected') {
-//     hit.status = 'available';
-//     this.selectedSeats = this.selectedSeats.filter(id => id !== hit.id);
-//     this.draw();
-//     return;
-//   }
+  //   // If already selected -> unselect
+  //   if (hit.status === 'selected') {
+  //     hit.status = 'available';
+  //     this.selectedSeats = this.selectedSeats.filter(id => id !== hit.id);
+  //     this.draw();
+  //     return;
+  //   }
 
-//   // ---- CONTIGUOUS SEAT SELECTION ----
-//   // Find all seats in the same row
-//   const rowSeats = this.seats
-//     .filter(s => s.row === hit.row)
-//     .sort((a, b) => a.col - b.col);
+  //   // ---- CONTIGUOUS SEAT SELECTION ----
+  //   // Find all seats in the same row
+  //   const rowSeats = this.seats
+  //     .filter(s => s.row === hit.row)
+  //     .sort((a, b) => a.col - b.col);
 
-//   // Find the index of the clicked seat
-//   const startIndex = rowSeats.findIndex(s => s.id === hit.id);
+  //   // Find the index of the clicked seat
+  //   const startIndex = rowSeats.findIndex(s => s.id === hit.id);
 
-//   // Get the block of `noOfSeats` seats starting from clicked one
-//   const block = rowSeats.slice(startIndex, startIndex + noOfSeats);
+  //   // Get the block of `noOfSeats` seats starting from clicked one
+  //   const block = rowSeats.slice(startIndex, startIndex + noOfSeats);
 
-//   // Check if block is valid & all available
-//   if (block.length === noOfSeats && block.every(s => s.status === 'available')) {
-//     block.forEach(s => {
-//       s.status = 'selected';
-//       if (!this.selectedSeats.includes(s.id)) {
-//         this.selectedSeats.push(s.id);
-//       }
-//     });
-//   } else {
-//     console.warn("Not enough available seats together.");
-//     return;
-//   }
+  //   // Check if block is valid & all available
+  //   if (block.length === noOfSeats && block.every(s => s.status === 'available')) {
+  //     block.forEach(s => {
+  //       s.status = 'selected';
+  //       if (!this.selectedSeats.includes(s.id)) {
+  //         this.selectedSeats.push(s.id);
+  //       }
+  //     });
+  //   } else {
+  //     console.warn("Not enough available seats together.");
+  //     return;
+  //   }
 
-//   this.draw();
-// }
-onCanvasClick(evt: MouseEvent, noOfSeats: number = 2) {
-  const rect = this.canvasRef.nativeElement.getBoundingClientRect();
-  const x = evt.clientX - rect.left - this.offsetX;
-  const y = evt.clientY - rect.top - this.offsetY;
+  //   this.draw();
+  // }
+  onCanvasClick(evt: MouseEvent, noOfSeats: number = 2) {
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    const x = evt.clientX - rect.left - this.offsetX;
+    const y = evt.clientY - rect.top - this.offsetY;
 
-  const hit = this.seats.find(
-    s => x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h
-  );
+    const hit = this.seats.find(
+      s => x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h
+    );
 
 
-  if (!hit) return;
-  if (hit.status === 'booked') return;
+    if (!hit) return;
+    if (hit.status === 'booked') return;
 
-  // ---- RESET PREVIOUS SELECTION ----
-  this.seats.forEach(s => {
-    if (s.status === 'selected') {
-      s.status = 'available';
-    }
-  });
-  this.selectedSeats = [];
+    // ---- RESET PREVIOUS SELECTION ----
+    this.seats.forEach(s => {
+      if (s.status === 'selected') {
+        s.status = 'available';
+      }
+    });
+    this.selectedSeats = [];
 
-  // ---- CONTIGUOUS SEAT SELECTION ----
-  const rowSeats = this.seats
-    .filter(s => s.row === hit.row)
-    .sort((a, b) => a.col - b.col);
+    // ---- CONTIGUOUS SEAT SELECTION ----
+    const rowSeats = this.seats
+      .filter(s => s.row === hit.row)
+      .sort((a, b) => a.col - b.col);
 
     console.log(rowSeats)
 
-  const startIndex = rowSeats.findIndex(s => s.id === hit.id);
+    const startIndex = rowSeats.findIndex(s => s.id === hit.id);
 
-  let block: any[] = [];
+    let block: any[] = [];
 
-  // 1. Try forward block (hit → hit+noOfSeats)
-  const forwardBlock = rowSeats.slice(startIndex, startIndex + noOfSeats);
-  if (forwardBlock.length === noOfSeats && forwardBlock.every(s => s.status === 'available')) {
-    block = forwardBlock;
-  } else {
-    // 2. Try backward block (hit-noOfSeats+1 → hit)
-    const backwardBlock = rowSeats.slice(startIndex - noOfSeats + 1, startIndex + 1);
-    if (backwardBlock.length === noOfSeats && backwardBlock.every(s => s.status === 'available')) {
-      block = backwardBlock;
+    // 1. Try forward block (hit → hit+noOfSeats)
+    const forwardBlock = rowSeats.slice(startIndex, startIndex + noOfSeats);
+    if (forwardBlock.length === noOfSeats && forwardBlock.every(s => s.status === 'available')) {
+      block = forwardBlock;
+    } else {
+      // 2. Try backward block (hit-noOfSeats+1 → hit)
+      const backwardBlock = rowSeats.slice(startIndex - noOfSeats + 1, startIndex + 1);
+      if (backwardBlock.length === noOfSeats && backwardBlock.every(s => s.status === 'available')) {
+        block = backwardBlock;
+      }
     }
-  }
 
-  if (block.length === noOfSeats) {
-    block.forEach(s => {
-      s.status = 'selected';
-      this.selectedSeats.push(s.id);
-    });
-  } else {
-    console.warn("No contiguous block available.");
-    return;
-  }
+    if (block.length === noOfSeats) {
+      block.forEach(s => {
+        s.status = 'selected';
+        this.selectedSeats.push(s.id);
+      });
+    } else {
+      console.warn("No contiguous block available.");
+      return;
+    }
 
-  this.draw();
-}
+    this.draw();
+  }
 
 
   // ----- Dragging -----

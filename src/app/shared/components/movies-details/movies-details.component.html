@@ -169,7 +169,7 @@
             ID/Age Proof to the theatre. If you are denied entry due to age or ID issues, you will not get a refund.</p>
     </div>
     <div class="p-3 d-grid">
-        <button class="popup_continue"  (click)="close();open(langFormatModal)">Continue</button>
+        <button class="popup_continue" (click)="close();open(langFormatModal)">Continue</button>
     </div>
 </ng-template>
 
@@ -201,7 +201,7 @@
                 <div class="d-flex gap-2 flex-wrap">
                     @for(f of item.format;track $index){
                     <button class="btn border rounded-pill px-3 py-1 text-danger fw-thin "
-                        (click)="navigateToBuyTicket({lang:item.lang,format:f})">{{f}}</button>
+                        (click)="navigateToBuyTicket()">{{f}}</button>
                     }
                 </div>
 

@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -7,15 +7,20 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './searchBox.component.html',
   styleUrls: ['./searchBox.component.scss']
 })
-export class SearchBoxComponent {
+export class SearchBoxComponent implements OnInit {
   currentIndex: number = 0;
   visibleCount: number = 6;
-  getvisiblefiltred: any
+  filterData: any;
   eventsFilters: any[] = ['Movies', 'Stream', 'Events', 'Plays', 'Sports', 'Activites', "Venues", 'Offers', 'Others']
   private modalRef?: NgbModalRef;
 
   constructor(private modalService: NgbModal) { }
 
+
+
+  ngOnInit(): void {
+    this.getVisibleFilters()
+  }
   openModal(content: TemplateRef<any>) {
     this.modalRef = this.modalService.open(content, {
       modalDialogClass: 'searchbox',
@@ -29,9 +34,14 @@ export class SearchBoxComponent {
     }
   }
 
+  /**  
+   * @description .  
+   * @author Gurmeet 
+   * @return {string} Return a string  
+   */
 
   getVisibleFilters() {
-    this.getvisiblefiltred = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
+    this.filterData = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
   }
 
   next() {

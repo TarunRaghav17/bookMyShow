@@ -2,18 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ListYourShowRoutingModule } from './list-your-show-routing.module';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
-import { LandingpageComponent } from './landingpage/landingpage.component';
+import { ListYourShowLandingPageComponent } from './list-your-show-landing-page/list-your-show-landing-page.component';
+
 
 @NgModule({
-  declarations: [
-    LandingpageComponent
-  ],
+  declarations: [ListYourShowLandingPageComponent],
   imports: [
     CommonModule,
-    CarouselModule,
-    ListYourShowRoutingModule,
-
+    ListYourShowRoutingModule
   ]
 })
 export class ListYourShowModule { }

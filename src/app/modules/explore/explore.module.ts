@@ -5,7 +5,9 @@ import { ExploreRoutingModule } from './explore-routing.module';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+
+  ],
   imports: [
     CommonModule,
     ExploreRoutingModule
