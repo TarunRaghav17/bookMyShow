@@ -169,6 +169,52 @@
             ID/Age Proof to the theatre. If you are denied entry due to age or ID issues, you will not get a refund.</p>
     </div>
     <div class="p-3 d-grid">
-        <button class="popup_continue">Continue</button>
+        <button class="popup_continue"  (click)="close();open(langFormatModal)">Continue</button>
+    </div>
+</ng-template>
+
+
+<!-- ---------------inzDev start----------- -->
+<ng-template #langFormatModal let-modal>
+    <div class="p-3 border">
+
+        <!-- Header -->
+        <div class="d-flex  justify-content-between align-items-center mb-2">
+            <div>
+                <p class="m-0 text-muted small">War 2</p>
+                <h5 class="m-0 fw-semibold">Select language and format</h5>
+            </div>
+            <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+        </div>
+
+        <!-- Language -->
+
+        <div class=" d-flex flex-column gap-3"> <!--main container flex-->
+            @for(item of langFormatData;track $index){
+            <div class=""> <!--one particular card lang + format-->
+                <div class="border rounded bg-light p-2 mb-3">
+                    <span class="fw-thin text-muted">{{item.lang}}</span>
+
+                </div>
+
+                <!-- Formats -->
+                <div class="d-flex gap-2 flex-wrap">
+                    @for(f of item.format;track $index){
+                    <button class="btn border rounded-pill px-3 py-1 text-danger fw-thin "
+                        (click)="navigateToBuyTicket({lang:item.lang,format:f})">{{f}}</button>
+                    }
+                </div>
+
+
+
+
+            </div>
+            }
+
+
+
+            <!-- end -->
+        </div>
+
     </div>
 </ng-template>
