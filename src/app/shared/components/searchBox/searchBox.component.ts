@@ -10,7 +10,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 export class SearchBoxComponent implements OnInit {
   currentIndex: number = 0;
   visibleCount: number = 6;
-  filtreData: any;
+  filterData: any;
   eventsFilters: any[] = ['Movies', 'Stream', 'Events', 'Plays', 'Sports', 'Activites', "Venues", 'Offers', 'Others']
   private modalRef?: NgbModalRef;
 
@@ -41,7 +41,7 @@ export class SearchBoxComponent implements OnInit {
    */
 
   getVisibleFilters() {
-    this.filtreData = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
+    this.filterData = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
   }
 
   next() {

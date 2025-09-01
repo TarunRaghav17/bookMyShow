@@ -50,10 +50,10 @@ export class FilterAccordionComponent {
     let newUrl = `/${this.commonService._selectCity()}/cinemas`
     this.router.navigate([newUrl])
   }
-  
 
 
-  
+
+
 }
 
 

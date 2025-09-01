@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { movies } from '../../../../../../db';
 
-
 @Component({
   selector: 'app-home',
   standalone: false,
@@ -18,9 +17,14 @@ export class HomeLandingPageComponent {
   end = 0
   constructor() {
     this.dummyMoviesdata = movies;
-
     this.getVisibleMovieCard()
   }
+
+
+  ngOnInit(): void {
+
+  }
+
   getVisibleMovieCard() {
     this.start = this.itemsPerCards * this.pageNo;
     this.end = this.start + this.itemsPerCards

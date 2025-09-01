@@ -16,20 +16,32 @@
                     </div>
 
                     <div class="col-4 text-end d-flex justify-content-end px-4">
-                        <span class="dropdown_city_text" (click)="openCityModal(cityModal)"> {{selectedCity || 'City'}}
-                            <i class="fa fa-angle-down ms-2" aria-hidden="true"></i></span>
-                        <button class="badge  ms-3" (click)="openLoginModal()">Sign in</button>
+
+                        <!-- City Selector -->
+                        <span class="dropdown_city_text" (click)="openCityModal(cityModal)">
+                            {{selectedCity || 'City'}}
+                            <i class="fa fa-angle-down ms-2" aria-hidden="true"></i>
+                        </span>
+
+                        @if (!authService.userDetailsSignal()) {
+                        <button class="badge ms-3" (click)="openLoginModal()">Sign in</button>
                         <span class="ms-3">
                             <i class="fa fa-bars bars_icon" aria-hidden="true" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                             </i>
                         </span>
-                        <!-- <p class="d-flex gap-1 align-items-center" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-                    aria-controls="offcanvasExample">
-                <i class="fa fa-user-circle fa-circle_header" aria-hidden="true" ></i>
-                <span>Hi, Guest</span>
-            </p> -->
+                        } @else {
+
+                        <p class="d-flex gap-1 align-items-center mt-1 ms-1" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+                            <i class="fa fa-user-circle fa-circle_header" aria-hidden="true"></i>
+                            <span>Hi, {{ authService.userDetailsSignal()?.sub || 'User' }}</span>
+                        </p>
+                        }
+
+
                     </div>
+
                 </header>
             </div>
         </div>
@@ -48,21 +60,27 @@
                 <div class="sub_header">
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
-
                             <a [routerLink]="['explore/movies']">Movies</a>
                             <a [routerLink]="['explore/events']">Events</a>
                             <a [routerLink]="['explore/plays']">Plays</a>
                             <a [routerLink]="['explore/sports']">Sports</a>
                             <a [routerLink]="['explore/activities']">Activities</a>
+                            @if (authService.userDetailsSignal()?.role =='ADMIN') {
+                            <a [routerLink]="['admin-dashboard']">Users</a>
+                            }
                         </div>
                     </div>
                     <div class="sub_header_right">
+                        @if(authService.userDetailsSignal()?.role !='USER' && authService.userDetailsSignal()?.role
+                        =='ADMIN'){
                         <div class=" sub_heder_right_links">
                             <a [routerLink]="['/list-your-show']">ListYourShow</a>
                             <a>Corporates</a>
                             <a>Offers</a>
                             <a>GiftCards</a>
                         </div>
+                        }
+
                     </div>
                 </div>
             </div>
@@ -93,9 +111,12 @@
         <div class="full_with d-flex justify-content-between align-items-center">
             <div class="hey_text">
                 <h5 class="offcanvas-title fw-bold" id="offcanvasExampleLabel">Hey!</h5>
+                @if (authService.userDetailsSignal()?.role =='USER') {
                 <span class="edit_profile" routerLink="my-profile" data-bs-toggle="offcanvas"
                     (click)="editProfile()">Edit-Profile <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </span>
+                }
+
             </div>
             <div class="user_icon">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
@@ -103,15 +124,18 @@
         </div>
     </div>
     <div class="offcanvas-body p-0">
+
+        @if(!authService.userDetailsSignal()) {
         <div class="unlock_special_offer_box border-top">
             <div height="40px" width="40px" class="unlock_special_offer_img bg-none ">
-                <img alt="rewards" width="40px" height="40px" class="sc-eykeme-1 iVbwwW"
-                    src="assets/images/rewards_login.png">
+                <img alt="rewards" width="40px" height="40px" src="assets/images/rewards_login.png">
             </div>
             <p class="unlock_special_offer_text m-0">Unlock special offers &amp; great benefits</p>
             <button class="unlock_special_offer_button" (click)="openLoginModal()" data-bs-toggle="offcanvas">Login /
                 Register</button>
         </div>
+        }
+
         <div class="main_sidebar_data ">
             <div class="d-flex flex-column grow-2 py-2">
                 <a class="d-flex justify-content-between align-items-center info_conatiner">
@@ -135,6 +159,7 @@
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
+                @if(authService.getUserFromToken()?.role == 'USER'){
                 <a class="d-flex justify-content-between align-items-center links_sidebar">
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-shopping-bag" aria-hidden="true"></i>
@@ -145,10 +170,36 @@
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
+                }
+
+
+
+                @if(authService.getUserFromToken()?.role == 'ADMIN'){
+                <a class="d-flex justify-content-between align-items-center links_sidebar">
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        <div class="info_text">
+                            <p class="m-0">User List</p>
+                            <!-- <span>View all your Users List </span> -->
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                </a>
+                <a class="d-flex justify-content-between align-items-center links_sidebar">
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        <div class="info_text">
+                            <p class="m-0">Your Events</p>
+                            <span>View all your Events </span>
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                </a>
+                }
             </div>
             <div class="button_section">
                 <div class="sc-zgl7vj-7 ifHHkE">
-                    <button class="button_sign_out w-100" data-bs-toggle="offcanvas">Sign
+                    <button class="button_sign_out w-100" data-bs-toggle="offcanvas" (click)="logout()">Sign
                         out</button>
                 </div>
             </div>
@@ -163,15 +214,33 @@
 
 
 <ng-template #cityModal let-modal>
-    <div class="modal-header d-block">
-        <div class="input-group has-validation ">
+    <div class="modal-header d-block modal_header">
+        <div class="input-group  ">
             <span class="input-group-text">
                 <i class="fa fa-search"></i>
             </span>
             <input type="text" class="form-control border-start-0" name="search-city" placeholder="Search for cities"
-                required="">
+                [(ngModel)]="searchText" (ngModelChange)="onSearchChange($event)">
+            @if (searchText.length > 0) {
+            <div class="icon_clear_search">
+                <i class="fa fa-times-circle" aria-hidden="true" (click)="clearSearch()"></i>
+            </div>
+            }
         </div>
-        <span class="detect_my_location_text text-danger mt-2"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
+        <div class="city_search_list">
+            @if (searchText.length > 0 && filteredCities.length > 0) {
+            <ul>
+                @for (city of filteredCities; track $index) {
+                <li (click)="selectCity(city.name, modal)">
+                    {{ city.name }}
+                </li>
+                }
+            </ul>
+            }
+
+        </div>
+
+        <span class="detect_my_location_text text-danger mt-3"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
             Detect my location</span>
     </div>
     <div class="modal-body p-0">

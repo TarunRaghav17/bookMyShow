@@ -1,25 +1,55 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { jwtDecode } from "jwt-decode";
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
-
-  base_url = environment.baseUrl
-
-  userLogin(obj: any): Observable<any> {
-
-    return this.http.post<any>(`${this.base_url}/auth/login`, obj)
+  constructor(private http: HttpClient, private router: Router) {
   }
 
-  userSignup(data: any): Observable<any> {
-    return this.http.post<any>(`${this.base_url}/auth/register`, data)
+  baseUrl = environment.baseUrl;
+
+  // Holds decoded user details from token
+  userDetailsSignal = signal<any>(this.getUserFromToken());
+
+
+
+
+  login(credentials: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials);
   }
 
+  signup(data: any): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/register`, data);
+  }
+
+
+  logout(): void {
+    localStorage.removeItem('token');
+    this.router.navigate(['/'])
+    this.userDetailsSignal.set(null);
+  }
+
+  getUserFromToken() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    return this.decodeToken(token);
+  }
+
+
+  decodeToken(token: string) {
+    try {
+      const userDetails: any = jwtDecode(token);
+      return userDetails;
+    } catch (error) {
+      return null;
+    }
+  }
 
 }

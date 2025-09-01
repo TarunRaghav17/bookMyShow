@@ -106,6 +106,7 @@
   letter-spacing: 0.2px;
   color: rgb(102, 102, 102);
   padding-right: 2px;
+  cursor: pointer;
 }
 
 .unlock_special_offer_box {
@@ -316,4 +317,29 @@ span {
   background: black;
   border-radius: 5px;
   padding: 2px;
+}
+.city_search_list {
+  max-height: 227px;
+  position: absolute;
+  z-index: 1;
+  overflow-y: auto;
+  width: -webkit-fill-available;
+}
+.modal_header {
+  height: 100x;
+}
+.city_search_list ul li {
+  border: 1px solid grey;
+  padding: 10px;
+  border-top: none;
+  box-shadow: 0px 2px 4px #cfc8c8;
+  border-radius: 5px;
+  overflow-y: auto;
+  background: white;
+}
+.icon_clear_search {
+  position: absolute;
+  right: 10px;
+  z-index: 99;
+  top: 5px;
 }

@@ -23,14 +23,12 @@ import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    UserAuthComponent,
     ErrorPageComponent,
     SearchBoxComponent,
     TheatreListComponent
-
   ],
   imports: [BrowserModule,
-    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent],
   providers: [provideHttpClient(withFetch()), {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
