@@ -1,0 +1,48 @@
+<form [formGroup]="createVenueForm" (ngSubmit)="onSubmit(createVenueForm)">
+
+
+    <label>Name:
+        <input type="text" formControlName="theatreName">
+    </label>
+
+
+
+    <label>city:
+        <input type="text" formControlName="theatreCity">
+    </label>
+
+
+    <div formArrayName="screens">
+
+        @for(screen of screens.controls;track $index){
+        <div class="" formGroupName="{{$index}}">
+            <input type="text" formControlName="screenName" placeholder="screenName">
+            <input type="text" formControlName="screenCapacity" placeholder="screenCapacity">
+
+            <div class=""formArrayName="layout">
+                
+          @for(category of getLayouts(screen).controls;track $index){
+            <div class="" formGroupName="{{$index}}">
+                <input type="text" formControlName="rowName" placeholder="rowName">
+                <input type="text" formControlName="cols" placeholder="cols">
+                <input type="text" formControlName="categoryName" placeholder="categoryName">
+            </div>
+
+            }
+             <button type="button" (click)="addCategory(screen)">Add Category</button>
+            </div>
+  
+        </div>
+
+        }
+
+          <button type="button" (click)="addScreen()">Add Screen</button>
+
+    </div>
+
+    <button>submit</button>
+
+
+    <!-- <button (click)="addSkill()">Add skill</button> -->
+
+</form>
