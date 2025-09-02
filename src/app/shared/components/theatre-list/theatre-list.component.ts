@@ -20,6 +20,16 @@ export class TheatreListComponent {
     this.selecetedCity = this.commonService._selectCity();
     this.cinemaData = cinemas
   }
+
+  onVenueSearch(event: any) {
+    let searchText = event.target.value
+    let res = cinemas.filter((cinema) => cinema.title.toLowerCase().includes(searchText) || cinema.location.toLowerCase().includes(searchText))
+    if (res) {
+      this.cinemaData = res
+    }
+    else
+      this.cinemaData = cinemas
+  }
 }
 
 
