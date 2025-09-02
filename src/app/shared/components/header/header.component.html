@@ -66,7 +66,7 @@
                             <a [routerLink]="['explore/sports']">Sports</a>
                             <a [routerLink]="['explore/activities']">Activities</a>
                             @if (authService.userDetailsSignal()?.role =='ADMIN') {
-                            <a [routerLink]="['admin-dashboard']">Users</a>
+                            <a [routerLink]="['/admin/users']">Users</a>
                             }
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         @if(authService.userDetailsSignal()?.role !='USER' && authService.userDetailsSignal()?.role
                         =='ADMIN'){
                         <div class=" sub_heder_right_links">
-                            <a [routerLink]="['/list-your-show']">ListYourShow</a>
+                            <a [routerLink]="['/admin/list-your-show']">ListYourShow</a>
                             <a>Corporates</a>
                             <a>Offers</a>
                             <a>GiftCards</a>
@@ -113,7 +113,8 @@
                 <h5 class="offcanvas-title fw-bold" id="offcanvasExampleLabel">Hey!</h5>
                 @if (authService.userDetailsSignal()?.role =='USER') {
                 <span class="edit_profile" routerLink="my-profile" data-bs-toggle="offcanvas"
-                    (click)="editProfile()">Edit-Profile <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                    data-bs-target="#offcanvasExample" (click)="editProfile()">Edit-Profile <i
+                        class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </span>
                 }
 
@@ -131,7 +132,8 @@
                 <img alt="rewards" width="40px" height="40px" src="assets/images/rewards_login.png">
             </div>
             <p class="unlock_special_offer_text m-0">Unlock special offers &amp; great benefits</p>
-            <button class="unlock_special_offer_button" (click)="openLoginModal()" data-bs-toggle="offcanvas">Login /
+            <button class="unlock_special_offer_button" (click)="openLoginModal()" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasExample">Login /
                 Register</button>
         </div>
         }
@@ -199,7 +201,8 @@
             </div>
             <div class="button_section">
                 <div class="sc-zgl7vj-7 ifHHkE">
-                    <button class="button_sign_out w-100" data-bs-toggle="offcanvas" (click)="logout()">Sign
+                    <button class="button_sign_out w-100" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+                        (click)="logout()">Sign
                         out</button>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-error-page',
   standalone: false,
@@ -7,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './error-page.component.scss'
 })
 export class ErrorPageComponent {
-
+  constructor(private location: Location) { } goBack() {
+    this.location.back();
+  }
 }

@@ -1,0 +1,52 @@
+<div class="container-fluid">
+    <div class="row main_table_container">
+
+
+        <div class="col-10">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h4>All Users List</h4>
+                <div class="col-4 py-3 px-2 d-flex">
+                    <input type="text" class="serach_input form-control"
+                        placeholder="Search by name,username & phoneNumber">
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>UserName</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>RoleName</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (users of UsersData; track $index) {
+                    <tr>
+                        <td>
+                            {{users.userId}}
+                        </td>
+                        <td>{{users.username}}</td>
+                        <td>{{users.name}}</td>
+                        <td>{{users.phoneNumber}}</td>
+                        <td>{{users.email}}</td>
+                        <td>
+                            <p class="rolename m-0" [ngClass]="{'admin_color': users.roleName =='ADMIN'}">
+                                {{users.roleName}}
+                            </p>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary text-white">Edit Role</button>
+                            <button class="btn btn-danger" (click)="deletUser(users.userId)">Delete</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
