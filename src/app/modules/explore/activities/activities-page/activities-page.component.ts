@@ -13,5 +13,7 @@ export class ActivitiesPageComponent {
   originalMovies = movies
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
+    this.commonService._selectedCategory.set('Activities');
   }
+
 }

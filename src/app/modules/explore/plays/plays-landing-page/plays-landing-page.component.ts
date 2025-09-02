@@ -11,6 +11,7 @@ import { movies } from '../../../../../../db';
 export class PlaysLandingPageComponent {
   dummyMoviesdata: any[] = [];
   originalMovies = movies
+  
   constructor(public commonService: CommonService) {
     this.dummyMoviesdata = movies;
     this.commonService._selectedCategory.set('Plays');

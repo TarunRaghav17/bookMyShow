@@ -39,9 +39,10 @@
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
                                                         <div class="card shadow-sm">
-                                                            <div class="img_container rounded-4 rounded-top">
+                                                            <a class="img_container rounded-4 rounded-top"
+                                                                [routerLink]="[`/plays/:plays-name/:id`]">
                                                                 <img [src]="item.Poster" [alt]="item.Poster">
-                                                            </div>
+                                                            </a>
                                                             <div class="card-body rounded-bottom bg-dark">
                                                                 <div class="d-flex gap-2">
                                                                     <span>

@@ -530,4 +530,54 @@ export const cinemas = [
 ]
 
 
+export const Filters = [
+  {
+    type: "Language",
+    data: [
+      { text: "Hindi", index: 0, selected: false },
+      { text: "English", index: 1, selected: false },
+      { text: "Gujrati", index: 2, selected: false },
+      { text: "Marathi", index: 3, selected: false },
+      { text: "Malayalam", index: 4, selected: false },
+      { text: "Punjabi", index: 5, selected: false },
+      { text: "Telugu", index: 6, selected: false }
+    ]
+  },
+  {
+    type: "Genres",
+    data: [
+      { text: "Drama", index: 0, selected: false },
+      { text: "Action", index: 1, selected: false },
+      { text: "Comedy", index: 2, selected: false },
+      { text: "Thriller", index: 3, selected: false }
+    ]
+  },
+  {
+    type: "Formats",
+    data: [
+      { text: "2D", index: 0, selected: false },
+      { text: "3D", index: 1, selected: false },
+      { text: "4Dx", index: 2, selected: false },
+      { text: "IMAX2d", index: 3, selected: false }
+    ]
+  }
+]
+
+
+export const selectedFilters = [
+
+  {
+    type: "Language",
+    data: []
+  },
+  {
+    type: "Genres",
+    data: []
+  },
+  {
+    type: "Formats",
+    data: []
+  }
+]
+
 

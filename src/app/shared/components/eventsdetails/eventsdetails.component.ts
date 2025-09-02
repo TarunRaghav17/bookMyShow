@@ -1,4 +1,5 @@
 import { Component, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventsdetails',
@@ -8,6 +9,8 @@ import { Component, HostListener } from '@angular/core';
 })
 export class EventsdetailsComponent {
 
+  constructor(private router:Router){}
+
   showHeader = false;
 
   @HostListener('window:scroll')
@@ -16,5 +19,7 @@ export class EventsdetailsComponent {
     if (!section.length) return;
     this.showHeader = window.scrollY >= (section[0] as HTMLElement).offsetTop;
   }
-
+  navigateToDetails() {
+    this.router.navigate(['plays/:plays-name/:id']);
+  }
 }

@@ -19,7 +19,8 @@
         <div [ngClass]="{'toggleFilter':filterShowButtons}">
             <div class="border border-top-0 filter_button_box bg-white ">
                 @for (i of item.data; track $index) {
-                <span (click)="applyFilter(i)">{{i}}</span>
+                <span [ngClass]="{selectedText: i.selected}"
+                    (click)="applyFilter({type:item.type,filterName:i,index:$index})">{{i.text}}</span>
                 }
             </div>
         </div>
