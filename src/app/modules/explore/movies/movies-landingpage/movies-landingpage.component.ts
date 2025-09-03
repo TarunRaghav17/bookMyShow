@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Filters, movies, selectedFilters } from '../../../../../../db';
+import { filters, movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { Router } from '@angular/router';
 
@@ -14,8 +14,10 @@ export class MovieLandingPageComponent {
   selectedCity: any = null
   topFiltersArray: any[] = ['Hindi', 'English', 'Gujrati', 'Marathi', 'Malayalam', 'Punjabi', 'Telugu'];
   originalMovies = movies;
-  filters = Filters
-  select = selectedFilters
+  filters: any[] = filters
+  select: any[] = selectedFilters
+
+
 
 
   constructor(public commonService: CommonService, public router: Router) {
@@ -29,6 +31,7 @@ export class MovieLandingPageComponent {
     })
   }
   handleEventFilter(filter: any) {
+    console.log(filter)
     // make selected filter appear background red
     this.filters.filter((item: any) => {
       if (item.type == filter.type) {

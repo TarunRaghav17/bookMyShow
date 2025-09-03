@@ -530,7 +530,7 @@ export const cinemas = [
 ]
 
 
-export const Filters = [
+export const filters = [
   {
     type: "Language",
     data: [

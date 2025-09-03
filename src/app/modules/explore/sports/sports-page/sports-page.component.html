@@ -14,19 +14,29 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion></app-filter-accordion>
+                                <app-filter-accordion (filterEvent)="handleEventFilter($event)"
+                                    [filters]="filters"></app-filter-accordion>
                             </div>
                         </div>
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
-                            <div class="d-flex gap-3 language_text py-2 flex-wrap">
-                                <span>
-                                    Hindi
+                            <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                                @for (item of select; track $index) {
+                                @for(i of item.data;track $index){
+                                <span [ngClass]="{selectedText: i.selected}">
+                                    {{i.text}}
                                 </span>
-                                <span>
-                                    English
+                                }
+                                }
+                                @for (item of topFiltersArray[0].data; track $index) {
+                                @if(!item.selected){
+
+                                <span [ngClass]="{selectedText: item.selected}" (click)="handleEventFilter(item)">
+                                    {{item.text}}
                                 </span>
+                                }
+                                }
                             </div>
                         </div>
                         <div class="col-12">
@@ -40,7 +50,7 @@
                                                     <div class="col card_container">
                                                         <div class="card shadow-sm">
                                                             <a class="img_container rounded-4 rounded-top"
-                                                            [routerLink]="[`/plays/:plays-name/:id`]">
+                                                                [routerLink]="[`/${commonService._selectedCategory()}/plays-name/id`]">
                                                                 <img [src]="item.Poster" [alt]="item.Poster">
                                                             </a>
                                                             <div class="card-body rounded-bottom bg-dark">

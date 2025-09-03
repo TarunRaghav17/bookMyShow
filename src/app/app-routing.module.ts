@@ -46,7 +46,7 @@ const routes: Routes = [
     component: SeatLayoutComponent
   },
   {
-    path: 'plays/:plays-name/:id',
+    path: ':category/:play-name/:id',
     component: EventsdetailsComponent
   },
   {
