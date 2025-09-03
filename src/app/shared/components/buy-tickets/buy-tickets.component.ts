@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
@@ -189,7 +189,7 @@ export class BuyTicketsComponent {
 
   ngOnInit() {
 
-    let res = this.theatres.map((theatre: any) => {
+    this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
 
@@ -201,7 +201,6 @@ export class BuyTicketsComponent {
 
     });
 
-    console.log("res", res);
 
 
   }
