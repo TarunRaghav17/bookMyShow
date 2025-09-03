@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule,RouterModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
@@ -201,7 +201,6 @@ export class BuyTicketsComponent {
 
     });
 
-    console.log("res", res);
 
 
   }

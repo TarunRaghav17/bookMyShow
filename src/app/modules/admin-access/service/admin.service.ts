@@ -21,7 +21,7 @@ export class AdminService {
 
 
   deleteUserById(id: any) {
-    return this.http.patch(`${this.baseUrl}/api/users/delete-user/${id}`, id)
+    return this.http.patch(`${this.baseUrl}/api/users/delete-user/${id}`, 6)
   }
 
 

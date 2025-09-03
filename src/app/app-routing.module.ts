@@ -22,12 +22,14 @@ const routes: Routes = [
   {
     path: 'my-profile',
     canActivate: [AuthGuard],
+    data: { role: 'USER' },
     loadChildren: () =>
       import('./modules/user-proile/user-profile.module').then((m) => m.UserProfileModule),
   },
   {
     path: 'admin',
     canActivate: [AuthGuard],
+    data: { role: 'ADMIN' },
     loadChildren: () => import('./modules/admin-access/admin-access.module').then((m) => m.AdminAccessModule)
   },
   {

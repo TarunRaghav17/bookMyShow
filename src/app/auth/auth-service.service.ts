@@ -4,18 +4,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { jwtDecode } from "jwt-decode";
 import { Router } from '@angular/router';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private secretKey = environment.secretKey;  // from environment
+  encrypted!: string;
+  baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient, private router: Router) {
   }
 
-  baseUrl = environment.baseUrl;
-
-  // Holds decoded user details from token
+  // Holds our decoded userDetails from tokenData
   userDetailsSignal = signal<any>(this.getUserFromToken());
 
 
@@ -43,6 +45,18 @@ export class AuthService {
   }
 
 
+  // I am  Checked if logged in
+  isLoggedIn(): boolean {
+    const token = localStorage.getItem('token');
+    return !!token;
+  }
+
+  // Get role from decoded token
+  getUserRole(): string | null {
+    const user = this.getUserFromToken();
+    return user?.role || null;  // I have sure your token has "role"
+  }
+
   decodeToken(token: string) {
     try {
       const userDetails: any = jwtDecode(token);
@@ -51,5 +65,35 @@ export class AuthService {
       return null;
     }
   }
+
+
+
+  encryptUsingAES256(val: any) {
+    const _key = CryptoJS.enc.Utf8.parse(this.secretKey);
+    const _iv = CryptoJS.enc.Utf8.parse(this.secretKey);
+    let encrypted = CryptoJS.AES.encrypt(val, _key, {
+      keySize: 32,
+      iv: _iv,
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+    this.encrypted = encrypted.toString();
+    return this.encrypted;
+  }
+
+
+  decryptUsingAES256(val: any) {
+    const _key = CryptoJS.enc.Utf8.parse(this.secretKey);
+    const _iv = CryptoJS.enc.Utf8.parse(this.secretKey);
+    const decrypted = CryptoJS.AES.decrypt(val, _key, {
+      keySize: 16,
+      iv: _iv,
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7,
+    });
+    const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    return decryptedText;
+  }
+
 
 }
