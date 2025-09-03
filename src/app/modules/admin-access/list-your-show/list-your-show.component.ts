@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -8,7 +9,17 @@ import { Component } from '@angular/core';
   styleUrl: './list-your-show.component.scss'
 })
 export class ListYourShowComponent {
+  @ViewChild('cityModal', { static: true }) content!: TemplateRef<any>;
+  constructor(private modalService: NgbModal) {
+
+  }
 
 
 
+  openCityModal(content: TemplateRef<any>) {
+    this.modalService.open(content, {
+      // modalDialogClass: 'dialog',
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
 }

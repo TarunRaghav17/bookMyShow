@@ -189,7 +189,7 @@ export class BuyTicketsComponent {
 
   ngOnInit() {
 
-    let res = this.theatres.map((theatre: any) => {
+    this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
 

@@ -1,0 +1,71 @@
+.img_container img {
+  max-width: auto;
+  max-height: 240px;
+}
+.card_events {
+  background: rgb(236, 245, 255);
+
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 2px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0px;
+  width: calc(34.3333% - 32px);
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+.card_events:hover {
+  box-shadow: rgba(0, 0, 0, 0.41) 10px 10px 5px -5px;
+  transform: translateY(-10px);
+}
+.card_events img,
+.card_service img {
+  max-height: 70px;
+}
+.card_events p,
+.card_service p {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 30px;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+}
+.button_section {
+  padding: 100px;
+}
+.list-your-btn {
+  font-size: 16px;
+  border-radius: 8px;
+  line-height: 50px;
+  font-weight: 500;
+  color: rgb(255, 255, 255);
+  text-align: center;
+  transition: background-color 1000ms;
+  background: rgb(220, 53, 75);
+  padding: 0px;
+}
+.card_service {
+  background: rgb(252, 241, 241);
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 2px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 0px;
+  width: calc(34.3333% - 32px);
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+.card_service img {
+  max-height: 100px;
+}
+.card_service:hover {
+  box-shadow: rgba(0, 0, 0, 0.41) 10px 10px 5px -5px;
+  transform: translateY(-10px);
+}
