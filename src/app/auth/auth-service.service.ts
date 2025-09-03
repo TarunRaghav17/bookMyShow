@@ -10,18 +10,16 @@ import * as CryptoJS from 'crypto-js';
   providedIn: 'root'
 })
 export class AuthService {
-  private secretKey = environment.secretKey;  // from environment
+  private secretKey = environment.secretKey;
   encrypted!: string;
   baseUrl = environment.baseUrl;
 
   constructor(private http: HttpClient, private router: Router) {
   }
-
-  // Holds our decoded userDetails from tokenData
+  /**
+    * @description  Holds our decoded userDetails from tokenData
+    */
   userDetailsSignal = signal<any>(this.getUserFromToken());
-
-
-
 
   login(credentials: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials);
@@ -44,17 +42,20 @@ export class AuthService {
     return this.decodeToken(token);
   }
 
-
-  // I am  Checked if logged in
   isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
     return !!token;
   }
 
-  // Get role from decoded token
+  /**
+    * @description Get role from decoded token 
+    * @author Gurmeet Kumar
+    * @returnType role || null 
+    */
+
   getUserRole(): string | null {
     const user = this.getUserFromToken();
-    return user?.role || null;  // I have sure your token has "role"
+    return user?.role || null;
   }
 
   decodeToken(token: string) {
@@ -66,7 +67,10 @@ export class AuthService {
     }
   }
 
-
+  /**
+    * @description send to the encrypted password to the backend  
+    * @author Gurmeet Kumar
+    */
 
   encryptUsingAES256(val: any) {
     const _key = CryptoJS.enc.Utf8.parse(this.secretKey);
@@ -80,7 +84,6 @@ export class AuthService {
     this.encrypted = encrypted.toString();
     return this.encrypted;
   }
-
 
   decryptUsingAES256(val: any) {
     const _key = CryptoJS.enc.Utf8.parse(this.secretKey);

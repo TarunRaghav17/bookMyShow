@@ -12,15 +12,22 @@ export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService, private router: Router, private toastrService: ToastrService) { }
 
+  /**
+   * @description expectedRole variable get role 
+   */
+
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    const expectedRole = route.data['role'];  //  role route se aayega
+    const expectedRole = route.data['role'];
     const userRole = this.authService.getUserRole();
 
     if (this.authService.isLoggedIn() && userRole === expectedRole) {
       return true;
     }
 
-    // Agar role match nahi karta toh unauthorized page pe bhej do
+    /**
+      * @description role doesn't match to get the toastr unauthorized 
+      */
+
     this.toastrService.error('You are not authorized to access this page', 'Unauthorized');
     this.router.navigate(['/']);
     return false;

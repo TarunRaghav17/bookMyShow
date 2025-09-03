@@ -12,16 +12,29 @@ export class AdminService {
 
   baseUrl = environment.baseUrl
 
+  /**
+   * @description getAll usersList
+   * @author Gurmeet Kumar
+   */
+
   getAllUsers(): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/users`)
   }
+
+  /**
+ * @description get user byId 
+ * @author Gurmeet Kumar
+ */
   getUserById(id: any) {
     return this.http.get(`${this.baseUrl}/api/users/${id}`)
   }
 
-
+  /**
+  * @description soft delete by admin  Users Here is change only deleteFlag change boolean
+  * @author Gurmeet Kumar
+  */
   deleteUserById(id: any) {
-    return this.http.patch(`${this.baseUrl}/api/users/delete-user/${id}`, 6)
+    return this.http.patch(`${this.baseUrl}/api/users/delete-user/${id}`, id)
   }
 
 

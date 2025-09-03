@@ -9,7 +9,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
-  UsersData: any[] = []
+
+  usersData: any[] = []
   constructor(private adminService: AdminService, private toastr: ToastrService) {
 
   }
@@ -18,19 +19,41 @@ export class UsersComponent implements OnInit {
     this.getAllUserData()
   }
 
+  /**
+  * @description Get all users List 
+  * @author Gurmeet Kumar
+  */
   getAllUserData() {
-    this.adminService.getAllUsers().subscribe((res) => {
-      this.UsersData = res.data.users
-
-    })
+    this.adminService.getAllUsers().subscribe({
+      next: (res) => {
+        this.usersData = res.data.users
+      },
+      error: (res) => {
+        this.toastr.error(res.error);
+      }
+    });
   }
 
+
+  /**
+  * @description user Get by userId   
+  * @author Gurmeet Kumar
+  */
   userGetById(id: any) {
-    this.adminService.getUserById(id).subscribe(() => {
-
-    })
+    this.adminService.getUserById(id).subscribe({
+      next: () => {
+        this.toastr.success("User get byId")
+      },
+      error: (res) => {
+        this.toastr.error(res.error);
+      }
+    });
   }
 
+  /**
+  * @description delete by userID 
+  * @author Gurmeet Kumar
+  */
   deletUser(id: number) {
     this.adminService.deleteUserById(id).subscribe({
       next: () => {
@@ -42,9 +65,6 @@ export class UsersComponent implements OnInit {
       }
     });
   }
-
-
-
 
 
 

@@ -18,6 +18,8 @@ export class UserAuthComponent implements OnInit {
   showPassword: boolean = false;
 
   constructor(private authService: AuthService, private activeModal: NgbActiveModal) { }
+
+
   ngOnInit(): void { }
 
   loginForm = new FormGroup({

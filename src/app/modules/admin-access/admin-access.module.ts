@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AdminAccessRoutingModule } from './admin-access-routing.module';
 import { UsersComponent } from './users/users.component';
 import { ListYourShowComponent } from './list-your-show/list-your-show.component';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 
 @NgModule({
@@ -13,7 +14,7 @@ import { ListYourShowComponent } from './list-your-show/list-your-show.component
   ],
   imports: [
     CommonModule,
-    AdminAccessRoutingModule
+    AdminAccessRoutingModule, CarouselModule
   ]
 })
 export class AdminAccessModule { }
