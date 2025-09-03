@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
 import { filters, movies, selectedFilters } from '../../../../../../db';
+import { resetfilterAccordian } from '../../../../../../util';
 
 @Component({
   selector: 'app-plays-landing-page',
@@ -26,6 +27,10 @@ export class PlaysLandingPageComponent {
       if (item.type == 'Language') return item.data.filter((i: any) => i)
     })
   }
+  ngOnDestroy() {
+    resetfilterAccordian(this.filters)
+  }
+
   handleEventFilter(filter: any) {
     console.log(filter)
     // make selected filter appear background red

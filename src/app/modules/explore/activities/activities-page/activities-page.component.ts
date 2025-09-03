@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { filters, movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
+import { resetfilterAccordian } from '../../../../../../util';
 
 @Component({
   selector: 'app-activities-page',
@@ -28,6 +29,9 @@ export class ActivitiesPageComponent {
     this.topFiltersArray = this.filters.filter((item: any) => {
       if (item.type == 'Language') return item.data.filter((i: any) => i)
     })
+  }
+  ngOnDestroy() {
+    resetfilterAccordian(this.filters)
   }
   handleEventFilter(filter: any) {
     console.log(filter)
@@ -61,7 +65,5 @@ export class ActivitiesPageComponent {
     }
 
   }
-
-
 
 }

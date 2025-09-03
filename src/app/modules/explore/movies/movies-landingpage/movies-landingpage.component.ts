@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { filters, movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { Router } from '@angular/router';
+import { resetfilterAccordian } from '../../../../../../util';
 
 @Component({
   selector: 'app-movie',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './movies-landingpage.component.html',
   styleUrl: './movies-landingpage.component.scss'
 })
-export class MovieLandingPageComponent {
+export class MovieLandingPageComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
   selectedCity: any = null
   topFiltersArray: any[] = ['Hindi', 'English', 'Gujrati', 'Marathi', 'Malayalam', 'Punjabi', 'Telugu'];
@@ -30,8 +31,11 @@ export class MovieLandingPageComponent {
       if (item.type == 'Language') return item.data.filter((i: any) => i)
     })
   }
+
+  ngOnDestroy() {
+    resetfilterAccordian(this.filters)
+  }
   handleEventFilter(filter: any) {
-    console.log(filter)
     // make selected filter appear background red
     this.filters.filter((item: any) => {
       if (item.type == filter.type) {
@@ -62,6 +66,11 @@ export class MovieLandingPageComponent {
     }
 
   }
+
+
+
+
+
 
 
 
