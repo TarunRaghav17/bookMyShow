@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+import { CreateVenueComponent } from './shared/components/create-venue/create-venue.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,11 @@ const routes: Routes = [
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
 
+  },
+
+  {
+    path: 'admin/create-venue',
+    component: CreateVenueComponent
   },
   {
     path: '**',

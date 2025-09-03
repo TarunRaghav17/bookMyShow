@@ -1,0 +1,117 @@
+<form [formGroup]="venueForm" (ngSubmit)="onSubmit()" novalidate class="container mt-4">
+    <div class="row">
+        <!-- Venue Name -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Venue Name</label>
+            <input type="text" formControlName="venueName" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('venueName')?.touched && venueForm.get('venueName')?.invalid}" />
+            <div class="invalid-feedback">Venue name is required.</div>
+        </div>
+
+        <!-- Capacity -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Capacity</label>
+            <input type="number" formControlName="venueCapacity" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
+            <div class="invalid-feedback">Capacity must be at least 1.</div>
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div formGroupName="address" class="row">
+        <h5 class="mb-3">Address</h5>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Street</label>
+            <input type="text" formControlName="street" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('address.street')?.touched && venueForm.get('address.street')?.invalid}" />
+            <div class="invalid-feedback">Street is required.</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">City</label>
+            <input type="text" formControlName="city" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('address.city')?.touched && venueForm.get('address.city')?.invalid}" />
+            <div class="invalid-feedback">City is required.</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">PIN</label>
+            <input type="text" formControlName="pin" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('address.pin')?.touched && venueForm.get('address.pin')?.invalid}" />
+            <div class="invalid-feedback">Must be a 6-digit PIN.</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Venue For -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Venue For</label>
+            <select formControlName="venueFor" class="form-select" (change)="onVenueForChange()"
+                [ngClass]="{'is-invalid': venueForm.get('venueFor')?.touched && venueForm.get('venueFor')?.invalid}">
+                <option value="">Select</option>
+                <option value="movies">Movies</option>
+                <option value="sports">Sports</option>
+                <option value="events">Events</option>
+                <option value="activities">Activities</option>
+            </select>
+            <div class="invalid-feedback">Please select a type.</div>
+        </div>
+
+        <!-- Venue Type -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Venue Type</label>
+            <input type="text" formControlName="venueType" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('venueType')?.touched && venueForm.get('venueType')?.invalid}" />
+            <div class="invalid-feedback">Venue type is required.</div>
+        </div>
+    </div>
+
+    <!-- Supported Categories -->
+    <div formArrayName="supportedCategories" class="mb-3">
+        <h5>Supported Categories</h5>
+        <div *ngFor="let category of supportedCategories.controls; let i = index" class="input-group mb-2">
+            <input [formControlName]="i" class="form-control" placeholder="Category"
+                [ngClass]="{'is-invalid': category.touched && category.invalid}" />
+            <button type="button" class="btn btn-danger" (click)="removeCategory(i)">Remove</button>
+            <div class="invalid-feedback">Category is required.</div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="addCategory()">+ Add Category</button>
+    </div>
+
+
+    <div class="" formGroupName="additionalFields">
+
+        <div class="" formArrayName="screens">
+
+            @for(screen of screens.controls;track $index){
+
+            <div class="" formGroupName="{{$index}}">
+                <label for="">screen name {{$index +1}}</label>
+                <input type="text" formControlName="screenName">
+
+                <label for="">Layout</label>
+                <input type="text" formControlName="layout">
+            </div>
+
+
+            }
+        </div>
+
+    </div>
+
+    <!-- Amenities -->
+    <div formArrayName="amenities" class="mb-3">
+        <h5>Amenities</h5>
+        <div *ngFor="let amenity of amenities.controls; let i = index" class="input-group mb-2">
+            <input [formControlName]="i" class="form-control" placeholder="Amenity"
+                [ngClass]="{'is-invalid': amenity.touched && amenity.invalid}" />
+            <button type="button" class="btn btn-danger" (click)="removeAmenity(i)">Remove</button>
+            <div class="invalid-feedback">Amenity is required.</div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="addAmenity()">+ Add Amenity</button>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-success mt-3">Submit</button>
+</form>
