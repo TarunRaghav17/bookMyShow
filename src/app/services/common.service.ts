@@ -9,7 +9,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CommonService {
 
-
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
@@ -17,7 +16,6 @@ export class CommonService {
   _selectedCategory = signal<any>('');
 
   constructor(private http: HttpClient) { }
-
 
   baseUrl = environment.baseUrl
 

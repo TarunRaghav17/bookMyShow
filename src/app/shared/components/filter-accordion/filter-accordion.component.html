@@ -1,8 +1,6 @@
 <div class="d-flex flex-column gap-2">
     @for(item of filters;track $index){
     <div class="main_container_accordion d-block ">
-
-
         <div class="d-flex justify-content-between border accordion_box border-bottom-0 shadow-sm border"
             (click)="toggleAccordion($index)">
             <div class="d-flex gap-2 align-items-center">
@@ -14,7 +12,6 @@
                 <span>Clear</span>
             </div>
         </div>
-
         @if(openedIndex.includes($index)) {
         <div [ngClass]="{'toggleFilter':filterShowButtons}">
             <div class="border border-top-0 filter_button_box bg-white ">
@@ -32,6 +29,5 @@
                 Browse by {{browseBy}}
             </button>
         </a>
-
     </div>
 </div>

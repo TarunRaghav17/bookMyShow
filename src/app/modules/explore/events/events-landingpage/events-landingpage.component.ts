@@ -21,16 +21,38 @@ export class EventsLandingPageComponent {
     this.commonService._selectedCategory.set('Events');
   }
 
+  /**
+   * @description initialize Top Filters
+   * @author Manu Shukla
+   * @params  
+   * @returnType void
+   */
+
   ngOnInit(): void {
     this.topFiltersArray = this.filters.filter((item: any) => {
       if (item.type == 'Language') return item.data.filter((i: any) => i)
     })
   }
-  ngOnDestroy() {
+
+  /**
+* @description Remove Already Selected Filters
+* @author Manu Shukla
+* @params  
+* @returnType void
+*/
+
+  ngOnDestroy(): void {
     resetfilterAccordian(this.filters)
   }
 
-  handleEventFilter(filter: any) {
+  /**
+ * @description Takes Filters Array , toggle the selected key and push into selectFilters array
+ * @author Manu Shukla
+ * @params  [Filters]
+ * @returnType void
+ */
+
+  handleEventFilter(filter: any): void {
     console.log(filter)
     // make selected filter appear background red
     this.filters.filter((item: any) => {
@@ -39,7 +61,6 @@ export class EventsLandingPageComponent {
           if (i.text == filter.filterName.text) {
             i.selected = !i.selected
           }
-
         })
       }
     }
@@ -59,6 +80,4 @@ export class EventsLandingPageComponent {
       }
     }
   }
-
-
 }

@@ -11,7 +11,6 @@
                             alt="">
                         <span class="cinema-badge">In cinemas</span>
                     </div>
-
                     <div class="col-9 h-100 text-white p-4 py-5">
                         <h1 class="movie-title">War 2</h1>
                         <div class="rating-box">
@@ -25,10 +24,8 @@
                                     <span>Rate Now</span>
                                 </button>
                             </div>
-
                         </div>
                         <div class="movie-formats">
-
                             <div class="format-tags">
                                 <a>2D,</a>
                                 <a>ICE,</a><a>IMAX 2D,</a><a>4DX,</a><a>DOLBY,</a><a>CINEMA 2D</a>
@@ -56,7 +53,6 @@
                         <i class="fa fa-share" aria-hidden="true"></i>
                         <span>Share</span>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -82,13 +78,11 @@
                         </p>
                         <p>The choices ahead of them are impossible. The price to be paid is ultimate. This is a War
                             with spectacular action and heart-wrenching emotion.</p>
-
                     </div>
                 </div>
 
             </div>
         </div>
-
         <div class="cast_and_crew-section py-4 d-flex justify-content-center flex-column align-items-center">
             <div class="col-8">
                 <hr class="w-100 py-3">
@@ -173,8 +167,6 @@
     </div>
 </ng-template>
 
-
-<!-- ---------------inzDev start----------- -->
 <ng-template #langFormatModal let-modal>
     <div class="p-3 border">
 
@@ -189,14 +181,12 @@
 
         <!-- Language -->
 
-        <div class=" d-flex flex-column gap-3"> <!--main container flex-->
+        <div class=" d-flex flex-column gap-3">
             @for(item of langFormatData;track $index){
-            <div class=""> <!--one particular card lang + format-->
+            <div>
                 <div class="border rounded bg-light p-2 mb-3">
                     <span class="fw-thin text-muted">{{item.lang}}</span>
-
                 </div>
-
                 <!-- Formats -->
                 <div class="d-flex gap-2 flex-wrap">
                     @for(f of item.format;track $index){
@@ -204,17 +194,8 @@
                         (click)="navigateToBuyTicket()">{{f}}</button>
                     }
                 </div>
-
-
-
-
             </div>
             }
-
-
-
-            <!-- end -->
         </div>
-
     </div>
 </ng-template>
