@@ -22,13 +22,15 @@ const routes: Routes = [
   {
     path: 'my-profile',
     canActivate: [AuthGuard],
+    data: { role: 'USER' },
     loadChildren: () =>
       import('./modules/user-proile/user-profile.module').then((m) => m.UserProfileModule),
   },
   {
-    path: 'list-your-show',
-
-    loadChildren: () => import('./modules/list-your-show/list-your-show.module').then((m) => m.ListYourShowModule)
+    path: 'admin',
+    canActivate: [AuthGuard],
+    data: { role: 'ADMIN' },
+    loadChildren: () => import('./modules/admin-access/admin-access.module').then((m) => m.AdminAccessModule)
   },
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent

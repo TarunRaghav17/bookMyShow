@@ -16,13 +16,16 @@ export class SearchBoxComponent implements OnInit {
 
   constructor(private modalService: NgbModal) { }
 
-
-
   ngOnInit(): void {
     this.getVisibleFilters()
   }
-  openModal(content: TemplateRef<any>) {
-    this.modalRef = this.modalService.open(content, {
+
+  /**
+    * @description openModal 
+    * @author Gurmeet Kumar
+    */
+  openModal(searchFilterModal: TemplateRef<any>) {
+    this.modalRef = this.modalService.open(searchFilterModal, {
       modalDialogClass: 'searchbox',
       ariaLabelledBy: 'modal-basic-title',
     });
@@ -36,7 +39,7 @@ export class SearchBoxComponent implements OnInit {
 
   /**  
    * @description .  
-   * @author Gurmeet 
+   * @author Gurmeet Kumar
    * @return {string} Return a string  
    */
 
@@ -44,11 +47,19 @@ export class SearchBoxComponent implements OnInit {
     this.filterData = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
   }
 
+  /**
+    * @description next i have click to get 6 cardsData
+    * @author Gurmeet Kumar,
+    */
   next() {
     if (this.currentIndex + this.visibleCount < this.eventsFilters.length) {
       this.currentIndex++;
     }
   }
+  /**
+   * @description prev i have click to get  back 6 cardsData
+   * @author Gurmeet Kumar,
+   */
 
   prev() {
     if (this.currentIndex > 0) {

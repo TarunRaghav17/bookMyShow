@@ -11,11 +11,13 @@ import { FilterAccordionComponent } from './shared/components/filter-accordion/f
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SearchBoxComponent } from './shared/components/searchBox/searchBox.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
+import { ToastrModule } from 'ngx-toastr';
 
 
 @NgModule({
@@ -27,8 +29,14 @@ import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
     SearchBoxComponent,
     TheatreListComponent
   ],
-  imports: [BrowserModule,
-    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent],
+  imports: [BrowserModule, BrowserAnimationsModule,
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent,
+    ToastrModule.forRoot({     // Global toastr configuration
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
+  ],
   providers: [provideHttpClient(withFetch()), {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,

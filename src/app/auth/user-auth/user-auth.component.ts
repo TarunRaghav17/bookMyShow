@@ -18,6 +18,8 @@ export class UserAuthComponent implements OnInit {
   showPassword: boolean = false;
 
   constructor(private authService: AuthService, private activeModal: NgbActiveModal) { }
+
+
   ngOnInit(): void { }
 
   loginForm = new FormGroup({
@@ -39,13 +41,18 @@ export class UserAuthComponent implements OnInit {
 
   onLoginSubmit() {
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
+      const encryptedData = {
+        ...this.loginForm.value,
+        password: this.authService.encryptUsingAES256(this.loginForm.value.password)
+      };
+      this.authService.login(encryptedData).subscribe({
         next: (res: any) => {
           alert(res.message);
           localStorage.setItem('token', res.data.token);
           this.authService.userDetailsSignal.set(
             this.authService.decodeToken(res.data.token)
           );
+
           this.loginForm.reset();
           this.activeModal.close(UserAuthComponent);
         },
@@ -56,7 +63,12 @@ export class UserAuthComponent implements OnInit {
 
   onSignupSubmit() {
     if (this.signupForm.valid) {
-      this.authService.signup(this.signupForm.value).subscribe({
+      const encryptedData = {
+        ...this.signupForm.value,
+        password: this.authService.encryptUsingAES256(this.signupForm.value.password)
+      };
+
+      this.authService.signup(encryptedData).subscribe({
         next: () => {
           this.signupForm.reset();
           this.activeModal.close(UserAuthComponent);
@@ -65,6 +77,7 @@ export class UserAuthComponent implements OnInit {
       });
     }
   }
+
 
   togglePassword() {
     this.showPassword = !this.showPassword;
