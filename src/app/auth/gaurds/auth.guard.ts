@@ -14,6 +14,7 @@ export class AuthGuard implements CanActivate {
 
   /**
    * @description expectedRole variable get role 
+   * @author Gurmeet Kumar
    */
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
@@ -26,6 +27,7 @@ export class AuthGuard implements CanActivate {
 
     /**
       * @description role doesn't match to get the toastr unauthorized 
+      * @author Gurmeet Kumar
       */
 
     this.toastrService.error('You are not authorized to access this page', 'Unauthorized');

@@ -113,8 +113,8 @@
                 <h5 class="offcanvas-title fw-bold" id="offcanvasExampleLabel">Hey!</h5>
                 @if (authService.userDetailsSignal()?.role =='USER') {
                 <span class="edit_profile" routerLink="my-profile" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasExample" (click)="editProfile()">Edit-Profile <i
-                        class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+                    data-bs-target="#offcanvasExample">Edit-Profile <i class="fa fa-angle-right ms-1"
+                        aria-hidden="true"></i>
                 </span>
                 }
 

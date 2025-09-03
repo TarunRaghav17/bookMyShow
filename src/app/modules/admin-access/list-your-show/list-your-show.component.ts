@@ -14,11 +14,13 @@ export class ListYourShowComponent {
 
   }
 
-
+  /**
+    * @description open service modal 
+    * @author  Gurmeet Kumar
+    */
 
   openCityModal(content: TemplateRef<any>) {
     this.modalService.open(content, {
-      // modalDialogClass: 'dialog',
       ariaLabelledBy: 'modal-basic-title',
     });
   }

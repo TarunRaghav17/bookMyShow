@@ -7,7 +7,13 @@ import { Location } from '@angular/common';
   styleUrl: './error-page.component.scss'
 })
 export class ErrorPageComponent {
-  constructor(private location: Location) { } goBack() {
+  constructor(private location: Location) { }
+
+  /**
+    * @description goback to home page
+    * @author Gurmeet Kumar
+    */
+  goBack() {
     this.location.back();
   }
 }

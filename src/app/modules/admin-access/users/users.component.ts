@@ -22,6 +22,8 @@ export class UsersComponent implements OnInit {
   /**
   * @description Get all users List 
   * @author Gurmeet Kumar
+  * @returns get all users
+  * 
   */
   getAllUserData() {
     this.adminService.getAllUsers().subscribe({
@@ -38,6 +40,7 @@ export class UsersComponent implements OnInit {
   /**
   * @description user Get by userId   
   * @author Gurmeet Kumar
+  * @returns userData getById
   */
   userGetById(id: any) {
     this.adminService.getUserById(id).subscribe({

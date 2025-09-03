@@ -15,6 +15,7 @@ import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from '../../../auth/auth-service.service';
+import { ToastrService } from 'ngx-toastr';
 export class NgbdModalContent {
   activeModal = inject(NgbActiveModal);
 }
@@ -35,25 +36,29 @@ export class HeaderComponent implements OnInit {
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
+
   constructor(
     private modalService: NgbModal,
     public commonService: CommonService,
     public authService: AuthService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private toastr: ToastrService
   ) {
-
     this.selectedCity = this.commonService._selectCity()
   }
 
   ngOnInit(): void {
     this.getAllPopularCity()
-    this.searchCityData()
+    this.getAllCitiesData()
     this.showProfileheader = this.commonService._profileHeader()
     if (!this.selectedCity) {
       this.openCityModal(this.content)
     }
-
   }
+  /**
+    * @description open cityModal  
+    * @author Gurmeet Kumar
+    */
 
   openCityModal(content: TemplateRef<any>) {
     this.modalService.open(content, {
@@ -62,19 +67,38 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+
+  /**
+    * @description view all city toggleButton and change the viewAllCity  
+    * @author Gurmeet Kumar
+    */
   viewAllCities() {
     this.showCities = !this.showCities;
     this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
   }
 
+
+  /**
+    * @description Get all popularCity  
+    * @author Gurmeet Kumar
+    *  @return PopularCity
+    */
   getAllPopularCity() {
-    this.commonService.getPopularCities().subscribe((res) => {
-      this.cityData = res;
-    })
+    this.commonService.getPopularCities().subscribe({
+      next: (res) => {
+        this.cityData = res;
+      },
+      error: (res) => {
+        this.toastr.error(res.error);
+      }
+    });
   }
 
 
-
+  /**
+   * @description open loginModal 
+   * @author Gurmeet Kumar,
+   */
   openLoginModal(): void {
     const modalOptions: NgbModalOptions = {
       centered: true,
@@ -85,7 +109,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-
+  /**
+      * @description SelectCity city and close the Modal after selectedCity, Save sessionStorage seletedCity 
+      * @author Gurmeet Kumar
+      */
   selectCity(city: any, modalRef: NgbModalRef) {
     this.commonService._selectCity.set(city)
     this.selectedCity = this.commonService._selectCity()
@@ -95,10 +122,12 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  editProfile() {
 
-  }
-  // Formating image
+
+  /**
+    * @description bs64imageConvertr  using this fun  
+    * @author Gurmeet Kumar
+    */
   getImageFromBase64(base64string: string): any {
     if (base64string) {
       let imageType = base64string;
@@ -107,24 +136,47 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  /**
+     * @description logout user/admin to remove The localStorage token
+     * @author Gurmeet Kumar
+     */
   logout() {
     this.authService.logout()
   }
 
-
-
-  searchCityData() {
-    this.commonService.getAllCities().subscribe((res) => {
-      this.citiesJson = res
-    })
+  /**
+      * @description get all citiesData  list 
+      * @author Gurmeet Kumar,
+      * @return cities List
+      */
+  getAllCitiesData() {
+    this.commonService.getAllCities().subscribe({
+      next: (res) => {
+        this.citiesJson = res
+      },
+      error: (res) => {
+        this.toastr.error(res.error);
+      }
+    });
 
   }
+
+  /**
+      * @description onSearch by city filtered show list 
+      * @author Gurmeet Kumar
+      */
+
   onSearchChange(value: string) {
     const searchValue = value.toLowerCase();
     this.filteredCities = this.citiesJson.filter((city: any) =>
       city.name.toLowerCase().includes(searchValue)
     );
   }
+
+  /**
+    * @description input clear ,remove all text in input 
+    * @author Gurmeet Kumar
+    */
   clearSearch() {
     this.searchText = '';
     this.filteredCities = [];
