@@ -19,6 +19,7 @@ export class FilterAccordionComponent {
   constructor(public router: Router, public commonService: CommonService) {
     this.selectedCategory = this.commonService._selectedCategory();
     this.browseBy = this.commonService._selectedCategory() === 'Movies' ? 'Cinemas' : 'Venues';
+
   }
 
   @Output() filterEvent = new EventEmitter<string>()
@@ -36,8 +37,9 @@ export class FilterAccordionComponent {
 
   applyFilter(filter: any) {
     this.filterEvent.emit(filter)
-
   }
+
+
 }
 
 

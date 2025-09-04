@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { filters, movies, selectedFilters } from '../../../../../../db';
+import { filters, movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
-import { resetfilterAccordian } from '../../../../../../util';
-
 @Component({
   selector: 'app-sports-page',
   standalone: false,
@@ -11,7 +9,7 @@ import { resetfilterAccordian } from '../../../../../../util';
 })
 export class SportsPageComponent {
   dummyMoviesdata: any[] = [];
-  topFiltersArray: any[] = ['Hindi', 'English', 'Gujrati', 'Marathi', 'Malayalam', 'Punjabi', 'Telugu'];
+  topFiltersArray: any[] = topFilters
   originalMovies = movies
   filters: any[] = filters
   select: any[] = selectedFilters
@@ -41,42 +39,8 @@ export class SportsPageComponent {
 */
 
   ngOnDestroy(): void {
-    resetfilterAccordian(this.filters)
+    this.commonService.resetfilterAccordian(this.filters)
+    localStorage.removeItem('category')
   }
 
-  /**
- * @description Takes Filters Array , toggle the selected key and push into selectFilters array
- * @author Manu Shukla
- * @params  [Filters]
- * @returnType void
- */
-
-  handleEventFilter(filter: any): void {
-    console.log(filter)
-    // make selected filter appear background red
-    this.filters.filter((item: any) => {
-      if (item.type == filter.type) {
-        item.data.filter((i: any) => {
-          if (i.text == filter.filterName.text) {
-            i.selected = !i.selected
-          }
-        })
-      }
-    }
-    )
-    let filterType: any[] = this.select.filter((item: any) =>
-      item.type == filter.type
-    )
-    if (filterType) {
-      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
-      if (alreayExist.length == 0) {
-        filterType[0].data.push(filter.filterName)
-        return filterType[0].data.sort((a: any, b: any) => a.index - b.index)
-      }
-      else {
-        filterType[0].data = filterType[0].data.filter((i: any) => i.text != filter.filterName.text)
-
-      }
-    }
-  }
 }

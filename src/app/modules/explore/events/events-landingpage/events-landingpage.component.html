@@ -14,7 +14,7 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion (filterEvent)="handleEventFilter($event)"
+                                <app-filter-accordion (filterEvent)="commonService.handleEventFilter($event)"
                                     [filters]="filters"></app-filter-accordion>
                             </div>
                         </div>
@@ -32,7 +32,8 @@
                                 @for (item of topFiltersArray[0].data; track $index) {
                                 @if(!item.selected){
 
-                                <span [ngClass]="{selectedText: item.selected}" (click)="handleEventFilter(item)">
+                                <span [ngClass]="{selectedText: item.selected}"
+                                    (click)="commonService.handleEventFilter(item)">
                                     {{item.text}}
                                 </span>
                                 }

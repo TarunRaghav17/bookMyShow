@@ -68,6 +68,11 @@ export class HeaderComponent implements OnInit {
   }
 
 
+
+  isCategorySelected(category: string) {
+    return category == this.commonService._selectedCategory()
+  }
+
   /**
     * @description view all city toggleButton and change the viewAllCity  
     * @author Gurmeet Kumar

@@ -579,5 +579,15 @@ export const selectedFilters = [
     data: []
   }
 ]
+export const topFilters = [
+  'Hindi',
+  'English',
+  'Gujrati',
+  'Marathi',
+  'Malayalam',
+  'Punjabi',
+  'Telugu'
+];
+
 
 

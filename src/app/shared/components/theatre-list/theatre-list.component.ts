@@ -30,6 +30,9 @@ export class TheatreListComponent {
     else
       this.cinemaData = cinemas
   }
+  toggleBtn() {
+
+  }
 }
 
 

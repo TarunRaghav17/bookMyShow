@@ -1,10 +1,9 @@
 <div class="d-flex flex-column gap-2">
     @for(item of filters;track $index){
     <div class="main_container_accordion d-block ">
-        <div class="d-flex justify-content-between border accordion_box border-bottom-0 shadow-sm border"
-            (click)="toggleAccordion($index)">
-            <div class="d-flex gap-2 align-items-center">
-                <i class="fa fa-angle-down" aria-hidden="true" [ngClass]="{'tranform_icon': filterShowButtons}"></i>
+        <div class="d-flex justify-content-between border accordion_box border-bottom-0 shadow-sm border">
+            <div class="d-flex gap-2 align-items-center " (click)="toggleAccordion($index)">
+                <i class="fa fa-angle-down" aria-hidden="true" [ngClass]="{'tranform_icon': toggleAccordion}"></i>
 
                 <p class="m-0 filter_text" [ngClass]="{'text_changColor': filterShowButtons}">{{item.type}}</p>
             </div>
