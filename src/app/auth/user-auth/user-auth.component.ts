@@ -3,8 +3,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { catchError, debounceTime, of, switchMap } from 'rxjs';
 
-
+/**
+ * @description Component for user authentication (login & signup modal)
+ * @author Gurmeet Kumar
+ */
 @Component({
   selector: 'app-user-auth',
   standalone: true,
@@ -16,30 +21,34 @@ export class UserAuthComponent implements OnInit {
 
   openSignupForm: boolean = false;
   showPassword: boolean = false;
+  resMessageShow: any;
 
-  constructor(private authService: AuthService, private activeModal: NgbActiveModal) { }
+  constructor(public authService: AuthService, private activeModal: NgbActiveModal, private toastr: ToastrService) { }
 
+  ngOnInit(): void {
 
-  ngOnInit(): void { }
-
+  }
+  /** @description Login form controls */
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
-
+  /** @description Signup form controls */
   signupForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     username: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.pattern(/^[^@]+@[^@]+\.[^@]+$/)]),
-    phoneNumber: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^[0-9]{10}$/)
-    ]),
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
     roleName: new FormControl("USER", Validators.required),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
-  onLoginSubmit() {
+  /**
+   * @description Handle login form submit, encrypt password, store token, update signal, close modal
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  onLoginSubmit(): void {
     if (this.loginForm.valid) {
       const encryptedData = {
         ...this.loginForm.value,
@@ -47,12 +56,11 @@ export class UserAuthComponent implements OnInit {
       };
       this.authService.login(encryptedData).subscribe({
         next: (res: any) => {
-          alert(res.message);
+          this.toastr.success(res.message)
           localStorage.setItem('token', res.data.token);
           this.authService.userDetailsSignal.set(
             this.authService.decodeToken(res.data.token)
           );
-
           this.loginForm.reset();
           this.activeModal.close(UserAuthComponent);
         },
@@ -61,13 +69,17 @@ export class UserAuthComponent implements OnInit {
     }
   }
 
-  onSignupSubmit() {
+  /**
+   * @description Handle signup form submit, encrypt password, call API, close modal on success
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  onSignupSubmit(): void {
     if (this.signupForm.valid) {
       const encryptedData = {
         ...this.signupForm.value,
         password: this.authService.encryptUsingAES256(this.signupForm.value.password)
       };
-
       this.authService.signup(encryptedData).subscribe({
         next: () => {
           this.signupForm.reset();
@@ -78,13 +90,51 @@ export class UserAuthComponent implements OnInit {
     }
   }
 
-
-  togglePassword() {
+  /**
+   * @description Toggle show/hide password field in forms
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  toggleSignupForm() {
+  /**
+   * @description Toggle between login and signup forms
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  toggleSignupForm(): void {
     this.openSignupForm = !this.openSignupForm;
   }
 
+
+
+
+  /**
+ * @description userName validate here to Exist here or not 
+ * @author Gurmeet Kumar
+ * @return void
+ * @param event
+ */
+  checkUsername(event: any) {
+    const username = event.target.value;
+    if (!username) return;
+    of(username)
+      .pipe(
+        debounceTime(500),
+        switchMap((userName) =>
+          this.authService.validateUserName(userName).pipe(
+            catchError(() => of(null))
+          )
+        )
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.resMessageShow = res.message
+
+        },
+        error: (err) => console.error(err)
+      });
+  }
 }

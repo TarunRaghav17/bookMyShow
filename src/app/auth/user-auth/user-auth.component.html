@@ -10,6 +10,7 @@
             @if(loginForm.get('username')?.touched && loginForm.get('username')?.invalid){
             <small class="text-danger">Username is required</small>
             }
+
         </div>
 
         <div class="mb-3 position-relative">
@@ -50,11 +51,24 @@
             }
         </div>
         <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input type="text" class="form-control" formControlName="username" placeholder="Choose a username">
+            <label class="form-label" id="username">Username</label>
+            <input type="text" class="form-control" formControlName="username" for="username"
+                placeholder="Choose a username" (keyup)="checkUsername($event)">
+            <div>
+
+            </div>
             @if(signupForm.get('username')?.touched && signupForm.get('username')?.invalid){
             <small class="text-danger">Username is required</small>
             }
+            @if(signupForm.get('username')?.value ){
+            <small [ngClass]="{
+    'text-success': resMessageShow === 'Username available',
+    'text-danger': resMessageShow == 'Username already exists'
+  }">
+                {{ resMessageShow }}
+            </small>
+            }
+
         </div>
 
         <div class="mb-3">
@@ -99,7 +113,8 @@
         </div>
 
 
-        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="signupForm.invalid"
+        <button type="button" class="btn btn-info text-white col-12 mb-2"
+            [disabled]="signupForm.invalid || resMessageShow =='Username already exists'"
             (click)="onSignupSubmit()">Register</button>
 
         <p class="text-center changeRouteFormPage">Already have an account?

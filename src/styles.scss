@@ -76,3 +76,10 @@ body {
 
   /* Center image has no rotation */
 }
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}

@@ -69,3 +69,8 @@
   box-shadow: rgba(0, 0, 0, 0.41) 10px 10px 5px -5px;
   transform: translateY(-10px);
 }
+.modal_container img {
+  max-height: 48px;
+  max-width: fit-content;
+  margin: 0 auto;
+}

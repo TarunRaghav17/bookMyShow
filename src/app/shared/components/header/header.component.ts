@@ -16,6 +16,7 @@ import { CommonService } from '../../../services/common.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from '../../../auth/auth-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 export class NgbdModalContent {
   activeModal = inject(NgbActiveModal);
 }
@@ -26,7 +27,7 @@ export class NgbdModalContent {
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent implements OnInit {
-  @ViewChild('cityModal', { static: true }) content!: TemplateRef<any>;
+  @ViewChild('cityModal', { static: true }) cityModal!: TemplateRef<any>;
   cityData: any[] = [];
   citiesJson: any = null;
   showCities = false;
@@ -42,7 +43,8 @@ export class HeaderComponent implements OnInit {
     public commonService: CommonService,
     public authService: AuthService,
     private sanitizer: DomSanitizer,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {
     this.selectedCity = this.commonService._selectCity()
   }
@@ -51,122 +53,121 @@ export class HeaderComponent implements OnInit {
     this.getAllPopularCity()
     this.getAllCitiesData()
     this.showProfileheader = this.commonService._profileHeader()
-    if (!this.selectedCity) {
-      this.openCityModal(this.content)
-    }
+
   }
   /**
-    * @description open cityModal  
-    * @author Gurmeet Kumar
-    */
-
-  openCityModal(content: TemplateRef<any>) {
-    this.modalService.open(content, {
+     * @description Open city selection modal popup
+     * @author Gurmeet Kumar
+     * @return void
+     */
+  openCityModal(cityModal: TemplateRef<any>): void {
+    this.modalService.open(cityModal, {
       modalDialogClass: 'dialog',
+      backdrop: 'static',
       ariaLabelledBy: 'modal-basic-title',
     });
   }
 
-
   /**
-    * @description view all city toggleButton and change the viewAllCity  
-    * @author Gurmeet Kumar
-    */
-  viewAllCities() {
+   * @description Toggle between viewing all cities and popular cities only
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  viewAllCities(): void {
     this.showCities = !this.showCities;
     this.viewCitiesText = this.showCities ? 'Hide All Cities' : 'View All Cities';
   }
 
-
   /**
-    * @description Get all popularCity  
-    * @author Gurmeet Kumar
-    *  @return PopularCity
-    */
-  getAllPopularCity() {
+   * @description Get popular cities from backend service & when is res Get poPularCity then Open CityModal
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  getAllPopularCity(): void {
     this.commonService.getPopularCities().subscribe({
       next: (res) => {
         this.cityData = res;
+        if (!this.selectedCity) {
+          this.openCityModal(this.cityModal)
+        }
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: (error) => {
+        this.toastr.error(error);
       }
     });
   }
 
-
   /**
-   * @description open loginModal 
-   * @author Gurmeet Kumar,
+   * @description Open login/signup modal popup
+   * @author Gurmeet Kumar
+   * @return void
    */
   openLoginModal(): void {
-    const modalOptions: NgbModalOptions = {
-      centered: true,
-    };
-    const modalRef = this.modalService.open(UserAuthComponent, modalOptions);
-    modalRef.result.then(() => {
-    }, () => {
-    });
+    const modalOptions: NgbModalOptions = { centered: true };
+    this.modalService.open(UserAuthComponent, modalOptions);
   }
 
   /**
-      * @description SelectCity city and close the Modal after selectedCity, Save sessionStorage seletedCity 
-      * @author Gurmeet Kumar
-      */
-  selectCity(city: any, modalRef: NgbModalRef) {
-    this.commonService._selectCity.set(city)
-    this.selectedCity = this.commonService._selectCity()
-    sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity))
+   * @description Select city, update session storage, and close modal
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  selectCity(city: any, modalRef: NgbModalRef): void {
+    this.commonService._selectCity.set(city);
+    this.selectedCity = this.commonService._selectCity();
+    this.router.navigate(['explore', 'home', city]);
+    sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
     if (modalRef) {
-      modalRef.close()
+      modalRef.close();
     }
   }
 
-
-
   /**
-    * @description bs64imageConvertr  using this fun  
-    * @author Gurmeet Kumar
-    */
+   * @description Convert base64 string to safe image URL for display
+   * @author Gurmeet Kumar
+   * @return any
+   */
   getImageFromBase64(base64string: string): any {
     if (base64string) {
-      let imageType = base64string;
-      const fullBase64String = `data:${imageType};base64,${base64string}`;
+      const fullBase64String = `data:${base64string};base64,${base64string}`;
       return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
     }
   }
 
   /**
-     * @description logout user/admin to remove The localStorage token
-     * @author Gurmeet Kumar
-     */
-  logout() {
-    this.authService.logout()
+   * @description Logout user and clear token from storage
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  logout(): void {
+    if (this.authService.getUserRole()) {
+      this.authService.logout();
+      this.toastr.success('logut SuccessFull')
+    }
   }
 
   /**
-      * @description get all citiesData  list 
-      * @author Gurmeet Kumar,
-      * @return cities List
-      */
-  getAllCitiesData() {
+   * @description Get list of all cities from backend
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  getAllCitiesData(): void {
     this.commonService.getAllCities().subscribe({
       next: (res) => {
-        this.citiesJson = res
+        this.citiesJson = res;
       },
       error: (res) => {
         this.toastr.error(res.error);
       }
     });
-
   }
 
   /**
-      * @description onSearch by city filtered show list 
-      * @author Gurmeet Kumar
-      */
-
-  onSearchChange(value: string) {
+   * @description Filter cities by search input text
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  onSearchChange(value: string): void {
     const searchValue = value.toLowerCase();
     this.filteredCities = this.citiesJson.filter((city: any) =>
       city.name.toLowerCase().includes(searchValue)
@@ -174,10 +175,11 @@ export class HeaderComponent implements OnInit {
   }
 
   /**
-    * @description input clear ,remove all text in input 
-    * @author Gurmeet Kumar
-    */
-  clearSearch() {
+   * @description Clear search input and filtered city list
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  clearSearch(): void {
     this.searchText = '';
     this.filteredCities = [];
   }
