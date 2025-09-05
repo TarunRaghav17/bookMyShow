@@ -14,6 +14,8 @@ export class TheatreListComponent {
   selectedCategory: any;
   browseBy: string;
   selecetedCity: any;
+  toggleButton: boolean = false
+
   constructor(public commonService: CommonService) {
     this.selectedCategory = this.commonService._selectedCategory();
     this.browseBy = this.commonService._selectedCategory() === 'Movies' ? 'Cinemas in' : 'Venues For';
@@ -30,9 +32,11 @@ export class TheatreListComponent {
     else
       this.cinemaData = cinemas
   }
-  toggleBtn() {
 
+  toggleBtn() {
+    this.toggleButton = !this.toggleButton
   }
+
 }
 
 

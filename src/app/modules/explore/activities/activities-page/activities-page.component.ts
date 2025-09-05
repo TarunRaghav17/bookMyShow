@@ -41,7 +41,6 @@ export class ActivitiesPageComponent {
 
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.filters)
-    localStorage.removeItem('category')
   }
 
 }
