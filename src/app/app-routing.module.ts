@@ -7,8 +7,7 @@ import { TheatreListComponent } from './shared/components/theatre-list/theatre-l
 import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets.component';
 import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout.component';
 import { AuthGuard } from './auth/gaurds/auth.guard';
-import { EventsdetailsComponent } from './shared/components/eventsdetails/eventsdetails.component';
-
+import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 
 const routes: Routes = [
   {
@@ -49,7 +48,7 @@ const routes: Routes = [
   },
   {
     path: ':category/:play-name/:id',
-    component: EventsdetailsComponent
+    component: EventsDetailsComponent
   },
   {
     path: '**',
