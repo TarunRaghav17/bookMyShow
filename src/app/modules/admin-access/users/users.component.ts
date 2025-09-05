@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -10,25 +11,27 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class UsersComponent implements OnInit {
 
-  usersData: any[] = []
-  constructor(private adminService: AdminService, private toastr: ToastrService) {
+  usersData: any[] = [];
+  searchText: string = '';
 
-  }
+  constructor(private adminService: AdminService, private toastr: ToastrService) { }
 
-  ngOnInit(): void {
+
+
+  ngOnInit() {
     this.getAllUserData()
+
   }
 
   /**
-  * @description Get all users List 
-  * @author Gurmeet Kumar
-  * @returns get all users
-  * 
-  */
-  getAllUserData() {
+   * @description Get all users from backend and update usersData
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  getAllUserData(): void {
     this.adminService.getAllUsers().subscribe({
       next: (res) => {
-        this.usersData = res.data.users
+        this.usersData = res.data.users;
       },
       error: (res) => {
         this.toastr.error(res.error);
@@ -36,16 +39,15 @@ export class UsersComponent implements OnInit {
     });
   }
 
-
   /**
-  * @description user Get by userId   
-  * @author Gurmeet Kumar
-  * @returns userData getById
-  */
-  userGetById(id: any) {
+   * @description Get user details by userId
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  userGetById(id: any): void {
     this.adminService.getUserById(id).subscribe({
       next: () => {
-        this.toastr.success("User get byId")
+        this.toastr.success("User get byId");
       },
       error: (res) => {
         this.toastr.error(res.error);
@@ -54,10 +56,11 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-  * @description delete by userID 
-  * @author Gurmeet Kumar
-  */
-  deletUser(id: number) {
+   * @description Delete user by userId and refresh list
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  deletUser(id: number): void {
     this.adminService.deleteUserById(id).subscribe({
       next: () => {
         this.toastr.success('Delete Users SuccessFully');
@@ -71,6 +74,51 @@ export class UsersComponent implements OnInit {
 
 
 
+  /**
+   * @description Delete user by userId and refresh list
+   * @author Gurmeet Kumar
+   * @return void
+   * @param searchText
+   */
+
+  onSearchUserData(searchText: any) {
+    if (!searchText)
+      return;
+    of(searchText).pipe(
+      debounceTime(2000),
+      distinctUntilChanged(),
+      switchMap((val: string) => this.adminService.serachUsers(val.trim()))
+    ).subscribe({
+      next: (res: any) => {
+        if (!searchText) {
+          this.getAllUserData()
+        }
+        this.usersData = res.data.users
+      },
+      error: (err) => {
+        console.error('Search error:', err);
+        this.usersData = [];
+      }
+    });
+  }
 
 
+  /**
+    * @description Here is Get the Data By param Iniside Html Select element 
+    * @author Gurmeet Kumar
+    * @param role
+    * @return void
+    */
+
+  selectRoleByList(role: any) {
+    this.adminService.getAllDataListByRole(role.target.value).subscribe({
+      next: (res) => {
+        if (role.target.value == 'All') {
+          this.getAllUserData()
+        }
+        this.usersData = res?.data?.users;
+      },
+      error: (err) => console.error(err)
+    });
+  }
 }

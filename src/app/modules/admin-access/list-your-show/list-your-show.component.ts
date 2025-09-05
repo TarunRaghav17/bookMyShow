@@ -1,5 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonService } from '../../../services/common.service';
 
 
 @Component({
@@ -9,8 +10,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './list-your-show.component.scss'
 })
 export class ListYourShowComponent {
-  @ViewChild('cityModal', { static: true }) content!: TemplateRef<any>;
-  constructor(private modalService: NgbModal) {
+  @ViewChild('serviceModal', { static: true }) serviceModal!: TemplateRef<any>;
+
+  serviceData: any[] = []
+  serviceContent: any;
+  constructor(private modalService: NgbModal, private commonService: CommonService) {
+    this.serviceData = this.commonService.listYourShowService
+
 
   }
 
@@ -19,9 +25,15 @@ export class ListYourShowComponent {
     * @author  Gurmeet Kumar
     */
 
-  openCityModal(content: TemplateRef<any>) {
-    this.modalService.open(content, {
+  openCityModal(serviceModal: TemplateRef<any>, data: any) {
+    this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
     });
+    this.serviceContent = data
+    console.log(this.serviceContent)
+
   }
+
+
+
 }

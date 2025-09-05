@@ -221,52 +221,54 @@
             </div>
         </div>
         <div class="col-12 d-flex justify-content-around">
-            <div class="col-6 d-flex flex-wrap justify-content-around align-itmes-center gap-3">
-                <div class="col-4 card_service " (click)="openCityModal(serviceModal)">
-                    <img src="assets/images/list-your-show/online-saless.png" alt="">
-                    <p>Online Sales & Marketing</p>
+            <div class="d-block ">
+                <div class="col-12 d-flex justify-content-center">
+                    <div class="col-6 d-flex flex-wrap justify-content-around align-itmes-center gap-3">
+                        @for (item of serviceData; track $index) {
+                        <div class="col-4 card_service " (click)="openCityModal(serviceModal,item)">
+                            <img [src]="item.image" alt="">
+                            <p>{{item.tittle}}</p>
+                        </div>
+                        }
+                    </div>
                 </div>
-                <div class="col-4 card_service " (click)="openCityModal(serviceModal)">
-                    <img src="assets/images/list-your-show/pricings.png" alt="">
-                    <p>Pricing</p>
-                </div>
-                <div class="col-4 card_service " (click)="openCityModal(serviceModal)">
-                    <img src="assets/images/list-your-show/food.png" alt="">
-                    <p>Food & beverages, stalls and the works!</p>
-                </div>
-                <div class="col-4 card_service " (click)="openCityModal(serviceModal)">
-                    <img src="assets/images/list-your-show/on-ground-support.png" alt="">
-                    <p>On ground support & gate entry management</p>
-                </div>
-                <div class="col-4 card_service " (click)="openCityModal(serviceModal)">
-                    <img src="assets/images/list-your-show/report.png" alt="">
-                    <p>Reports & business insights</p>
-                </div>
-                <div class="col-4 card_service " (click)="openCityModal(serviceModal)">
-                    <img src="assets/images/list-your-show/rfids.png" alt="">
-                    <p>POS, RFID, Turnstiles & more...</p>
+
+                <div class="button_section  d-flex flex-column justify-content-center align-itmes-center">
+                    <p class="text-center">
+                        Apart form these must haves for any event, we also support a host of other services like SEO for
+                        your
+                        event, custom pricing for your tickets and this and also this.</p>
+                    <button class="btn list-your-btn col-2 m-auto">List your Show</button>
                 </div>
             </div>
         </div>
-        <div class="button_section  d-flex flex-column justify-content-center align-itmes-center">
-            <p class="text-center">
-                Apart form these must haves for any event, we also support a host of other services like SEO for your
-                event, custom pricing for your tickets and this and also this.</p>
-            <button class="btn list-your-btn col-2 m-auto">List your Show</button>
+    </div>
+
+
+
+
+    <ng-template #serviceModal let-modal>
+
+        <div class="modal-body p-0">
+            <div class="col-12 d-flex justify-content-end align-itmes-center">
+                <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true"></i>
+            </div>
+            @if (serviceContent) {
+            <div class="col-12 d-flex flex-column justify-content-center align-itmes-center modal_container p-3">
+                <img [src]="serviceContent.image" alt="" class="">
+                <h3 class="text-center">{{serviceContent.tittle}}</h3>
+                <p class="text-center">{{serviceContent.description}}</p>
+                @for (item of serviceContent.itemsList; track $index) {
+                <p><span><i class="fa fa-check" aria-hidden="true"></i>
+                    </span> {{item}}</p>
+                }
+
+
+            </div>
+            }
+
+
         </div>
 
-    </div>
-</div>
 
-
-
-
-<ng-template #serviceModal let-modal>
-
-    <div class="modal-body p-0">
-
-
-    </div>
-
-
-</ng-template>
+    </ng-template>
