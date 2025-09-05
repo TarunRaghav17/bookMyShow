@@ -1,15 +1,12 @@
 .fa_search {
   color: rgb(170, 170, 170);
-
-  //   border: none;
 }
-// .input-group-text {
-//   border-radius: 5px 0px 0px 5px;
-// }
+
 .input-group {
   width: 500px;
   cursor: pointer;
 }
+
 .input-group span {
   color: rgb(170, 170, 170);
   font-size: small;
@@ -18,16 +15,54 @@
 .search_cinema_input {
   border-left: none;
 }
+
 .card {
   border: none;
 }
+
 .cinema_details_text p {
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.2px;
   margin: 0px;
 }
+
 .cinema_details_text span {
   color: rgb(102, 102, 102);
   margin: 8px 0px 0px;
+}
+
+.toggleBtn {
+  transform: rotate(180deg);
+}
+
+.toggleBtn_value {
+  position: absolute;
+  z-index: 1;
+  background: white;
+  top: 43px;
+  left: 2px;
+  width: 124px;
+}
+
+.toggleBtn_value ul li {
+  list-style-type: none;
+  border-bottom: 1px solid grey;
+  text-align: center;
+  padding: 3px;
+}
+
+.toggleBtn_value ul li:hover {
+  cursor: pointer;
+  background-color: rgb(255, 235, 237);
+  color: rgb(240, 117, 132);
+  border-bottom: 1px solid rgb(220, 53, 75);
+}
+
+.toggleBtn_value ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0px;
+  padding: 0px;
 }

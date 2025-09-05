@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { movies } from '../../../../../../db';
+import { Component, OnDestroy } from '@angular/core';
+import { filters, movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { Router } from '@angular/router';
 
@@ -9,13 +9,13 @@ import { Router } from '@angular/router';
   templateUrl: './movies-landingpage.component.html',
   styleUrl: './movies-landingpage.component.scss'
 })
-export class MovieLandingPageComponent {
-
+export class MovieLandingPageComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
-  selectedFilters: any[] = []
   selectedCity: any = null
-  topFiltersArray: any[] = ['Hindi', 'English', 'Gujrati', 'Marathi', 'Malayalam', 'Punjabi', 'Telugu'];
+  topFiltersArray: any[] = topFilters
   originalMovies = movies;
+  filters: any[] = filters
+  select: any[] = selectedFilters
 
   constructor(public commonService: CommonService, public router: Router) {
     this.dummyMoviesdata = movies;
@@ -23,8 +23,27 @@ export class MovieLandingPageComponent {
     this.commonService._selectedCategory.set('Movies');
   }
 
-  handleEventFilter(filter: any) {
-    this.selectedFilters.push(filter)
+  /**
+   * @description initialize Top Filters
+   * @author Manu Shukla
+   * @params  
+   * @returnType void
+   */
+
+  ngOnInit(): void {
+    this.topFiltersArray = this.filters.filter((item: any) => {
+      if (item.type == 'Language') return item.data
+    })
   }
 
+  /**
+* @description Remove Already Selected Filters
+* @author Manu Shukla
+* @params  
+* @returnType void
+*/
+
+  ngOnDestroy(): void {
+    this.commonService.resetfilterAccordian(this.filters)
+  }
 }
