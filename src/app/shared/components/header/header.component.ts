@@ -36,14 +36,17 @@ export class HeaderComponent implements OnInit {
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-
+public selectedCategory:string
   constructor(
     private modalService: NgbModal,
     public commonService: CommonService,
     public authService: AuthService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService
+
   ) {
+
+        this.selectedCategory =this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
   }
 
@@ -69,9 +72,6 @@ export class HeaderComponent implements OnInit {
 
 
 
-  isCategorySelected(category: string) {
-    return category == this.commonService._selectedCategory()
-  }
 
   /**
     * @description view all city toggleButton and change the viewAllCity  
@@ -186,5 +186,10 @@ export class HeaderComponent implements OnInit {
     this.searchText = '';
     this.filteredCities = [];
   }
+ 
+   onClickCategory(category:string){
+    this.commonService.setCategory(category)
+     this.selectedCategory =this.commonService._selectedCategory()
+   }
 
 }

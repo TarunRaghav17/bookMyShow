@@ -31,9 +31,7 @@ export class MovieLandingPageComponent implements OnDestroy {
    */
 
   ngOnInit(): void {
-    this.topFiltersArray = this.filters.filter((item: any) => {
-      if (item.type == 'Language') return item.data
-    })
+     this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
   }
 
   /**
