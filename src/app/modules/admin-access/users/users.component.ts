@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
+import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-users',
@@ -10,11 +11,14 @@ import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
+  @ViewChild('editRoleModal', { static: true }) editRoleModal!: TemplateRef<any>;
 
   usersData: any[] = [];
   searchText: string = '';
-
-  constructor(private adminService: AdminService, private toastr: ToastrService) { }
+  selectedRole: any;
+  userId:any;
+  singleUserDetail:any;
+  constructor(private adminService: AdminService, private toastr: ToastrService, private modalService: NgbModal) { }
 
 
 
@@ -40,34 +44,21 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-   * @description Get user details by userId
+   * @description Get user details by userId, this.selectedRole this use purpose to auto patch in select Element Role
    * @author Gurmeet Kumar
    * @return void
+   * @param id
    */
   userGetById(id: any): void {
     this.adminService.getUserById(id).subscribe({
-      next: () => {
-        this.toastr.success("User get byId");
+      next: (res:any) => {
+        this.singleUserDetail = res.data.user
+        this.openEditRoleModal(this.editRoleModal)
+        this.userId = res.data.user.userId
+        this.selectedRole = res.data.user.roleName
       },
       error: (res) => {
         this.toastr.error(res.error);
-      }
-    });
-  }
-
-  /**
-   * @description Delete user by userId and refresh list
-   * @author Gurmeet Kumar
-   * @return void
-   */
-  deletUser(id: number): void {
-    this.adminService.deleteUserById(id).subscribe({
-      next: () => {
-        this.toastr.success('Delete Users SuccessFully');
-        this.getAllUserData();
-      },
-      error: () => {
-        this.toastr.error('Something went wrong');
       }
     });
   }
@@ -95,8 +86,7 @@ export class UsersComponent implements OnInit {
         }
         this.usersData = res.data.users
       },
-      error: (err) => {
-        console.error('Search error:', err);
+      error: () => {
         this.usersData = [];
       }
     });
@@ -104,21 +94,74 @@ export class UsersComponent implements OnInit {
 
 
   /**
-    * @description Here is Get the Data By param Iniside Html Select element 
+    * @description Filter user by roles 
     * @author Gurmeet Kumar
     * @param role
     * @return void
     */
 
   selectRoleByList(role: any) {
+    if (role.target.value == 'All') {
+      this.getAllUserData()
+      return;
+    }
     this.adminService.getAllDataListByRole(role.target.value).subscribe({
       next: (res) => {
-        if (role.target.value == 'All') {
-          this.getAllUserData()
-        }
         this.usersData = res?.data?.users;
       },
       error: (err) => console.error(err)
     });
   }
+  /**
+     * @description Open city selection modal popup
+     * @author Gurmeet Kumar
+     * @return void
+  */
+
+  openEditRoleModal(editRoleModal: TemplateRef<any>): void {
+    this.modalService.open(editRoleModal, {
+      backdrop: 'static',
+      ariaLabelledBy: 'modal-basic-title',
+    });
+  }
+
+ /**
+     * @description update roles by Admin
+     * @author Gurmeet Kumar
+     * @return void
+  */
+  updateUserRole(){
+    this.adminService.editRolebyId(this.userId,this.selectedRole).subscribe({
+      next:(res:any)=>{
+        this.toastr.success(res.message)
+        this.modalService.dismissAll()
+        this.getAllUserData()
+      },
+      error:(res:any)=>{
+        this.toastr.error(res.message)
+      }
+    })
+  }
+  
+  /**
+   * @description Delete user by userId and refresh list
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  deletUser(id: number): void {
+    this.adminService.deleteUserById(id).subscribe({
+      next: () => {
+        if (confirm('Are you sure to delete this user?')) {
+          this.toastr.success('Delete Users SuccessFully');
+          this.getAllUserData();   
+        }
+      },
+      error: () => {
+        this.toastr.error('Something went wrong');
+      }
+    });
+  }
+
+
+
 }

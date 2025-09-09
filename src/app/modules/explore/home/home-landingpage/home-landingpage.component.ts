@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { movies } from '../../../../../../db';
 
 @Component({
@@ -7,15 +7,20 @@ import { movies } from '../../../../../../db';
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
 })
-export class HomeLandingPageComponent {
+export class HomeLandingPageComponent implements OnInit {
   dummyMoviesdata: any[] = [];
   moviesFilteredData: any[] = []
   originalMovies = movies
   pageNo = 0;
   itemsPerCards = 6;
+
+  ngOnInit(): void {
+    
+  }
   start = 0
   end = 0
-  constructor() {
+  constructor(
+  ) {
     this.dummyMoviesdata = movies;
     this.getVisibleMovieCard()
   }
@@ -51,4 +56,10 @@ export class HomeLandingPageComponent {
       this.getVisibleMovieCard();
     }
   }
+
+
+
+
+
+
 }

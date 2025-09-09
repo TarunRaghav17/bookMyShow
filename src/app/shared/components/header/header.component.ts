@@ -86,7 +86,7 @@ export class HeaderComponent implements OnInit {
   getAllPopularCity(): void {
     this.commonService.getPopularCities().subscribe({
       next: (res) => {
-        this.cityData = res;
+        this.cityData = res.data;
         if (!this.selectedCity) {
           this.openCityModal(this.cityModal)
         }
@@ -154,7 +154,7 @@ export class HeaderComponent implements OnInit {
   getAllCitiesData(): void {
     this.commonService.getAllCities().subscribe({
       next: (res) => {
-        this.citiesJson = res;
+        this.citiesJson = res.data;
       },
       error: (res) => {
         this.toastr.error(res.error);

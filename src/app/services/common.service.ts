@@ -25,7 +25,7 @@ export class CommonService {
    * @return Observable<any>
    */
   getAllCities(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/city/all`);
+    return this.http.get(`${this.baseUrl}/api/city/all`);
   }
 
   /**
@@ -34,7 +34,7 @@ export class CommonService {
    * @return Observable<any>
    */
   getPopularCities(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/city/popular`);
+    return this.http.get(`${this.baseUrl}/api/city/popular`);
   }
 
 

@@ -60,5 +60,15 @@ export class AdminService {
     return this.http.get(`${this.baseUrl}/api/users/search?value=${searchText}`);
   }
 
+  /**
+ * @description edit user role by id
+ * @author Gurmeet Kumar
+ * @params id, roleName
+ */
+    editRolebyId(id: any, roleName: any) {
+      return this.http.put(`${this.baseUrl}/api/users/${id}/role?roleName=${roleName}` ,id,roleName )
+    }
 
+    
+  
 }

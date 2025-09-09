@@ -120,7 +120,6 @@ export class AuthService {
       padding: CryptoJS.pad.Pkcs7,
     });
     this.encrypted = encrypted.toString();
-    console.log(this.secretKey)
     return this.encrypted;
   }
 
@@ -142,10 +141,12 @@ export class AuthService {
     return decryptedText;
   }
 
-
-
-
-
+   /**
+   * @description Check if username already exists in DB
+   * @author Gurmeet Kumar
+   * @return string
+   * @param control 
+   */
 
   existingUserValidator(control: any) {
     if (!control.target.value) {
@@ -163,6 +164,11 @@ export class AuthService {
 
 
 
+  
+
+
+
+
+
 }
 
-// const routes: Routes = [{ path: '', redirectTo: 'dashboard', pathMatch: 'full', }, { path: ':city', component: HomeComponent },]; homeRouting Module handleCitySelection(city: string, modalRef ?: BsModalRef): void { sessionStorage.setItem('selectedCity', city);  Save city into session storage this.service.selectedCitySignal.set(city); Update signal in common service this.router.navigate(['explore', 'home', city]); if (modalRef) { modalRef.hide(); } } in header.ts
