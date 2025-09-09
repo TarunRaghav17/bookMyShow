@@ -2,14 +2,14 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-eventsdetails',
+  selector: 'app-events-details',
   standalone: true,
-  templateUrl: './eventsdetails.component.html',
-  styleUrl: './eventsdetails.component.scss'
+  templateUrl: './events-details.component.html',
+  styleUrl: './events-details.component.scss'
 })
-export class EventsdetailsComponent {
+export class EventsDetailsComponent {
 
-  constructor(private router:Router){}
+  constructor(private router: Router) { }
 
   showHeader = false;
 

@@ -60,17 +60,20 @@
                 <div class="sub_header">
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
-                            <a [routerLink]="['explore/movies']" (click)="commonService.setCategory('Movies')"
-                                [ngClass]="{'fontBold':isCategorySelected('Movies')}">Movies</a>
-                            <a [routerLink]="['explore/events']" (click)="commonService.setCategory('Events')"
-                                [ngClass]="{'fontBold':isCategorySelected('Events')}">Events</a>
+                            <a [routerLink]="['explore/movies']" (click)="onClickCategory('Movies')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Movies'}">Movies</a>
 
-                            <a [routerLink]="['explore/plays']" (click)="commonService.setCategory('Events')"
-                                [ngClass]="{'fontBold':isCategorySelected('Plays')}">Plays</a>
-                            <a [routerLink]="['explore/sports']" [ngClass]="{'fontBold':isCategorySelected('Sports')}"
-                                (click)="commonService.setCategory('Sports')">Sports</a>
-                            <a [routerLink]="['explore/activities']" (click)="commonService.setCategory('Activities')"
-                                [ngClass]="{'fontBold':isCategorySelected('Activities')}">Activities</a>
+                            <a [routerLink]="['explore/events']" (click)="onClickCategory('Events')"
+                                [ngClass]="{'fontBold':selectedCategory=='Events'}">Events</a>
+
+                            <a [routerLink]="['explore/plays']" (click)="onClickCategory('Plays')"
+                                [ngClass]="{'fontBold':selectedCategory=='Plays'}">Plays</a>
+
+                            <a [routerLink]="['explore/sports']" (click)="onClickCategory('Sports')"
+                            [ngClass]="{'fontBold': selectedCategory=='Sports'}">Sports</a>
+
+                            <a [routerLink]="['explore/activities']" (click)="onClickCategory('Activities')"
+                                [ngClass]="{'fontBold':selectedCategory=='Activities'}">Activities</a>
 
                             @if (authService.userDetailsSignal()?.role =='ADMIN') {
                             <a [routerLink]="['/admin/users']">Users</a>

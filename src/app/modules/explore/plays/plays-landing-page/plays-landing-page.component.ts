@@ -28,9 +28,7 @@ export class PlaysLandingPageComponent {
    */
 
   ngOnInit(): void {
-    this.topFiltersArray = this.filters.filter((item: any) => {
-      if (item.type == 'Language') return item.data.filter((i: any) => i)
-    })
+    this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
   }
 
   /**

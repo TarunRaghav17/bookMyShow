@@ -50,6 +50,19 @@ export class CommonService {
     })
   }
 
+
+   /**
+* @description iniitalizes the topFilterArray
+* @author Manu Shukla
+* @params  [Filters] receives array of filters
+* @returnType [Filter] return the filteredArray on the basis of category
+*/
+   getTopFiltersArray(filters:any){
+    return filters.filter((item: any) => {
+      if (item.type == 'Language') return item.data})
+    
+  }
+
   /**
  * @description Takes Filters Array , toggle the selected key and push into selectFilters array
  * @author Manu Shukla
@@ -82,5 +95,8 @@ export class CommonService {
       }
     }
   }
+
+
+ 
 
 }
