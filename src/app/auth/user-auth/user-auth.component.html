@@ -59,7 +59,7 @@
             @if(signupForm.get('username')?.touched && signupForm.get('username')?.invalid){
             <small class="text-danger">Username is required</small>
             }
-            @if(!showMessageFlag){
+            @if(showMessageFlag){
             <small [ngClass]="{
     'text-success': isUsernameAvailable == 'Username available',
     'text-danger': isUsernameAvailable == 'Username already exists'

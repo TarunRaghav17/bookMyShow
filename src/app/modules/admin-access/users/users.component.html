@@ -14,7 +14,7 @@
                         </select>
                     </div>
 
-                    <input type="text" 
+                    <input type="text" [(ngModel)]="searchText" (ngModelChange)="onSearchUserData($event)"
                         class="search_input form-control" placeholder="Search by name, username, email & phoneNumber">
                 </div>
             </div>

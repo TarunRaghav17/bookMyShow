@@ -1,6 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
+import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
 import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -10,7 +11,8 @@ import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
- openedDropdownId: string | null = null; 
+  private searchSubject = new Subject<string>();
+  openedDropdownId: string | null = null; 
   usersData: any[] = [];
   searchText: string = '';
   selectedRole: any;
@@ -22,6 +24,7 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.getAllUserData()
+    this.onSearchHandler()
   }
 
   /**
@@ -61,6 +64,32 @@ export class UsersComponent implements OnInit {
 
 
 
+ /**
+ * @description Handles user search with debounce. Fetches all users if search input is empty, or searches users based on query.
+ * @author Gurmeet Kumar
+ * @return void
+ */
+  onSearchHandler() {
+   this.searchSubject.pipe(
+      debounceTime(600),
+      distinctUntilChanged(),
+      switchMap((val: string) => {
+        if (!val) {
+          return this.adminService.getAllUsers(); 
+        }
+        return this.adminService.serachUsers(val.trim());
+      })
+    ).subscribe({
+      next: (res: any) => {
+        this.usersData = res?.data?.users || [];
+      },
+      error: () => {
+        this.usersData = [];
+      }
+    });
+  }
+
+
   /**
     * @description Filter user by roles 
     * @author Gurmeet Kumar
@@ -95,7 +124,7 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-   * @description Delete user by userId and refresh list
+   * @description Delete user by userId and refresh list 
    * @author Gurmeet Kumar
    * @return void
    */
@@ -128,4 +157,15 @@ toggleDropdown(userId: string) {
     this.openedDropdownId = userId; 
   }
 }
+
+ /**
+ * @description Triggers the search functionality by passing the user's search text to the subject.
+ * @param searchText The search query entered by the user.
+ * @author Gurmeet Kumar
+ * @return void
+ */
+onSearchUserData(searchText: string) {
+  this.searchSubject.next(searchText);
+}
+
 }
