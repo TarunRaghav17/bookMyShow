@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListYourShowComponent } from './list-your-show/list-your-show.component';
 import { UsersComponent } from './users/users.component';
 import { CreateVenueComponent } from './create-venue/create-venue.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list-your-show', pathMatch: 'full' },
@@ -21,7 +22,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(routes), NgbModule],
   exports: [RouterModule]
 })
 export class AdminAccessRoutingModule { }

@@ -85,9 +85,9 @@
                         =='ADMIN'){
                         <div class=" sub_heder_right_links">
                             <a [routerLink]="['/admin/list-your-show']">ListYourShow</a>
-                            <a>Corporates</a>
-                            <a>Offers</a>
-                            <a>GiftCards</a>
+                            <a [routerLink]="['/admin/create/venue']">Venues</a>
+                            <a [routerLink]="['/admin/content']">Content</a>
+                            <a [routerLink]="['/admin/shows']">Shows</a>
                         </div>
                         }
 
@@ -224,8 +224,6 @@
 
 
 <!-- City-Dropdown-modal  -->
-
-
 <ng-template #cityModal let-modal>
     <div class="modal-header d-block modal_header">
         <div class="input-group  ">
@@ -244,8 +242,8 @@
             @if (searchText.length > 0 && filteredCities.length > 0) {
             <ul>
                 @for (city of filteredCities; track $index) {
-                <li (click)="selectCity(city.name, modal)">
-                    {{ city.name }}
+                <li (click)="selectCity(city.cityName, modal)">
+                    {{ city.cityName }}
                 </li>
                 }
             </ul>
@@ -263,10 +261,10 @@
 
             @for (item of cityData; track $index) {
 
-            <div class="main-view-city-container d-flex " (click)=" selectCity(item.name,modal)">
+            <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)">
                 <div class="flex_direction d-flex flex-column justify-content-center align-items-center">
                     <img [src]="getImageFromBase64(item.imageUrl)" alt="" class="img-fluid city_section">
-                    <p class="p-0 m-0">{{item.name}}</p>
+                    <p class="p-0 m-0">{{item.cityName}}</p>
                 </div>
             </div>
             }

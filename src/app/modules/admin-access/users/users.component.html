@@ -1,17 +1,25 @@
 <div class="container-fluid">
     <div class="row main_table_container">
-
-
         <div class="col-10">
             <div class="col-12 d-flex justify-content-between align-items-center">
                 <h4>All Users List</h4>
-                <div class="col-4 py-3 px-2 d-flex">
-                    <input type="text" class="serach_input form-control"
-                        placeholder="Search by name,username & phoneNumber">
+
+                <div class="col-4 py-3 px-2 gap-2 d-flex">
+                    <div class="col-3">
+                        <select class="form-select" aria-label="Default select example"
+                            (change)="selectRoleByList($event)">
+                            <option value="All" selected>All</option>
+                            <option value="ADMIN">Admin</option>
+                            <option value="USER">User</option>
+                        </select>
+                    </div>
+
+                    <input type="text" [formControl]="searchControl"
+                        class="search_input form-control" placeholder="Search by name, username, email & phoneNumber">
                 </div>
             </div>
-
-            <table>
+            <!-- Users Table -->
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -24,28 +32,41 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (users of usersData; track $index) {
+                    @for (user of usersData; track $index) {
                     <tr>
+                        <td>{{ user.userId }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phoneNumber }}</td>
                         <td>
-                            {{users.userId}}
-                        </td>
-                        <td>{{users.username}}</td>
-                        <td>{{users.name}}</td>
-                        <td>{{users.phoneNumber}}</td>
-                        <td>{{users.email}}</td>
-                        <td>
-                            <p class="rolename m-0" [ngClass]="{'admin_color': users.roleName =='ADMIN'}">
-                                {{users.roleName}}
+                            <p class="rolename m-0" [ngClass]="{'admin_color': user.roleName === 'ADMIN'}">
+                                {{ user.roleName }}
                             </p>
                         </td>
-                        <td>
-                            <button class="btn btn-primary text-white">Edit Role</button>
-                            <button class="btn btn-danger" (click)="deletUser(users.userId)">Delete</button>
+                        <td >
+                            <button class="btn btn-secondary" (click)="toggleDropdown(user.userId)">
+                                ...
+                            </button>
+                            @if (openedDropdownId === user.userId) {
+                            <div class="position-relative">
+                                <div class="dropdown">
+                                    <label >
+                                        <input type="checkbox"   [checked]="user.roleName === 'ADMIN'" />
+                                        Make Admin
+                                    </label>
+
+                                    <div class="delete-btn" (click)="deleteUser(user.userId)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Delete
+                                    </div>
+                                </div>
+                            </div>
+                            }
                         </td>
                     </tr>
                     }
                 </tbody>
-
             </table>
         </div>
     </div>
