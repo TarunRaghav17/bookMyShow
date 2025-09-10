@@ -30,7 +30,6 @@ export class ListYourShowComponent {
       ariaLabelledBy: 'modal-basic-title',
     });
     this.serviceContent = data
-    console.log(this.serviceContent)
 
   }
 

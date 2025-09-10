@@ -57,9 +57,4 @@ export class HomeLandingPageComponent implements OnInit {
     }
   }
 
-
-
-
-
-
 }

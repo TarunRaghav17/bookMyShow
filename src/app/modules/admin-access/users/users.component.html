@@ -45,10 +45,27 @@
                                 {{ user.roleName }}
                             </p>
                         </td>
-                        <td>
-                            <button class="btn btn-primary text-white" (click)="userGetById(user.userId)">Edit
-                                Role</button>
-                            <button class="btn btn-danger" (click)="deletUser(user.userId)">Delete</button>
+                        <td >
+                            <button class="btn btn-secondary" (click)="toggleDropdown(user.userId)">
+                                ...
+                            </button>
+                            @if (openedDropdownId === user.userId) {
+                            <div class="position-relative">
+                                <div class="dropdown">
+                                    <label >
+                                        <input type="checkbox"   [checked]="user.roleName === 'ADMIN'" />
+                                        Make Admin
+                                    </label>
+
+                                    <div class="delete-btn" (click)="deleteUser(user.userId)">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                        Delete
+                                    </div>
+                                </div>
+                            </div>
+
+                            }
+
                         </td>
                     </tr>
                     }
@@ -57,31 +74,3 @@
         </div>
     </div>
 </div>
-
-
-<ng-template #editRoleModal let-modal>
-    <div class="modal-body p-0">
-        <div class="container-fluid p-4">
-            <div class="row">
-                <div class="col-12 g-0">
-                    <h5><span class="">UserName:</span>{{singleUserDetail.username}}</h5>
-                </div>
-
-                <div class="col-12 g-0 ">
-
-                    <label for="roleSelect" class="form-label">Select Role</label>
-                    <select id="roleSelect" class="form-select" [(ngModel)]="selectedRole">
-                        <option value="USER" selected>User</option>
-                        <option value="ADMIN">Admin</option>
-                    </select>
-                </div>
-
-
-                <button type="button" class="btn btn-primary mt-2" (click)="updateUserRole()">Save Changes</button>
-
-            </div>
-        </div>
-    </div>
-
-
-</ng-template>

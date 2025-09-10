@@ -4,7 +4,8 @@ import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, debounceTime, of, switchMap } from 'rxjs';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 /**
  * @description Component for user authentication (login & signup modal)
@@ -22,11 +23,10 @@ export class UserAuthComponent implements OnInit {
   openSignupForm: boolean = false;
   showPassword: boolean = false;
   resMessageShow: any;
-
   constructor(public authService: AuthService, private activeModal: NgbActiveModal, private toastr: ToastrService) { }
 
   ngOnInit(): void {
-
+    this.onValidateExistUser();
   }
   /** @description Login form controls */
   loginForm = new FormGroup({
@@ -64,7 +64,8 @@ export class UserAuthComponent implements OnInit {
           this.loginForm.reset();
           this.activeModal.close(UserAuthComponent);
         },
-        error: (err) => console.error(err)
+        error: (err) =>
+          this.toastr.error(err.error || 'Login failed')
       });
     }
   }
@@ -85,7 +86,8 @@ export class UserAuthComponent implements OnInit {
           this.signupForm.reset();
           this.activeModal.close(UserAuthComponent);
         },
-        error: (err) => console.error(err)
+        error: (err) =>
+          this.toastr.error(err.error || 'Signup failed')
       });
     }
   }
@@ -117,24 +119,38 @@ export class UserAuthComponent implements OnInit {
  * @return void
  * @param event
  */
-  checkUsername(event: any) {
-    const username = event.target.value;
-    if (!username) return;
-    of(username)
-      .pipe(
-        debounceTime(500),
-        switchMap((userName) =>
-          this.authService.validateUserName(userName).pipe(
-            catchError(() => of(null))
-          )
-        )
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.resMessageShow = res.message
 
-        },
-        error: (err) => console.error(err)
-      });
+
+onValidateExistUser(): void {
+  
+  const usernameControl = this.signupForm.get('username');
+  if (!usernameControl) {
+    console.warn('Username control not found');
+    return;
   }
+  usernameControl.valueChanges.pipe(
+    filter((val): val is string => val !== null),        
+    debounceTime(200),                                 
+    map((val) => val.trim()),                             
+    distinctUntilChanged(),                             
+    switchMap((username: string) => 
+      this.authService.validateUserName(username))        
+  ).subscribe({
+    next: (res: any) => {
+      this.resMessageShow = res.message;                  
+      if (res.success) {
+        this.toastr.success(res.message);                
+      } else {
+        this.toastr.error(res.message);                   
+      }
+    },
+    error: (err) => {
+      console.error('Validation error:', err);
+      this.toastr.error(err.message || 'Validation failed');
+    }
+  });
+}
+
+
+ 
 }

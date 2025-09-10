@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
+import { Observable} from 'rxjs';
 import { jwtDecode } from "jwt-decode";
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
@@ -46,6 +46,7 @@ export class AuthService {
    * @param name
    */
   validateUserName(userName: any): Observable<any> {
+    console.log(userName)
     return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`)
   }
 
@@ -147,27 +148,6 @@ export class AuthService {
    * @return string
    * @param control 
    */
-
-  existingUserValidator(control: any) {
-    if (!control.target.value) {
-      return of(null);
-    }
-    return timer(500).pipe(
-      switchMap(() =>
-        this.validateUserName(control.value).pipe(
-          map((exists: boolean) => (exists ? { userExists: true } : null)),
-          catchError(() => of(null))
-        )
-      )
-    );
-  }
-
-
-
-  
-
-
-
 
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
@@ -11,8 +11,7 @@ import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
-  @ViewChild('editRoleModal', { static: true }) editRoleModal!: TemplateRef<any>;
-
+ openedDropdownId: string | null = null; 
   usersData: any[] = [];
   searchText: string = '';
   selectedRole: any;
@@ -24,7 +23,6 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.getAllUserData()
-
   }
 
   /**
@@ -53,7 +51,6 @@ export class UsersComponent implements OnInit {
     this.adminService.getUserById(id).subscribe({
       next: (res:any) => {
         this.singleUserDetail = res.data.user
-        this.openEditRoleModal(this.editRoleModal)
         this.userId = res.data.user.userId
         this.selectedRole = res.data.user.roleName
       },
@@ -109,15 +106,16 @@ export class UsersComponent implements OnInit {
       next: (res) => {
         this.usersData = res?.data?.users;
       },
-      error: (err) => console.error(err)
+      error: (err) => 
+        this.toastr.error(err.error)
     });
   }
+  
   /**
      * @description Open city selection modal popup
      * @author Gurmeet Kumar
      * @return void
   */
-
   openEditRoleModal(editRoleModal: TemplateRef<any>): void {
     this.modalService.open(editRoleModal, {
       backdrop: 'static',
@@ -125,30 +123,12 @@ export class UsersComponent implements OnInit {
     });
   }
 
- /**
-     * @description update roles by Admin
-     * @author Gurmeet Kumar
-     * @return void
-  */
-  updateUserRole(){
-    this.adminService.editRolebyId(this.userId,this.selectedRole).subscribe({
-      next:(res:any)=>{
-        this.toastr.success(res.message)
-        this.modalService.dismissAll()
-        this.getAllUserData()
-      },
-      error:(res:any)=>{
-        this.toastr.error(res.message)
-      }
-    })
-  }
-  
   /**
    * @description Delete user by userId and refresh list
    * @author Gurmeet Kumar
    * @return void
    */
-  deletUser(id: number): void {
+  deleteUser(id: number): void {
     this.adminService.deleteUserById(id).subscribe({
       next: () => {
         if (confirm('Are you sure to delete this user?')) {
@@ -163,5 +143,18 @@ export class UsersComponent implements OnInit {
   }
 
 
+  /**
+   * @description Toggles dropdown for the specified user ID.
+   * @author Gurmeet Kumar
+   ** @param userId - The user's ID.
+   */
 
+  
+toggleDropdown(userId: string) {
+  if (this.openedDropdownId === userId) {
+    this.openedDropdownId = null; 
+  } else {
+    this.openedDropdownId = userId; 
+  }
+}
 }
