@@ -65,7 +65,7 @@ export class AdminService {
  * @author Gurmeet Kumar
  * @params id, roleName
  */
-    editRolebyId(id: any, roleName: any) {
+    editRoleById(id: any, roleName: any) {
       return this.http.put(`${this.baseUrl}/api/users/${id}/role?roleName=${roleName}` ,id,roleName )
     }
 

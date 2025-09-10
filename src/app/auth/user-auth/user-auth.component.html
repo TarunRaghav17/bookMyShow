@@ -53,18 +53,18 @@
         <div class="mb-3">
             <label class="form-label" id="username">Username</label>
             <input type="text" class="form-control" formControlName="username" for="username"
-                placeholder="Choose a username" >
+                placeholder="Choose a username">
             <div>
             </div>
             @if(signupForm.get('username')?.touched && signupForm.get('username')?.invalid){
             <small class="text-danger">Username is required</small>
             }
-            @if(signupForm.get('username')?.value ){
+            @if(!showMessageFlag){
             <small [ngClass]="{
-    'text-success': resMessageShow === 'Username available',
-    'text-danger': resMessageShow == 'Username already exists'
+    'text-success': isUsernameAvailable == 'Username available',
+    'text-danger': isUsernameAvailable == 'Username already exists'
   }">
-                {{ resMessageShow }}
+                {{ isUsernameAvailable }}
             </small>
             }
         </div>
@@ -112,7 +112,7 @@
 
 
         <button type="button" class="btn btn-info text-white col-12 mb-2"
-            [disabled]="signupForm.invalid || resMessageShow =='Username already exists'"
+            [disabled]="signupForm.invalid || isUsernameAvailable =='Username already exists'"
             (click)="onSignupSubmit()">Register</button>
 
         <p class="text-center changeRouteFormPage">Already have an account?

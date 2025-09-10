@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -60,34 +59,6 @@ export class UsersComponent implements OnInit {
     });
   }
 
-
-
-  /**
-   * @description Delete user by userId and refresh list
-   * @author Gurmeet Kumar
-   * @return void
-   * @param searchText
-   */
-
-  onSearchUserData(searchText: any) {
-    if (!searchText)
-      return;
-    of(searchText).pipe(
-      debounceTime(2000),
-      distinctUntilChanged(),
-      switchMap((val: string) => this.adminService.serachUsers(val.trim()))
-    ).subscribe({
-      next: (res: any) => {
-        if (!searchText) {
-          this.getAllUserData()
-        }
-        this.usersData = res.data.users
-      },
-      error: () => {
-        this.usersData = [];
-      }
-    });
-  }
 
 
   /**

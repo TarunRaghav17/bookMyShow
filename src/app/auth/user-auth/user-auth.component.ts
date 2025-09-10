@@ -19,10 +19,10 @@ import { debounceTime } from 'rxjs';
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
-
+  isUsernameAvailable:any;
   openSignupForm: boolean = false;
   showPassword: boolean = false;
-  resMessageShow: any;
+  showMessageFlag: any;
   constructor(public authService: AuthService, private activeModal: NgbActiveModal, private toastr: ToastrService) { }
 
   ngOnInit(): void {
@@ -133,7 +133,8 @@ onValidateExistUser(): void {
       this.authService.validateUserName(username))        
   ).subscribe({
     next: (res: any) => {
-      this.resMessageShow = res.message;                  
+      this.isUsernameAvailable = res.message; 
+       this.showMessageFlag = res.status                
       if (res.success) {
         this.toastr.success(res.message);                
       } else {
