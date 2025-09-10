@@ -28,7 +28,7 @@ export class PlaysLandingPageComponent {
    */
 
   ngOnInit(): void {
-    this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
+    // this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
   }
 
   /**

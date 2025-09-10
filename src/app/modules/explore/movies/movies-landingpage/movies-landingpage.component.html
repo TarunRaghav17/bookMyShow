@@ -62,7 +62,7 @@
                                 </span>
                                 }
                                 }
-                                @for (item of topFiltersArray[0].data; track $index) {
+                                @for (item of topFiltersArray; track $index) {
                                 @if(!item.selected){
 
                                 <span [ngClass]="{selectedText: item.selected}"

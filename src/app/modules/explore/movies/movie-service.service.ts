@@ -14,4 +14,8 @@ export class MovieService {
   getAllMovies(): Observable<any> {
     return this.http.get(`${this.base_url}`)
   }
+
+  getFilters(target:string):Observable<any>{
+    return this.http.get(`${this.base_url}/api/events/${target}`)
+  }
 }

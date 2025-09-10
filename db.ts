@@ -571,13 +571,14 @@ export const selectedFilters = [
     data: []
   },
   {
-    type: "Genres",
+    type: "Formats",
     data: []
   },
   {
-    type: "Formats",
+    type: "Genres",
     data: []
-  }
+  },
+  
 ]
 export const topFilters = [
   'Hindi',

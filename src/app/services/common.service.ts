@@ -11,6 +11,7 @@ import { filters, selectedFilters } from '../../../db';
 export class CommonService {
   filters: any[] = filters
   select: any[] = selectedFilters
+  base_url = 'http://172.31.252.101:8080/bookmyshow'
 
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
@@ -57,11 +58,13 @@ export class CommonService {
 * @params  [Filters] receives array of filters
 * @returnType [Filter] return the filteredArray on the basis of category
 */
-   getTopFiltersArray(filters:any){
-    return filters.filter((item: any) => {
-      if (item.type == 'Language') return item.data})
-    
+   getTopFiltersArray(target:any):Observable<any>{
+
+
+    return this.http.get(`${this.base_url}/api/events/${target}`)
   }
+    
+  
 
   /**
  * @description Takes Filters Array , toggle the selected key and push into selectFilters array
@@ -71,6 +74,7 @@ export class CommonService {
  */
 
   handleEventFilter(filter: any): void {
+  console.log(filter)
     this.filters.map((item: any) => {
       if (item.type == filter.type) {
         item.data.map((i: any) => {
@@ -84,10 +88,12 @@ export class CommonService {
     let filterType: any[] = this.select.filter((item: any) =>
       item.type == filter.type
     )
+
+      console.log(filterType)
     if (filterType) {
-      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
+      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.text)
       if (alreayExist.length == 0) {
-        filterType[0].data.push(filter.filterName)
+        filterType[0].data.push(filter)
         return filterType[0].data.sort((a: any, b: any) => a.index - b.index)
       }
       else {
