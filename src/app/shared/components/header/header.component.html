@@ -60,11 +60,21 @@
                 <div class="sub_header">
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
-                            <a [routerLink]="['explore/movies']">Movies</a>
-                            <a [routerLink]="['explore/events']">Events</a>
-                            <a [routerLink]="['explore/plays']">Plays</a>
-                            <a [routerLink]="['explore/sports']">Sports</a>
-                            <a [routerLink]="['explore/activities']">Activities</a>
+                            <a [routerLink]="['explore/movies']" (click)="onClickCategory('Movies')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Movies'}">Movies</a>
+
+                            <a [routerLink]="['explore/events']" (click)="onClickCategory('Events')"
+                                [ngClass]="{'fontBold':selectedCategory=='Events'}">Events</a>
+
+                            <a [routerLink]="['explore/plays']" (click)="onClickCategory('Plays')"
+                                [ngClass]="{'fontBold':selectedCategory=='Plays'}">Plays</a>
+
+                            <a [routerLink]="['explore/sports']" (click)="onClickCategory('Sports')"
+                            [ngClass]="{'fontBold': selectedCategory=='Sports'}">Sports</a>
+
+                            <a [routerLink]="['explore/activities']" (click)="onClickCategory('Activities')"
+                                [ngClass]="{'fontBold':selectedCategory=='Activities'}">Activities</a>
+
                             @if (authService.userDetailsSignal()?.role =='ADMIN') {
                             <a [routerLink]="['/admin/users']">Users</a>
                             }
@@ -75,7 +85,7 @@
                         =='ADMIN'){
                         <div class=" sub_heder_right_links">
                             <a [routerLink]="['/admin/list-your-show']">ListYourShow</a>
-                            <a [routerLink]="['/admin/venues']">Venues</a>
+                            <a [routerLink]="['/admin/create/venue']">Venues</a>
                             <a [routerLink]="['/admin/content']">Content</a>
                             <a [routerLink]="['/admin/shows']">Shows</a>
                         </div>
@@ -214,8 +224,6 @@
 
 
 <!-- City-Dropdown-modal  -->
-
-
 <ng-template #cityModal let-modal>
     <div class="modal-header d-block modal_header">
         <div class="input-group  ">

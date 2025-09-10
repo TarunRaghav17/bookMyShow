@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-
+public selectedCategory:string
   constructor(
     private modalService: NgbModal,
     public commonService: CommonService,
@@ -45,7 +45,10 @@ export class HeaderComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
     private router: Router
+
   ) {
+
+        this.selectedCategory =this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
   }
 
@@ -67,6 +70,8 @@ export class HeaderComponent implements OnInit {
       ariaLabelledBy: 'modal-basic-title',
     });
   }
+
+
 
   /**
    * @description Toggle between viewing all cities and popular cities only
@@ -183,5 +188,10 @@ export class HeaderComponent implements OnInit {
     this.searchText = '';
     this.filteredCities = [];
   }
+ 
+   onClickCategory(category:string){
+    this.commonService.setCategory(category)
+     this.selectedCategory =this.commonService._selectedCategory()
+   }
 
 }

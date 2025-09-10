@@ -110,9 +110,6 @@ export class UserAuthComponent implements OnInit {
     this.openSignupForm = !this.openSignupForm;
   }
 
-
-
-
   /**
  * @description userName validate here to Exist here or not 
  * @author Gurmeet Kumar
@@ -125,7 +122,6 @@ onValidateExistUser(): void {
   
   const usernameControl = this.signupForm.get('username');
   if (!usernameControl) {
-    console.warn('Username control not found');
     return;
   }
   usernameControl.valueChanges.pipe(
@@ -145,7 +141,6 @@ onValidateExistUser(): void {
       }
     },
     error: (err) => {
-      console.error('Validation error:', err);
       this.toastr.error(err.message || 'Validation failed');
     }
   });

@@ -17,7 +17,9 @@ import { SearchBoxComponent } from './shared/components/searchBox/searchBox.comp
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
+
 import { ToastrModule } from 'ngx-toastr';
+import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 
 
 @NgModule({
@@ -27,10 +29,10 @@ import { ToastrModule } from 'ngx-toastr';
     FooterComponent,
     ErrorPageComponent,
     SearchBoxComponent,
-    TheatreListComponent
+    TheatreListComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
-    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent,
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
     ToastrModule.forRoot({     // Global toastr configuration
       timeOut: 3000,
       positionClass: 'toast-top-right',

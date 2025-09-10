@@ -46,7 +46,6 @@ export class AuthService {
    * @param name
    */
   validateUserName(userName: any): Observable<any> {
-    console.log(userName)
     return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`)
   }
 
@@ -141,14 +140,6 @@ export class AuthService {
     const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
     return decryptedText;
   }
-
-   /**
-   * @description Check if username already exists in DB
-   * @author Gurmeet Kumar
-   * @return string
-   * @param control 
-   */
-
 
 }
 
