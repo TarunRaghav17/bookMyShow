@@ -1,8 +1,9 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
-import { debounceTime, distinctUntilChanged, Subject, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs';
 import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
@@ -11,7 +12,7 @@ import {NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent implements OnInit {
-  private searchSubject = new Subject<string>();
+  searchControl: FormControl = new FormControl(); // FormControl for search input
   openedDropdownId: string | null = null; 
   usersData: any[] = [];
   searchText: string = '';
@@ -70,8 +71,10 @@ export class UsersComponent implements OnInit {
  * @return void
  */
   onSearchHandler() {
-   this.searchSubject.pipe(
+   this.searchControl.valueChanges.pipe(
       debounceTime(600),
+      map((val) => val?.trim() || ''),
+      filter((val) => val.length > 0),
       distinctUntilChanged(),
       switchMap((val: string) => {
         if (!val) {
@@ -88,6 +91,7 @@ export class UsersComponent implements OnInit {
       }
     });
   }
+
 
 
   /**
@@ -158,14 +162,6 @@ toggleDropdown(userId: string) {
   }
 }
 
- /**
- * @description Triggers the search functionality by passing the user's search text to the subject.
- * @param searchText The search query entered by the user.
- * @author Gurmeet Kumar
- * @return void
- */
-onSearchUserData(searchText: string) {
-  this.searchSubject.next(searchText);
-}
+// 
 
 }
