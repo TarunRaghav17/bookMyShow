@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { filters, selectedFilters } from '../../../db';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Injectable({
@@ -20,7 +21,9 @@ export class CommonService {
   selectedCategory: any = (localStorage.getItem('category'))
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private sanitizer:DomSanitizer
+  ) { }
 
   baseUrl = environment.baseUrl
 
@@ -103,6 +106,22 @@ export class CommonService {
   }
 
 
+   /**
+   * @description Convert base64 string to safe image URL for display
+   * @author Gurmeet Kumar
+   * @return any
+   */
+  getImageFromBase64(base64string: string): any {
+    if (base64string) {
+      const fullBase64String = `data:${base64string};base64,${base64string}`;
+      return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
+    }
+  }
+
+getEventDetailsById(id:any):Observable<any>{
+    return this.http.get(`${this.baseUrl}/api/events/${id}`)
+
+  }
  
 
 }
