@@ -21,7 +21,7 @@ export class MovieLandingPageComponent implements OnDestroy {
   select: any[] = selectedFilters
 
   constructor(public commonService: CommonService, public router: Router, private movieService:MovieService) {
-    this.dummyMoviesdata = movies;
+ 
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }

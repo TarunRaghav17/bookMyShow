@@ -54,6 +54,23 @@ export class FilterAccordionComponent implements OnInit {
           filteredData = data.map((i: any) => ({ ...i,  text: i.genresName , selected:false }));
           break;
 
+           case 'date_filters':
+          filteredData = data.map((i: any) => ({ ...i,  text: i.date_filters , selected:false }));
+          break;
+
+        case 'categories':
+          filteredData = data.map((i: any) => ({ ...i,  text: i.categories , selected:false }));
+          break;
+
+        case 'more_filters':
+          filteredData = data.map((i: any) => ({ ...i,  text: i.more_filters , selected:false }));
+          break;
+
+           case 'prices':
+          filteredData = data.map((i: any) => ({ ...i,  text: i.prices , selected:false }));
+          break;
+
+
         default:
           filteredData = data;
       }

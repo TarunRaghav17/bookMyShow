@@ -9,11 +9,7 @@ export class MovieService {
 
   constructor(private http: HttpClient) { }
 
-  base_url = 'http://172.31.252.101:8080/bookmyshow'
-
-  // getAllMovies(): Observable<any> {
-  //   return this.http.get(`${this.base_url}`)
-  // }
+ base_url = 'http://172.31.252.101:8080/bookmyshow'
 
   getFilters(target:string):Observable<any>{
     return this.http.get(`${this.base_url}/api/events/${target}`)
@@ -22,6 +18,5 @@ export class MovieService {
   getAllMovies():Observable<any>{
     return this.http.post(`${this.base_url}/api/events/filter`,{
   "type": "Movie"})
-
   }
 }

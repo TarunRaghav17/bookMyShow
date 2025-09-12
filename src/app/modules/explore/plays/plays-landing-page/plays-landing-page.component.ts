@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
 import { filters, movies, selectedFilters, topFilters } from '../../../../../../db';
+import { PlaysService } from '../plays.service';
 
 @Component({
   selector: 'app-plays-landing-page',
@@ -15,8 +16,10 @@ export class PlaysLandingPageComponent {
   filters: any[] = filters
   select: any[] = selectedFilters
 
-  constructor(public commonService: CommonService) {
-    this.dummyMoviesdata = movies;
+  constructor(public commonService: CommonService , 
+    private playService:PlaysService
+  ) {
+    // this.dummyMoviesdata = movies;
     this.commonService._selectedCategory.set('Plays');
   }
 
@@ -29,6 +32,12 @@ export class PlaysLandingPageComponent {
 
   ngOnInit(): void {
     // this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
+    this.playService.getAllPlays().subscribe((res)=>{
+      this.dummyMoviesdata = res.data
+   
+    }
+    )
+
   }
 
   /**

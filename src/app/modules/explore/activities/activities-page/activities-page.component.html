@@ -34,7 +34,7 @@
 
                                 <span [ngClass]="{selectedText: item.selected}"
                                     (click)="commonService.handleEventFilter(item)">
-                                    {{item.text}}
+                                    {{item.selectd}}
                                 </span>
                                 }
                                 }
@@ -52,7 +52,7 @@
                                                         <div class="card shadow-sm">
                                                             <a class="img_container rounded-4 rounded-top"
                                                                 [routerLink]="[`/${commonService._selectedCategory()}/play-name/id`]">
-                                                                <img [src]="item.Poster" [alt]="item.Poster">
+                                                                <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl">
                                                             </a>
                                                             <div class="card-body rounded-bottom bg-dark">
                                                                 <div class="d-flex gap-2">
@@ -61,14 +61,14 @@
                                                                             aria-hidden="true"></i>
                                                                     </span>
                                                                     <span class="text-white">
-                                                                        1.5M likes
+                                                                        {{item.likes}}
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="bottom_text_movie_card py-3 px-4">
-                                                            <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
-                                                            <span class="m-0">{{item.Genre}}</span>
+                                                            <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
+                                                            <span class="m-0">{{item.genres}}</span>
                                                         </div>
                                                     </div>
                                                 </ng-container>
