@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 @Component({
   selector: 'app-error-page',
   standalone: false,
@@ -7,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './error-page.component.scss'
 })
 export class ErrorPageComponent {
+
+
 
 }
