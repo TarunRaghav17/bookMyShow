@@ -15,3 +15,14 @@
   text-decoration: underline;
   text-underline-offset: 5px;
 }
+.password-input {
+  padding-right: 2rem; /* space for icon */
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 70%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

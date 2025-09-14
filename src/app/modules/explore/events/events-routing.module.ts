@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { eventsLandingpageComponent } from './events-landingpage/events-landingpage.component';
+import { EventsLandingPageComponent } from './events-landingpage/events-landingpage.component';
 
 const routes: Routes = [
-  { path: '', component: eventsLandingpageComponent },
+  { path: '', component: EventsLandingPageComponent },
 ];
 
 @NgModule({

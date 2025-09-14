@@ -6,8 +6,9 @@
   cursor: pointer;
   white-space: nowrap;
   border-radius: 16px;
-  padding: 1px 12px 0px;
-  height: 32px;
+  padding: 4px 12px;
+  font-size: 12px;
+  height: 30px;
   background-color: rgb(255, 255, 255);
   border: 1px solid rgb(204, 204, 204);
   opacity: 1;
@@ -18,8 +19,6 @@
   border: 0;
   font-size: 100%;
   font-weight: 400;
-  margin: 0;
-  padding: 0;
   vertical-align: baseline;
 }
 .explore_text {
@@ -38,4 +37,12 @@
 .app_filter_box {
   margin: 10px;
   padding: 0px 35px 0px 0px;
+}
+.card_container {
+  max-width: 200px;
+  min-width: 200px;
+}
+.selectedText {
+  background-color: rgb(220, 53, 88) !important;
+  color: white !important;
 }

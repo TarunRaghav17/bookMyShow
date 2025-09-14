@@ -1,67 +1,152 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../services/api.service';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
+import { distinctUntilChanged, filter, map, switchMap } from 'rxjs';
+import { debounceTime } from 'rxjs';
+
+/**
+ * @description Component for user authentication (login & signup modal)
+ * @author Gurmeet Kumar
+ */
 @Component({
   selector: 'app-user-auth',
-  standalone: false,
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './user-auth.component.html',
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
+  isUsernameAvailable:any;
   openSignupForm: boolean = false;
   showPassword: boolean = false;
+  showMessageFlag: any;
+  constructor(public authService: AuthService, private activeModal: NgbActiveModal, private toastr: ToastrService) { }
 
-  constructor(private authService: AuthService, private activeModal: NgbActiveModal) {
+  ngOnInit(): void {
+    this.onValidateExistUser();
   }
-
-  ngOnInit(): void { }
-  userLogin = new FormGroup({
+  /** @description Login form controls */
+  loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
-
-  userSignUp = new FormGroup({
+  /** @description Signup form controls */
+  signupForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
     username: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phoneNumber: new FormControl('', [
-      Validators.required,
-      Validators.pattern(/^[0-9]{10}$/)
-    ]),
+    email: new FormControl('', [Validators.required, Validators.pattern(/^[^@]+@[^@]+\.[^@]+$/)]),
+    phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
     roleName: new FormControl("USER", Validators.required),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
-
-  onloginSubmit() {
-    if (this.userLogin.valid) {
-      const data = this.userLogin.value;
-      this.authService.userLogin(data).subscribe((res) => {
-        localStorage.setItem('token', res.token);
-        this.userLogin.reset();
-        this.activeModal.close(UserAuthComponent)
+  /**
+   * @description Handle login form submit, encrypt password, store token, update signal, close modal
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  onLoginSubmit(): void {
+    if (this.loginForm.valid) {
+      const encryptedData = {
+        ...this.loginForm.value,
+        password: this.authService.encryptUsingAES256(this.loginForm.value.password)
+      };
+      this.authService.login(encryptedData).subscribe({
+        next: (res: any) => {
+          this.toastr.success(res.message)
+          localStorage.setItem('token', res.data.token);
+          this.authService.userDetailsSignal.set(
+            this.authService.decodeToken(res.data.token)
+          );
+          this.loginForm.reset();
+          this.activeModal.close(UserAuthComponent);
+        },
+        error: (err) =>
+          this.toastr.error(err.error || 'Login failed')
       });
     }
   }
 
-
-  onSignupSubmit() {
-    if (this.userSignUp.valid) {
-      const data = this.userSignUp.value;
-      this.authService.userSignup(data).subscribe((res) => {
-        this.userSignUp.reset();
-        this.activeModal.close(UserAuthComponent)
-      })
+  /**
+   * @description Handle signup form submit, encrypt password, call API, close modal on success
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  onSignupSubmit(): void {
+    if (this.signupForm.valid) {
+      const encryptedData = {
+        ...this.signupForm.value,
+        password: this.authService.encryptUsingAES256(this.signupForm.value.password)
+      };
+      this.authService.signup(encryptedData).subscribe({
+        next: () => {
+          this.signupForm.reset();
+          this.activeModal.close(UserAuthComponent);
+        },
+        error: (err) =>
+          this.toastr.error(err.error || 'Signup failed')
+      });
     }
   }
 
-  togglePassword() {
+  /**
+   * @description Toggle show/hide password field in forms
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  openFormSignup() {
+  /**
+   * @description Toggle between login and signup forms
+   * @author Gurmeet Kumar
+   * @return void
+   */
+  toggleSignupForm(): void {
     this.openSignupForm = !this.openSignupForm;
   }
+
+  /**
+ * @description userName validate here to Exist here or not 
+ * @author Gurmeet Kumar
+ * @return void
+ * @param event
+ */
+
+
+onValidateExistUser(): void {
+  
+  const usernameControl = this.signupForm.get('username');
+  if (!usernameControl) {
+    return;
+  }
+  usernameControl.valueChanges.pipe(
+    filter((val): val is string => val !== null),        
+    debounceTime(200),                                 
+    map((val) => val.trim()),                             
+    distinctUntilChanged(),                             
+    switchMap((username: string) => 
+      this.authService.validateUserName(username))        
+  ).subscribe({
+    next: (res: any) => {
+      this.isUsernameAvailable = res.message; 
+       this.showMessageFlag = res.status                
+      if (res.success) {
+        this.toastr.success(res.message);                
+      } else {
+        this.toastr.error(res.message);                   
+      }
+    },
+    error: (err) => {
+      this.toastr.error(err.message || 'Validation failed');
+    }
+  });
+}
+
+
+ 
 }

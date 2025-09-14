@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LandingpageComponent } from './landingpage.component';
+import { TheatreListComponent } from './theatre-list.component';
 
-describe('LandingpageComponent', () => {
-  let component: LandingpageComponent;
-  let fixture: ComponentFixture<LandingpageComponent>;
+describe('TheatreListComponent', () => {
+  let component: TheatreListComponent;
+  let fixture: ComponentFixture<TheatreListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LandingpageComponent]
+      declarations: [TheatreListComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(LandingpageComponent);
+    fixture = TestBed.createComponent(TheatreListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

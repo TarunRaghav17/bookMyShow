@@ -485,3 +485,313 @@ export const movies = [
 ];
 
 
+export const cinemas = [
+
+  {
+    title: "PVR: Elante, Chandigarh",
+    location: "Chandigarh, India"
+  },
+  {
+    title: "PVR: Inox, Chandigarh",
+    location: "Chandigarh, India"
+  },
+  {
+    title: "PVR: City Centre, Chandigarh",
+    location: "Chandigarh, India"
+  },
+  {
+    title: "PVR: Drive-in, Ahmedabad",
+    location: "Ahmedabad, India"
+  },
+  {
+    title: "INOX: Fun Republic, Mumbai",
+    location: "Mumbai, India"
+  },
+  {
+    title: "PVR: Mall of India, Noida",
+    location: "Noida, India"
+  },
+  {
+    title: "INOX: Cyberhub, Gurgaon",
+    location: "Gurgaon, India"
+  },
+  {
+    title: "PVR: Saket, Delhi",
+    location: "Delhi, India"
+  },
+  {
+    title: "INOX: Lower Parel, Mumbai",
+    location: "Mumbai, India"
+  },
+  {
+    title: "PVR: Phoenix Marketcity, Pune",
+    location: "Pune, India"
+  }
+]
+
+
+export const filters = [
+  {
+    type: "Language",
+    data: [
+      { text: "Hindi", index: 0, selected: false },
+      { text: "English", index: 1, selected: false },
+      { text: "Gujrati", index: 2, selected: false },
+      { text: "Marathi", index: 3, selected: false },
+      { text: "Malayalam", index: 4, selected: false },
+      { text: "Punjabi", index: 5, selected: false },
+      { text: "Telugu", index: 6, selected: false }
+    ]
+  },
+  {
+    type: "Genres",
+    data: [
+      { text: "Drama", index: 0, selected: false },
+      { text: "Action", index: 1, selected: false },
+      { text: "Comedy", index: 2, selected: false },
+      { text: "Thriller", index: 3, selected: false }
+    ]
+  },
+  {
+    type: "Formats",
+    data: [
+      { text: "2D", index: 0, selected: false },
+      { text: "3D", index: 1, selected: false },
+      { text: "4Dx", index: 2, selected: false },
+      { text: "IMAX2d", index: 3, selected: false }
+    ]
+  }
+]
+
+
+export const selectedFilters = [
+
+  {
+    type: "Language",
+    data: []
+  },
+  {
+    type: "Genres",
+    data: []
+  },
+  {
+    type: "Formats",
+    data: []
+  }
+]
+export const topFilters = [
+  'Hindi',
+  'English',
+  'Gujrati',
+  'Marathi',
+  'Malayalam',
+  'Punjabi',
+  'Telugu'
+];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------------
+// ------------inz start----------------
+
+
+
+
+
+
+
+
+export const venues=[
+  {
+    "venueName": "Crystal Auditorium",
+    "address": {
+      "street": "12 Pearl Avenue",
+      "city": "Chandigarh",
+      "pin": "160017"
+    },
+    "venueCapacity": 800,
+    "venueFor": "events",
+    "venueType": "auditorium",
+    "supportedCategories": ["Seminars", "Live Performances", "Graduation Ceremonies"],
+    "additionalFields": {
+      "projectorAvailable": true,
+      "stageLighting": "Full RGB LED"
+    },
+    "amenities": ["Air Conditioning", "Projector", "AV System", "Green Room"]
+  },
+  {
+    "venueName": "Unity Sports Court",
+    "address": {
+      "street": "Block C, Sector 10",
+      "city": "Noida",
+      "pin": "201301"
+    },
+    "venueCapacity": 200,
+    "venueFor": "sports",
+    "venueType": "court",
+    "supportedCategories": ["Basketball", "Tennis", "Badminton"],
+    "additionalFields": {
+      "surfaceType": "Synthetic",
+      "lighting": "LED",
+      "indoor": true
+    },
+    "amenities": ["Scoreboard", "Benches", "Locker Rooms", "Coach Room"]
+  },
+  {
+    "venueName": "Titan Stadium",
+    "address": {
+      "street": "99 Arena Road",
+      "city": "Ahmedabad",
+      "pin": "380015"
+    },
+    "venueCapacity": 50000,
+    "venueFor": "sports",
+    "venueType": "stadium",
+    "supportedCategories": ["Cricket", "Football", "Concerts"],
+    "additionalFields": {
+      "coveredSeating": true,
+      "VIPBoxes": true
+    },
+    "amenities": ["LED Screens", "CCTV", "Food Stalls", "Parking"]
+  },
+  {
+    "venueName": "Sunrise Sports Ground",
+    "address": {
+      "street": "22 Open Field Road",
+      "city": "Jaipur",
+      "pin": "302012"
+    },
+    "venueCapacity": 1000,
+    "venueFor": "sports",
+    "venueType": "ground",
+    "supportedCategories": ["Cricket", "Football", "Athletics"],
+    "additionalFields": {
+      "groundType": "Grass",
+      "boundaryFence": true
+    },
+    "amenities": ["Changing Rooms", "Drinking Water", "Seating Area", "First Aid"]
+  },
+  {
+    "venueName": "Regal Theatre Hall",
+    "address": {
+      "street": "5 Classic Street",
+      "city": "Kolkata",
+      "pin": "700001"
+    },
+    "venueCapacity": 300,
+    "venueFor": "movies",
+    "venueType": "theatre",
+    "supportedCategories": ["Classic Films", "Drama Screenings"],
+    "additionalFields": {
+      "screenType": "Digital",
+      "soundSystem": "Dolby Digital"
+    },
+    "amenities": ["Cushioned Seating", "Snack Bar", "Online Tickets", "3D Glasses"]
+  },
+  {
+    "venueName": "Galaxy Multiplex",
+    "address": {
+      "street": "Sector 62 Mall Road",
+      "city": "Gurgaon",
+      "pin": "122002"
+    },
+    "venueCapacity": 1200,
+    "venueFor": "movies",
+    "venueType": "theatre",
+    "supportedCategories": ["3D Films", "Hollywood", "Bollywood"],
+    "additionalFields": {
+      "screens": 6,
+      "premiumSeats": true
+    },
+    "amenities": ["Recliner Seats", "Dolby Atmos", "Food Court", "Parking"]
+  },
+  {
+    "venueName": "Lotus Event Convention Center",
+    "address": {
+      "street": "44 Harmony Street",
+      "city": "Delhi",
+      "pin": "110001"
+    },
+    "venueCapacity": 1500,
+    "venueFor": "events",
+    "venueType": "convention-center",
+    "supportedCategories": ["Dance Shows", "Music Performances", "Drama"],
+    "additionalFields": {
+      "soundSystem": "Bose Professional",
+      "acousticDesign": "Theatre-grade"
+    },
+    "amenities": ["Stage", "VIP Lounge", "Cafe", "Exhibition Area"]
+  },
+  {
+    "venueName": "Emerald Stadium",
+    "address": {
+      "street": "88 Victory Lane",
+      "city": "Bengaluru",
+      "pin": "560001"
+    },
+    "venueCapacity": 45000,
+    "venueFor": "sports",
+    "venueType": "stadium",
+    "supportedCategories": ["Football", "Athletics", "Concerts"],
+    "additionalFields": {
+      "roofType": "Retractable",
+      "vipLounge": true
+    },
+    "amenities": ["LED Screens", "Food Court", "Parking", "Medical Center"]
+  },
+  {
+    "venueName": "Greenfield Grounds",
+    "address": {
+      "street": "19 Sports Colony",
+      "city": "Lucknow",
+      "pin": "226001"
+    },
+    "venueCapacity": 5000,
+    "venueFor": "sports",
+    "venueType": "ground",
+    "supportedCategories": ["Hockey", "Football", "Cricket"],
+    "additionalFields": {
+      "grassType": "Hybrid Turf",
+      "floodLights": true
+    },
+    "amenities": ["Seating Area", "Scoreboard", "Parking", "CCTV"]
+  },
+  {
+    "venueName": "Silver Screen Cineplex",
+    "address": {
+      "street": "11 Film Street",
+      "city": "Pune",
+      "pin": "411001"
+    },
+    "venueCapacity": 800,
+    "venueFor": "movies",
+    "venueType": "threatre",
+    "supportedCategories": ["Regional Films", "Hollywood Blockbusters"],
+    "additionalFields": {
+      "soundSystem": "IMAX Enhanced",
+      "screens": 4
+    },
+    "amenities": ["Recliners", "Online Booking", "Popcorn Bar", "4K Projection"]
+  }
+]

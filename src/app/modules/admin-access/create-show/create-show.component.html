@@ -1,0 +1,263 @@
+<form [formGroup]="showForm" (ngSubmit)="onSubmit()" class="p-3">
+
+    <div class="row">
+        <div class="mb-3 w-50">
+            <label class="form-label">Event Type</label>
+            <select class="form-select" formControlName="eventType" (change)="onEventTypeChange()">
+                <option value="" disabled selected>Select</option>
+                <option value="movies">Movies</option>
+                <option value="sports">Sports</option>
+                <option value="events">Events</option>
+                <option value="activities">Activities</option>
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('eventType')?.touched && showForm.get('eventType')?.invalid">
+                Event Type is required.
+            </div>
+        </div>
+
+
+        <div class="w-50 mb-3">
+            <label class="form-label">City</label>
+            <select formControlName="city" class="form-select" (change)="onCityChange()">
+                <option value="" disabled selected>Select</option>
+                <option value="noida">Noida</option>
+                <option value="gurgaon">Gurgaon</option>
+                <option value="kanpur">Kanpur</option>
+                <option value="delhi">Delhi</option>
+            </select>
+            <div class="invalid-feedback">City is required.</div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- Show Details -->
+    <div class="row mb-3">
+
+        <div class="w-50 mb-3">
+            <label class="form-label">Venue Name:</label>
+            <select formControlName="venueName" class="form-select" (change)="onVenueNameChange()">
+                <option value="" disabled selected>Select</option>
+                @for(venue of venuesNameList ;track $index){
+                <option value="{{venue.venueName}}">{{venue.venueName}}</option>
+                }
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('venueId')?.touched && showForm.get('venueId')?.invalid">
+                Venue name is required.
+            </div>
+        </div>
+
+
+
+        <div class="w-50 mb-3">
+            <label class="form-label">Event Name:</label>
+            <select formControlName="eventName" class="form-select" (change)="onEventNameChange()">
+                <option value="" disabled selected>Select</option>
+                @for(event of eventsNameList ;track $index){
+                <option value="{{event.name}}">{{event.name}}</option>
+                }
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('eventId')?.touched && showForm.get('eventId')?.invalid">
+                Event name is required.
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Event Type -->
+
+
+    <!-- Schedule -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" formControlName="date" [min]="minDate" />
+            <div class="text-danger" *ngIf="showForm.get('date')?.touched && showForm.get('date')?.invalid">
+                Date is required.
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Start Time</label>
+            <input type="time" class="form-control" formControlName="startTime" />
+            <div class="text-danger" *ngIf="showForm.get('startTime')?.touched && showForm.get('startTime')?.invalid">
+                Start Time is required.
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Duration (min)</label>
+            <input type="number" class="form-control" formControlName="duration" />
+            <div class="text-danger"
+                *ngIf="showForm.get('duration')?.touched && showForm.get('duration')?.hasError('required')">
+                Duration is required.
+            </div>
+            <div class="text-danger"
+                *ngIf="showForm.get('duration')?.touched && showForm.get('duration')?.hasError('min')">
+                Duration must be greater than 0.
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100  row">
+
+        <div class="">
+            <label class="form-label">Language</label>
+            <select formControlName="language" class="form-select w-50 border">
+                <option value="" selected disabled>Select</option>
+
+                @for(lang of languagesArray ;track $index){
+                <option value="{{lang}}">{{lang}}</option>
+                }
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('language')?.touched && showForm.get('language')?.invalid">
+                Language is required.
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!-- Content Details -->
+
+    @if(showForm.get('eventType')?.value =='movies'){
+
+    <div class="row my-3 ">
+
+        <div class="w-50">
+            <label class="form-label">Format</label>
+            <select formControlName="format" class="form-select border">
+                <option value="" selected disabled>Select</option>
+
+                @for(format of formatsArray ;track $index){
+                <option value="{{format}}">{{format | uppercase}}</option>
+                }
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('format')?.touched && showForm.get('format')?.invalid">
+                Format is required.
+            </div>
+        </div>
+
+
+        <div class="mb-3 w-50 ">
+            <label class="form-label">Screen Name</label>
+            <select formControlName="screenName" class="form-select  border" (change)="onScreenChange($event)">
+                <option value="" selected disabled>Select</option>
+
+                @for(screen of screenNamesArray ;track $index){
+                <option value="{{screen.screenName}}">{{screen.screenName}}</option>
+                }
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('screenName')?.touched && showForm.get('screenName')?.invalid">
+                Screen name is required.
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+    @if(showForm.get('categories')){
+    <div formArrayName="categories" class="mb-4">
+        <h5>Categories</h5>
+        <!-- <button type="button" class="btn btn-sm btn-primary mb-2" (click)="addCategory()">+ Add Category</button> -->
+        @for(category of categories.controls ;track $index){
+
+        <div formGroupName="{{$index}}" class="row my-3 d-flex  w-75 mx-auto px-3">
+
+            <div class=" row col-3">
+
+                <h6>Category Name : </h6>
+
+                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                    {{category.get('layoutName')?.value}}
+                </span>
+            </div>
+
+
+            <div class=" row col-2">
+
+                <h6>Rows : </h6>
+                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
+                    {{category.get('rows')?.value}}
+                </span>
+            </div>
+
+            <div class="col-2 row">
+
+                <h6>Cols : </h6>
+                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                    {{category.get('cols')?.value}}
+                </span>
+
+            </div>
+
+
+            <div class="col-2 row">
+
+                <h6>Total Seats : </h6>
+                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                    {{+category.get('cols')?.value * +getRows(category)}}
+                </span>
+
+            </div>
+
+
+            <div class="col-3 row">
+
+                <h6>Price : ₹</h6>
+
+                <input type="number" formControlName="price" min="0" class="form-control px-3 py-2 w-75 my-1">
+            </div>
+
+
+        </div>
+
+        }
+    </div>
+    }
+
+
+    }
+
+
+    <!-- Status -->
+    <div class="my-2 row  d-flex align-items-center">
+
+        <div class="w-50">
+            <label class="form-label">Status</label>
+            <select class="form-select" formControlName="status">
+                <option value="" disabled selected>Select</option>
+                @for(status of statusArray ;track $index){
+                         <option value="{{status}}">{{status | titlecase}}</option>
+                }
+            </select>
+            <div class="text-danger" *ngIf="showForm.get('status')?.touched && showForm.get('status')?.invalid">
+                Status is required.
+            </div>
+        </div>
+
+        @if(showForm.get('price')){
+
+
+        <div class="w-50  ">
+
+            <label>Price : ₹</label>
+
+            <input type="number" formControlName="price" min="0" class="form-control px-3 w-75 ">
+        </div>
+
+        }
+
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>

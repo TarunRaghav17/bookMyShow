@@ -10,10 +10,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FilterAccordionComponent } from './shared/components/filter-accordion/filter-accordion.component';
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { CarouselModule } from "ngx-bootstrap/carousel";
-import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SearchBoxComponent } from './shared/components/searchBox/searchBox.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
+import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
+import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
+
+import { ToastrModule } from 'ngx-toastr';
+import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 
 
 @NgModule({
@@ -21,13 +27,23 @@ import { ErrorPageComponent } from './shared/components/error-page/error-page.co
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    UserAuthComponent,
     ErrorPageComponent,
-    SearchBoxComponent
-
+    SearchBoxComponent,
+    TheatreListComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule],
-  providers: [provideHttpClient(withFetch())],
+  imports: [BrowserModule, BrowserAnimationsModule,
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
+    ToastrModule.forRoot({     // Global toastr configuration
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
+  ],
+  providers: [provideHttpClient(withFetch()), {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

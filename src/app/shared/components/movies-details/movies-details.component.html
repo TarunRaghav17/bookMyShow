@@ -11,7 +11,6 @@
                             alt="">
                         <span class="cinema-badge">In cinemas</span>
                     </div>
-
                     <div class="col-9 h-100 text-white p-4 py-5">
                         <h1 class="movie-title">War 2</h1>
                         <div class="rating-box">
@@ -25,10 +24,8 @@
                                     <span>Rate Now</span>
                                 </button>
                             </div>
-
                         </div>
                         <div class="movie-formats">
-
                             <div class="format-tags">
                                 <a>2D,</a>
                                 <a>ICE,</a><a>IMAX 2D,</a><a>4DX,</a><a>DOLBY,</a><a>CINEMA 2D</a>
@@ -56,7 +53,6 @@
                         <i class="fa fa-share" aria-hidden="true"></i>
                         <span>Share</span>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -82,13 +78,11 @@
                         </p>
                         <p>The choices ahead of them are impossible. The price to be paid is ultimate. This is a War
                             with spectacular action and heart-wrenching emotion.</p>
-
                     </div>
                 </div>
 
             </div>
         </div>
-
         <div class="cast_and_crew-section py-4 d-flex justify-content-center flex-column align-items-center">
             <div class="col-8">
                 <hr class="w-100 py-3">
@@ -169,6 +163,39 @@
             ID/Age Proof to the theatre. If you are denied entry due to age or ID issues, you will not get a refund.</p>
     </div>
     <div class="p-3 d-grid">
-        <button class="popup_continue">Continue</button>
+        <button class="popup_continue" (click)="close();open(langFormatModal)">Continue</button>
+    </div>
+</ng-template>
+
+<ng-template #langFormatModal let-modal>
+    <div class="p-3 border">
+
+        <!-- Header -->
+        <div class="d-flex  justify-content-between align-items-center mb-2">
+            <div>
+                <p class="m-0 text-muted small">War 2</p>
+                <h5 class="m-0 fw-semibold">Select language and format</h5>
+            </div>
+            <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+        </div>
+
+        <!-- Language -->
+
+        <div class=" d-flex flex-column gap-3">
+            @for(item of langFormatData;track $index){
+            <div>
+                <div class="border rounded bg-light p-2 mb-3">
+                    <span class="fw-thin text-muted">{{item.lang}}</span>
+                </div>
+                <!-- Formats -->
+                <div class="d-flex gap-2 flex-wrap">
+                    @for(f of item.format;track $index){
+                    <button class="btn border rounded-pill px-3 py-1 text-danger fw-thin "
+                        (click)="navigateToBuyTicket()">{{f}}</button>
+                    }
+                </div>
+            </div>
+            }
+        </div>
     </div>
 </ng-template>

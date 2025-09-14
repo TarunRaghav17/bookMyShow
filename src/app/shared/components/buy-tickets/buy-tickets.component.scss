@@ -1,0 +1,13 @@
+.on_hover {
+display: flex;
+align-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+.on_hover:hover {
+  width: 20%;
+
+  cursor: pointer;
+}

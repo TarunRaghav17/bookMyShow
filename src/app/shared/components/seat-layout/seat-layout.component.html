@@ -1,0 +1,26 @@
+<div class="seatmap-wrap">
+  <div class="header">
+    <div class="times">
+      <button class="time" *ngFor="let t of showTimes"
+              [class.active]="t === activeShow"
+              (click)="switchShow(t)">
+        {{ t }}
+      </button>
+    </div>
+    <div class="summary">
+      <div *ngIf="selectedSeats.length">Selected: {{ selectedSeats | json }}</div>
+      <div>Total: ₹{{totalPrice }}</div>
+      <button class="confirm" [disabled]="!selectedSeats.length" (click)="confirm()">Proceed</button>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span class="key available"></span> Available
+    <span class="key selected"></span> Selected
+    <span class="key booked"></span> Sold
+  </div>
+
+  <div class="canvas-shell">
+    <canvas #seatCanvas (click)="onCanvasClick($event)" style="border:2px solid red"></canvas>
+  </div>
+</div>

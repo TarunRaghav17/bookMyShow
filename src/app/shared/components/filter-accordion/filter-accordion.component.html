@@ -1,26 +1,32 @@
-<div class="main_container_ccordion d-block ">
-    <div class="d-flex justify-content-between border ccordion_box border-bottom-0 shadow-sm"
-        (click)="toggleAccordion()">
-        <div class="d-flex gap-2 align-items-center">
-            <i class="fa fa-angle-down" aria-hidden="true" [ngClass]="{'tranform_icon': filterShowButtons}"></i>
-            <p class="m-0 filter_text" [ngClass]="{'text_changColor': filterShowButtons}">Languages</p>
+<div class="d-flex flex-column gap-2">
+    @for(item of filters;track $index){
+    <div class="main_container_accordion d-block ">
+        <div class="d-flex justify-content-between border accordion_box border-bottom-0 shadow-sm border">
+            <div class="d-flex gap-2 align-items-center " (click)="toggleAccordion($index)">
+                <i class="fa fa-angle-down" aria-hidden="true" [ngClass]="{'tranform_icon': toggleAccordion}"></i>
+
+                <p class="m-0 filter_text" [ngClass]="{'text_changColor': filterShowButtons}">{{item.type}}</p>
+            </div>
+            <div>
+                <span>Clear</span>
+            </div>
         </div>
-        <div>
-            <span>Clear</span>
+        @if(openedIndex.includes($index)) {
+        <div [ngClass]="{'toggleFilter':filterShowButtons}">
+            <div class="border border-top-0 filter_button_box bg-white ">
+                @for (i of item.data; track $index) {
+                <span [ngClass]="{selectedText: i.selected}"
+                    (click)="applyFilter({type:item.type,filterName:i,index:$index})">{{i.text}}</span>
+                }
+            </div>
         </div>
-    </div>
-    @if(filterShowButtons){
-    <div [ngClass]="{'toggleFilter':filterShowButtons}">
-        <div class="border border-top-0 filter_button_box bg-white ">
-            <button type="button">Primary</button>
-            <button type="button">Secondary</button>
-            <button type="button">Success</button>
-            <button type="button">Danger</button>
-            <button type="button">Warning</button>
-            <button type="button">Info</button>
-            <button type="button">Light</button>
-            <button type="button">Dark</button>
-        </div>
+        }
     </div>
     }
+    <div>
+        <a><button (click)="handleNavigate()" type="button" class="btn w-100 border-danger text-danger">
+                Browse by {{browseBy}}
+            </button>
+        </a>
+    </div>
 </div>

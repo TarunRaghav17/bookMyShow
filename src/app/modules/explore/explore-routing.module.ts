@@ -16,6 +16,19 @@ const routes: Routes = [
   {
     path: 'events',
     loadChildren: () => import('./events/events.module').then((m) => m.EventsModule)
+  },
+  {
+    path: 'activities',
+    loadChildren: () => import('./activities/activities.module').then((m) => m.ActivitiesModule)
+
+  },
+  {
+    path: 'sports',
+    loadChildren: () => import('./sports/sports.module').then((m) => m.SportsModule)
+  },
+  {
+    path: 'plays',
+    loadChildren: () => import('./plays/plays.module').then((m) => m.PlaysModule)
   }
 ];
 

@@ -1,23 +1,26 @@
-.ccordion_box {
+.accordion_box {
   padding: 15px 16px 15px 11px;
   border-radius: 3px;
   background-color: white;
   cursor: pointer;
 }
-.ccordion_box span {
+
+.accordion_box span {
   font-size: 13px;
   color: rgb(102, 102, 102);
 }
-.ccordion_box span:hover {
+
+.accordion_box span:hover {
   color: rgb(220, 53, 75);
 }
+
 .filter_text {
   padding: 0px;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.43;
-  background-color: transparent;
 }
+
 .filter_button_box {
   padding: 10px;
   display: flex;
@@ -25,23 +28,26 @@
   gap: 3px;
   background-color: white;
 }
-.toggleFilter button {
-  transition: 3s;
-  word-break: break-word;
-  color: rgb(220, 53, 75);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.43;
-}
+
 .tranform_icon {
   transform: rotate(180deg);
 }
+
 .text_changColor {
   color: rgb(220, 53, 88);
 }
-.filter_button_box button {
+
+.filter_button_box span {
   background-color: white;
   border: 1px solid rgb(229, 229, 229);
   margin: 2px;
+  color: rgb(220, 53, 88);
   padding: 5px;
+  cursor: pointer;
+}
+
+.selectedText {
+  background-color: rgb(235, 78, 98) !important;
+  color: white !important;
+  border-color: rgb(235, 78, 98) !important;
 }

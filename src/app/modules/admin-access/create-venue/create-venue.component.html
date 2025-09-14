@@ -1,0 +1,200 @@
+<form [formGroup]="venueForm" (ngSubmit)="onSubmit()" novalidate class="container my-4">
+    <div class="row">
+        <!-- Venue Name -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Venue Name</label>
+            <input type="text" formControlName="venueName" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('venueName')?.touched && venueForm.get('venueName')?.invalid}" />
+            <div class="invalid-feedback">Venue name is required.</div>
+        </div>
+
+        <!-- Capacity -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Capacity</label>
+            <input type="number" formControlName="venueCapacity" class="form-control" min="100" 
+                [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
+            <div class="invalid-feedback">Capacity must be at least 100.</div>
+        </div>
+    </div>
+
+    <!-- Address -->
+    <div formGroupName="address" class="row">
+        <h5 class="mb-3">Address</h5>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">Street</label>
+            <input type="text" formControlName="street" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('address.street')?.touched && venueForm.get('address.street')?.invalid}" />
+            <div class="invalid-feedback">Street is required.</div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label class="form-label">City</label>
+            <select formControlName="city" class="form-select"
+                [ngClass]="{'is-invalid': venueForm.get('address.city')?.touched && venueForm.get('address.city')?.invalid}">
+                <option value="" disabled>Select</option>
+                <option value="noida">Noida</option>
+                <option value="gurgaon">Gurgaon</option>
+                <option value="kanpur">Kanpur</option>
+                <option value="delhi">Delhi</option>
+            </select>
+            <div class="invalid-feedback">City is required.</div>
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <label class="form-label">PIN</label>
+            <input type="text" formControlName="pin" class="form-control"
+                [ngClass]="{'is-invalid': venueForm.get('address.pin')?.touched && venueForm.get('address.pin')?.invalid}" />
+            <div class="invalid-feedback">Must be a 6-digit PIN.</div>
+        </div>
+    </div>
+
+    <!-- Venue For -->
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Venue For</label>
+            <select formControlName="venueFor" class="form-select" (change)="onVenueForChange()"
+                [ngClass]="{'is-invalid': venueForm.get('venueFor')?.touched && venueForm.get('venueFor')?.invalid}">
+                <option value="" disabled>Select</option>
+                <option value="movies">Movies</option>
+                <option value="sports">Sports</option>
+                <option value="events">Events</option>
+                <option value="activities">Activities</option>
+            </select>
+            <div class="invalid-feedback">Please select a type.</div>
+        </div>
+
+        <!-- Venue Type -->
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Venue Type</label>
+            <select type="text" formControlName="venueType" class="form-select" (change)="onVenueTypeChange()"
+                [ngClass]="{'is-invalid': venueForm.get('venueType')?.touched && venueForm.get('venueType')?.invalid }">
+                <option value="" selected disabled>Select</option>
+                @for(type of venueType;track $index){
+                <option value="{{type.value}}">{{type.label | titlecase}}</option>
+                }
+            </select>
+            <div class="invalid-feedback">Venue type is required.</div>
+        </div>
+    </div>
+
+    <!-- Supported Categories -->
+    <div class="col-md-6 mb-3">
+        <label>Supported Categories</label>
+        <select formControlName="supportedCategories" class="form-select" (change)="handleCategoryChange($event)"
+            [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}">
+            <option value="" selected disabled>Select</option>
+            @for(category of supportedCategoriesArray;track $index){
+            <option value="{{category.value}}" >{{category.label}}</option>
+            }
+        </select>
+ <div class="invalid-feedback">Supported Category is required.</div>
+
+    </div>
+
+    @if(venueForm.get('screens')){
+        <div formArrayName="screens" class="card mt-3 p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="">Screens</h4>
+                <button type="button" class="btn btn-success  " (click)="addScreen()">
+                     Add Screen
+                </button>
+            </div>
+
+
+            @for (screen of screens.controls; track $index) {
+            <div class="card my-3 mb-1 p-3" [formGroupName]="$index">
+                <div class="mb-3">
+                    <label class="form-label">Screen Name</label>
+                    <input type="text" class="form-control" placeholder="Enter screen name"
+                        formControlName="screenName"
+                        [ngClass]="{'is-invalid': screen.get('screenName')?.touched && screen.get('screenName')?.invalid }"
+                        >
+                         <div class="invalid-feedback">Screen name is required.</div>
+                        
+                </div>
+                <div formArrayName="layouts" class=" border-danger">
+                    <h5 class="mb-2">Categories</h5>
+                    @for (layout of getLayouts(screen).controls; track $index) {
+                    <div class="row mb-2 border-bottom d-flex align-items-start px-2 " [formGroupName]="$index">
+                        <div class="col-4">
+                            <label class="form-label">Category</label>
+                            <input type="text" class="form-control" placeholder="VIP / Regular"
+                                formControlName="layoutName"
+                                 [ngClass]="{'is-invalid': layout.get('layoutName')?.touched && layout.get('layoutName')?.invalid }"
+                                >
+                                 <div class="invalid-feedback">Layout name is required.</div>
+                        </div>
+                        <div class="col-4 ">
+                            <label class="form-label">Row Name</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                @for(alpha of getAvailableRows(screen,layout);track $index){
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" value="{{alpha}}"
+                                        (change)="onCheckboxChange($event,layout)"
+                                        [ngClass]="{'is-invalid': layout.get('rows')?.touched && layout.get('rows')?.invalid }"
+                                        >
+                                    <label class="form-check-label">{{alpha}}</label>
+                                     <div class="invalid-feedback">Row  is required.</div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <label class="form-label">Columns</label>
+                            <input type="number" class="form-control" placeholder="10"  min="10" max="25" formControlName="cols"
+                            [ngClass]="{'is-invalid': layout.get('cols')?.touched && layout.get('cols')?.invalid }"
+                            >
+                            @if(layout.get('cols')?.touched && layout.get('cols')?.errors?.['min']){
+                                   <div class="invalid-feedback"
+                             
+                             >Min.10 Cols are required.</div>
+                            }
+                          
+
+                             @if(layout.get('cols')?.touched && layout.get('cols')?.errors?.['max']){
+                                   <div class="invalid-feedback"
+                             
+                             >Max.25 Cols are required.</div>
+                            }
+
+                             
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger col-2  ms-auto mt-auto  mb-2"
+                            (click)="removeLayout(screen, $index)">
+                            Remove Category
+                        </button>
+                    </div>
+                    }
+                    <!-- Add Layout Button -->
+                    <button type="button" class="btn btn-sm btn-primary mt-2" (click)="addLayout(screen)">
+                        Add Category
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger my-2 col-2 ms-auto " (click)="removeScreen($index)">
+                 Remove Screen
+            </button>
+            }
+        </div>
+    }
+
+    <div formArrayName="amenities" class="my-3 ">
+        <h5>Amenities</h5>
+        <ul class="list-group d-flex flex-row align-items-center justify-content-start gap-3">
+            @for(amenity of amenities.controls; track $index){
+            <li class="list-group-item d-fles justify-content-between align-items-center">
+                {{amenity.value | titlecase}}
+                <button type="button" class="btn-close" (click)="removeAmenity($index)"></button>
+            </li>
+            }
+        </ul>
+        <div class="d-flex my-2 gap-3 justify-content-end">
+            <input type="text" class="form-control w-75" placeholder="Enter amenity" [formControl]="tempAmmenity">
+            <button type="button" class="btn btn-primary w-25" (click)="addAmenity()">Add</button>
+        </div>
+    </div>
+    <div class="w-100 d-flex justify-content-end">
+        <button type="submit" class="btn btn-success border w-25 ">
+            Submit
+        </button>
+    </div>
+</form>

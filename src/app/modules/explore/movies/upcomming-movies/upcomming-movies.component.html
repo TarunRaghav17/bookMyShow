@@ -1,1 +1,94 @@
-<h2>In process</h2>
+<div class="conatiner-fluid mt-5 ">
+    <div class="row g-0">
+        <div class="main_container_box d-flex justify-content-center ">
+            <div class="col-8">
+                <div class="top_heading_movies  d-flex justify-content-between">
+                    <div class="col-3">
+                        <h4>Filters</h4>
+                    </div>
+                    <div class="col-9">
+                        <h4 class="fs-4 fw-500 m-0">Movies in {{commonService._selectCity()}}</h4>
+                    </div>
+                </div>
+                <div class="filter_cards_container d-flex justify-content-between py-4">
+                    <div class="col-3">
+                        <div>
+                            <div class="app_filter_box ">
+                                <app-filter-accordion (filterEvent)="commonService.handleEventFilter($event)"
+                                    [filters]="filters">
+                                </app-filter-accordion>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-9 d-block ">
+                        <div class="top_bar_Comming_soon d-flex flex-column gap-3">
+                            <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                                @for (item of select; track $index) {
+                                @for(i of item.data;track $index){
+                                <span [ngClass]="{selectedText: i.selected}">
+                                    {{i.text}}
+                                </span>
+                                }
+                                }
+                                @for (item of topFiltersArray; track $index) {
+                                @if(!item.selected){
+
+                                <span [ngClass]="{selectedText: item.selected}"
+                                    (click)="commonService.handleEventFilter(item)">
+                                    {{item}}
+                                </span>
+                                }
+                                }
+                            </div>
+                            <div
+                                class="d-flex justify-content-between py-4 px-3 rounded-2 comming_soon_bar bg-white align-items-center">
+                                <h4 class="fs-5 fw-500 m-0"> Now Showing</h4>
+                                <a class="explore_text" [routerLink]="['/explore/movies']">In Cineams near You <i
+                                        class="fa fa-angle-right ms-1" aria-hidden="true"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center g-0">
+                                <div class="main_box_crasoule">
+                                    <div class="main_filter_card overflow-hidden">
+                                        <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start ">
+                                            @for (item of dummyMoviesdata; track $index) {
+                                            <ng-container class="overflow-hidden w-50">
+                                                <div class="col card_container">
+                                                    <div class="card shadow-sm">
+                                                        <a class="img_container rounded-4"
+                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-');}/${item.imdbID}`]">
+                                                            <img [src]="item.Poster" [alt]="item.Poster">
+                                                        </a>
+                                                        <div class="card-body rounded-bottom bg-dark">
+                                                            <div class="d-flex gap-2">
+                                                                <span>
+                                                                    <i class="fa fa-thumbs-up text-success"
+                                                                        aria-hidden="true"></i>
+                                                                </span>
+                                                                <span class="text-white">
+                                                                    1.5M likes
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="bottom_text_movie_card py-3 px-4">
+                                                        <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
+                                                        <span class="m-0">{{item.Genre}}</span>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
