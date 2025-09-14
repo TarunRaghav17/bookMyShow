@@ -11,9 +11,9 @@
         <!-- Capacity -->
         <div class="col-md-6 mb-3">
             <label class="form-label">Capacity</label>
-            <input type="number" formControlName="venueCapacity" class="form-control"
+            <input type="number" formControlName="venueCapacity" class="form-control" min="100" 
                 [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
-            <div class="invalid-feedback">Capacity must be at least 1.</div>
+            <div class="invalid-feedback">Capacity must be at least 100.</div>
         </div>
     </div>
 
@@ -79,22 +79,23 @@
     <!-- Supported Categories -->
     <div class="col-md-6 mb-3">
         <label>Supported Categories</label>
-        <select formControlName="supportedCategories" class="form-select"
+        <select formControlName="supportedCategories" class="form-select" (change)="handleCategoryChange($event)"
             [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}">
             <option value="" selected disabled>Select</option>
             @for(category of supportedCategoriesArray;track $index){
-            <option value="{{category.value}}">{{category.label}}</option>
+            <option value="{{category.value}}" >{{category.label}}</option>
             }
         </select>
+ <div class="invalid-feedback">Supported Category is required.</div>
+
     </div>
 
-    @if(venueForm.get('additionalFields.screens')){
-    <div class="card mt-3 p-3" formGroupName="additionalFields">
-        <div formArrayName="screens">
+    @if(venueForm.get('screens')){
+        <div formArrayName="screens" class="card mt-3 p-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="">Screens</h4>
                 <button type="button" class="btn btn-success  " (click)="addScreen()">
-                    + Add Screen
+                     Add Screen
                 </button>
             </div>
 
@@ -104,7 +105,11 @@
                 <div class="mb-3">
                     <label class="form-label">Screen Name</label>
                     <input type="text" class="form-control" placeholder="Enter screen name"
-                        formControlName="screenName">
+                        formControlName="screenName"
+                        [ngClass]="{'is-invalid': screen.get('screenName')?.touched && screen.get('screenName')?.invalid }"
+                        >
+                         <div class="invalid-feedback">Screen name is required.</div>
+                        
                 </div>
                 <div formArrayName="layouts" class=" border-danger">
                     <h5 class="mb-2">Categories</h5>
@@ -113,7 +118,10 @@
                         <div class="col-4">
                             <label class="form-label">Category</label>
                             <input type="text" class="form-control" placeholder="VIP / Regular"
-                                formControlName="layoutName">
+                                formControlName="layoutName"
+                                 [ngClass]="{'is-invalid': layout.get('layoutName')?.touched && layout.get('layoutName')?.invalid }"
+                                >
+                                 <div class="invalid-feedback">Layout name is required.</div>
                         </div>
                         <div class="col-4 ">
                             <label class="form-label">Row Name</label>
@@ -121,34 +129,52 @@
                                 @for(alpha of getAvailableRows(screen,layout);track $index){
                                 <div class="form-check">
                                     <input type="checkbox" class="form-check-input" value="{{alpha}}"
-                                        (change)="onCheckboxChange($event,layout)">
+                                        (change)="onCheckboxChange($event,layout)"
+                                        [ngClass]="{'is-invalid': layout.get('rows')?.touched && layout.get('rows')?.invalid }"
+                                        >
                                     <label class="form-check-label">{{alpha}}</label>
+                                     <div class="invalid-feedback">Row  is required.</div>
                                 </div>
                                 }
                             </div>
                         </div>
                         <div class="col-3">
                             <label class="form-label">Columns</label>
-                            <input type="number" class="form-control" placeholder="10" formControlName="cols">
+                            <input type="number" class="form-control" placeholder="10"  min="10" max="25" formControlName="cols"
+                            [ngClass]="{'is-invalid': layout.get('cols')?.touched && layout.get('cols')?.invalid }"
+                            >
+                            @if(layout.get('cols')?.touched && layout.get('cols')?.errors?.['min']){
+                                   <div class="invalid-feedback"
+                             
+                             >Min.10 Cols are required.</div>
+                            }
+                          
+
+                             @if(layout.get('cols')?.touched && layout.get('cols')?.errors?.['max']){
+                                   <div class="invalid-feedback"
+                             
+                             >Max.25 Cols are required.</div>
+                            }
+
+                             
                         </div>
                         <button type="button" class="btn btn-sm btn-danger col-2  ms-auto mt-auto  mb-2"
                             (click)="removeLayout(screen, $index)">
-                            + Remove Category
+                            Remove Category
                         </button>
                     </div>
                     }
                     <!-- Add Layout Button -->
                     <button type="button" class="btn btn-sm btn-primary mt-2" (click)="addLayout(screen)">
-                        + Add Category
+                        Add Category
                     </button>
                 </div>
             </div>
             <button type="button" class="btn btn-sm btn-danger my-2 col-2 ms-auto " (click)="removeScreen($index)">
-                + Remove Screen
+                 Remove Screen
             </button>
             }
         </div>
-    </div>
     }
 
     <div formArrayName="amenities" class="my-3 ">

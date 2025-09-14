@@ -4,6 +4,7 @@ import { ListYourShowComponent } from './list-your-show/list-your-show.component
 import { UsersComponent } from './users/users.component';
 import { CreateVenueComponent } from './create-venue/create-venue.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateShowComponent } from './create-show/create-show.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list-your-show', pathMatch: 'full' },
@@ -18,6 +19,14 @@ const routes: Routes = [
   {
     path:'create/venue',
     component:CreateVenueComponent
+  },
+     /**
+  * @description route to access /admin/create/shows to create show 
+  * @author Inzamam
+  */
+  {
+    path:'create/show',
+    component:CreateShowComponent
   }
 ];
 
