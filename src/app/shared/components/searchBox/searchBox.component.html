@@ -18,37 +18,34 @@
             </div>
             <div class="input_container col-4">
                 <form class="w-100 me-3" role="search">
-                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                    <input type="search" class="form-control" [formControl]="seachControl" placeholder="Search..."
+                        aria-label="Search">
                 </form>
             </div>
             <div class="close_icon_container col-4">
                 <p class="text-end px-4" (click)=" closeModal()">x</p>
             </div>
-
         </div>
     </header>
     <div class="filter_container  ">
         <div class="main_box_filter d-flex align-items-center ">
-            <div class="icon_box">
-                <button class="arrow-btn" (click)="prev()" [disabled]="currentIndex === 0">
-                    <i class="fa fa-angle-left" aria-hidden="true"></i>
-                </button>
-            </div>
+
             <div class="main_filter_text">
-                <div class="filter_text d-flex gap-3">
-                    @for ( item of filterData; track $index) {
-                    <span>
-                        <a>{{ item }}</a>
+                <div class="filter_text d-flex gap-3 justify-content-around pb-2">
+                    @for (item of eventsFilters; track $index) {
+                    <span [ngClass]="{ 'active-filter': searchObj.eventTypes.includes(item) }">
+                        <a (click)="addFilters(item)">
+                            {{ item }}
+                            @if(searchObj.eventTypes.includes(item)){
+                            <i>X</i>
+                            }
+                        </a>
                     </span>
                     }
 
+
+
                 </div>
-            </div>
-            <div class="icon_box">
-                <button class="arrow-btn" (click)="next()"
-                    [disabled]="currentIndex + visibleCount >= eventsFilters.length">
-                    <i class="fa fa-angle-right" aria-hidden="true"></i>
-                </button>
             </div>
 
 
@@ -58,22 +55,22 @@
         <div class="trending_serach_list">
             <p class="m-0">TRENDING SEARCHES</p>
         </div>
-        <div class="movies_list">
-            <div class="">
-                <span class="movie_name">War 2</span>
+        <div class="movie_list_container">
+            @for (item of movieName; track $index) {
+
+            <div class="movies_list">
+                <div class="">
+                    <span class="movie_name">{{item}}</span>
+                </div>
+                <span class="movie_icon">
+                    <i class="fa fa-film" aria-hidden="true"></i>
+                </span>
             </div>
-            <span class="movie_icon">
-                <i class="fa fa-film" aria-hidden="true"></i>
-            </span>
+
+            }
         </div>
-        <div class="movies_list">
-            <div class="">
-                <span class="movie_name">Race 2</span>
-            </div>
-            <span class="movie_icon">
-                <i class="fa fa-film" aria-hidden="true"></i>
-            </span>
-        </div>
+
+
     </div>
 
 

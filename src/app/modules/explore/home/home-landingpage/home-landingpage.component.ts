@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { movies } from '../../../../../../db';
+import { HomeService } from '../service/home.service';
+import { forkJoin } from 'rxjs';
+import { DomSanitizer } from '@angular/platform-browser';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
   selector: 'app-home',
@@ -7,53 +10,84 @@ import { movies } from '../../../../../../db';
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
 })
+
 export class HomeLandingPageComponent implements OnInit {
-  dummyMoviesdata: any[] = [];
-  moviesFilteredData: any[] = []
-  originalMovies = movies
-  pageNo = 0;
-  itemsPerCards = 6;
+  pageNoMap: Record<string, number | undefined> = {};
+  itemsPerCards = 5;
+  activiesData: any[] = [];
+  movieData: any[] = [];
+  playsData: any[] = [];
+  sportsData: any[] = [];
+
+  visibleData: Record<string, any[]> = {};
+
+  constructor(
+    private homeService: HomeService,
+    private sanitizer: DomSanitizer,
+    public commonService: CommonService
+  ) { }
 
   ngOnInit(): void {
-    
-  }
-  start = 0
-  end = 0
-  constructor(
-  ) {
-    this.dummyMoviesdata = movies;
-    this.getVisibleMovieCard()
+    this.getAllData()
   }
 
 
-  /**
-    * @description carousel  cards data 
-    * @author  Inzamam,
-    */
-  getVisibleMovieCard() {
-    this.start = this.itemsPerCards * this.pageNo;
-    this.end = this.start + this.itemsPerCards
-    this.moviesFilteredData = this.originalMovies.slice(this.start, this.end);
+  getVisibleCards(type: string, originalData: any[]) {
+    const pageNo = this.pageNoMap[type] ?? 0;
+    const start = this.itemsPerCards * pageNo;
+    const end = start + this.itemsPerCards;
+    this.visibleData[type] = originalData.slice(start, end);
   }
 
-  /**
-   * @description next i have click to get 6 cards
-   * @author  Inzamam,
-   */
-  next() {
-    if (this.end < this.originalMovies.length) {
-      this.pageNo++;
-      this.getVisibleMovieCard();
+
+  next(type: string, originalData: any[]) {
+    const pageNo = this.pageNoMap[type] ?? 0;
+    const start = (pageNo + 1) * this.itemsPerCards;
+    if (start < originalData.length) {
+      this.pageNoMap[type] = pageNo + 1;
+      this.getVisibleCards(type, originalData);
     }
   }
+
+
+  prev(type: string, originalData: any[]) {
+    const pageNo = this.pageNoMap[type] ?? 0;
+    if (pageNo > 0) {
+      this.pageNoMap[type] = pageNo - 1;
+      this.getVisibleCards(type, originalData);
+    }
+  }
+
+  getAllData() {
+    const types = ['Movie', 'Plays', 'Sports', 'Activities'];
+
+    forkJoin(types.map(type => this.homeService.getEventListByType(type)))
+      .subscribe({
+        next: (results) => {
+          const [Movie, Plays, Sports, Activities] = results;
+          this.movieData = Movie?.data
+          this.playsData = Plays?.data;
+          this.sportsData = Sports?.data;
+          this.activiesData = Activities?.data;
+          types.forEach(type => this.pageNoMap[type] = 0);
+
+          this.getVisibleCards('Movie', this.movieData);
+          this.getVisibleCards('Plays', this.playsData);
+          this.getVisibleCards('Sports', this.sportsData);
+          this.getVisibleCards('Activities', this.activiesData);
+        },
+        error: (err) => console.error(err)
+      });
+  }
   /**
-   * @description prev i have click to get back 6 cards
-   * @author Gurmeet Kumar,
-   */
-  prev() {
-    if (this.start > 0) {
-      this.pageNo--;
-      this.getVisibleMovieCard();
+    * @description Convert base64 string to safe image URL for display
+    * @author Gurmeet Kumar
+    * @return any
+    */
+  getImageFromBase64(base64string: string): any {
+    if (base64string) {
+      const fullBase64String = `data:${base64string};base64,${base64string}`;
+      return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
     }
   }
 

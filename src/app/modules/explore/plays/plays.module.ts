@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { PlaysRoutingModule } from './plays-routing.module';
 import { PlaysLandingPageComponent } from './plays-landing-page/plays-landing-page.component';
 import { FilterAccordionComponent } from '../../../shared/components/filter-accordion/filter-accordion.component';
-import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
+import { TruncatePipe } from '../../../core/pipes/truncate.pipe';
 
 
 @NgModule({

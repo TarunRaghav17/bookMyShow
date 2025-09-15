@@ -1,29 +1,55 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HomeService } from '../../../modules/explore/home/service/home.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-searchBox',
   standalone: false,
   templateUrl: './searchBox.component.html',
-  styleUrls: ['./searchBox.component.scss']
+  styleUrls: ['./searchBox.component.scss'],
 })
 export class SearchBoxComponent implements OnInit {
   currentIndex: number = 0;
   visibleCount: number = 6;
-  filterData: any;
-  eventsFilters: any[] = ['Movies', 'Stream', 'Events', 'Plays', 'Sports', 'Activites', "Venues", 'Offers', 'Others']
+  seachControl: any = new FormControl('');
+  selectedFilter:any;
+  movieName:any;
+ eventsFilters: string[] = ['Movies', 'Events', 'Plays', 'Sports', 'Activities'];
+
+  searchObj: any = {
+    name: '',
+    eventTypes: [],
+  };
   private modalRef?: NgbModalRef;
 
-  constructor(private modalService: NgbModal) { }
+  constructor(
+    private modalService: NgbModal,
+    private homeService: HomeService
+  ) {}
 
   ngOnInit(): void {
-    this.getVisibleFilters()
+    this.seachControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        tap((query: string) => {
+          this.searchObj.name = query; // only update name
+        }),
+        switchMap(() => this.homeService.globalSearch(this.searchObj))
+      )
+      .subscribe({
+        next: (res: any) => {
+          this.movieName= res.data
+          console.log(res);
+        },
+      });
   }
 
   /**
-    * @description openModal 
-    * @author Gurmeet Kumar
-    */
+   * @description openModal
+   * @author Gurmeet Kumar
+   */
   openModal(searchFilterModal: TemplateRef<any>) {
     this.modalRef = this.modalService.open(searchFilterModal, {
       modalDialogClass: 'searchbox',
@@ -37,33 +63,13 @@ export class SearchBoxComponent implements OnInit {
     }
   }
 
-  /**  
-   * @description .  
-   * @author Gurmeet Kumar
-   * @return {string} Return a string  
-   */
-
-  getVisibleFilters() {
-    this.filterData = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
+addFilters(eventType: string) {
+  const index = this.searchObj.eventTypes.indexOf(eventType);
+  if (index === -1) {
+    this.searchObj.eventTypes.push(eventType);
+  } else {
+    this.searchObj.eventTypes.splice(index, 1);
   }
+}
 
-  /**
-    * @description next i have click to get 6 cardsData
-    * @author Gurmeet Kumar,
-    */
-  next() {
-    if (this.currentIndex + this.visibleCount < this.eventsFilters.length) {
-      this.currentIndex++;
-    }
-  }
-  /**
-   * @description prev i have click to get  back 6 cardsData
-   * @author Gurmeet Kumar,
-   */
-
-  prev() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    }
-  }
 }

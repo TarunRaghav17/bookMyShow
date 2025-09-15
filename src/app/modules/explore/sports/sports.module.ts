@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SportsRoutingModule } from './sports-routing.module';
 import { SportsPageComponent } from './sports-page/sports-page.component';
 import { FilterAccordionComponent } from '../../../shared/components/filter-accordion/filter-accordion.component';
-import { TruncatePipe } from '../../../shared/pipes/truncate.pipe';
+import { TruncatePipe } from '../../../core/pipes/truncate.pipe';
 
 
 @NgModule({
