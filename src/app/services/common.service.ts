@@ -33,6 +33,21 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/api/city/all`);
   }
 
+
+
+
+getContentDetailsById(contentId:string | null):Observable<any>{
+  return this.http.get(`${this.baseUrl}/api/events/${contentId}`)
+
+}
+
+
+
+
+
+
+
+
   /**
    * @description Get list of popular cities from backend
    * @author Gurmeet Kumar
@@ -42,7 +57,7 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/api/city/popular`);
   }
 
-  setCategory(category: string) {
+  setCategory(category: string | null) {
     this._selectedCategory.set(category)
     localStorage.setItem('category', JSON.stringify(category))
   }

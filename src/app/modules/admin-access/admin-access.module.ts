@@ -8,11 +8,12 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateVenueComponent } from './create-venue/create-venue.component';
 import { CreateShowComponent } from './create-show/create-show.component';
+import { CreateContentComponent } from './create-content/create-content.component';
 
 @NgModule({
   declarations: [
     UsersComponent,
-    ListYourShowComponent, CreateVenueComponent, CreateShowComponent
+    ListYourShowComponent, CreateVenueComponent, CreateShowComponent, CreateContentComponent
   ],
   imports: [
     ReactiveFormsModule, CommonModule,

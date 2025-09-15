@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 // import { contents } from '../../../../../db';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
 import { ShowsService } from './shows-services/shows.service';
 import { ToastrService } from 'ngx-toastr';
+import { ContentService } from '../create-content/content-services/content.service';
+import { CommonService } from '../../../services/common.service';
 @Component({
   standalone: false,
   selector: 'app-show-form',
   templateUrl: './create-show.component.html',
   styleUrls: ['./create-show.component.scss']
 })
-export class CreateShowComponent implements OnInit {
+export class CreateShowComponent implements OnInit,OnDestroy {
 
   constructor(private fb: FormBuilder,
     private venuesService: VenuesService,
-    private toaster: ToastrService,
+    private contentService:ContentService,
     private showService: ShowsService,
-    
+    private toaster: ToastrService,
+    private commonService:CommonService
+
   ) { }
 
-  contents!:any[]
+  contents!: any[]
 
   minDate = ""
   minTime = ""
@@ -33,6 +37,7 @@ export class CreateShowComponent implements OnInit {
   formatsArray: any[] = [];
   screenNamesArray: any[] = [];
   statusArray: any[] = [];
+  citiesArray: any[] = [];
 
 
   ngOnInit(): void {
@@ -41,28 +46,30 @@ export class CreateShowComponent implements OnInit {
       venueName: ['', Validators.required],
       eventType: ['', Validators.required],  // movies | sports | events | activities
       city: ['', Validators.required],
-      date: ['', Validators.required],       // YYYY-MM-DD
-      startTime: ['', Validators.required],  // HH:mm
-      duration: [null, [Validators.required, Validators.min(1)]],
-
+      date: ['', Validators.required],
+      startTime: ['', [Validators.required,]],
+      duration: [null, [Validators.required]],
       language: ['', Validators.required],
-      
-
-
-      // categories: this.fb.array([]),
-
-      status: ['', Validators.required]      // active | cancelled | completed | ongoing
+      status: ['', Validators.required]
     });
+
+  
 
 
     this.setToday()
+    // api to get contents
+    this.contentService.getContents().subscribe((res) => {
+      this.contents = res
 
-    this.showService.getContents().subscribe((res) => {
-      this.contents=res
-      
     })
+   
   }
 
+
+    ngOnDestroy(){
+this.commonService.setCategory(null)
+
+    }
 
 
 
@@ -77,6 +84,11 @@ export class CreateShowComponent implements OnInit {
 
   onEventTypeChange() {
     this.handleReset(['city', 'status', 'venueName', 'eventName'])
+     // api to get cities
+    this.showService.getCitites().subscribe(
+      (res)=>this.citiesArray=res)
+
+
     // this.showForm.get('status')?.setValue('')
     let selectedEventType = this.showForm.get('eventType')?.value
     if (selectedEventType != 'movies') {
@@ -84,8 +96,6 @@ export class CreateShowComponent implements OnInit {
         this.fb.group({
           userId: ["1245", Validators.required],
           userReservationSeats: [["A-01", "A-02"], Validators.required],
-
-
         })
 
       ]));
@@ -108,66 +118,18 @@ export class CreateShowComponent implements OnInit {
       this.showForm.addControl('categories', this.fb.array([]));
       this.showForm.removeControl('reservedSeats');
       this.showForm.removeControl('price')
-      this.showForm.addControl('format',this.fb.control('',Validators.required));
-      this.showForm.addControl('screenName',this.fb.control('',Validators.required));
-   
+      this.showForm.addControl('format', this.fb.control('', Validators.required));
+      this.showForm.addControl('screenName', this.fb.control('', Validators.required));
+
 
     }
   }
 
-  // Add category group
-  addCategory(): void {
-    const categoryGroup = this.fb.group({
-      category: ['', Validators.required],
-      price: [null, [Validators.required, Validators.min(0)]],
-      totalSeats: [null, [Validators.required, Validators.min(1)]],
-      reservedSeats: this.fb.array([])
-    });
-
-    this.categories.push(categoryGroup);
-  }
-
-  // Getter for reservedSeats inside a category
-  getReservedSeats(index: number): FormArray {
-    return this.categories.at(index).get('reservedSeats') as FormArray;
-  }
-
-  // Add reserved seat into a specific category
-  addReservedSeat(categoryIndex: number): void {
-    const reservedSeatGroup = this.fb.group({
-      seatId: ['', Validators.required],
-      status: ['', Validators.required], // reserved | booked | blocked
-      userId: ['', Validators.required],
-      timestamp: ['', Validators.required],
-      holdExpiry: [''] // optional
-    });
-
-    this.getReservedSeats(categoryIndex).push(reservedSeatGroup);
-  }
-
-  onSubmit(): void {
-    // if (this.showForm.valid) {
-    console.log('Form Value:', this.showForm.value);
-    this.showService.createShow(this.showForm.value).subscribe({
-      next: (res) => {
-        console.log(res)
-        this.toaster.success('Show created successfully')
-      },
-      error: (err) => {
-        console.log(err)
-        this.toaster.error(err.message)
-      }
-
-    })
-    // } else {
-    //   console.log('Form Invalid');
-    //   this.showForm.markAllAsTouched();
-    // }
-  }
-
-  onCityChange() {
+   onCityChange() {
     let selectedEventType = this.showForm.get('eventType')?.value
     let selectedCity = this.showForm.get('city')?.value
+
+    this.handleReset(['venueName','eventName'])
     this.venuesService.getVenues().subscribe({
       next: (res) => {
         this.venuesNameList = res.filter((venue: any) => {
@@ -184,12 +146,11 @@ export class CreateShowComponent implements OnInit {
   }
 
 
-
-  onVenueNameChange() {
+   onVenueNameChange() {
     const selectedEventType = this.showForm.get('eventType')?.value;
     const selectedVenueName = this.showForm.get('venueName')?.value;
 
-
+this.handleReset(['eventName'])
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
     );
@@ -211,25 +172,25 @@ export class CreateShowComponent implements OnInit {
     this.formatsArray = supportedCategories
 
     this.eventsNameList = this.contents.filter((content: any) => {
-      console.log(content)
-
-      switch(content.type){
+console.log(content)
+      switch (content.eventType.toLowerCase()
+) {
 
         case 'movies':
           {
- return (
-        content.type.toLowerCase() === selectedEventType.toLowerCase() && content.movieDetails.format.some((f: any) =>
-          supportedCategories.includes(f.toLowerCase())
-        )
-      );
-      
+            return (
+              content.eventType.toLowerCase() === selectedEventType.toLowerCase() && content.format.some((f: any) =>
+                supportedCategories.includes(f.toLowerCase())
+              )
+            );
+
           }
 
-           case 'events':
+        case 'events':
           {
- console.log('events called')
-        if(content.type.toLowerCase() === selectedEventType.toLowerCase())
-          return content
+            console.log('events called')
+            if (content.eventType.toLowerCase() === selectedEventType.toLowerCase())
+              return content
           }
 
 
@@ -239,8 +200,8 @@ export class CreateShowComponent implements OnInit {
 
 
       }
-     
-      
+
+
 
     });
 
@@ -248,7 +209,52 @@ export class CreateShowComponent implements OnInit {
   }
 
 
-  onScreenChange(event: any) {
+    onEventNameChange() {
+    let selectedEventName = this.showForm.get('eventName')?.value
+
+
+
+    let selectedEventNameObj = this.eventsNameList.filter((event: any) => event.name == selectedEventName)
+    console.log(selectedEventNameObj[0])
+    this.languagesArray = selectedEventNameObj[0].languages
+  }
+
+  setToday() {
+    let today = new Date()
+    this.minDate = today.toISOString().split('T')[0]
+
+  }
+
+
+  validateStartTime():ValidatorFn{
+
+
+    return(control:AbstractControl):ValidationErrors | null=>{
+
+  let selectedDate=this.showForm.get('date')?.value;
+  let selectedTime=control?.value;
+  if(!selectedDate || !selectedTime) return null;
+    let today =new Date()
+    let selectedDateObj=new Date(selectedDate)
+
+    if(selectedDateObj.toISOString().split('T')[0]== today.toISOString().split('T')[0]){
+      this.minTime=today.getHours()+":"+today.getMinutes()
+      console.log(this.minTime)
+
+      if(selectedTime<this.minTime){
+        return {inValidStartTime:true}
+      }
+    }
+
+    return null
+
+    }
+    
+
+  }
+
+
+   onScreenChange(event: any) {
     this.categories.clear();
     let selectedScreen = this.selectedVenueObj[0].screens.find((screen: any) => screen.screenName == event.target.value)
     console.log(selectedScreen, "value")
@@ -280,28 +286,30 @@ export class CreateShowComponent implements OnInit {
 
 
 
+  onSubmit(): void {
+    // if (this.showForm.valid) {
+    console.log('Form Value:', this.showForm.value);
+    this.showService.createShow(this.showForm.value).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.toaster.success('Show created successfully')
+      },
+      error: (err) => {
+        console.log(err)
+        this.toaster.error(err.message)
+      }
 
-
-
-
-  onEventNameChange() {
-    let selectedEventName = this.showForm.get('eventName')?.value
-
-
-
-    let selectedEventNameObj = this.eventsNameList.filter((event: any) => event.name == selectedEventName)
-    this.languagesArray = selectedEventNameObj[0].language 
+    })
+    // } else {
+    //   console.log('Form Invalid');
+    //   this.showForm.markAllAsTouched();
+    // }
   }
 
+  
 
-  setToday() {
-    let today = new Date()
-    this.minDate = today.toISOString().split('T')[0]
-
-  }
-
-
-
+// utility funct. to reset form controls 
+// takes array of form-control names to reset 
   handleReset(formControls: any[]) {
     formControls.forEach((ctrl) => {
       this.showForm.get(ctrl)?.reset();
@@ -312,5 +320,7 @@ export class CreateShowComponent implements OnInit {
 
 
 
+
+ 
 
 }

@@ -84,10 +84,19 @@
                         @if(authService.userDetailsSignal()?.role !='USER' && authService.userDetailsSignal()?.role
                         =='ADMIN'){
                         <div class=" sub_heder_right_links">
-                            <a [routerLink]="['/admin/list-your-show']">ListYourShow</a>
-                            <a [routerLink]="['/admin/create/venue']">Venues</a>
-                            <a [routerLink]="['/admin/content']">Content</a>
-                            <a [routerLink]="['/admin/shows']">Shows</a>
+                            <a [routerLink]="['/admin/list-your-show']" 
+                            (click)="onClickCategory('ListYourShow')"
+                                [ngClass]="{'fontBold':selectedCategory == 'ListYourShow'}"
+                            >ListYourShow</a>
+                            <a [routerLink]="['/admin/create/venue']" (click)="onClickCategory('Venues')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Venues'}"
+                            >Venues</a>
+                            <a [routerLink]="['/admin/content']"(click)="onClickCategory('Content')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Content'}"
+                            >Content</a>
+                            <a [routerLink]="['/admin/create/show']"(click)="onClickCategory('Shows')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Shows'}"
+                            >Shows</a>
                         </div>
                         }
 
