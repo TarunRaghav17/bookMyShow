@@ -18,51 +18,63 @@ export class SearchBoxComponent implements OnInit {
   movieName:any;
  eventsFilters: string[] = ['Movies', 'Events', 'Plays', 'Sports', 'Activities'];
 
-  searchObj: any = {
-    name: '',
-    eventTypes: [],
-  };
-  private modalRef?: NgbModalRef;
+/**
+ * @description Search object used for filtering events
+ */
+searchObj: any = {
+  name: '',
+  eventTypes: [],
+};
 
-  constructor(
-    private modalService: NgbModal,
-    private homeService: HomeService
-  ) {}
+/** @description Reference to the currently open modal */
+private modalRef?: NgbModalRef;
 
-  ngOnInit(): void {
-    this.seachControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        tap((query: string) => {
-          this.searchObj.name = query; // only update name
-        }),
-        switchMap(() => this.homeService.globalSearch(this.searchObj))
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.movieName= res.data
-          console.log(res);
-        },
-      });
-  }
+constructor(
+  private modalService: NgbModal,
+  private homeService: HomeService
+) {}
 
-  /**
-   * @description openModal
-   * @author Gurmeet Kumar
-   */
-  openModal(searchFilterModal: TemplateRef<any>) {
-    this.modalRef = this.modalService.open(searchFilterModal, {
-      modalDialogClass: 'searchbox',
-      ariaLabelledBy: 'modal-basic-title',
+ngOnInit(): void {
+  this.seachControl.valueChanges
+    .pipe(
+      debounceTime(300), // wait before firing search
+      tap((query: string) => {
+        this.searchObj.name = query; // update only name field
+      }),
+      switchMap(() => this.homeService.globalSearch(this.searchObj))
+    )
+    .subscribe({
+      next: (res: any) => {
+        this.movieName = res.data;
+        console.log(res);
+      },
     });
-  }
+}
 
-  closeModal() {
-    if (this.modalRef) {
-      this.modalRef.close();
-    }
-  }
+/**
+ * @description Open search modal
+ * @param searchFilterModal TemplateRef of the modal
+ */
+openModal(searchFilterModal: TemplateRef<any>) {
+  this.modalRef = this.modalService.open(searchFilterModal, {
+    modalDialogClass: 'searchbox',
+    ariaLabelledBy: 'modal-basic-title',
+  });
+}
 
+/**
+ * @description Close the currently open modal
+ */
+closeModal() {
+  if (this.modalRef) {
+    this.modalRef.close();
+  }
+}
+
+/**
+ * @description Toggle filters by event type (add/remove)
+ * @param eventType Selected event type
+ */
 addFilters(eventType: string) {
   const index = this.searchObj.eventTypes.indexOf(eventType);
   if (index === -1) {

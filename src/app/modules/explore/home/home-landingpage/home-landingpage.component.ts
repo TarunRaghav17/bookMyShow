@@ -10,7 +10,6 @@ import { CommonService } from '../../../../services/common.service';
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
 })
-
 export class HomeLandingPageComponent implements OnInit {
   pageNoMap: Record<string, number | undefined> = {};
   itemsPerCards = 5;
@@ -25,13 +24,17 @@ export class HomeLandingPageComponent implements OnInit {
     private homeService: HomeService,
     private sanitizer: DomSanitizer,
     public commonService: CommonService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.getAllData()
+    this.getAllData();
   }
 
-
+  /**
+   * @description Get paginated (visible) cards for a specific event type
+   * @param type Event type (Movie, Plays, Sports, Activities)
+   * @param originalData Full dataset for the given type
+   */
   getVisibleCards(type: string, originalData: any[]) {
     const pageNo = this.pageNoMap[type] ?? 0;
     const start = this.itemsPerCards * pageNo;
@@ -39,7 +42,11 @@ export class HomeLandingPageComponent implements OnInit {
     this.visibleData[type] = originalData.slice(start, end);
   }
 
-
+  /**
+   * @description Move to the next page of cards for the given type
+   * @param type Event type
+   * @param originalData Full dataset
+   */
   next(type: string, originalData: any[]) {
     const pageNo = this.pageNoMap[type] ?? 0;
     const start = (pageNo + 1) * this.itemsPerCards;
@@ -49,7 +56,11 @@ export class HomeLandingPageComponent implements OnInit {
     }
   }
 
-
+  /**
+   * @description Move to the previous page of cards for the given type
+   * @param type Event type
+   * @param originalData Full dataset
+   */
   prev(type: string, originalData: any[]) {
     const pageNo = this.pageNoMap[type] ?? 0;
     if (pageNo > 0) {
@@ -58,37 +69,42 @@ export class HomeLandingPageComponent implements OnInit {
     }
   }
 
+  /**
+   * @description Fetch event data for all types and initialize pagination
+   */
   getAllData() {
     const types = ['Movie', 'Plays', 'Sports', 'Activities'];
+    forkJoin(
+      types.map((type) => this.homeService.getEventListByType(type))
+    ).subscribe({
+      next: (results) => {
+        const [Movie, Plays, Sports, Activities] = results;
+        this.movieData = Movie?.data;
+        this.playsData = Plays?.data;
+        this.sportsData = Sports?.data;
+        this.activiesData = Activities?.data;
 
-    forkJoin(types.map(type => this.homeService.getEventListByType(type)))
-      .subscribe({
-        next: (results) => {
-          const [Movie, Plays, Sports, Activities] = results;
-          this.movieData = Movie?.data
-          this.playsData = Plays?.data;
-          this.sportsData = Sports?.data;
-          this.activiesData = Activities?.data;
-          types.forEach(type => this.pageNoMap[type] = 0);
+        // initialize pagination
+        types.forEach((type) => (this.pageNoMap[type] = 0));
 
-          this.getVisibleCards('Movie', this.movieData);
-          this.getVisibleCards('Plays', this.playsData);
-          this.getVisibleCards('Sports', this.sportsData);
-          this.getVisibleCards('Activities', this.activiesData);
-        },
-        error: (err) => console.error(err)
-      });
+        this.getVisibleCards('Movie', this.movieData);
+        this.getVisibleCards('Plays', this.playsData);
+        this.getVisibleCards('Sports', this.sportsData);
+        this.getVisibleCards('Activities', this.activiesData);
+      },
+      error: (err) => console.error(err),
+    });
   }
+
   /**
-    * @description Convert base64 string to safe image URL for display
-    * @author Gurmeet Kumar
-    * @return any
-    */
+   * @description Convert base64 string to a safe image URL
+   * @param base64string Base64 string
+   * @returns Safe image URL
+   */
   getImageFromBase64(base64string: string): any {
     if (base64string) {
       const fullBase64String = `data:${base64string};base64,${base64string}`;
       return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
     }
   }
-
 }
