@@ -87,10 +87,11 @@
                                             @for (item of dummyMoviesdata; track $index) {
                                             <ng-container class="overflow-hidden w-50">
                                                 <div class="col card_container">
-                                                    <div class="card shadow-sm" >
-                                                        <a class="img_container rounded-4" 
+                                                    <div class="card shadow-sm">
+                                                        <a class="img_container rounded-4"
                                                             [routerLink]="['/movies', commonService._selectCity(), item.eventId]">
-                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl" >
+                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)"
+                                                                [alt]="item.imageurl">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">
@@ -122,31 +123,3 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
