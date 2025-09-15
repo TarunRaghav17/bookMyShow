@@ -15,4 +15,10 @@ export class SportsService {
       "type":"Sports"
     })
   }
+    getFilters(target:string):Observable<any>{
+       let Target= target.split('_').join('-')
+
+    return this.http.get(`${this.base_url}/api/events/${Target}`)
+  }
+  
 }

@@ -23,7 +23,7 @@ export class CommonService {
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
   constructor(private http: HttpClient,
-    private sanitizer:DomSanitizer
+    private sanitizer: DomSanitizer
   ) { }
 
   baseUrl = environment.baseUrl
@@ -67,19 +67,17 @@ export class CommonService {
   }
 
 
-   /**
+  /**
 * @description iniitalizes the topFilterArray
 * @author Manu Shukla
 * @params  [Filters] receives array of filters
 * @returnType [Filter] return the filteredArray on the basis of category
 */
-   getTopFiltersArray(target:any):Observable<any>{
+  getTopFiltersArray(target: any): Observable<any> {
 
 
     return this.http.get(`${this.base_url}/api/events/${target}`)
   }
-    
-  
 
   /**
  * @description Takes Filters Array , toggle the selected key and push into selectFilters array
@@ -89,7 +87,6 @@ export class CommonService {
  */
 
   handleEventFilter(filter: any): void {
-  console.log(filter)
     this.filters.map((item: any) => {
       if (item.type == filter.type) {
         item.data.map((i: any) => {
@@ -104,7 +101,6 @@ export class CommonService {
       item.type == filter.type
     )
 
-      console.log(filterType)
     if (filterType) {
       let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.text)
       if (alreayExist.length == 0) {
@@ -118,11 +114,11 @@ export class CommonService {
   }
 
 
-   /**
-   * @description Convert base64 string to safe image URL for display
-   * @author Gurmeet Kumar
-   * @return any
-   */
+  /**
+  * @description Convert base64 string to safe image URL for display
+  * @author Gurmeet Kumar
+  * @return any
+  */
   getImageFromBase64(base64string: string): any {
     if (base64string) {
       const fullBase64String = `data:${base64string};base64,${base64string}`;
@@ -130,14 +126,10 @@ export class CommonService {
     }
   }
 
-getEventDetailsById(id:any):Observable<any>{
+  getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`)
 
   }
- 
-
-
-
   listYourShowService = [
     {
       image: 'assets/images/list-your-show/online-saless.png',
@@ -177,4 +169,49 @@ getEventDetailsById(id:any):Observable<any>{
     },
 
   ]
+
+  formatFilters(filters: any): any {
+    let filtersArray: any = [];
+
+
+    filters.map((filter: any) => {
+      let { data, type } = filter;
+      let filteredData;
+
+      switch (type) {
+        case 'Language':
+          filteredData = data.map((i: any) => ({ ...i, text: i.languageName, selected: false }));
+          break;
+
+        case 'Formats':
+          filteredData = data.map((i: any) => ({ ...i, text: i.formatName, selected: false }));
+          break;
+
+        case 'Genres':
+          filteredData = data.map((i: any) => ({ ...i, text: i.genresName, selected: false }));
+          break;
+
+        case 'Date':
+          filteredData = data.map((i: any) => ({ ...i, text: i.dateFilterName, selected: false }));
+          break;
+
+        case 'Categories':
+          filteredData = data.map((i: any) => ({ ...i, text: i.categoryName, selected: false }));
+          break;
+
+        case 'More Filters':
+          filteredData = data.map((i: any) => ({ ...i, text: i.moreFilterName, selected: false }));
+          break;
+
+        case 'Price':
+          filteredData = data.map((i: any) => ({ ...i, text: i.priceRange, selected: false }));
+          break;
+
+        default:
+          filteredData = data;
+      }
+      filtersArray.push({ type, data: filteredData });
+    });
+    return filtersArray;
+  }
 }

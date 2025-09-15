@@ -34,41 +34,11 @@ export class MovieLandingPageComponent implements OnDestroy {
    */
 
   ngOnInit(): void {
-    //  this.commonService.getTopFiltersArray('languages').subscribe((res)=>
-    //   console.log(res)
-    //  )
-    //  this.topFiltersArray =[{type:'Language' , ...res.data.name}])    
      this.setFilter()
      this.movieService.getAllMovies().subscribe((res)=>{
       this.dummyMoviesdata = res.data
-      console.log(res.data)
      })
   }
-
-
-
-
-  
-  // setFilter(){
-  //   this.movieService.getFilters('languages').subscribe((res)=>{
-  //     this.filtersArray=[...this.filtersArray,res]
-  //     // console.log('lang',res)
-  //   })
-  //     this.movieService.getFilters('formats').subscribe((res)=>{
-  //            this.filtersArray=[...this.filtersArray,res]
-  //     // console.log('formats',res)
-  //   })
-  //     this.movieService.getFilters('genres').subscribe((res)=>{
-  //            this.filtersArray=[...this.filtersArray,res]
-  //     // console.log('genres',res)
-  //     console.log(this.filtersArray)
-  //   })
-  // }
-
-
-
-
-
 
 setFilter() {
   forkJoin([
@@ -77,16 +47,8 @@ setFilter() {
     this.movieService.getFilters('genres')
   ]).subscribe(([languages, formats, genres]) => {
     this.filters = [{type:'Language',data:languages.data}, {type:'Formats', data:formats.data}, {type:'Genres', data:genres.data}];
-    console.log(this.filtersArray);
   });
 }
-
-
-
-
-
-
-
 
   /**
 * @description Remove Already Selected Filters

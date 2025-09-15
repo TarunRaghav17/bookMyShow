@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { filters, movies, selectedFilters, topFilters } from '../../../../../../db';
+import { movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { SportsService } from '../sports.service';
+import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-sports-page',
   standalone: false,
@@ -12,7 +13,7 @@ export class SportsPageComponent {
   dummyMoviesdata: any[] = [];
   topFiltersArray: any[] = topFilters
   originalMovies = movies
-  filters: any[] = filters
+  filters: any[] = []
   select: any[] = selectedFilters
 
   constructor(public commonService: CommonService , private sportService:SportsService) {
@@ -26,24 +27,31 @@ export class SportsPageComponent {
  */
 
   ngOnInit(): void {
-    // this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
     this.sportService.getAllSports().subscribe((res)=>{
- 
       this.dummyMoviesdata = res.data
+      this.setFilter()
     })
   }
  
-
   /**
 * @description Remove Already Selected Filters
 * @author Manu Shukla
 * @params  
 * @returnType void
 */
-
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.filters)
     localStorage.removeItem('category')
   }
 
+  setFilter() {
+      forkJoin([
+        this.sportService.getFilters('date_filters'),
+        this.sportService.getFilters('categories'),
+        this.sportService.getFilters('more_filters'),
+        this.sportService.getFilters('prices')
+      ]).subscribe(([date_filters, categories, more_filters,prices]) => {
+        this.filters = [{type:'Date',data: date_filters.data}, {type:'Categories', data:categories.data}, {type:'More Filters', data:more_filters.data},{type:'Price', data:prices.data}];
+      });
+    }
 }

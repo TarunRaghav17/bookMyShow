@@ -16,4 +16,10 @@ export class EventService {
       "type":"Event"
     })
    }
+
+   getFilters(target:any):Observable<any>{
+       let Target= target.split('_').join('-')
+      return this.http.get(`${this.base_url}/api/events/${Target}`)
+      
+    }
 }

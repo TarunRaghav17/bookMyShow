@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {   movies, selectedFilters, topFilters } from '../../../../../../db';
+import {  movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { ActivitiesService } from '../activities.service';
 import { forkJoin } from 'rxjs';
@@ -19,7 +19,7 @@ export class ActivitiesPageComponent {
   filtersArray:any[]=[]
 
   constructor(public commonService: CommonService , private activitiesSercice:ActivitiesService) {
-    this.commonService._selectedCategory.set('Activities');
+   this.commonService._selectedCategory.set('Activities');
   }
   /**
  * @description initialize Top Filters
@@ -29,10 +29,9 @@ export class ActivitiesPageComponent {
  */
 
   ngOnInit(): void {
-    // this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
-    this.activitiesSercice.getAllActivities().subscribe((res)=>{
-      this.dummyMoviesdata = res.data
       this.setFilter()
+      this.activitiesSercice.getAllActivities().subscribe((res)=>{
+      this.dummyMoviesdata = res.data
     })
   }
 
@@ -54,8 +53,7 @@ export class ActivitiesPageComponent {
       this.activitiesSercice.getFilters('more_filters'),
       this.activitiesSercice.getFilters('prices')
     ]).subscribe(([date_filters, categories, more_filters,prices]) => {
-      this.filters = [{type:'date_filters',data: date_filters.data}, {type:'categories', data:categories.data}, {type:'more_filters', data:more_filters.data},{type:'prices', data:prices.data}];
-      console.log(this.filtersArray);
+      this.filters = [{type:'Date',data: date_filters.data}, {type:'Categories', data:categories.data}, {type:'More Filters', data:more_filters.data},{type:'Price', data:prices.data}];
     });
   }
 
