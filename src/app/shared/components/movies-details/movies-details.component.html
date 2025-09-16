@@ -2,9 +2,11 @@
     <div class="row g-0">
         <!-- Poster Movies -->
         <div class="main_container_box d-flex justify-content-center align-itmes-center bg-dark py-4 text-white">
-            <div class="col-8 d-flex bg-custom poster_movies" >
-                <div class="col-10 d-flex gap-3 align-items-start ">
-                    <div class="col-3 h-100 poster-img-container">
+            <div class="col-8 d-flex poster_movies ">
+                <img [src]="commonService.getImageFromBase64(movieDetails.imageurl)"alt="" class="bg-custom" 
+                >
+                <div class="col-10 d-flex gap-3 align-items-start z-1">
+                    <div class="col-3 h-100 poster-img-container"> 
                         <img [src]="commonService.getImageFromBase64(movieDetails.imageurl)"
                             class="img-fluid rounded-3 h-100" alt="">
                         @if((movieDetails?.eventType?.toLowerCase() ) == 'movie'){
