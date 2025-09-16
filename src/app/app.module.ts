@@ -32,8 +32,9 @@ import { EventsDetailsComponent } from './shared/components/events-details/event
     TheatreListComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
-    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule, FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
-    ToastrModule.forRoot({     // Global toastr configuration
+    AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule,
+     FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
+    ToastrModule.forRoot({    
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,

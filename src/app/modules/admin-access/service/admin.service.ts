@@ -7,14 +7,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminService {
-
   constructor(private http: HttpClient) { }
 
   baseUrl = environment.baseUrl
 
   /**
    * @description getAll usersList
-   * @author Gurmeet Kumar
+   * @author Gurmeet Kumars
    */
 
   getAllUsers(): Observable<any> {
@@ -65,9 +64,10 @@ export class AdminService {
  * @author Gurmeet Kumar
  * @params id, roleName
  */
-    editRoleById(id: any, roleName: any) {
-      return this.http.put(`${this.baseUrl}/api/users/${id}/role?roleName=${roleName}` ,id,roleName )
+    editRoleById(id: any) {
+      return this.http.put(`${this.baseUrl}/api/users/${id}/role`,id )
     }
+
 
     
   
