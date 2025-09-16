@@ -12,7 +12,6 @@ import { filters, selectedFilters } from '../../../db';
 export class CommonService {
   filters: any[] = filters
   select: any[] = selectedFilters
-
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
@@ -20,9 +19,9 @@ export class CommonService {
   selectedCategory: any = (localStorage.getItem('category'))
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
-  constructor(private http: HttpClient) { }
-
   baseUrl = environment.baseUrl
+
+  constructor(private http: HttpClient) { }
 
   /**
    * @description Get list of all cities from backend
@@ -33,21 +32,9 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/api/city/all`);
   }
 
-
-
-
-getContentDetailsById(contentId:string | null):Observable<any>{
-  return this.http.get(`${this.baseUrl}/api/events/${contentId}`)
-
-}
-
-
-
-
-
-
-
-
+  getContentDetailsById(contentId: string | null): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/events/${contentId}`)
+  }
   /**
    * @description Get list of popular cities from backend
    * @author Gurmeet Kumar
@@ -56,12 +43,10 @@ getContentDetailsById(contentId:string | null):Observable<any>{
   getPopularCities(): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/city/popular`);
   }
-
   setCategory(category: string | null) {
     this._selectedCategory.set(category)
     localStorage.setItem('category', JSON.stringify(category))
   }
-
   /**
 * @description Resrt Filter Accordian 
 * @author Manu Shukla
@@ -77,17 +62,16 @@ getContentDetailsById(contentId:string | null):Observable<any>{
     })
   }
 
-
-   /**
+  /**
 * @description iniitalizes the topFilterArray
 * @author Manu Shukla
 * @params  [Filters] receives array of filters
 * @returnType [Filter] return the filteredArray on the basis of category
 */
-   getTopFiltersArray(filters:any){
+  getTopFiltersArray(filters: any) {
     return filters.filter((item: any) => {
-      if (item.type == 'Language') return item.data})
-    
+      if (item.type == 'Language') return item.data
+    })
   }
 
   /**
@@ -96,7 +80,6 @@ getContentDetailsById(contentId:string | null):Observable<any>{
  * @params  [Filters]
  * @returnType void
  */
-
   handleEventFilter(filter: any): void {
     this.filters.map((item: any) => {
       if (item.type == filter.type) {
@@ -122,11 +105,6 @@ getContentDetailsById(contentId:string | null):Observable<any>{
       }
     }
   }
-
-
- 
-
-
 
   listYourShowService = [
     {

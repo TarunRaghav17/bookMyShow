@@ -1,5 +1,4 @@
 <form [formGroup]="showForm" (ngSubmit)="onSubmit()" class="p-3">
-
     <div class="row">
         <div class="mb-3 w-50">
             <label class="form-label">Event Type</label>
@@ -45,11 +44,8 @@
                 Venue name is required.
             </div>
             }
-
         </div>
-
-
-
+        <!--event name-->
         <div class="w-50 mb-3">
             <label class="form-label">Event Name:</label>
             <select formControlName="eventName" class="form-select" (change)="onEventNameChange()">
@@ -62,14 +58,10 @@
             <div class="text-danger">
                 Event name is required.
             </div>
-
             }
-
-
         </div>
-
     </div>
-
+    <!--date-->
     <div class="row mb-3">
         <div class="col-md-4">
             <label class="form-label">Date</label>
@@ -79,19 +71,23 @@
                 Date is required.
             </div>
             }
-
         </div>
+        <!--start time-->
         <div class="col-md-4">
             <label class="form-label">Start Time</label>
-            <input type="time" class="form-control"
-            formControlName="startTime" />
-            @if(showForm.get('startTime')?.touched && showForm.get('startTime')?.invalid){
+            <input type="time" class="form-control" formControlName="startTime" />
+            @if (showForm.get('startTime')?.touched && showForm.get('startTime')?.hasError('required')) {
             <div class="text-danger">
                 Start Time is required.
             </div>
             }
-
+            @if (showForm.get('startTime')?.touched && showForm.get('startTime')?.hasError('inValidStartTime')) {
+            <div class="text-danger">
+                Invalid start time.
+            </div>
+            }
         </div>
+        <!--duration-->
         <div class="col-md-4">
             <label class="form-label">Duration (min)</label>
             <input type="number" class="form-control" formControlName="duration" min="20" />
@@ -100,89 +96,64 @@
                 Duration is required.
             </div>
             }
-
             @if(showForm.get('duration')?.touched && showForm.get('duration')?.hasError('min')){
             <div class="text-danger">
                 Duration must be greater than 20.
             </div>
             }
-
-
         </div>
     </div>
-
+    <!--duration-->
     <div class="w-100  row">
-
         <div class="">
             <label class="form-label">Language</label>
             <select formControlName="language" class="form-select w-50 border">
                 <option value="" selected disabled>Select</option>
-
                 @for(lang of languagesArray ;track $index){
                 <option value="{{lang}}">{{lang}}</option>
                 }
             </select>
-
             @if(showForm.get('language')?.touched && showForm.get('language')?.invalid){
             <div class="text-danger">
                 Language is required.
             </div>
             }
         </div>
-
-
-
     </div>
-
     <!-- Content Details -->
-
     @if(showForm.get('eventType')?.value =='movies'){
-
     <div class="row my-3 ">
-
         <div class="w-50">
             <label class="form-label">Format</label>
             <select formControlName="format" class="form-select border">
                 <option value="" selected disabled>Select</option>
-
                 @for(format of formatsArray ;track $index){
                 <option value="{{format}}">{{format | uppercase}}</option>
                 }
             </select>
-
             @if(showForm.get('format')?.touched && showForm.get('format')?.invalid){
             <div class="text-danger">
                 Format is required.
             </div>
             }
         </div>
-
-
+        <!--screen name-->
         <div class="mb-3 w-50 ">
             <label class="form-label">Screen Name</label>
             <select formControlName="screenName" class="form-select  border" (change)="onScreenChange($event)">
                 <option value="" selected disabled>Select</option>
-
                 @for(screen of screenNamesArray ;track $index){
                 <option value="{{screen.screenName}}">{{screen.screenName}}</option>
                 }
             </select>
-
             @if(showForm.get('screenName')?.touched && showForm.get('screenName')?.invalid){
             <div class="text-danger">
                 Screen name is required.
             </div>
             }
-
         </div>
-
-
     </div>
-
-
-
-
-
+    <!-- categories -->
     @if(showForm.get('categories')){
     <div formArrayName="categories" class="mb-4">
         <h5>Categories</h5>
@@ -191,17 +162,13 @@
         <div formGroupName="{{$index}}" class="row my-3 d-flex  w-75 mx-auto px-3">
 
             <div class=" row col-3">
-
                 <h6>Category Name : </h6>
-
                 <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
                     {{category.get('layoutName')?.value}}
                 </span>
             </div>
 
-
             <div class=" row col-2">
-
                 <h6>Rows : </h6>
                 <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
                     {{category.get('rows')?.value}}
@@ -209,52 +176,34 @@
             </div>
 
             <div class="col-2 row">
-
                 <h6>Cols : </h6>
                 <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
                     {{category.get('cols')?.value}}
                 </span>
-
             </div>
 
-
             <div class="col-2 row">
-
                 <h6>Total Seats : </h6>
                 <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
                     {{+category.get('cols')?.value * +getRows(category)}}
                 </span>
-
             </div>
 
-
             <div class="col-3 row">
-
                 <h6>Price : ₹</h6>
-
                 <input type="number" formControlName="price" min="0" class="form-control px-3 py-2 w-75 my-1">
                 @if(category.get('price')?.touched && category.get('price')?.invalid){
                 <div class="text-danger">
                     Price is required.
                 </div>
                 }
-
             </div>
-
-
         </div>
-
         }
     </div>
-    }
-
-
-    }
-
-
+    }}
     <!-- Status -->
     <div class="my-2 row  d-flex align-items-center">
-
         <div class="w-50">
             <label class="form-label">Status</label>
             <select class="form-select" formControlName="status">
@@ -263,30 +212,19 @@
                 <option value="{{status}}">{{status | titlecase}}</option>
                 }
             </select>
-
             @if(showForm.get('status')?.touched && showForm.get('status')?.invalid){
             <div class="text-danger">
                 Status is required.
             </div>
             }
-
         </div>
-
         @if(showForm.get('price')){
-
-
-        <div class="w-50  ">
-
-            <label>Price : ₹</label>
-
+        <div class="w-50">
+            <label class="form-label">Price : ₹</label>
             <input type="number" formControlName="price" min="0" class="form-control px-3 w-75 ">
         </div>
-
         }
-
     </div>
-
     <!-- Submit -->
     <button type="submit" class="btn btn-success">Submit</button>
-    
 </form>

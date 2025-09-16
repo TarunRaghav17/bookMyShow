@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-// import { contents } from '../../../../../db';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
 import { ShowsService } from './shows-services/shows.service';
 import { ToastrService } from 'ngx-toastr';
@@ -12,25 +11,22 @@ import { CommonService } from '../../../services/common.service';
   templateUrl: './create-show.component.html',
   styleUrls: ['./create-show.component.scss']
 })
-export class CreateShowComponent implements OnInit,OnDestroy {
+export class CreateShowComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
     private venuesService: VenuesService,
-    private contentService:ContentService,
+    private contentService: ContentService,
     private showService: ShowsService,
     private toaster: ToastrService,
-    private commonService:CommonService
-
+    private commonService: CommonService
   ) { }
 
+  showForm!: FormGroup;
   contents!: any[]
-
   minDate = ""
   minTime = ""
   venues = [];
   selectedVenueObj: any[] = [];
-  showForm!: FormGroup;
-
   venuesNameList: any[] = [];
   eventsNameList: any[] = [];
   languagesArray: any[] = [];
@@ -39,7 +35,6 @@ export class CreateShowComponent implements OnInit,OnDestroy {
   statusArray: any[] = [];
   citiesArray: any[] = [];
 
-
   ngOnInit(): void {
     this.showForm = this.fb.group({
       eventName: ['', Validators.required],
@@ -47,31 +42,22 @@ export class CreateShowComponent implements OnInit,OnDestroy {
       eventType: ['', Validators.required],  // movies | sports | events | activities
       city: ['', Validators.required],
       date: ['', Validators.required],
-      startTime: ['', [Validators.required,]],
+      startTime: ['', [Validators.required, this.validateStartTime()]],
       duration: [null, [Validators.required]],
       language: ['', Validators.required],
       status: ['', Validators.required]
     });
 
-  
-
-
     this.setToday()
     // api to get contents
     this.contentService.getContents().subscribe((res) => {
       this.contents = res
-
     })
-   
   }
 
-
-    ngOnDestroy(){
-this.commonService.setCategory(null)
-
-    }
-
-
+  ngOnDestroy() {
+    this.commonService.setCategory(null)
+  }
 
   // Getter for categories array
   get categories(): FormArray {
@@ -84,12 +70,12 @@ this.commonService.setCategory(null)
 
   onEventTypeChange() {
     this.handleReset(['city', 'status', 'venueName', 'eventName'])
-     // api to get cities
-    this.showService.getCitites().subscribe(
-      (res)=>this.citiesArray=res)
-
-
-    // this.showForm.get('status')?.setValue('')
+    this.venuesNameList = []
+    this.eventsNameList = []
+    this.languagesArray = []
+    // api to get cities
+    this.commonService.getAllCities().subscribe(
+      (res) => this.citiesArray = res.data)
     let selectedEventType = this.showForm.get('eventType')?.value
     if (selectedEventType != 'movies') {
       this.showForm.addControl('reservedSeats', this.fb.array([
@@ -109,7 +95,6 @@ this.commonService.setCategory(null)
         "completed",
         "ongoing",
       ]
-
     }
     else {
       this.statusArray = [
@@ -120,62 +105,50 @@ this.commonService.setCategory(null)
       this.showForm.removeControl('price')
       this.showForm.addControl('format', this.fb.control('', Validators.required));
       this.showForm.addControl('screenName', this.fb.control('', Validators.required));
-
-
     }
   }
 
-   onCityChange() {
+  onCityChange() {
     let selectedEventType = this.showForm.get('eventType')?.value
     let selectedCity = this.showForm.get('city')?.value
-
-    this.handleReset(['venueName','eventName'])
+    this.handleReset(['venueName', 'eventName'])
+    this.venuesNameList = []
+    this.eventsNameList = []
+    this.languagesArray = []
     this.venuesService.getVenues().subscribe({
       next: (res) => {
         this.venuesNameList = res.filter((venue: any) => {
           if (venue.address.city.toLowerCase() == selectedCity.toLowerCase() &&
-            venue.venueFor.toLowerCase() == selectedEventType.toLowerCase()) return venue
-
+            venue.venueFor.toLowerCase() == selectedEventType.toLowerCase()) {
+            return venue
+          }
         });
       },
       error: (err) => {
-        console.log(err)
+        this.toaster.error(err)
       }
     })
-
   }
 
-
-   onVenueNameChange() {
+  onVenueNameChange() {
     const selectedEventType = this.showForm.get('eventType')?.value;
     const selectedVenueName = this.showForm.get('venueName')?.value;
-
-this.handleReset(['eventName'])
+    this.handleReset(['eventName'])
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
     );
-
     this.screenNamesArray = this.selectedVenueObj[0].screens
-
     const venue = this.selectedVenueObj[0];
-
     if (!venue) {
       this.eventsNameList = [];
       return;
     }
-
     const supportedCategories = venue.supportedCategories.map((cat: string) =>
       cat.toLowerCase()
     );
-
-    console.log(supportedCategories)
     this.formatsArray = supportedCategories
-
     this.eventsNameList = this.contents.filter((content: any) => {
-console.log(content)
-      switch (content.eventType.toLowerCase()
-) {
-
+      switch (content.eventType.toLowerCase()) {
         case 'movies':
           {
             return (
@@ -183,144 +156,94 @@ console.log(content)
                 supportedCategories.includes(f.toLowerCase())
               )
             );
-
           }
-
         case 'events':
           {
-            console.log('events called')
             if (content.eventType.toLowerCase() === selectedEventType.toLowerCase())
               return content
           }
-
-
-
-
-
-
-
       }
-
-
-
     });
-
-    console.log(this.eventsNameList)
   }
 
-
-    onEventNameChange() {
+  onEventNameChange() {
     let selectedEventName = this.showForm.get('eventName')?.value
-
-
-
     let selectedEventNameObj = this.eventsNameList.filter((event: any) => event.name == selectedEventName)
-    console.log(selectedEventNameObj[0])
     this.languagesArray = selectedEventNameObj[0].languages
   }
-
   setToday() {
     let today = new Date()
     this.minDate = today.toISOString().split('T')[0]
-
   }
 
+  validateStartTime(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const form = control.parent as FormGroup;
+      if (!form) return null; // in case it's not ready yet
 
-  validateStartTime():ValidatorFn{
+      const selectedDate = form.get('date')?.value;
+      const selectedTime = control?.value;
 
+      if (!selectedDate || !selectedTime) return null;
 
-    return(control:AbstractControl):ValidationErrors | null=>{
+      const today = new Date();
+      const selectedDateObj = new Date(selectedDate);
 
-  let selectedDate=this.showForm.get('date')?.value;
-  let selectedTime=control?.value;
-  if(!selectedDate || !selectedTime) return null;
-    let today =new Date()
-    let selectedDateObj=new Date(selectedDate)
-
-    if(selectedDateObj.toISOString().split('T')[0]== today.toISOString().split('T')[0]){
-      this.minTime=today.getHours()+":"+today.getMinutes()
-      console.log(this.minTime)
-
-      if(selectedTime<this.minTime){
-        return {inValidStartTime:true}
+      if (selectedDateObj.toDateString() === today.toDateString()) {
+        const [hours, minutes] = selectedTime.split(':').map(Number);
+        const selectedDateTime = new Date(selectedDateObj);
+        selectedDateTime.setHours(hours, minutes, 0, 0);
+        if (selectedDateTime < today) {
+          return { inValidStartTime: true };
+        }
       }
-    }
-
-    return null
-
-    }
-    
-
+      return null;
+    };
   }
 
 
-   onScreenChange(event: any) {
+  onScreenChange(event: any) {
     this.categories.clear();
     let selectedScreen = this.selectedVenueObj[0].screens.find((screen: any) => screen.screenName == event.target.value)
-    console.log(selectedScreen, "value")
     if (!selectedScreen) return;
-
     selectedScreen.layouts.forEach((layout: any) => {
       this.categories.push(this.fb.group({
-
         layoutName: [layout.layoutName, Validators.required],
-        rows: [layout.rows, Validators.required], // you can make it FormArray if needed
+        rows: [layout.rows, Validators.required],
         cols: [layout.cols, Validators.required],
         price: ['', Validators.required],
         reservedSeats: this.fb.array([
           this.fb.group({
             userId: ["1245", Validators.required],
             userReservationSeats: [["A-01"], Validators.required],
-
-
           })
         ])
-
       }))
-
-
     })
-
-
   }
-
-
 
   onSubmit(): void {
-    // if (this.showForm.valid) {
-    console.log('Form Value:', this.showForm.value);
-    this.showService.createShow(this.showForm.value).subscribe({
-      next: (res) => {
-        console.log(res)
-        this.toaster.success('Show created successfully')
-      },
-      error: (err) => {
-        console.log(err)
-        this.toaster.error(err.message)
-      }
-
-    })
-    // } else {
-    //   console.log('Form Invalid');
-    //   this.showForm.markAllAsTouched();
-    // }
+    if (this.showForm.valid) {
+      this.showService.createShow(this.showForm.value).subscribe({
+        next: () => {
+          this.toaster.success('Show created successfully')
+        },
+        error: (err) => {
+          this.toaster.error(err.message)
+        }
+      })
+    } else {
+      this.toaster.error('Form Invalid Please check all fields')
+      this.showForm.markAllAsTouched();
+    }
   }
-
-  
-
-// utility funct. to reset form controls 
-// takes array of form-control names to reset 
+  // utility funct. to reset form controls 
+  // takes array of form-control names to reset 
   handleReset(formControls: any[]) {
     formControls.forEach((ctrl) => {
       this.showForm.get(ctrl)?.reset();
       this.showForm.get(ctrl)?.setValue('')
     })
-
   }
-
-
-
-
- 
 
 }

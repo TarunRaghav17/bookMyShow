@@ -11,22 +11,21 @@ const routes: Routes = [
   { path: 'list-your-show', component: ListYourShowComponent },
   { path: 'users', component: UsersComponent },
 
-
-   /**
-  * @description route to access /admin/create/venue to create venue 
-  * @author Inzamam
-  */
+  /**
+   * @description route to access /admin/create/venue to create venue 
+   * @author Inzamam
+   */
   {
-    path:'create/venue',
-    component:CreateVenueComponent
+    path: 'create/venue',
+    component: CreateVenueComponent
   },
-     /**
-  * @description route to access /admin/create/shows to create show 
-  * @author Inzamam
-  */
+  /**
+* @description route to access /admin/create/shows to create show 
+* @author Inzamam
+*/
   {
-    path:'create/show',
-    component:CreateShowComponent
+    path: 'create/show',
+    component: CreateShowComponent
   }
 ];
 

@@ -125,7 +125,7 @@ export class CreateVenueComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private venuesService: VenuesService,
-    private toaster : ToastrService
+    private toaster: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -175,7 +175,7 @@ export class CreateVenueComponent implements OnInit {
 
   createScreen() {
     return this.fb.group({
-      screenName: ['',Validators.required],
+      screenName: ['', Validators.required],
       layouts: this.fb.array([this.createLayout()])
 
     })
@@ -217,7 +217,7 @@ export class CreateVenueComponent implements OnInit {
 
   createLayout() {
     return this.fb.group({
-      layoutName: ['',Validators.required],
+      layoutName: ['', Validators.required],
       rows: this.fb.array([], Validators.required),
       cols: ['12', Validators.required]
     })
@@ -249,27 +249,24 @@ export class CreateVenueComponent implements OnInit {
 
   // Submit
   onSubmit(): void {
-    // if (this.venueForm.valid) {
-      // --------to do-----------------
-      // bind the api from backend
+    if (this.venueForm.valid) {
       this.venuesService.createVenueService(this.venueForm.value).subscribe({
-        next:(res)=>{
+        next: () => {
           this.toaster.success('Venue created successfully')
           this.venueForm.removeControl('screens')
           this.venueForm.reset()
           this.venueForm.get('venueFor')?.setValue('')
           this.venueForm.get('venueType')?.setValue('')
           this.venueForm.get('supportedCategories')?.setValue('')
-          return console.log(res)
         },
-        error:(err)=>{
-           this.toaster.error(err.message)
-          console.log(err)
+        error: (err) => {
+          this.toaster.error(err.message)
         }
       })
-    // } else {
-    //   this.venueForm.markAllAsTouched();
-    // }
+    } else {
+      this.toaster.error('All fields are required')
+      this.venueForm.markAllAsTouched();
+    }
   }
 
   onCheckboxChange(event: any, layout: AbstractControl) {
@@ -283,9 +280,7 @@ export class CreateVenueComponent implements OnInit {
     }
   }
 
-
-
-  handleCategoryChange(event:any){
+  handleCategoryChange(event: any) {
     this.venueForm.get('supportedCategories')?.setValue([event.target.value])
   }
 }

@@ -484,7 +484,6 @@ export const movies = [
   },
 ];
 
-
 export const cinemas = [
 
   {
@@ -529,7 +528,6 @@ export const cinemas = [
   }
 ]
 
-
 export const filters = [
   {
     type: "Language",
@@ -563,7 +561,6 @@ export const filters = [
   }
 ]
 
-
 export const selectedFilters = [
 
   {
@@ -589,40 +586,7 @@ export const topFilters = [
   'Telugu'
 ];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// -------------------------------------
-// ------------inz start----------------
-
-
-
-
-
-
-
-
-export const venues=[
+export const venues = [
   {
     "venueName": "Crystal Auditorium",
     "address": {

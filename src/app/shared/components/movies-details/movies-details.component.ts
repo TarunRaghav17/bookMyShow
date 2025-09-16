@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-movies-details',
   imports: [NgbModule],
@@ -10,13 +11,14 @@ import { CommonService } from '../../../services/common.service';
   styleUrl: './movies-details.component.scss'
 })
 export class MoviesDetailsComponent {
-  constructor( private modalService: NgbModal, public commonService: CommonService,
+  constructor(private modalService: NgbModal, public commonService: CommonService,
     private router: Router,
-private route:ActivatedRoute
+    private route: ActivatedRoute,
+    private toaster: ToastrService
   ) { }
   private modalRef?: NgbModalRef | null = null
-  movieDetails: any = {}
 
+  movieDetails: any = {}
 
   langFormatData: any = [
     {
@@ -34,10 +36,7 @@ private route:ActivatedRoute
     }
   ]
   ngOnInit() {
-    
-this.fetchContentIdByUrl()
-
-
+    this.fetchContentIdByUrl()
   }
   showHeader = false;
 
@@ -54,12 +53,10 @@ this.fetchContentIdByUrl()
       ariaLabelledBy: 'modal-basic-title',
       centered: true
     });
-
   }
 
   close() {
     if (this.modalRef) {
-      console.log('close called')
       this.modalRef.close()
       this.modalRef = null
     }
@@ -67,25 +64,19 @@ this.fetchContentIdByUrl()
 
   navigateToBuyTicket() {
     this.modalRef?.close()
-    // this.commonService.setLanguageFormat(langFormat)
-    // console.log(this.router.url.split('/'))
     this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/war2/buytickets/123`])
   }
 
-
-  fetchContentIdByUrl(){
-
-  let contentId:string | null=this.route.snapshot.paramMap.get('id')
-  this.commonService.getContentDetailsById(contentId).subscribe({
-    next:(res)=>{
-      this.movieDetails=res.data
-      console.log(this.movieDetails)
-    },
-    error:(err)=>{
-      console.log(err)
-    }
-  })
-
-}
+  fetchContentIdByUrl() {
+    let contentId: string | null = this.route.snapshot.paramMap.get('id')
+    this.commonService.getContentDetailsById(contentId).subscribe({
+      next: (res) => {
+        this.movieDetails = res.data
+      },
+      error: () => {
+        this.toaster.error('Something went wrong')
+      }
+    })
+  }
 
 }

@@ -7,10 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class ContentService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-
-   getContents():Observable<any>{
+  getContents(): Observable<any> {
     return this.http.get<any>(`http://localhost:3001/contents`)
   }
 }
