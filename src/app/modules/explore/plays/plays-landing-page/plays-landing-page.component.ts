@@ -36,8 +36,8 @@ export class PlaysLandingPageComponent {
       next: (res) => {
         this.topFiltersArray = res.data
       },
-      error: () => {
-        this.toastr.error("Something Went Wrong");
+      error: (res) => {
+        this.toastr.error(res.message);
       }
     })
 
@@ -46,7 +46,7 @@ export class PlaysLandingPageComponent {
         this.dummyMoviesdata = res.data
       },
       error: () => {
-        this.toastr.error("Failed To Fetch");
+        this.toastr.error("Failed To Fetch Plays");
       }
     }
     )
@@ -74,8 +74,8 @@ export class PlaysLandingPageComponent {
       next: ([date_filters, languages, genres, categories, more_filters, prices]) => {
         this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'Genres', data: genres.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch");
+      error: (res) => {
+        this.toastr.error(res.message);
       }
     });
   }

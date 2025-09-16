@@ -31,8 +31,8 @@ export class UpcommingMoviesComponent {
       next: (res) => {
         this.topFiltersArray = res.data
       },
-      error: () => {
-        this.toastr.error("Something Went Wrong");
+      error: (res) => {
+        this.toastr.error(res.message);
       }
     })
     this.movieService.getAllMovies().subscribe({
@@ -40,7 +40,7 @@ export class UpcommingMoviesComponent {
         this.dummyMoviesdata = res.data
       },
       error: () => {
-        this.toastr.error("Failed To Fetch");
+        this.toastr.error("Failed To Fetch upcoming Movies");
       }
     })
   }
@@ -61,8 +61,8 @@ export class UpcommingMoviesComponent {
           { type: 'Release Month', data: releaseMonth.data }
         ];
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch");
+      error: (res) => {
+        this.toastr.error(res.message);
       }
     });
   }
