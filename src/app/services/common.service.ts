@@ -11,7 +11,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class CommonService {
   filters: any[] = filters
   select: any[] = selectedFilters
-  base_url = 'http://172.31.252.101:8080/bookmyshow'
+   baseUrl = environment.baseUrl
+
 
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
@@ -23,8 +24,6 @@ export class CommonService {
   constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
   ) { }
-
-  baseUrl = environment.baseUrl
 
   /**
    * @description Get list of all cities from backend
@@ -74,7 +73,7 @@ export class CommonService {
   getTopFiltersArray(target: any): Observable<any> {
 
 
-    return this.http.get(`${this.base_url}/api/events/${target}`)
+    return this.http.get(`${this.baseUrl}/api/events/${target}`)
   }
 
   /**
@@ -125,6 +124,8 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/api/events/${id}`)
 
   }
+
+  
   listYourShowService = [
     {
       image: 'assets/images/list-your-show/online-saless.png',

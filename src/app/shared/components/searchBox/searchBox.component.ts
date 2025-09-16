@@ -1,3 +1,4 @@
+import { CommonService } from './../../../services/common.service';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { HomeService } from '../../../modules/explore/home/service/home.service';
@@ -16,7 +17,7 @@ export class SearchBoxComponent implements OnInit {
   seachControl: any = new FormControl('');
   selectedFilter:any;
   movieName:any;
- eventsFilters: string[] = ['Movies', 'Events', 'Plays', 'Sports', 'Activities'];
+  eventsFilters: string[] = ['Movies', 'Events', 'Plays', 'Sports', 'Activities'];
 
 /**
  * @description Search object used for filtering events
@@ -31,27 +32,28 @@ private modalRef?: NgbModalRef;
 
 constructor(
   private modalService: NgbModal,
-  private homeService: HomeService
+  private homeService: HomeService,
+  public  commonService: CommonService
 ) {}
 
 ngOnInit(): void {
   this.seachControl.valueChanges
     .pipe(
-      debounceTime(300), // wait before firing search
+      debounceTime(300), 
       tap((query: string) => {
-        this.searchObj.name = query; // update only name field
+        this.searchObj.name = query; 
       }),
       switchMap(() => this.homeService.globalSearch(this.searchObj))
     )
     .subscribe({
       next: (res: any) => {
-        this.movieName = res.data;
+        this.movieName = res.data || [];
       },
     });
 }
 
 /**
- * @description Open search modal
+ * @description Open search modal & reset event types on every open
  * @param searchFilterModal TemplateRef of the modal
  */
 openModal(searchFilterModal: TemplateRef<any>) {
@@ -59,6 +61,7 @@ openModal(searchFilterModal: TemplateRef<any>) {
     modalDialogClass: 'searchbox',
     ariaLabelledBy: 'modal-basic-title',
   });
+  this.searchObj.eventTypes = []; 
 }
 
 /**

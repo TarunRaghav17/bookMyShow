@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters, topFilters } from '../../../../../../db';
+import { movies, selectedFilters} from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';

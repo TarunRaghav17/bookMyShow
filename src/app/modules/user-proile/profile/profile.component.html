@@ -24,11 +24,12 @@
                             <div class="email_section d-flex justify-content-between gap-5">
                                 <span class="form-label">Email Address</span>
                                 <div class="mail_data">
-                                    <span class="fw-bold">manushukla83185gmail.com</span>
+                                    <span class="fw-bold" >manushukla83185gmail.com</span>
                                     <span class="verified_tag ms-2">Verified</span>
                                 </div>
                             </div>
-                            <div class="edit_Icons d-flex gap-2 align-items-center">
+                            <div class="edit_Icons d-flex gap-2 align-items-center"
+                                (click)="openEditProfileModal(editProfileModal, 'email')">
                                 <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <span>Edit</span>
                             </div>
@@ -37,7 +38,8 @@
                         <div class="d-flex justify-content-between">
                             <div class="mobile_section d-flex align-items-center">
                                 <span class="form-label lable_mobile"> Mobile Number</span>
-                                <div class="add_mobile_number d-flex flex-column">
+                                <div class="add_mobile_number d-flex flex-column"
+                                    (click)="openEditProfileModal(editProfileModal, 'number')">
                                     <a>
                                         + Add Mobile Number
                                     </a>
@@ -80,7 +82,6 @@
                                 <label for="form-label">Identity (optional)</label>
                             </div>
                             <div class="input_field d-flex gap-2">
-
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="gender" id="women" value="women"
                                         checked>
@@ -167,8 +168,15 @@
                             <div class="title_text">
                                 <label for="form-label">State</label>
                             </div>
+
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Maharashtra">
+                                <select class="form-select" aria-label="Default select example">
+                                    @for (item of states; track $index) {
+                                    <option [value]="item.name" class="d-flex justify-content-between">
+                                        {{item.name}}
+                                    </option>
+                                    }
+                                </select>
                             </div>
                         </div>
                     </section>
@@ -177,3 +185,40 @@
         </div>
     </div>
 </div>
+
+<ng-template #editProfileModal let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Edit Profile</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeEditProfileModal()"></button>
+    </div>
+
+    <div class="modal-body p-0">
+        <form action="" class="p-3">
+            @if (!editNumberFlag) {
+            <div class="mb-3">
+                <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Email Address below</label>
+            </div>
+            <div class="mt-2 d-flex flex-column gap-3">
+                <input type="text" class="form-control" id="email" placeholder="Edit your Email Address">
+            </div>
+            <div class="button_section mt-3">
+                <button type="button" class="btn btn-secondary w-100">Verify</button>
+            </div>
+            }
+            @if( editNumberFlag) {
+            <div class="mb-3">
+                <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Mobile Number below</label>
+            </div>
+            <div class="mt-2 d-flex flex-column gap-3">
+                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number ">
+            </div>
+            <div class="button_section mt-3">
+                <button type="button" class="btn btn-secondary w-100">Verify</button>
+            </div>
+            }
+
+        </form>
+    </div>
+
+
+</ng-template>

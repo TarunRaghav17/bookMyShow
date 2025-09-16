@@ -16,7 +16,7 @@ export class MovieLandingPageComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
   selectedCity: any = null
   topFiltersArray!: any[]
-  filtersArray: any[] = []
+  filtersArray: any[] = [] 
   originalMovies = movies;
   filters: any[] = this.filtersArray
   select: any[] = selectedFilters

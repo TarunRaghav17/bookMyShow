@@ -1,16 +1,15 @@
 .bg-custom {
-  background: linear-gradient(
-      90deg,
+  background: linear-gradient(90deg,
       rgb(26, 26, 26) 24.97%,
       rgb(26, 26, 26) 38.3%,
       rgba(26, 26, 26, 0.04) 97.47%,
-      rgb(26, 26, 26) 100%
-    ),
+      rgb(26, 26, 26) 100%),
     url("https://assets-in.bmscdn.com/iedb/movies/images/mobile/listing/xxlarge/war-2-et00356501-1755672553.jpg");
   background-repeat: no-repeat;
   background-position: right center;
   border-radius: 8px;
 }
+
 .book_ticket_button {
   border: 1px solid rgb(248, 68, 100);
   color: rgb(255, 255, 255);
@@ -19,6 +18,7 @@
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 8px;
   padding: 10px 40px;
 }
+
 .share_btn {
   display: flex;
   color: white;
@@ -48,6 +48,7 @@
 .top_bar.show {
   transform: translateY(0);
 }
+
 .popup_continue {
   background: rgb(235, 78, 98);
   color: rgb(255, 255, 255);
@@ -56,6 +57,7 @@
   padding: 8px;
   display: grid;
 }
+
 /* General */
 .movie-title {
   font-weight: bold;
