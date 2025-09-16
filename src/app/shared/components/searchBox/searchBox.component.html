@@ -51,10 +51,9 @@
         </div>
         <div class="movie_list_container">
             @for (item of movieName; track $index) {
-
             <div class="movies_list">
-                <div class="">
-                    <span class="movie_name">{{item}}</span>
+                <div class="" [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
+                    <span class="movie_name" >{{item.name}}</span>
                 </div>
                 <span class="movie_icon">
                     <i class="fa fa-film" aria-hidden="true"></i>

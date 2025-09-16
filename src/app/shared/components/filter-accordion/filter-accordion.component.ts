@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
-
 @Component({
   selector: 'app-filter-accordion',
   standalone: true,
@@ -17,11 +16,18 @@ export class FilterAccordionComponent {
   selectedCategory: any;
   browseBy: any
   openedIndex: number[] = [0];
+  filtersArray: any[] = []
 
   constructor(public router: Router, public commonService: CommonService) {
     this.selectedCategory = this.commonService._selectedCategory();
     this.browseBy = this.commonService._selectedCategory() === 'Movies' ? 'Cinemas' : 'Venues';
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+  if (changes['filters']) {
+    this.filtersArray=this.commonService.formatFilters(this.filters)
+    } 
+}
 
   handleNavigate() {
     let newUrl = `/${this.commonService._selectCity()}/cinemas`

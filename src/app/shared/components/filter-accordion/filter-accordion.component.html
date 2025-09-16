@@ -1,5 +1,5 @@
 <div class="d-flex flex-column gap-2">
-    @for(item of filters;track $index){
+    @for(item of filtersArray;track $index){
     <div class="main_container_accordion d-block ">
         <div class="d-flex justify-content-between border accordion_box border-bottom-0 shadow-sm border">
             <div class="d-flex gap-2 align-items-center " (click)="toggleAccordion($index)">

@@ -11,7 +11,7 @@ import { CommonService } from '../../../services/common.service';
 })
 export class MoviesDetailsComponent {
   constructor(private location: Location, private modalService: NgbModal, public commonService: CommonService,
-    private router: Router) { }
+  private router: Router) { }
   private modalRef?: NgbModalRef | null = null
   movieDetails: any = {}
 
@@ -37,7 +37,6 @@ export class MoviesDetailsComponent {
 
   }
   showHeader = false;
-
   @HostListener('window:scroll')
   onScroll() {
     const section = document.getElementsByClassName('description_movie_section');

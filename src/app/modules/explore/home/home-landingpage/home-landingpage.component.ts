@@ -9,7 +9,6 @@ import { CommonService } from '../../../../services/common.service';
   standalone: false,
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
-  
 })
 export class HomeLandingPageComponent implements OnInit {
   pageNoMap: Record<string, number | undefined> = {};
@@ -18,14 +17,16 @@ export class HomeLandingPageComponent implements OnInit {
   movieData: any[] = [];
   playsData: any[] = [];
   sportsData: any[] = [];
-
+  selectedCategory: string = '';
   visibleData: Record<string, any[]> = {};
 
   constructor(
     private homeService: HomeService,
     private sanitizer: DomSanitizer,
     public commonService: CommonService
-  ) {}
+  ) {
+    this.selectedCategory = this.commonService._selectedCategory();
+  }
 
   ngOnInit(): void {
     this.getAllData();
@@ -69,7 +70,6 @@ export class HomeLandingPageComponent implements OnInit {
       this.getVisibleCards(type, originalData);
     }
   }
-
   /**
    * @description Fetch event data for all types and initialize pagination
    */
@@ -84,16 +84,15 @@ export class HomeLandingPageComponent implements OnInit {
         this.playsData = plays?.data;
         this.sportsData = sports?.data;
         this.activiesData = activities?.data;
-
-        // initialize pagination
         types.forEach((type) => (this.pageNoMap[type] = 0));
-
         this.getVisibleCards('Movie', this.movieData);
         this.getVisibleCards('Plays', this.playsData);
         this.getVisibleCards('Sports', this.sportsData);
         this.getVisibleCards('Activities', this.activiesData);
       },
-      error: (err) => console.error(err),
+      error: (err) =>{
+        console.error('Error fetching event data:', err);
+      },
     });
   }
 
@@ -107,5 +106,10 @@ export class HomeLandingPageComponent implements OnInit {
       const fullBase64String = `data:${base64string};base64,${base64string}`;
       return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
     }
+  }
+
+  onClickCategory(category: string) {
+    this.commonService.setCategory(category);
+    this.selectedCategory = this.commonService._selectedCategory();
   }
 }

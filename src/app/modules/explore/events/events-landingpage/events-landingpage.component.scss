@@ -44,3 +44,13 @@
   background-color: rgb(220, 53, 88) !important;
   color: white !important;
 }
+.img_container img {
+  height: 250px;
+  max-height: 250px;
+  width: -webkit-fill-available;
+}
+
+.card_container{
+  width: 225px;
+  max-width: 225px;
+}
