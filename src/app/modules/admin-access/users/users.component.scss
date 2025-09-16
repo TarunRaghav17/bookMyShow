@@ -79,7 +79,7 @@ td button:hover {
 
 .rolename {
   color: rgb(255, 255, 255);
-  background: rgb(72, 253, 72);
+  background: #198754;
   padding-inline: 10px;
   width: max-content;
   border-radius: 5px;
@@ -122,4 +122,7 @@ td button:hover {
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
+}
+tbody tr:last-child .dropdown {
+  top: -125px;
 }

@@ -1,25 +1,23 @@
 import {
   Component,
-  inject,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
-  NgbActiveModal,
   NgbModal,
   NgbModalOptions,
   NgbModalRef,
 } from '@ng-bootstrap/ng-bootstrap';
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
-import { DomSanitizer } from '@angular/platform-browser';
 import { AuthService } from '../../../auth/auth-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
-export class NgbdModalContent {
-  activeModal = inject(NgbActiveModal);
-}
+import { DomSanitizer } from '@angular/platform-browser';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { FormControl } from '@angular/forms';
+
 @Component({
   selector: 'app-header',
   standalone: false,
@@ -34,30 +32,30 @@ export class HeaderComponent implements OnInit {
   selectedCity: any;
   searchText: string = '';
   city = false;
+  searchControl: FormControl = new FormControl()
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
-public selectedCategory:string
+  public selectedCategory: string
   constructor(
     private modalService: NgbModal,
     public commonService: CommonService,
     public authService: AuthService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private router: Router
-
+    private router: Router,
   ) {
 
-        this.selectedCategory =this.commonService._selectedCategory()
+    this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
   }
 
   ngOnInit(): void {
     this.getAllPopularCity()
     this.getAllCitiesData()
+    this.onSearchHandler()
     this.showProfileheader = this.commonService._profileHeader()
-
-  }
+    }
   /**
      * @description Open city selection modal popup
      * @author Gurmeet Kumar
@@ -70,9 +68,6 @@ public selectedCategory:string
       ariaLabelledBy: 'modal-basic-title',
     });
   }
-
-
-
   /**
    * @description Toggle between viewing all cities and popular cities only
    * @author Gurmeet Kumar
@@ -126,19 +121,6 @@ public selectedCategory:string
       modalRef.close();
     }
   }
-
-  /**
-   * @description Convert base64 string to safe image URL for display
-   * @author Gurmeet Kumar
-   * @return any
-   */
-  getImageFromBase64(base64string: string): any {
-    if (base64string) {
-      const fullBase64String = `data:${base64string};base64,${base64string}`;
-      return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
-    }
-  }
-
   /**
    * @description Logout user and clear token from storage
    * @author Gurmeet Kumar
@@ -172,11 +154,35 @@ public selectedCategory:string
    * @author Gurmeet Kumar
    * @return void
    */
-  onSearchChange(value: string): void {
-    const searchValue = value.toLowerCase();
-    this.filteredCities = this.citiesJson.filter((city: any) =>
-      city.name.toLowerCase().includes(searchValue)
-    );
+
+
+  /**
+* @description Handles user search with debounce. Fetches all users if search input is empty, or searches users based on query.
+* @author Gurmeet Kumar
+* @return void
+*/
+  onSearchHandler() {
+    this.searchControl.valueChanges.pipe(
+      debounceTime(600),
+      map((val) => val?.trim().toLowerCase() || ''), 
+      distinctUntilChanged(),
+    ).subscribe({
+      next: (val: string) => {
+        this.searchText = val; 
+        if (!val) {
+         
+          this.filteredCities = [...this.citiesJson];
+        } else {
+    
+          this.filteredCities = this.citiesJson.filter((city: any) =>
+            city.cityName.toLowerCase().includes(val)
+          );
+        }
+      },
+      error: () => {
+        this.filteredCities = [];
+      }
+    });
   }
 
   /**
@@ -184,14 +190,41 @@ public selectedCategory:string
    * @author Gurmeet Kumar
    * @return void
    */
-  clearSearch(): void {
-    this.searchText = '';
+  clearSearch() {
+    this.searchControl.setValue('');
     this.filteredCities = [];
   }
- 
-   onClickCategory(category:string){
+
+  onClickCategory(category: string) {
     this.commonService.setCategory(category)
-     this.selectedCategory =this.commonService._selectedCategory()
-   }
+    this.selectedCategory = this.commonService._selectedCategory()
+  }
+
+
+  /**
+   * @description Convert base64 string to safe image URL for display
+   * @author Gurmeet Kumar
+   * @return any
+   */
+  getImageFromBase64(base64string: string): any {
+    if (base64string) {
+      const fullBase64String = `data:${base64string};base64,${base64string}`;
+      return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
+    }
+  }
+
+   /**
+   * @description Close cityModal 
+   * @author Gurmeet Kumar
+   * @return any
+   * @param modalRef
+   */
+   
+  closeCityModal(modalRef: NgbModalRef): void {
+    if (modalRef) {
+      modalRef.dismiss();
+    }
+  }
+
 
 }

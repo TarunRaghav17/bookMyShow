@@ -7,7 +7,8 @@
             <div class="col-8 ">
                 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-between">
                     <div class="col-3 mb-2 mb-0 d-flex">
-                        <a [routerLink]="['/']" class="d-inline-flex link-body-emphasis text-decoration-none">
+                        <a [routerLink]="['/explore/home/',commonService._selectCity()]"
+                            class="d-inline-flex link-body-emphasis text-decoration-none">
                             <img src="assets/images/logo.png" alt="" class="logo">
                         </a>
                         <div class="d-flex align-items-center">
@@ -22,7 +23,6 @@
                             {{selectedCity || 'City'}}
                             <i class="fa fa-angle-down ms-2" aria-hidden="true"></i>
                         </span>
-
                         @if (!authService.userDetailsSignal()) {
                         <button class="badge ms-3" (click)="openLoginModal()">Sign in</button>
                         <span class="ms-3">
@@ -70,7 +70,7 @@
                                 [ngClass]="{'fontBold':selectedCategory=='Plays'}">Plays</a>
 
                             <a [routerLink]="['explore/sports']" (click)="onClickCategory('Sports')"
-                            [ngClass]="{'fontBold': selectedCategory=='Sports'}">Sports</a>
+                                [ngClass]="{'fontBold': selectedCategory=='Sports'}">Sports</a>
 
                             <a [routerLink]="['explore/activities']" (click)="onClickCategory('Activities')"
                                 [ngClass]="{'fontBold':selectedCategory=='Activities'}">Activities</a>
@@ -226,20 +226,26 @@
 <!-- City-Dropdown-modal  -->
 <ng-template #cityModal let-modal>
     <div class="modal-header d-block modal_header">
+        @if(commonService._selectCity()){
+        <div class="px-2 py-2 text-end">
+            <i class="fa fa-times-circle" aria-hidden="true" (click)="closeCityModal(modal)"></i>
+        </div>
+        }
+
         <div class="input-group  ">
             <span class="input-group-text">
                 <i class="fa fa-search"></i>
             </span>
             <input type="text" class="form-control border-start-0" name="search-city" placeholder="Search for cities"
-                [(ngModel)]="searchText" (ngModelChange)="onSearchChange($event)">
-            @if (searchText.length > 0) {
+                [formControl]="searchControl">
+            @if(searchControl.value?.length >0){
             <div class="icon_clear_search">
                 <i class="fa fa-times-circle" aria-hidden="true" (click)="clearSearch()"></i>
             </div>
             }
         </div>
+        @if(searchControl.value?.length > 0 && filteredCities.length > 0){
         <div class="city_search_list">
-            @if (searchText.length > 0 && filteredCities.length > 0) {
             <ul>
                 @for (city of filteredCities; track $index) {
                 <li (click)="selectCity(city.cityName, modal)">
@@ -247,9 +253,11 @@
                 </li>
                 }
             </ul>
-            }
-
         </div>
+        }
+
+
+
 
         <span class="detect_my_location_text text-danger mt-3"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
             Detect my location</span>
@@ -280,7 +288,7 @@
 
                 <div class="list_cities py-2 ">
                     @for (item of citiesJson; track $index) {
-                    <p class="m-0" (click)="selectCity(item.name,modal)"> {{item.name}}</p>
+                    <p class="m-0" (click)="selectCity(item.cityName,modal)"> {{item.cityName}}</p>
                     }
                 </div>
 

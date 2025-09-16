@@ -7,6 +7,7 @@ import { ListYourShowComponent } from './list-your-show/list-your-show.component
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateVenueComponent } from './create-venue/create-venue.component';
+import { ClickOutsideDirective } from '../../core/directive/click-out-side.directive';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { CreateVenueComponent } from './create-venue/create-venue.component';
   ],
   imports: [
     ReactiveFormsModule, CommonModule,
+    ClickOutsideDirective,
     CommonModule,
     AdminAccessRoutingModule, CarouselModule, ReactiveFormsModule, FormsModule
   ]
