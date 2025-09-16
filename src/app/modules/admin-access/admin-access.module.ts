@@ -7,18 +7,20 @@ import { ListYourShowComponent } from './list-your-show/list-your-show.component
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreateVenueComponent } from './create-venue/create-venue.component';
+import { CreateShowComponent } from './create-show/create-show.component';
+import { CreateContentComponent } from './create-content/create-content.component';
 import { ClickOutsideDirective } from '../../core/directive/click-out-side.directive';
 
 @NgModule({
   declarations: [
     UsersComponent,
-    ListYourShowComponent, CreateVenueComponent
+    ListYourShowComponent, CreateVenueComponent, CreateShowComponent, CreateContentComponent
   ],
   imports: [
     ReactiveFormsModule, CommonModule,
     ClickOutsideDirective,
     CommonModule,
-    AdminAccessRoutingModule, CarouselModule, ReactiveFormsModule, FormsModule
+    AdminAccessRoutingModule, CarouselModule, ReactiveFormsModule, FormsModule,
   ]
 })
 export class AdminAccessModule { }

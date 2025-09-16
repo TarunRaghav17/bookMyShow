@@ -1,6 +1,4 @@
 <!-- Top-Header  -->
-
-
 <div class="conatiner-fluid ">
     <div class="row g-0">
         <div class="main_header_container d-flex justify-content-center bg-white">
@@ -17,7 +15,6 @@
                     </div>
 
                     <div class="col-4 text-end d-flex justify-content-end px-4">
-
                         <!-- City Selector -->
                         <span class="dropdown_city_text" (click)="openCityModal(cityModal)">
                             {{selectedCity || 'City'}}
@@ -31,28 +28,20 @@
                             </i>
                         </span>
                         } @else {
-
                         <p class="d-flex gap-1 align-items-center mt-1 ms-1" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                             <i class="fa fa-user-circle fa-circle_header" aria-hidden="true"></i>
                             <span>Hi, {{ authService.userDetailsSignal()?.sub || 'User' }}</span>
                         </p>
                         }
-
-
                     </div>
-
                 </header>
             </div>
         </div>
-
     </div>
-
-
 </div>
 
 <!-- Sub Headers -->
-
 <div class="container-fluid ">
     <div class="row">
         <div class="main_conatiner_sub_header d-flex justify-content-center  border-bottom">
@@ -84,13 +73,16 @@
                         @if(authService.userDetailsSignal()?.role !='USER' && authService.userDetailsSignal()?.role
                         =='ADMIN'){
                         <div class=" sub_heder_right_links">
-                            <a [routerLink]="['/admin/list-your-show']">ListYourShow</a>
-                            <a [routerLink]="['/admin/create/venue']">Venues</a>
-                            <a [routerLink]="['/admin/content']">Content</a>
-                            <a [routerLink]="['/admin/shows']">Shows</a>
+                            <a [routerLink]="['/admin/list-your-show']" (click)="onClickCategory('ListYourShow')"
+                                [ngClass]="{'fontBold':selectedCategory == 'ListYourShow'}">ListYourShow</a>
+                            <a [routerLink]="['/admin/create/venue']" (click)="onClickCategory('Venues')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Venues'}">Venues</a>
+                            <a [routerLink]="['/admin/content']" (click)="onClickCategory('Content')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Content'}">Content</a>
+                            <a [routerLink]="['/admin/create/show']" (click)="onClickCategory('Shows')"
+                                [ngClass]="{'fontBold':selectedCategory== 'Shows'}">Shows</a>
                         </div>
                         }
-
                     </div>
                 </div>
             </div>
@@ -111,10 +103,6 @@
 </div>
 }
 
-
-
-
-
 <!-- SideBar Offcanvas  -->
 <div class="offcanvas offcanvas-end p-0" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
     <div class="offcanvas-header px-2">
@@ -127,15 +115,14 @@
                         aria-hidden="true"></i>
                 </span>
                 }
-
             </div>
             <div class="user_icon">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
             </div>
         </div>
     </div>
-    <div class="offcanvas-body p-0">
 
+    <div class="offcanvas-body p-0">
         @if(!authService.userDetailsSignal()) {
         <div class="unlock_special_offer_box border-top">
             <div height="40px" width="40px" class="unlock_special_offer_img bg-none ">
@@ -147,7 +134,6 @@
                 Register</button>
         </div>
         }
-
         <div class="main_sidebar_data ">
             <div class="d-flex flex-column grow-2 py-2">
                 <a class="d-flex justify-content-between align-items-center info_conatiner">
@@ -183,9 +169,6 @@
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
                 }
-
-
-
                 @if(authService.getUserFromToken()?.role == 'ADMIN'){
                 <a class="d-flex justify-content-between align-items-center links_sidebar">
                     <div class="d-flex gap-2 align-items-center">
@@ -212,16 +195,12 @@
             <div class="button_section">
                 <div>
                     <button class="button_sign_out w-100" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-                        (click)="logout()">Sign
-                        out</button>
+                        (click)="logout()">Signout</button>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
-
 
 <!-- City-Dropdown-modal  -->
 <ng-template #cityModal let-modal>
@@ -255,20 +234,13 @@
             </ul>
         </div>
         }
-
-
-
-
         <span class="detect_my_location_text text-danger mt-3"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
             Detect my location</span>
     </div>
     <div class="modal-body p-0">
         <p class="text-center mt-1">Popular Cities</p>
-
         <div class="py-2 d-flex gap-2 px-3">
-
             @for (item of cityData; track $index) {
-
             <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)">
                 <div class="flex_direction d-flex flex-column justify-content-center align-items-center">
                     <img [src]="getImageFromBase64(item.imageUrl)" alt="" class="img-fluid city_section">
@@ -276,8 +248,6 @@
                 </div>
             </div>
             }
-
-
         </div>
         @if(showCities){
         <div class="main_container">
@@ -285,20 +255,15 @@
             <p class="text-center mt-1">Other Cities</p>
             }
             <div class="other_cities_list px-3" [ngClass]="{'other_cities_list': citiesJson}">
-
                 <div class="list_cities py-2 ">
                     @for (item of citiesJson; track $index) {
                     <p class="m-0" (click)="selectCity(item.cityName,modal)"> {{item.cityName}}</p>
                     }
                 </div>
-
             </div>
         </div>
         }
-
-
     </div>
-
     <div class="modal-footer text-center d-block">
         <a class="view_city" (click)="viewAllCities()"> {{viewCitiesText}} </a>
     </div>

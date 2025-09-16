@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { VenuesService } from './venues-services/venues.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   standalone: false,
   selector: 'app-venue-form',
-    templateUrl: './create-venue.component.html'
+  templateUrl: './create-venue.component.html'
 })
 export class CreateVenueComponent implements OnInit {
   venueForm!: FormGroup;
@@ -121,7 +123,10 @@ export class CreateVenueComponent implements OnInit {
 
   }
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+    private venuesService: VenuesService,
+    private toaster: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.venueForm = this.fb.group({
@@ -134,27 +139,25 @@ export class CreateVenueComponent implements OnInit {
       venueCapacity: ['', [Validators.required, Validators.min(1)]],
       venueFor: ['', Validators.required],
       venueType: ['', Validators.required],
-      supportedCategories: ['', Validators.required],
-      additionalFields: this.fb.group({}),
+      supportedCategories: [[], Validators.required],
       amenities: this.fb.array([])
     });
 
   }
 
-
   onVenueForChange() {
     let venueFor = this.venueForm.get('venueFor')?.value as keyof typeof this.venueTypeMapping
     this.venueForm.get('venueType')?.setValue('')
     this.venueForm.get('supportedCategories')?.setValue('')
-    let additionalFields = this.venueForm.get('additionalFields') as FormGroup
+
     this.venueType = this.venueTypeMapping[venueFor]
 
     if (venueFor == 'movies') {
-      additionalFields.addControl('screens',
+      this.venueForm.addControl('screens',
         this.fb.array([this.createScreen()]))
     }
     else {
-      additionalFields.removeControl('screens')
+      this.venueForm.removeControl('screens')
     }
   }
 
@@ -166,12 +169,12 @@ export class CreateVenueComponent implements OnInit {
   }
 
   get screens() {
-    return this.venueForm.get('additionalFields.screens') as FormArray
+    return this.venueForm.get('screens') as FormArray
   }
 
   createScreen() {
     return this.fb.group({
-      screenName: [''],
+      screenName: ['', Validators.required],
       layouts: this.fb.array([this.createLayout()])
 
     })
@@ -212,7 +215,7 @@ export class CreateVenueComponent implements OnInit {
 
   createLayout() {
     return this.fb.group({
-      layoutName: [''],
+      layoutName: ['', Validators.required],
       rows: this.fb.array([], Validators.required),
       cols: ['12', Validators.required]
     })
@@ -245,9 +248,21 @@ export class CreateVenueComponent implements OnInit {
   // Submit
   onSubmit(): void {
     if (this.venueForm.valid) {
-      // --------to do-----------------
-      // bind the api from backend
+      this.venuesService.createVenueService(this.venueForm.value).subscribe({
+        next: () => {
+          this.toaster.success('Venue created successfully')
+          this.venueForm.removeControl('screens')
+          this.venueForm.reset()
+          this.venueForm.get('venueFor')?.setValue('')
+          this.venueForm.get('venueType')?.setValue('')
+          this.venueForm.get('supportedCategories')?.setValue('')
+        },
+        error: (err) => {
+          this.toaster.error(err.message)
+        }
+      })
     } else {
+      this.toaster.error('All fields are required')
       this.venueForm.markAllAsTouched();
     }
   }
@@ -261,6 +276,10 @@ export class CreateVenueComponent implements OnInit {
       const index = rows.controls.findIndex(x => x.value === event.target.value);
       rows.removeAt(index)
     }
+  }
+
+  handleCategoryChange(event: any) {
+    this.venueForm.get('supportedCategories')?.setValue([event.target.value])
   }
 }
 
