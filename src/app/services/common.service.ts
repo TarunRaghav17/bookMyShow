@@ -28,8 +28,6 @@ export class CommonService {
     private sanitizer: DomSanitizer
   ) { }
 
-  baseUrl = environment.baseUrl
-
   /**
    * @description Get list of all cities from backend
    * @author Gurmeet Kumar
@@ -70,15 +68,12 @@ export class CommonService {
   }
 
   /**
-  /**
 * @description iniitalizes the topFilterArray
 * @author Manu Shukla
 * @params  [Filters] receives array of filters
 * @returnType [Filter] return the filteredArray on the basis of category
 */
   getTopFiltersArray(target: any): Observable<any> {
-
-
     return this.http.get(`${this.base_url}/api/events/${target}`)
   }
 
@@ -102,7 +97,6 @@ export class CommonService {
     let filterType: any[] = this.select.filter((item: any) =>
       item.type == filter.type
     )
-
     if (filterType) {
       let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.text)
       if (alreayExist.length == 0) {
@@ -114,7 +108,6 @@ export class CommonService {
       }
     }
   }
-
 
   /**
   * @description Convert base64 string to safe image URL for display
@@ -130,7 +123,6 @@ export class CommonService {
 
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`)
-
   }
   listYourShowService = [
     {

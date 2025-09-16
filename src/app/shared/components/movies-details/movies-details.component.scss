@@ -135,20 +135,21 @@
   font-weight: 400;
   display: flex;
   flex-wrap: wrap;
+gap:6px;
   background-color: #e5e5e5;
   color: #000;
-  padding: 2px 8px;
+  padding: 2px 10px;
   border-radius: 2px;
   margin-top: 8px;
   font-size: 16px;
 }
 
 .format-tags {
-  width: 322px;
+  width: max-content;
 }
 
 .language-tags {
-  width: 157px;
+  width: max-content;
 }
 
 /* Meta Info */
@@ -212,4 +213,10 @@
   font-weight: 400;
   line-height: 20px;
   letter-spacing: 0.2px;
+}
+
+
+.langBackground{
+  background-color: rgb(242, 245, 249);
+
 }

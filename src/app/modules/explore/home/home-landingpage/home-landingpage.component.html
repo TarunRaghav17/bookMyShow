@@ -1,5 +1,4 @@
 <!-- carousel -->
-
 <div class="conatiner-fluid">
   <div class="row g-0">
     <carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000" indicators="false"
@@ -39,7 +38,6 @@
   </div>
 </div>
 
-
 <!-- Recommended Movies -->
 <div class="conatiner-fluid">
   <div class="row g-0">
@@ -51,7 +49,6 @@
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
         </div>
-
         <div class="col-12 py-3">
           <div class="d-flex justify-content-center g-0">
             <div class="main_box_crasoule d-flex align-items-center">
@@ -59,21 +56,18 @@
               <!-- Left Arrow -->
               <div class="icon_box d-flex justify-content-end me-3">
                 @if((pageNoMap['Movie'] ?? 0) > 0){
-
                 <button class="arrow-btn" (click)="prev('Movie', movieData)">
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
                 </button>
-
                 }
               </div>
-
               <!-- Carousel Content -->
               <div class="main_filter_card overflow-hidden"
               >
                 <div class="filter_text d-flex gap-3">
                   @for (item of visibleData['Movie']; track $index) {
                   <div class=" card_section">
-                    <div class="col" [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
+                    <div class="col border" [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -98,25 +92,20 @@
                   }
                 </div>
               </div>
-
               <!-- Right Arrow -->
               <div class="icon_box d-flex justify-content-start ms-3">
                 @if(((pageNoMap['Movie'] ?? 0) + 1) * itemsPerCards < movieData.length){ <button class="arrow-btn"
                   (click)="next('Movie', movieData)">
                   <i class="fa fa-angle-right" aria-hidden="true"></i>
                   </button>
-
                   }
-
               </div>
-
             </div>
           </div>
         </div>
         <div class=" d-flex justify-content-center  stream_poster">
           <img src="assets/images/stream-leadin-web-collection-202210241242.avif" alt="render" class="img-fluid">
         </div>
-
       </div>
     </div>
   </div>
@@ -135,11 +124,9 @@
         <div class="col-12 py-3">
           <div class="d-flex justify-content-center g-0">
             <div class="main_box_crasoule d-flex align-items-center">
-
               <!-- Left Arrow -->
               <div class="icon_box d-flex justify-content-end me-3">
                 @if((pageNoMap['Plays'] ?? 0) > 0){
-
                 <button class="arrow-btn" (click)="prev('Plays', playsData)">
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
                 </button>
@@ -182,15 +169,10 @@
                   <i class="fa fa-angle-right" aria-hidden="true"></i>
                   </button>
                   }
-
-
               </div>
-
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -209,7 +191,6 @@
         <div class="col-12 py-3">
           <div class="d-flex justify-content-center g-0">
             <div class="main_box_crasoule d-flex align-items-center">
-
               <!-- Left Arrow -->
               <div class="icon_box d-flex justify-content-end me-3">
                 @if((pageNoMap['Sports'] ?? 0) > 0){
@@ -217,9 +198,7 @@
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
                 </button>
                 }
-
               </div>
-
               <!-- Carousel Content -->
               <div class="main_filter_card overflow-hidden">
                 <div class="filter_text d-flex gap-3">
@@ -250,7 +229,6 @@
                   }
                 </div>
               </div>
-
               <!-- Right Arrow -->
               <div class="icon_box d-flex justify-content-start ms-3">
                 @if(((pageNoMap['Sports'] ?? 0) + 1) * itemsPerCards < sportsData.length){ <button class="arrow-btn"
@@ -259,12 +237,9 @@
                   </button>
                   }
               </div>
-
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -283,7 +258,6 @@
         <div class="col-12 py-3">
           <div class="d-flex justify-content-center g-0">
             <div class="main_box_crasoule d-flex align-items-center">
-
               <!-- Left Arrow -->
               <div class="icon_box d-flex justify-content-end me-3">
                 @if((pageNoMap['Activities'] ?? 0) > 0){
@@ -291,9 +265,7 @@
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
                 </button>
                 }
-
               </div>
-
               <!-- Carousel Content -->
               <div class="main_filter_card overflow-hidden">
                 <div class="filter_text d-flex gap-3">
@@ -324,24 +296,17 @@
                   }
                 </div>
               </div>
-
               <!-- Right Arrow -->
               <div class="icon_box d-flex justify-content-start ms-3">
                 @if (((pageNoMap['Activities'] ?? 0) + 1) * itemsPerCards < activiesData.length) { <button
                   class="arrow-btn" (click)="next('Activities', activiesData)">
                   <i class="fa fa-angle-right" aria-hidden="true"></i>
                   </button>
-
                   }
-
-
               </div>
-
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   </div>

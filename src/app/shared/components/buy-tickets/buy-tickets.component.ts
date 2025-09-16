@@ -12,7 +12,8 @@ import { RouterModule } from '@angular/router';
 })
 export class BuyTicketsComponent {
 
-  constructor(public commonService: CommonService) { }
+  constructor(public commonService: CommonService,
+  ) { }
 
   selectedMovie = 'movie999'
   myMovies = [
@@ -188,7 +189,6 @@ export class BuyTicketsComponent {
   ]
 
   ngOnInit() {
-
     this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);

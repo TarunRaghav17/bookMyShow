@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule],
+  imports: [NgbModule, CommonModule],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
@@ -20,21 +21,6 @@ export class MoviesDetailsComponent {
 
   movieDetails: any = {}
 
-  langFormatData: any = [
-    {
-      lang: 'TAMIL',
-      format: ['2D', '4DX', 'IMAX 2D', 'ICE']
-    },
-    {
-      lang: 'ENGLISH',
-      format: ['2D', '4DX', 'IMAX 2D', 'ICE']
-
-    },
-    {
-      lang: 'HINDI',
-      format: ['2D', '4DX', 'IMAX 2D', 'ICE']
-    }
-  ]
   ngOnInit() {
     this.fetchContentIdByUrl()
   }
@@ -62,9 +48,12 @@ export class MoviesDetailsComponent {
     }
   }
 
-  navigateToBuyTicket() {
+  navigateToBuyTicket(payload: any) {
     this.modalRef?.close()
-    this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/war2/buytickets/123`])
+    this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.name.split(' ').join('-')}/buytickets/${this.movieDetails.eventId}`],
+      {
+        state: payload
+      })
   }
 
   fetchContentIdByUrl() {
