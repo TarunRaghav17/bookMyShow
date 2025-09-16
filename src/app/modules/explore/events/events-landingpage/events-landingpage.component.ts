@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
-import { filters, movies, selectedFilters, topFilters } from '../../../../../../db';
-import { EventService } from '../event.service';
+import { movies, selectedFilters } from '../../../../../../db';
+import { EventService } from '../service/event.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -12,8 +12,8 @@ import { forkJoin } from 'rxjs';
 })
 export class EventsLandingPageComponent {
   dummyMoviesdata: any[] = [];
-  topFiltersArray: any[] = topFilters
-  filters: any[] = filters
+  topFiltersArray!: any[]
+  filters!: any[] 
   select: any[] = selectedFilters
   originalMovies = movies;
   filtersArray: any[] = [];
@@ -32,6 +32,9 @@ export class EventsLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
+    this.eventService.getFilters('categories').subscribe((res)=>{
+    this.topFiltersArray = res.data
+    })
     this.eventService.getAllEvents().subscribe((res)=>{
     this.dummyMoviesdata = res.data
     })

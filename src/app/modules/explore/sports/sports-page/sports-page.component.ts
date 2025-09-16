@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
-import { SportsService } from '../sports.service';
+import { SportsService } from '../service/sports.service';
 import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-sports-page',
@@ -27,9 +27,12 @@ export class SportsPageComponent {
  */
 
   ngOnInit(): void {
+    this.setFilter()
+    this.sportService.getFilters('categories').subscribe((res)=>{
+    this.topFiltersArray = res.data
+    })
     this.sportService.getAllSports().subscribe((res)=>{
-      this.dummyMoviesdata = res.data
-      this.setFilter()
+    this.dummyMoviesdata = res.data
     })
   }
  

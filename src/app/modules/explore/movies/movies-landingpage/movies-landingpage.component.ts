@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { Router } from '@angular/router';
-import { MovieService } from '../movie-service.service';
+import { MovieService } from '../service/movie-service.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -14,14 +14,14 @@ import { forkJoin } from 'rxjs';
 export class MovieLandingPageComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
   selectedCity: any = null
-  topFiltersArray!: any[] 
-  filtersArray:any[]=[]
+  topFiltersArray!: any[]
+  filtersArray: any[] = []
   originalMovies = movies;
   filters: any[] = this.filtersArray
   select: any[] = selectedFilters
 
-  constructor(public commonService: CommonService, public router: Router, private movieService:MovieService) {
- 
+  constructor(public commonService: CommonService, public router: Router, private movieService: MovieService) {
+
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
@@ -34,21 +34,24 @@ export class MovieLandingPageComponent implements OnDestroy {
    */
 
   ngOnInit(): void {
-     this.setFilter()
-     this.movieService.getAllMovies().subscribe((res)=>{
-      this.dummyMoviesdata = res.data
-     })
+    this.setFilter()
+    this.movieService.getFilters('languages').subscribe((res) => {
+    this.topFiltersArray = res.data
+    })
+    this.movieService.getAllMovies().subscribe((res) => {
+    this.dummyMoviesdata = res.data
+    })
   }
 
-setFilter() {
-  forkJoin([
-    this.movieService.getFilters('languages'),
-    this.movieService.getFilters('formats'),
-    this.movieService.getFilters('genres')
-  ]).subscribe(([languages, formats, genres]) => {
-    this.filters = [{type:'Language',data:languages.data}, {type:'Formats', data:formats.data}, {type:'Genres', data:genres.data}];
-  });
-}
+  setFilter() {
+    forkJoin([
+      this.movieService.getFilters('languages'),
+      this.movieService.getFilters('genres'),
+      this.movieService.getFilters('formats')
+    ]).subscribe(([languages, formats, genres]) => {
+      this.filters = [{ type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Formats', data: formats.data }];
+    });
+  }
 
   /**
 * @description Remove Already Selected Filters

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
-import { MovieService } from '../movie-service.service';
+import { MovieService } from '../service/movie-service.service';
 
 @Component({
   selector: 'app-upcomming-movies',
@@ -30,14 +30,22 @@ export class UpcommingMoviesComponent {
       this.dummyMoviesdata = res.data
      })
   }
-  setFilter() {
-    forkJoin([
-      this.movieService.getFilters('languages'),
-      this.movieService.getFilters('formats'),
-      this.movieService.getFilters('genres')
-    ]).subscribe(([languages, formats, genres]) => {
-      this.filters = [{type:'Language',data:languages.data}, {type:'Formats', data:formats.data}, {type:'Genres', data:genres.data}];
-    });
-  }
+ setFilter() {
+  forkJoin([
+    this.movieService.getFilters('languages'),
+    this.movieService.getFilters('genres'),
+    this.movieService.getFilters('tags'),
+    this.movieService.getFilters('formats'),
+    this.movieService.getFilters('release-months')
+  ]).subscribe(([languages, genres, tags, formats, releaseMonth]) => {
+    this.filters = [
+      { type: 'Language', data: languages.data },
+      { type: 'Genres', data: genres.data },
+      { type: 'Tags', data: tags.data },
+      { type: 'Formats', data: formats.data },
+      { type: 'Release Month', data: releaseMonth.data }
+    ];
+  });
+}
 
 }

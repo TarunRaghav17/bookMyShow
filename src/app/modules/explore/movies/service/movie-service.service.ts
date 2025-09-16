@@ -12,7 +12,8 @@ export class MovieService {
  base_url = 'http://172.31.252.101:8080/bookmyshow'
 
   getFilters(target:string):Observable<any>{
-    return this.http.get(`${this.base_url}/api/events/${target}`)
+       let Target= target.split('_').join('-')
+    return this.http.get(`${this.base_url}/api/events/${Target}?eventType=Movie`)
   }
 
   getAllMovies():Observable<any>{

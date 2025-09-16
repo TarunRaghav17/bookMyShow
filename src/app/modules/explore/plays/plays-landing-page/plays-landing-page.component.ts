@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
-import { movies, selectedFilters, topFilters } from '../../../../../../db';
-import { PlaysService } from '../plays.service';
+import { movies, selectedFilters } from '../../../../../../db';
+import { PlaysService } from '../service/plays.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -12,7 +12,7 @@ import { forkJoin } from 'rxjs';
 })
 export class PlaysLandingPageComponent {
   dummyMoviesdata: any[] = [];
-  topFiltersArray: any[] = topFilters
+  topFiltersArray!: any[]
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
@@ -32,14 +32,14 @@ export class PlaysLandingPageComponent {
    */
 
   ngOnInit(): void {
-    // this.topFiltersArray = this.commonService.getTopFiltersArray(filters)
     this.setFilter()
+    this.playService.getFilters('categories').subscribe((res)=>{
+    this.topFiltersArray = res.data
+    })
     this.playService.getAllPlays().subscribe((res)=>{
     this.dummyMoviesdata = res.data
-   
     }
     )
-
   }
 
   /**
@@ -52,8 +52,6 @@ export class PlaysLandingPageComponent {
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.filters)
   }
-
-
    setFilter() {
       forkJoin([
         this.playService.getFilters('date_filters'),

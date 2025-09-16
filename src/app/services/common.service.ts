@@ -5,8 +5,6 @@ import { HttpClient } from '@angular/common/http';
 import { filters, selectedFilters } from '../../../db';
 import { DomSanitizer } from '@angular/platform-browser';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -66,7 +64,6 @@ export class CommonService {
     })
   }
 
-
   /**
 * @description iniitalizes the topFilterArray
 * @author Manu Shukla
@@ -112,8 +109,6 @@ export class CommonService {
       }
     }
   }
-
-
   /**
   * @description Convert base64 string to safe image URL for display
   * @author Gurmeet Kumar
@@ -179,39 +174,49 @@ export class CommonService {
       let filteredData;
 
       switch (type) {
-        case 'Language':
+         case 'Language':
           filteredData = data.map((i: any) => ({ ...i, text: i.languageName, selected: false }));
           break;
 
-        case 'Formats':
-          filteredData = data.map((i: any) => ({ ...i, text: i.formatName, selected: false }));
-          break;
-
-        case 'Genres':
+         case 'Genres':
           filteredData = data.map((i: any) => ({ ...i, text: i.genresName, selected: false }));
           break;
 
-        case 'Date':
+         case 'Formats':
+          filteredData = data.map((i: any) => ({ ...i, text: i.formatName, selected: false }));
+          break;
+
+         case 'Date':
           filteredData = data.map((i: any) => ({ ...i, text: i.dateFilterName, selected: false }));
           break;
 
-        case 'Categories':
-          filteredData = data.map((i: any) => ({ ...i, text: i.categoryName, selected: false }));
+         case 'Categories':
+           filteredData = data.map((i: any) => ({ ...i, text: i.categoryName, selected: false }));
           break;
-
-        case 'More Filters':
+ 
+         case 'More Filters':
           filteredData = data.map((i: any) => ({ ...i, text: i.moreFilterName, selected: false }));
           break;
-
-        case 'Price':
+ 
+         case 'Price':
           filteredData = data.map((i: any) => ({ ...i, text: i.priceRange, selected: false }));
           break;
 
-        default:
+          case 'Tags':
+          filteredData = data.map((i: any) => ({ ...i, text: i.tageName, selected: false }));
+          break;
+
+          case 'Release Month':
+          filteredData = data.map((i: any) => ({ ...i, text: i.releaseMonthName, selected: false }));
+          break;
+
+         default:
           filteredData = data;
       }
       filtersArray.push({ type, data: filteredData });
     });
     return filtersArray;
   }
+
+  
 }

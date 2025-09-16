@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {  movies, selectedFilters, topFilters } from '../../../../../../db';
+import {  movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
-import { ActivitiesService } from '../activities.service';
+import { ActivitiesService } from '../service/activities.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -15,7 +15,7 @@ export class ActivitiesPageComponent {
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
-  topFiltersArray: any[] = topFilters
+  topFiltersArray!: any[]
   filtersArray:any[]=[]
 
   constructor(public commonService: CommonService , private activitiesSercice:ActivitiesService) {
@@ -30,6 +30,9 @@ export class ActivitiesPageComponent {
 
   ngOnInit(): void {
       this.setFilter()
+       this.activitiesSercice.getFilters('categories').subscribe((res)=>{
+        this.topFiltersArray = res.data
+       })
       this.activitiesSercice.getAllActivities().subscribe((res)=>{
       this.dummyMoviesdata = res.data
     })
@@ -41,7 +44,6 @@ export class ActivitiesPageComponent {
 * @params  
 * @returnType void
 */
-
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.filters)
   }
