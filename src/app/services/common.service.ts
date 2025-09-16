@@ -22,11 +22,11 @@ export class CommonService {
   selectedCategory: any = (localStorage.getItem('category'))
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
+  baseUrl = environment.baseUrl
+
   constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
   ) { }
-
-  baseUrl = environment.baseUrl
 
   /**
    * @description Get list of all cities from backend
@@ -37,6 +37,9 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/api/city/all`);
   }
 
+  getContentDetailsById(contentId: string | null): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/events/${contentId}`)
+  }
   /**
    * @description Get list of popular cities from backend
    * @author Gurmeet Kumar
@@ -45,12 +48,10 @@ export class CommonService {
   getPopularCities(): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/city/popular`);
   }
-
-  setCategory(category: string) {
+  setCategory(category: string | null) {
     this._selectedCategory.set(category)
     localStorage.setItem('category', JSON.stringify(category))
   }
-
   /**
 * @description Resrt Filter Accordian 
 * @author Manu Shukla
@@ -66,7 +67,7 @@ export class CommonService {
     })
   }
 
-
+  /**
   /**
 * @description iniitalizes the topFilterArray
 * @author Manu Shukla
@@ -85,7 +86,6 @@ export class CommonService {
  * @params  [Filters]
  * @returnType void
  */
-
   handleEventFilter(filter: any): void {
     this.filters.map((item: any) => {
       if (item.type == filter.type) {
