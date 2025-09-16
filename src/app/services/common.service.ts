@@ -217,6 +217,4 @@ export class CommonService {
     });
     return filtersArray;
   }
-
-  
 }

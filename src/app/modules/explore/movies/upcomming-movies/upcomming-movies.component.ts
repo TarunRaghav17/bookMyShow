@@ -3,6 +3,7 @@ import { movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-upcomming-movies',
@@ -18,34 +19,43 @@ export class UpcommingMoviesComponent {
   originalMovies = movies;
   filters: any[] = []
   select: any[] = selectedFilters
-  filtersArray:any[]=[]
+  filtersArray: any[] = []
 
-  constructor(public commonService: CommonService, private movieService:MovieService) {
+  constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
   ngOnInit(): void {
-      this.setFilter()
-      this.movieService.getAllMovies().subscribe((res)=>{
-      this.dummyMoviesdata = res.data
-     })
+    this.setFilter()
+    this.movieService.getAllMovies().subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (res) => {
+        this.toastr.error(res.error);
+      }
+    })
   }
- setFilter() {
-  forkJoin([
-    this.movieService.getFilters('languages'),
-    this.movieService.getFilters('genres'),
-    this.movieService.getFilters('tags'),
-    this.movieService.getFilters('formats'),
-    this.movieService.getFilters('release-months')
-  ]).subscribe(([languages, genres, tags, formats, releaseMonth]) => {
-    this.filters = [
-      { type: 'Language', data: languages.data },
-      { type: 'Genres', data: genres.data },
-      { type: 'Tags', data: tags.data },
-      { type: 'Formats', data: formats.data },
-      { type: 'Release Month', data: releaseMonth.data }
-    ];
-  });
-}
-
+  setFilter() {
+    forkJoin([
+      this.movieService.getFilters('languages'),
+      this.movieService.getFilters('genres'),
+      this.movieService.getFilters('tags'),
+      this.movieService.getFilters('formats'),
+      this.movieService.getFilters('release-months')
+    ]).subscribe({
+      next: ([languages, genres, tags, formats, releaseMonth]) => {
+        this.filters = [
+          { type: 'Language', data: languages.data },
+          { type: 'Genres', data: genres.data },
+          { type: 'Tags', data: tags.data },
+          { type: 'Formats', data: formats.data },
+          { type: 'Release Month', data: releaseMonth.data }
+        ];
+      },
+      error: (res) => {
+        this.toastr.error(res.error);
+      }
+    });
+  }
 }
