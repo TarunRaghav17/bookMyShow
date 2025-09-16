@@ -56,7 +56,6 @@ export class MoviesDetailsComponent {
 
   close() {
     if (this.modalRef) {
-      console.log('close called')
       this.modalRef.close()
       this.modalRef = null
     }
@@ -64,8 +63,6 @@ export class MoviesDetailsComponent {
 
   navigateToBuyTicket() {
     this.modalRef?.close()
-    // this.commonService.setLanguageFormat(langFormat)
-    // console.log(this.router.url.split('/'))
     this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/war2/buytickets/123`])
   }
 
