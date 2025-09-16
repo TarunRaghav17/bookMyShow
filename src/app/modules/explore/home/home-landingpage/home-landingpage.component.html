@@ -68,7 +68,8 @@
               </div>
 
               <!-- Carousel Content -->
-              <div class="main_filter_card overflow-hidden">
+              <div class="main_filter_card overflow-hidden"
+              >
                 <div class="filter_text d-flex gap-3">
                   @for (item of visibleData['Movie']; track $index) {
                   <div class=" card_section">
@@ -83,7 +84,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              1.5M likes
+                              {{item.likes | numberFormat}}
                             </span>
                           </div>
                         </div>
@@ -126,7 +127,7 @@
     <div class="main_conatiner_box d-flex justify-content-center">
       <div class="col-9 py-3">
         <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
-          <h4 class="recommended_movie_headding mb-3">The latest Shows</h4>
+          <h4 class="recommended_movie_headding mb-3">The Latest Shows</h4>
           <a class="seeAll_txt">
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
@@ -160,7 +161,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              1.5M likes
+                             {{item.likes | numberFormat}}
                             </span>
                           </div>
                         </div>
@@ -235,7 +236,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              1.5M likes
+                              {{item.likes | numberFormat}}
                             </span>
                           </div>
                         </div>
@@ -309,7 +310,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              1.5M likes
+                              {{item.likes | numberFormat}}
                             </span>
                           </div>
                         </div>

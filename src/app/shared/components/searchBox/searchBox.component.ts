@@ -46,7 +46,6 @@ ngOnInit(): void {
     .subscribe({
       next: (res: any) => {
         this.movieName = res.data;
-        console.log(res);
       },
     });
 }

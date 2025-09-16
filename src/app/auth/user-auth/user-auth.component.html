@@ -118,7 +118,7 @@
             <small class="text-danger">Password cannot exceed 20 characters</small>
             }
             @if (signupForm.get('password')?.hasError('pattern')) {
-            <small class="text-danger">Must contain uppercase, lowercase, digit, and no spaces</small>
+            <small class="text-danger">Must contain uppercase, lowercase, digit, special character, and no spaces</small>
             }
         </div>
 

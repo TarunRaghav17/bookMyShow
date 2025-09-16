@@ -9,6 +9,7 @@ import { CommonService } from '../../../../services/common.service';
   standalone: false,
   templateUrl: './home-landingpage.component.html',
   styleUrl: './home-landingpage.component.scss',
+  
 })
 export class HomeLandingPageComponent implements OnInit {
   pageNoMap: Record<string, number | undefined> = {};
@@ -78,11 +79,11 @@ export class HomeLandingPageComponent implements OnInit {
       types.map((type) => this.homeService.getEventListByType(type))
     ).subscribe({
       next: (results) => {
-        const [Movie, Plays, Sports, Activities] = results;
-        this.movieData = Movie?.data;
-        this.playsData = Plays?.data;
-        this.sportsData = Sports?.data;
-        this.activiesData = Activities?.data;
+        const [movie, plays, sports, activities] = results;
+        this.movieData = movie?.data;
+        this.playsData = plays?.data;
+        this.sportsData = sports?.data;
+        this.activiesData = activities?.data;
 
         // initialize pagination
         types.forEach((type) => (this.pageNoMap[type] = 0));
