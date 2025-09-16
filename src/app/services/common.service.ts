@@ -20,8 +20,6 @@ export class CommonService {
   selectedCategory: any = (localStorage.getItem('category'))
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
-  baseUrl = environment.baseUrl
-
   constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
   ) { }

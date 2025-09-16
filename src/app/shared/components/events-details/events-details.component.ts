@@ -10,7 +10,7 @@ import { CommonService } from '../../../services/common.service';
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
-  constructor(private route: ActivatedRoute, private commonService: CommonService) { }
+  constructor(private route: ActivatedRoute, public commonService: CommonService) { }
   eventDetails: any;
   showHeader = false;
 

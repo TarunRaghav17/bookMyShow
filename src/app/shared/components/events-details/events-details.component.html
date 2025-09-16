@@ -13,7 +13,7 @@
             <div class="col-8 d-flex justify-content-start gap-5 align-items-start">
                 <div class="col-8 py-3">
                     <img class="w-100 oject-fill rounded-4 h-100"
-                        src="https://assets-in.bmscdn.com/nmcms/events/banner/desktop/media-desktop-kisi-ko-batana-mat-ft-anubhav-singh-bassi-0-2025-3-9-t-8-12-52.jpg"
+                        [src]="commonService.getImageFromBase64(eventDetails?.imageurl)" [alt]=" eventDetails.imageurl"
                         alt="">
                     <!-- bottom_text -->
                     <div class="d-flex justify-content-center align-items-start  py-4">
@@ -40,9 +40,7 @@
                     <div class="py-3">
                         <h3>Artists</h3>
                         <div class="img-container">
-                            <img src="https://in.bmscdn.com/Artist/anubhav-singh-bassi-1093365-1678091907.jpg"
-                                class="rounded-4">
-
+                            <img [src]="commonService.getImageFromBase64(eventDetails?.cast?.castImg)" [alt]="eventDetails?.cast?.castImg" class="rounded-4">
                             <h6 class="m-0">{{eventDetails?.cast?.actorName}}</h6>
                             <span>
                                 Actor

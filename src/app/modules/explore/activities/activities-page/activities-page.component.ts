@@ -18,7 +18,7 @@ export class ActivitiesPageComponent {
   topFiltersArray!: any[]
   filtersArray:any[]=[]
 
-  constructor(public commonService: CommonService , private activitiesSercice:ActivitiesService) {
+  constructor(public commonService: CommonService , private activitiesService:ActivitiesService) {
    this.commonService._selectedCategory.set('Activities');
   }
   /**
@@ -30,10 +30,10 @@ export class ActivitiesPageComponent {
 
   ngOnInit(): void {
       this.setFilter()
-       this.activitiesSercice.getFilters('categories').subscribe((res)=>{
+       this.activitiesService.getFilters('categories').subscribe((res)=>{
         this.topFiltersArray = res.data
        })
-      this.activitiesSercice.getAllActivities().subscribe((res)=>{
+      this.activitiesService.getAllActivities().subscribe((res)=>{
       this.dummyMoviesdata = res.data
     })
   }
@@ -50,10 +50,10 @@ export class ActivitiesPageComponent {
 
   setFilter() {
     forkJoin([
-      this.activitiesSercice.getFilters('date_filters'),
-      this.activitiesSercice.getFilters('categories'),
-      this.activitiesSercice.getFilters('more_filters'),
-      this.activitiesSercice.getFilters('prices')
+      this.activitiesService.getFilters('date_filters'),
+      this.activitiesService.getFilters('categories'),
+      this.activitiesService.getFilters('more_filters'),
+      this.activitiesService.getFilters('prices')
     ]).subscribe(([date_filters, categories, more_filters,prices]) => {
       this.filters = [{type:'Date',data: date_filters.data}, {type:'Categories', data:categories.data}, {type:'More Filters', data:more_filters.data},{type:'Price', data:prices.data}];
     });

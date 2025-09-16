@@ -48,7 +48,7 @@ export class MovieLandingPageComponent implements OnDestroy {
       this.movieService.getFilters('languages'),
       this.movieService.getFilters('genres'),
       this.movieService.getFilters('formats')
-    ]).subscribe(([languages, formats, genres]) => {
+    ]).subscribe(([languages,genres, formats ]) => {
       this.filters = [{ type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Formats', data: formats.data }];
     });
   }
