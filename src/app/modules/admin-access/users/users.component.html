@@ -14,8 +14,8 @@
                         </select>
                     </div>
 
-                    <input type="text" [formControl]="searchControl"
-                        class="search_input form-control" placeholder="Search by name, username, email & phoneNumber">
+                    <input type="text" [formControl]="searchControl" class="search_input form-control"
+                        placeholder="Search by name, username, email & phoneNumber">
                 </div>
             </div>
             <!-- Users Table -->
@@ -44,15 +44,15 @@
                                 {{ user.roleName }}
                             </p>
                         </td>
-                        <td >
+                        <td>
                             <button class="btn btn-secondary" (click)="toggleDropdown(user.userId)">
                                 ...
                             </button>
                             @if (openedDropdownId === user.userId) {
-                            <div class="position-relative">
+                            <div class="position-relative" appClickOutside (clickedOutside)="openedDropdownId = null">
                                 <div class="dropdown">
-                                    <label >
-                                        <input type="checkbox"   [checked]="user.roleName === 'ADMIN'" />
+                                    <label>
+                                        <input type="checkbox" [disabled]="user.roleName === 'ADMIN'" [checked]="user.roleName === 'ADMIN'" (click)="makeAnAdmin(user.userId)"/>
                                         Make Admin
                                     </label>
 

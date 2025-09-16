@@ -1,69 +1,86 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { HomeService } from '../../../modules/explore/home/service/home.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-searchBox',
   standalone: false,
   templateUrl: './searchBox.component.html',
-  styleUrls: ['./searchBox.component.scss']
+  styleUrls: ['./searchBox.component.scss'],
 })
 export class SearchBoxComponent implements OnInit {
   currentIndex: number = 0;
   visibleCount: number = 6;
-  filterData: any;
-  eventsFilters: any[] = ['Movies', 'Stream', 'Events', 'Plays', 'Sports', 'Activites', "Venues", 'Offers', 'Others']
-  private modalRef?: NgbModalRef;
+  seachControl: any = new FormControl('');
+  selectedFilter:any;
+  movieName:any;
+ eventsFilters: string[] = ['Movies', 'Events', 'Plays', 'Sports', 'Activities'];
 
-  constructor(private modalService: NgbModal) { }
+/**
+ * @description Search object used for filtering events
+ */
+searchObj: any = {
+  name: '',
+  eventTypes: [],
+};
 
-  ngOnInit(): void {
-    this.getVisibleFilters()
-  }
+/** @description Reference to the currently open modal */
+private modalRef?: NgbModalRef;
 
-  /**
-    * @description openModal 
-    * @author Gurmeet Kumar
-    */
-  openModal(searchFilterModal: TemplateRef<any>) {
-    this.modalRef = this.modalService.open(searchFilterModal, {
-      modalDialogClass: 'searchbox',
-      ariaLabelledBy: 'modal-basic-title',
+constructor(
+  private modalService: NgbModal,
+  private homeService: HomeService
+) {}
+
+ngOnInit(): void {
+  this.seachControl.valueChanges
+    .pipe(
+      debounceTime(300), // wait before firing search
+      tap((query: string) => {
+        this.searchObj.name = query; // update only name field
+      }),
+      switchMap(() => this.homeService.globalSearch(this.searchObj))
+    )
+    .subscribe({
+      next: (res: any) => {
+        this.movieName = res.data;
+      },
     });
-  }
+}
 
-  closeModal() {
-    if (this.modalRef) {
-      this.modalRef.close();
-    }
-  }
+/**
+ * @description Open search modal
+ * @param searchFilterModal TemplateRef of the modal
+ */
+openModal(searchFilterModal: TemplateRef<any>) {
+  this.modalRef = this.modalService.open(searchFilterModal, {
+    modalDialogClass: 'searchbox',
+    ariaLabelledBy: 'modal-basic-title',
+  });
+}
 
-  /**  
-   * @description .  
-   * @author Gurmeet Kumar
-   * @return {string} Return a string  
-   */
-
-  getVisibleFilters() {
-    this.filterData = this.eventsFilters.slice(this.currentIndex, this.currentIndex + this.visibleCount);
+/**
+ * @description Close the currently open modal
+ */
+closeModal() {
+  if (this.modalRef) {
+    this.modalRef.close();
   }
+}
 
-  /**
-    * @description next i have click to get 6 cardsData
-    * @author Gurmeet Kumar,
-    */
-  next() {
-    if (this.currentIndex + this.visibleCount < this.eventsFilters.length) {
-      this.currentIndex++;
-    }
+/**
+ * @description Toggle filters by event type (add/remove)
+ * @param eventType Selected event type
+ */
+addFilters(eventType: string) {
+  const index = this.searchObj.eventTypes.indexOf(eventType);
+  if (index === -1) {
+    this.searchObj.eventTypes.push(eventType);
+  } else {
+    this.searchObj.eventTypes.splice(index, 1);
   }
-  /**
-   * @description prev i have click to get  back 6 cardsData
-   * @author Gurmeet Kumar,
-   */
+}
 
-  prev() {
-    if (this.currentIndex > 0) {
-      this.currentIndex--;
-    }
-  }
 }

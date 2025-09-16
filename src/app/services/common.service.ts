@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { filters, selectedFilters } from '../../../db';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 
@@ -12,6 +13,8 @@ import { filters, selectedFilters } from '../../../db';
 export class CommonService {
   filters: any[] = filters
   select: any[] = selectedFilters
+  base_url = 'http://172.31.252.101:8080/bookmyshow'
+
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
@@ -21,7 +24,11 @@ export class CommonService {
 
   baseUrl = environment.baseUrl
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private sanitizer: DomSanitizer
+  ) { }
+
+  baseUrl = environment.baseUrl
 
   /**
    * @description Get list of all cities from backend
@@ -63,15 +70,16 @@ export class CommonService {
   }
 
   /**
+  /**
 * @description iniitalizes the topFilterArray
 * @author Manu Shukla
 * @params  [Filters] receives array of filters
 * @returnType [Filter] return the filteredArray on the basis of category
 */
-  getTopFiltersArray(filters: any) {
-    return filters.filter((item: any) => {
-      if (item.type == 'Language') return item.data
-    })
+  getTopFiltersArray(target: any): Observable<any> {
+
+
+    return this.http.get(`${this.base_url}/api/events/${target}`)
   }
 
   /**
@@ -94,10 +102,11 @@ export class CommonService {
     let filterType: any[] = this.select.filter((item: any) =>
       item.type == filter.type
     )
+
     if (filterType) {
-      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
+      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.text)
       if (alreayExist.length == 0) {
-        filterType[0].data.push(filter.filterName)
+        filterType[0].data.push(filter)
         return filterType[0].data.sort((a: any, b: any) => a.index - b.index)
       }
       else {
@@ -106,6 +115,23 @@ export class CommonService {
     }
   }
 
+
+  /**
+  * @description Convert base64 string to safe image URL for display
+  * @author Gurmeet Kumar
+  * @return any
+  */
+  getImageFromBase64(base64string: string): any {
+    if (base64string) {
+      const fullBase64String = `data:${base64string};base64,${base64string}`;
+      return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
+    }
+  }
+
+  getEventDetailsById(id: any): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/events/${id}`)
+
+  }
   listYourShowService = [
     {
       image: 'assets/images/list-your-show/online-saless.png',
@@ -145,4 +171,49 @@ export class CommonService {
     },
 
   ]
+
+  formatFilters(filters: any): any {
+    let filtersArray: any = [];
+
+
+    filters.map((filter: any) => {
+      let { data, type } = filter;
+      let filteredData;
+
+      switch (type) {
+        case 'Language':
+          filteredData = data.map((i: any) => ({ ...i, text: i.languageName, selected: false }));
+          break;
+
+        case 'Formats':
+          filteredData = data.map((i: any) => ({ ...i, text: i.formatName, selected: false }));
+          break;
+
+        case 'Genres':
+          filteredData = data.map((i: any) => ({ ...i, text: i.genresName, selected: false }));
+          break;
+
+        case 'Date':
+          filteredData = data.map((i: any) => ({ ...i, text: i.dateFilterName, selected: false }));
+          break;
+
+        case 'Categories':
+          filteredData = data.map((i: any) => ({ ...i, text: i.categoryName, selected: false }));
+          break;
+
+        case 'More Filters':
+          filteredData = data.map((i: any) => ({ ...i, text: i.moreFilterName, selected: false }));
+          break;
+
+        case 'Price':
+          filteredData = data.map((i: any) => ({ ...i, text: i.priceRange, selected: false }));
+          break;
+
+        default:
+          filteredData = data;
+      }
+      filtersArray.push({ type, data: filteredData });
+    });
+    return filtersArray;
+  }
 }

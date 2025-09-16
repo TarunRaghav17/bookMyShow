@@ -145,7 +145,6 @@ export class CreateVenueComponent implements OnInit {
 
   }
 
-
   onVenueForChange() {
     let venueFor = this.venueForm.get('venueFor')?.value as keyof typeof this.venueTypeMapping
     this.venueForm.get('venueType')?.setValue('')
@@ -213,7 +212,6 @@ export class CreateVenueComponent implements OnInit {
     let currentRows = (currentLayout.get('rows') as FormArray).value;
     return this.alphabets.filter(letter => !used.includes(letter) || currentRows.includes(letter));
   }
-
 
   createLayout() {
     return this.fb.group({

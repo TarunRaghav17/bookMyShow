@@ -7,13 +7,13 @@ import { Observable } from 'rxjs';
 })
 export class VenuesService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  createVenueService(payload:any):Observable<any>{ 
-    return this.http.post('http://localhost:3002/venues',payload)
+  createVenueService(payload: any): Observable<any> {
+    return this.http.post('http://localhost:3002/venues', payload)
   }
 
-  getVenues():Observable<any>{
+  getVenues(): Observable<any> {
     return this.http.get('http://localhost:3002/venues')
   }
 }

@@ -16,7 +16,7 @@
         <div class="mb-3 position-relative">
             <label class="form-label">Password</label>
 
-            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input"
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input position-relative"
                 formControlName="password" placeholder="Enter your password">
 
             <!-- eye icon inside input -->
@@ -27,7 +27,7 @@
             <small class="text-danger">Password is required</small>
             }
             @if(loginForm.get('password')?.hasError('minlength')) {
-            <small class="text-danger">Password must be at least 6 characters</small>
+            <small class="text-danger">Password must be at least 8 characters</small>
             }
         </div>
 
@@ -46,79 +46,91 @@
         <div class="mb-3">
             <label class="form-label">Full Name</label>
             <input type="text" class="form-control" formControlName="name" placeholder="Enter full name">
-            @if(signupForm.get('name')?.touched && signupForm.get('name')?.invalid){
+            @if (signupForm.get('name')?.touched && signupForm.get('name')?.hasError('required')) {
             <small class="text-danger">Name is required</small>
             }
         </div>
+
         <div class="mb-3">
             <label class="form-label" id="username">Username</label>
-            <input type="text" class="form-control" formControlName="username" for="username"
-                placeholder="Choose a username">
-            <div>
-            </div>
-            @if(signupForm.get('username')?.touched && signupForm.get('username')?.invalid){
+            <input type="text" class="form-control" formControlName="username" placeholder="Choose a username">
+
+            @if (signupForm.get('username')?.touched && signupForm.get('username')?.hasError('required')) {
             <small class="text-danger">Username is required</small>
             }
-            @if(showMessageFlag){
-            <small [ngClass]="{
-    'text-success': isUsernameAvailable == 'Username available',
-    'text-danger': isUsernameAvailable == 'Username already exists'
-  }">
-                {{ isUsernameAvailable }}
-            </small>
+            @if (signupForm.get('username')?.hasError('minlength')) {
+            <small class="text-danger">Username must be at least 5 characters</small>
+            }
+            @if (signupForm.get('username')?.hasError('maxlength')) {
+            <small class="text-danger">Username cannot exceed 15 characters</small>
+            }
+            @if (signupForm.get('username')?.hasError('pattern')) {
+            <small class="text-danger">Only letters, numbers, and underscores allowed</small>
+            }
+            @if (!showMessageFlag) {
+            <small class="text-danger">{{ isUsernameAvailable }}</small>
             }
         </div>
 
         <div class="mb-3">
             <label class="form-label">Email</label>
             <input type="email" class="form-control" formControlName="email" placeholder="Enter your email">
-            @if(signupForm.get('email')?.touched && signupForm.get('email')?.hasError('required')){
+            @if (signupForm.get('email')?.touched && signupForm.get('email')?.hasError('required')) {
             <small class="text-danger">Email is required</small>
             }
-            @if(signupForm.get('email')?.hasError('pattern')){
+            @if (signupForm.get('email')?.hasError('pattern')) {
             <small class="text-danger">Invalid email format</small>
             }
         </div>
 
         <div class="mb-3">
             <label class="form-label">Phone Number</label>
-            <input type="text" class="form-control" formControlName="phoneNumber"
-                placeholder="Enter 10-digit phone number">
-            @if(signupForm.get('phoneNumber')?.touched && signupForm.get('phoneNumber')?.hasError('required')){
+            <input type="text" class="form-control" formControlName="phoneNumber" placeholder="Enter phone number">
+            @if (signupForm.get('phoneNumber')?.touched && signupForm.get('phoneNumber')?.hasError('required')) {
             <small class="text-danger">Phone number is required</small>
             }
-            @if(signupForm.get('phoneNumber')?.hasError('pattern')){
-            <small class="text-danger">Phone number must be exactly 10 digits</small>
+            @if (signupForm.get('phoneNumber')?.hasError('minlength')) {
+            <small class="text-danger">Phone number must be at least 10 digits</small>
+            }
+            @if (signupForm.get('phoneNumber')?.hasError('maxlength')) {
+            <small class="text-danger">Phone number cannot exceed 15 digits</small>
+            }
+            @if (signupForm.get('phoneNumber')?.hasError('pattern')) {
+            <small class="text-danger">Only digits are allowed</small>
             }
         </div>
 
         <div class="mb-3 position-relative">
             <label class="form-label">Password</label>
-
-            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input"
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input position-relative"
                 formControlName="password" placeholder="Enter your password">
 
-            <!-- eye icon inside input -->
             <i class="fa password-toggle-icon" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
                 (click)="togglePassword()"></i>
 
-            @if(loginForm.get('password')?.touched && loginForm.get('password')?.hasError('required')) {
+            @if (signupForm.get('password')?.touched && signupForm.get('password')?.hasError('required')) {
             <small class="text-danger">Password is required</small>
             }
-            @if(loginForm.get('password')?.hasError('minlength')) {
-            <small class="text-danger">Password must be at least 6 characters</small>
+            @if (signupForm.get('password')?.hasError('minlength')) {
+            <small class="text-danger">Password must be at least 8 characters</small>
+            }
+            @if (signupForm.get('password')?.hasError('maxlength')) {
+            <small class="text-danger">Password cannot exceed 20 characters</small>
+            }
+            @if (signupForm.get('password')?.hasError('pattern')) {
+            <small class="text-danger">Must contain uppercase, lowercase, digit, special character, and no spaces</small>
             }
         </div>
 
-
         <button type="button" class="btn btn-info text-white col-12 mb-2"
-            [disabled]="signupForm.invalid || isUsernameAvailable =='Username already exists'"
+            [disabled]="signupForm.invalid || isUsernameAvailable == 'Username already exists'"
             (click)="onSignupSubmit()">Register</button>
 
         <p class="text-center changeRouteFormPage">Already have an account?
             <a (click)="toggleSignupForm()">Login</a>
         </p>
     </form>
+
     }
 
 </div>

@@ -55,12 +55,13 @@
                                     <div class="main_filter_card overflow-hidden">
                                         <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start ">
                                             @for (item of dummyMoviesdata; track $index) {
-                                            <ng-container class="overflow-hidden w-50">
+                                                @if (!item.releasedFlag) {
+                                                       <ng-container class="overflow-hidden w-50">
                                                 <div class="col card_container">
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.Title).split(' ').join('-');}/${item.imdbID}`]">
-                                                            <img [src]="item.Poster" [alt]="item.Poster">
+                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.name).split(' ').join('-');}/${item.imdbID}`]">
+                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">
@@ -69,17 +70,18 @@
                                                                         aria-hidden="true"></i>
                                                                 </span>
                                                                 <span class="text-white">
-                                                                    1.5M likes
+                                                                   {{item.likes}}
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="bottom_text_movie_card py-3 px-4">
-                                                        <h6 class="card-text m-0">{{item.Title | truncate:15}} </h6>
-                                                        <span class="m-0">{{item.Genre}}</span>
+                                                        <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
+                                                        <span class="m-0">{{item.genres}}</span>
                                                     </div>
                                                 </div>
                                             </ng-container>
+                                                }
                                             }
                                         </div>
                                     </div>

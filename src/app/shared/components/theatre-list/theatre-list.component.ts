@@ -36,6 +36,7 @@ export class TheatreListComponent {
   toggleBtn() {
     this.toggleButton = !this.toggleButton
   }
+  
 
 }
 

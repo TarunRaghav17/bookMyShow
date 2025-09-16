@@ -19,7 +19,7 @@ import { debounceTime } from 'rxjs';
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
-  isUsernameAvailable:any;
+  isUsernameAvailable: any;
   openSignupForm: boolean = false;
   showPassword: boolean = false;
   showMessageFlag: any;
@@ -31,16 +31,16 @@ export class UserAuthComponent implements OnInit {
   /** @description Login form controls */
   loginForm = new FormGroup({
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+    password: new FormControl('', [Validators.required, Validators.minLength(8)])
   });
   /** @description Signup form controls */
   signupForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
-    username: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.pattern(/^[^@]+@[^@]+\.[^@]+$/)]),
-    phoneNumber: new FormControl('', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
-    roleName: new FormControl("USER", Validators.required),
-    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+    username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(15), Validators.pattern(/^[A-Za-z0-9_]+$/)]),
+    email: new FormControl('', [Validators.required, Validators.pattern(/^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/)]),
+    phoneNumber: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(15), Validators.pattern(/^[0-9]+$/)]),
+    roleName: new FormControl('USER', [Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:[^@$^&*%]*[@$^&*%][^@$^&*%]*$))[A-Za-z\d@$^&*%]{8,20}$/)])
   });
 
   /**
@@ -118,35 +118,29 @@ export class UserAuthComponent implements OnInit {
  */
 
 
-onValidateExistUser(): void {
-  
-  const usernameControl = this.signupForm.get('username');
-  if (!usernameControl) {
-    return;
-  }
-  usernameControl.valueChanges.pipe(
-    filter((val): val is string => val !== null),        
-    debounceTime(200),                                 
-    map((val) => val.trim()),                             
-    distinctUntilChanged(),                             
-    switchMap((username: string) => 
-      this.authService.validateUserName(username))        
-  ).subscribe({
-    next: (res: any) => {
-      this.isUsernameAvailable = res.message; 
-       this.showMessageFlag = res.status                
-      if (res.success) {
-        this.toastr.success(res.message);                
-      } else {
-        this.toastr.error(res.message);                   
-      }
-    },
-    error: (err) => {
-      this.toastr.error(err.message || 'Validation failed');
+  onValidateExistUser(): void {
+    const usernameControl = this.signupForm.get('username');
+    if (!usernameControl) {
+      return;
     }
-  });
-}
+    usernameControl.valueChanges.pipe(
+      filter((val): val is string => val !== null),
+      debounceTime(200),
+      map((val) => val.trim()),
+      distinctUntilChanged(),
+      switchMap((username: string) =>
+        this.authService.validateUserName(username))
+    ).subscribe({
+      next: (res: any) => {
+        this.isUsernameAvailable = res.message;
+        this.showMessageFlag = res.success
+      },
+      error: (err) => {
+        this.toastr.error(err.message || 'Validation failed');
+      }
+    });
+  }
 
 
- 
+
 }

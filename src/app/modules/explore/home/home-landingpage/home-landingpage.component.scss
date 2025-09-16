@@ -18,6 +18,11 @@
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
 }
+.card_section{
+  width: 350px;
+  max-width: 350px;
+
+}
 .bottom_text_movie_card span {
   margin: 0px;
   word-break: break-word;
@@ -32,15 +37,12 @@
 .carousel-indicators button {
   border-radius: 50% !important;
 }
-.img_container_carsolue img {
-  min-width: 100%;
-  max-height: 350px;
-  min-height: 350px;
-}
 .img_container img {
-  min-width: 100%;
-  max-height: 250px;
+  height: 250px;
+ max-height: 250px;
+  width: -webkit-fill-available;
 }
+
 .main_box_crasoule {
   width: calc(100%);
   max-width: calc(100%);
@@ -79,3 +81,13 @@
   opacity: 0.5;
   display: none;
 }
+
+.stream_poster{
+  padding: 70px;
+}
+
+.filter_text {
+  transition: transform 3s ease-in-out;
+  will-change: transform;
+}
+
