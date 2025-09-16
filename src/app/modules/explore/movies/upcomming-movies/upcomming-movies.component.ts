@@ -15,7 +15,7 @@ export class UpcommingMoviesComponent {
   dummyMoviesdata: any[] = [];
   selectedFilters: any[] = []
   selectedCity: any = null
-  topFiltersArray: any[] = topFilters
+  topFiltersArray!: any[]
   originalMovies = movies;
   filters: any[] = []
   select: any[] = selectedFilters
@@ -27,12 +27,20 @@ export class UpcommingMoviesComponent {
   }
   ngOnInit(): void {
     this.setFilter()
+    this.movieService.getFilters('languages').subscribe({
+      next: (res) => {
+        this.topFiltersArray = res.data
+      },
+      error: () => {
+        this.toastr.error("Something Went Wrong");
+      }
+    })
     this.movieService.getAllMovies().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     })
   }
@@ -53,8 +61,8 @@ export class UpcommingMoviesComponent {
           { type: 'Release Month', data: releaseMonth.data }
         ];
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     });
   }

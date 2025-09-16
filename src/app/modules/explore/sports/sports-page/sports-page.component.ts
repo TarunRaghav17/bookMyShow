@@ -33,8 +33,8 @@ export class SportsPageComponent {
       next: (res) => {
         this.topFiltersArray = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Something Went Wrong");
       }
     })
 
@@ -42,8 +42,8 @@ export class SportsPageComponent {
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     })
   }
@@ -69,8 +69,8 @@ export class SportsPageComponent {
       next: ([date_filters, categories, more_filters, prices]) => {
         this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }]
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     });
   }

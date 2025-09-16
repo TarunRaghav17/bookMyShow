@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-events-details',
@@ -10,7 +11,7 @@ import { CommonService } from '../../../services/common.service';
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
-  constructor(private route: ActivatedRoute, public commonService: CommonService) { }
+  constructor(private route: ActivatedRoute, public commonService: CommonService, private toastr: ToastrService) { }
   eventDetails: any;
   showHeader = false;
 
@@ -19,6 +20,9 @@ export class EventsDetailsComponent implements OnInit {
     this.commonService.getEventDetailsById(this.id).subscribe({
       next: (res: any) => {
         this.eventDetails = res.data
+      },
+      error: () => {
+        this.toastr.error("Failed to fetch Id")
       }
     })
   }

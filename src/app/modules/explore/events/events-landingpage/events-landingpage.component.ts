@@ -37,16 +37,16 @@ export class EventsLandingPageComponent {
       next: (res) => {
         this.topFiltersArray = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Something Went Wrong");
       }
     })
     this.eventService.getAllEvents().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     })
   }
@@ -72,8 +72,8 @@ export class EventsLandingPageComponent {
       next: ([date_filters, languages, categories, more_filters, prices]) => {
         this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     });
 

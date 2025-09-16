@@ -40,16 +40,16 @@ export class MovieLandingPageComponent implements OnDestroy {
       next: (res) => {
         this.topFiltersArray = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Something Went Wrong");
       }
     })
     this.movieService.getAllMovies().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     })
   }
@@ -63,8 +63,8 @@ export class MovieLandingPageComponent implements OnDestroy {
       next: ([languages, genres, formats]) => {
         this.filters = [{ type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Formats', data: formats.data }];
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: () => {
+        this.toastr.error("Failed To Fetch");
       }
     });
   }
