@@ -28,8 +28,6 @@ export class CommonService {
     private sanitizer: DomSanitizer
   ) { }
 
-  baseUrl = environment.baseUrl
-
   /**
    * @description Get list of all cities from backend
    * @author Gurmeet Kumar
@@ -132,6 +130,8 @@ export class CommonService {
     return this.http.get(`${this.baseUrl}/api/events/${id}`)
 
   }
+
+  
   listYourShowService = [
     {
       image: 'assets/images/list-your-show/online-saless.png',

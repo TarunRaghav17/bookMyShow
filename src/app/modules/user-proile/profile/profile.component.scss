@@ -2,18 +2,17 @@
   height: 96px;
   padding: 18px 64px;
   border-radius: 4px 4px 0px 0px;
-  background: linear-gradient(
-    98.18deg,
-    rgb(43, 49, 72) 2.87%,
-    rgb(136, 63, 85) 59.96%,
-    rgb(235, 78, 98) 98.36%
-  );
+  background: linear-gradient(98.18deg,
+      rgb(43, 49, 72) 2.87%,
+      rgb(136, 63, 85) 59.96%,
+      rgb(235, 78, 98) 98.36%);
 }
 
 .upload_image_box .top_container {
   position: relative;
   top: 30px;
 }
+
 .circle {
   border-radius: 50%;
   overflow: hidden;
@@ -21,6 +20,7 @@
   height: 70px;
   display: flex;
 }
+
 .dropzone {
   width: 100px;
   height: 80px;
@@ -29,6 +29,7 @@
   background-color: #999;
   text-align: center;
 }
+
 .dropzone p {
   position: relative;
   bottom: 52px;
@@ -39,8 +40,11 @@
 }
 
 .upload-icon {
-  margin: 25px 2px 2px 2px;
-  cursor: pointer;
+      margin: 8px 2px 2px 2px;
+    cursor: pointer;
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
 }
 
 .upload-input {
@@ -52,9 +56,11 @@
   opacity: 0;
   cursor: pointer;
 }
+
 .second_section {
   padding: 30px;
 }
+
 .second_section_heading {
   margin-bottom: 16px;
   font-size: 18px;
@@ -62,6 +68,7 @@
   line-height: 24px;
   color: rgb(51, 51, 51);
 }
+
 .verified_tag {
   font-weight: 400;
   font-size: small;
@@ -73,6 +80,9 @@
   vertical-align: middle;
   background: rgb(201, 248, 211);
 }
+.edit_Icons {
+    cursor: pointer;
+}
 .edit_Icons i,
 .edit_Icons span {
   font-size: 14px;
@@ -81,29 +91,36 @@
   letter-spacing: 0.2px;
   color: rgb(220, 53, 75);
 }
+
 .mobile_section {
   width: calc(100%);
   max-width: calc(100%);
   display: flex;
   justify-content: space-between;
 }
+
 .add_mobile_number {
   padding: 8px 16px;
   border-radius: 4px;
+  cursor: pointer;
   background: rgb(255, 228, 155);
 }
+
 .mobile_section .lable_mobile {
   width: calc(100% - 80%);
   max-width: calc(100% - 80%);
 }
+
 .mobile_section .add_mobile_number {
   width: calc(100% - 20%);
   max-width: calc(100% - 20%);
 }
+
 .add_mobile_number a {
   text-decoration: none;
   color: rgb(220, 53, 75);
 }
+
 .add_mobile_number span {
   font-size: 12px;
   font-weight: 400;
@@ -112,17 +129,42 @@
   color: rgb(51, 51, 51);
   margin-top: 2px;
 }
+
 .input_box {
   width: calc(100%);
   max-width: calc(100%);
   display: flex;
   margin-top: 20px;
 }
+
 .input_box .title_text {
   width: calc(100% - 70%);
   max-width: calc(100% - 70%);
 }
+
 .input_box .input_field {
   width: calc(100% - 30%);
   max-width: calc(100% - 30%);
+}
+
+.form-check {
+  padding-left: 0px !important;
+}
+
+.form-check-input {
+  display: none;
+}
+
+.form-check-label {
+  cursor: pointer;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  user-select: none;
+}
+
+.form-check-input:checked+.form-check-label {
+  background-color: rgb(235, 78, 98);
+  color: #fff;
+  border-color: rgb(235, 78, 98);
 }

@@ -31,7 +31,8 @@
                         <p class="d-flex gap-1 align-items-center mt-1 ms-1" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                             <i class="fa fa-user-circle fa-circle_header" aria-hidden="true"></i>
-                            <span>Hi, {{ authService.userDetailsSignal()?.sub || 'User' }}</span>
+                            <span class="fa-circle_header">Hi, {{ authService.userDetailsSignal()?.sub || 'User'
+                                }}</span>
                         </p>
                         }
                     </div>
@@ -136,7 +137,8 @@
         }
         <div class="main_sidebar_data ">
             <div class="d-flex flex-column grow-2 py-2">
-                <a class="d-flex justify-content-between align-items-center info_conatiner">
+                <a class="d-flex justify-content-between align-items-center info_conatiner" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample">
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-info-circle" aria-hidden="true"></i>
 
@@ -147,7 +149,8 @@
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
-                <a class="d-flex justify-content-between align-items-center links_sidebar">
+                <a class="d-flex justify-content-between align-items-center links_sidebar" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample">
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-bell-o" aria-hidden="true"></i>
 
@@ -158,7 +161,8 @@
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
                 @if(authService.getUserFromToken()?.role == 'USER'){
-                <a class="d-flex justify-content-between align-items-center links_sidebar">
+                <a class="d-flex justify-content-between align-items-center links_sidebar" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample">
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                         <div class="info_text">
@@ -170,7 +174,8 @@
                 </a>
                 }
                 @if(authService.getUserFromToken()?.role == 'ADMIN'){
-                <a class="d-flex justify-content-between align-items-center links_sidebar">
+                <a class="d-flex justify-content-between align-items-center links_sidebar"
+                    [routerLink]="['/admin/users']" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample">
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                         <div class="info_text">
@@ -180,7 +185,8 @@
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
-                <a class="d-flex justify-content-between align-items-center links_sidebar">
+                <a class="d-flex justify-content-between align-items-center links_sidebar" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasExample">
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                         <div class="info_text">
@@ -244,7 +250,7 @@
             <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)">
                 <div class="flex_direction d-flex flex-column justify-content-center align-items-center">
                     <img [src]="getImageFromBase64(item.imageUrl)" alt="" class="img-fluid city_section">
-                    <p class="p-0 m-0">{{item.cityName}}</p>
+                    <p class="p-0 m-0 city_name">{{item.cityName}}</p>
                 </div>
             </div>
             }
@@ -257,7 +263,8 @@
             <div class="other_cities_list px-3" [ngClass]="{'other_cities_list': citiesJson}">
                 <div class="list_cities py-2 ">
                     @for (item of citiesJson; track $index) {
-                    <p class="m-0" (click)="selectCity(item.cityName,modal)"> {{item.cityName}}</p>
+                    <p class="m-0" (click)="selectCity(item.cityName,modal)"
+                        [ngClass]="{'selected-other-city': item.cityName === selectedCity}"> {{item.cityName}}</p>
                     }
                 </div>
             </div>

@@ -47,11 +47,10 @@
       <div class="col-9 py-3">
         <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
           <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
-          <a class="seeAll_txt">
+          <a class="seeAll_txt" [routerLink]="['/explore/movies']" (click)="onClickCategory('Movie')">
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
         </div>
-
         <div class="col-12 py-3">
           <div class="d-flex justify-content-center g-0">
             <div class="main_box_crasoule d-flex align-items-center">
@@ -63,13 +62,10 @@
                 <button class="arrow-btn" (click)="prev('Movie', movieData)">
                   <i class="fa fa-angle-left" aria-hidden="true"></i>
                 </button>
-
                 }
               </div>
-
               <!-- Carousel Content -->
-              <div class="main_filter_card overflow-hidden"
-              >
+              <div class="main_filter_card overflow-hidden">
                 <div class="filter_text d-flex gap-3">
                   @for (item of visibleData['Movie']; track $index) {
                   <div class=" card_section">

@@ -39,7 +39,6 @@ export class MoviesDetailsComponent {
     this.fetchContentIdByUrl()
   }
   showHeader = false;
-
   @HostListener('window:scroll')
   onScroll() {
     const section = document.getElementsByClassName('description_movie_section');
