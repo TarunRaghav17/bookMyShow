@@ -52,7 +52,7 @@
                             <div class="position-relative" appClickOutside (clickedOutside)="openedDropdownId = null">
                                 <div class="dropdown">
                                     <label>
-                                        <input type="checkbox" [disabled]="user.roleName === 'ADMIN'" [checked]="user.roleName === 'ADMIN'" (click)="makeAnAdmin(user.userId)"/>
+                                        <input type="checkbox" class="form-check-input" [disabled]="user.roleName === 'ADMIN'" [checked]="user.roleName === 'ADMIN'" (click)="makeAnAdmin(user.userId)"/>
                                         Make Admin
                                     </label>
 

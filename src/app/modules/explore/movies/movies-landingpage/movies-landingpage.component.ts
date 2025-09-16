@@ -14,14 +14,14 @@ import { forkJoin } from 'rxjs';
 export class MovieLandingPageComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
   selectedCity: any = null
-  topFiltersArray!: any[] 
-  filtersArray:any[]=[]
+  topFiltersArray!: any[]
+  filtersArray: any[] = []
   originalMovies = movies;
   filters: any[] = this.filtersArray
   select: any[] = selectedFilters
 
-  constructor(public commonService: CommonService, public router: Router, private movieService:MovieService) {
- 
+  constructor(public commonService: CommonService, public router: Router, private movieService: MovieService) {
+
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
@@ -34,21 +34,21 @@ export class MovieLandingPageComponent implements OnDestroy {
    */
 
   ngOnInit(): void {
-     this.setFilter()
-     this.movieService.getAllMovies().subscribe((res)=>{
+    this.setFilter()
+    this.movieService.getAllMovies().subscribe((res) => {
       this.dummyMoviesdata = res.data
-     })
+    })
   }
 
-setFilter() {
-  forkJoin([
-    this.movieService.getFilters('languages'),
-    this.movieService.getFilters('formats'),
-    this.movieService.getFilters('genres')
-  ]).subscribe(([languages, formats, genres]) => {
-    this.filters = [{type:'Language',data:languages.data}, {type:'Formats', data:formats.data}, {type:'Genres', data:genres.data}];
-  });
-}
+  setFilter() {
+    forkJoin([
+      this.movieService.getFilters('languages'),
+      this.movieService.getFilters('formats'),
+      this.movieService.getFilters('genres')
+    ]).subscribe(([languages, formats, genres]) => {
+      this.filters = [{ type: 'Language', data: languages.data }, { type: 'Formats', data: formats.data }, { type: 'Genres', data: genres.data }];
+    });
+  }
 
   /**
 * @description Remove Already Selected Filters

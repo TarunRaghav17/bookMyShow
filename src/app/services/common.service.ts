@@ -124,6 +124,8 @@ export class CommonService {
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`)
   }
+
+  
   listYourShowService = [
     {
       image: 'assets/images/list-your-show/online-saless.png',
