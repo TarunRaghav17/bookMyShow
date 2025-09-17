@@ -29,12 +29,11 @@
                                 </span>
                                 }
                                 }
-                                @for (item of topFiltersArray[0].data; track $index) {
+                                @for (item of topFiltersArray; track $index) {
                                 @if(!item.selected){
-
                                 <span [ngClass]="{selectedText: item.selected}"
                                     (click)="commonService.handleEventFilter(item)">
-                                    {{item.text}}
+                                    {{item.categoryName}}
                                 </span>
                                 }
                                 }
@@ -51,24 +50,20 @@
                                                     <div class="col card_container">
                                                         <div class="card shadow-sm">
                                                             <a class="img_container rounded-4 rounded-top"
-                                                                [routerLink]="[`/${commonService._selectedCategory()}/plays-name/id`]">
+                                                                [routerLink]="`/${commonService._selectedCategory()}/${item.name}/${item.eventId}`">
                                                                 <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl">
                                                             </a>
                                                             <div class="card-body rounded-bottom bg-dark">
                                                                 <div class="d-flex gap-2">
-                                                                    <span>
-                                                                        <i class="fa fa-thumbs-up text-success"
-                                                                            aria-hidden="true"></i>
-                                                                    </span>
                                                                     <span class="text-white">
-                                                                         {{item.likes}}
+                                                                         {{item.releasingOn}}
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="bottom_text_movie_card py-3 px-4">
                                                             <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
-                                                            <span class="m-0">{{item.genres}}</span>
+                                                            <span class="m-0">{{item.categories}}</span>
                                                         </div>
                                                     </div>
                                                 </ng-container>

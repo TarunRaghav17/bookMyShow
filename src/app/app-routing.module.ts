@@ -34,7 +34,6 @@ const routes: Routes = [
   },
   {
     path: 'movies/:city/:id', component: MoviesDetailsComponent
-
   },
   {
     path: ':city/cinemas', component: TheatreListComponent
