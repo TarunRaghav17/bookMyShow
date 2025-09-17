@@ -94,8 +94,7 @@ export class MovieLandingPageComponent implements OnDestroy {
         this.sendPayload.formats.push(event.filterName.formatId);
         break;
     }
-    console.log(this.sendPayload);
-
+    // console.log(this.sendPayload);
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

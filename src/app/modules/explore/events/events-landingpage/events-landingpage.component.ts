@@ -102,8 +102,7 @@ export class EventsLandingPageComponent {
         this.sendPayload.categories.push(event.filterName.priceId);
         break;
     }
-    console.log(this.sendPayload);
-
+    // console.log(this.sendPayload);
     this.eventService.getAllEvents(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

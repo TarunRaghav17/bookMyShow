@@ -16,6 +16,13 @@ export class SportsPageComponent {
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
+  sendPayload: any = {
+    "type": "string",
+    "dateFilters": [],
+    "categories": [],
+    "morefilter": [],
+    "price": [],
+  }
 
   constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService) {
     this.commonService._selectedCategory.set('Sports');
@@ -29,6 +36,7 @@ export class SportsPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
+    this.sendPayload.type = 'Sports'
     this.sportService.getFilters('categories').subscribe({
       next: (res) => {
         this.topFiltersArray = res.data
@@ -38,7 +46,7 @@ export class SportsPageComponent {
       }
     })
 
-    this.sportService.getAllSports().subscribe({
+    this.sportService.getAllSports(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
@@ -66,12 +74,41 @@ export class SportsPageComponent {
       this.sportService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, categories, more_filters, prices]) => {
-       let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }]
-      this.commonService.setFiltersSignal(filters)
-    },
+        let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }]
+        this.commonService.setFiltersSignal(filters)
+      },
       error: (err) => {
         this.toastr.error(err.message);
       }
     });
+  }
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Date':
+        this.sendPayload.dateFilter.push(event.filterName.dateFilterId);
+        break;
+
+      case 'Categories':
+        this.sendPayload.categories.push(event.filterName.categoryId);
+        break;
+
+      case 'More Filters':
+        this.sendPayload.morefilter.push(event.filterName.morefilterId);
+        break;
+
+      case 'Prices':
+        this.sendPayload.categories.push(event.filterName.priceId);
+        break;
+    }
+    // console.log(this.sendPayload);
+    this.sportService.getAllSports(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }

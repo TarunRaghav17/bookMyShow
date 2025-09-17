@@ -87,15 +87,14 @@ export class ActivitiesPageComponent {
         break;
 
       case 'More Filters':
-        this.sendPayload.categories.push(event.filterName.morefilterId);
+        this.sendPayload.morefilter.push(event.filterName.morefilterId);
         break;
 
       case 'Prices':
         this.sendPayload.categories.push(event.filterName.priceId);
         break;
     }
-    console.log(this.sendPayload);
-
+    // console.log(this.sendPayload);
     this.activitiesService.getAllActivities(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
