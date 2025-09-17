@@ -21,9 +21,47 @@ export class CommonService {
   selectedCategory: any = (localStorage.getItem('category'))
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
+  userLangFormat=signal<any>({})
+
   constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
   ) { }
+
+
+
+
+  setUserLangFormat(payload:any){
+    this.userLangFormat.set(payload)
+  }
+
+  getUserLangFormat(){
+    return this.userLangFormat()
+  }
+
+
+  movieDetails=signal<any>({})
+
+
+  setMovieDetails(payload:any){
+    this.movieDetails.set(payload)
+  }
+
+  getMovieDetails(){
+    return this.movieDetails()
+  }
+
+userSelectedDate=signal<any>({})
+
+setUserSelectedDate(payload:any){
+  this.userSelectedDate.set(payload)
+}
+
+getUserSelectedDate(){
+  return this.userSelectedDate()
+}
+
+
+
 
   /**
    * @description Get list of all cities from backend

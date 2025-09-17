@@ -16,6 +16,8 @@ export class BuyTicketsComponent {
   ) { }
 
   selectedMovie = 'movie999'
+  movieDetails: any = {}
+  dateSelectionArray: any = []
   myMovies = [
     {
       "_id": "movie001",
@@ -189,6 +191,12 @@ export class BuyTicketsComponent {
   ]
 
   ngOnInit() {
+    this.movieDetails = this.commonService.movieDetails()
+
+    this.initializeDateSelectionArray()
+    this.commonService.setUserSelectedDate(this.dateSelectionArray[0])
+    console.log( this.commonService.getUserSelectedDate())
+
     this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
@@ -205,6 +213,19 @@ export class BuyTicketsComponent {
 
   }
 
+
+  initializeDateSelectionArray() {
+    let today = new Date();
+    for (let i = 0; i < 7; i++) {
+      let dateObj = new Date();
+      dateObj.setDate(today.getDate() + i)
+      this.dateSelectionArray.push({
+        day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
+        dateNum: dateObj.getDate(),
+        month: dateObj.toLocaleDateString('en-US', { month: 'short' })
+      })
+    }
+  }
 
 
 

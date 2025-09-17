@@ -53,9 +53,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     this.contentService.getContents().subscribe((res) => {
       this.eventsNameList = res
     })
-
-
-   
   }
 
   ngOnDestroy() {
@@ -137,9 +134,8 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     // const selectedEventType = this.showForm.get('eventType')?.value;
     const selectedVenueName = this.showForm.get('venueName')?.value;
     this.handleReset(['eventName'])
-     this.contentService.getContentByType('Movie').subscribe((res)=>{
-      this.eventsNameList=res.data;
-      console.log(res.data)})
+    this.contentService.getContentByType('Movie').subscribe((res) => this.eventsNameList = res.data
+    )
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
     );
@@ -175,9 +171,14 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   onEventNameChange() {
     let selectedEventName = this.showForm.get('eventName')?.value
     let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
-console.log(selectedEventNameObj)
-
+    console.log(selectedEventNameObj)
     this.languagesArray = selectedEventNameObj.languages
+    if(selectedEventNameObj.releasedFlag){
+      this.showForm.get('status')?.setValue('released')
+    }
+    else{
+      this.showForm.get('status')?.setValue('upcoming')
+    }
   }
   setToday() {
     let today = new Date()
@@ -209,7 +210,6 @@ console.log(selectedEventNameObj)
     };
   }
 
-
   onScreenChange(event: any) {
     this.categories.clear();
     let selectedScreen = this.selectedVenueObj[0].screens.find((screen: any) => screen.screenName == event.target.value)
@@ -231,7 +231,7 @@ console.log(selectedEventNameObj)
   }
 
   onSubmit(): void {
-    if (this.showForm.valid) {
+    // if (this.showForm.valid) {
       this.showService.createShow(this.showForm.value).subscribe({
         next: () => {
           this.toaster.success('Show created successfully')
@@ -240,10 +240,10 @@ console.log(selectedEventNameObj)
           this.toaster.error(err.message)
         }
       })
-    } else {
-      this.toaster.error('Form Invalid Please check all fields')
-      this.showForm.markAllAsTouched();
-    }
+    // } else {
+    //   this.toaster.error('Form Invalid Please check all fields')
+    //   this.showForm.markAllAsTouched();
+    // }
   }
   // utility funct. to reset form controls 
   // takes array of form-control names to reset 
