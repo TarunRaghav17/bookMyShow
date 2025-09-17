@@ -16,9 +16,9 @@ export class ActivitiesService {
       "type":"Activities"
     })
   }
-
+  
    getFilters(target:string):Observable<any>{
    let mTarget= target.split('_').join('-')
-    return this.http.get(`${this.base_url}/api/events/${mTarget}`)
+    return this.http.get(`${this.base_url}/api/events/${mTarget}?eventType=Activities`)
   }
 }

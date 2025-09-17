@@ -51,8 +51,11 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     this.setToday()
     // api to get contents
     this.contentService.getContents().subscribe((res) => {
-      this.contents = res
+      this.eventsNameList = res
     })
+
+
+   
   }
 
   ngOnDestroy() {
@@ -131,9 +134,12 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   }
 
   onVenueNameChange() {
-    const selectedEventType = this.showForm.get('eventType')?.value;
+    // const selectedEventType = this.showForm.get('eventType')?.value;
     const selectedVenueName = this.showForm.get('venueName')?.value;
     this.handleReset(['eventName'])
+     this.contentService.getContentByType('Movie').subscribe((res)=>{
+      this.eventsNameList=res.data;
+      console.log(res.data)})
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
     );
@@ -147,29 +153,31 @@ export class CreateShowComponent implements OnInit, OnDestroy {
       cat.toLowerCase()
     );
     this.formatsArray = supportedCategories
-    this.eventsNameList = this.contents.filter((content: any) => {
-      switch (content.eventType.toLowerCase()) {
-        case 'movies':
-          {
-            return (
-              content.eventType.toLowerCase() === selectedEventType.toLowerCase() && content.format.some((f: any) =>
-                supportedCategories.includes(f.toLowerCase())
-              )
-            );
-          }
-        case 'events':
-          {
-            if (content.eventType.toLowerCase() === selectedEventType.toLowerCase())
-              return content
-          }
-      }
-    });
+    //  = this.contents.filter((content: any) => {
+    //   switch (selectedEventType) {
+    //     case 'movie':
+    //       {
+    //         return (
+    //           content.format.some((f: any) =>
+    //             supportedCategories.includes(f.toLowerCase())
+    //           )
+    //         );
+    //       }
+    //     case 'events':
+    //       {
+    //         if (content.eventType.toLowerCase() === selectedEventType.toLowerCase())
+    //           return content
+    //       }
+    //   }
+    // });
   }
 
   onEventNameChange() {
     let selectedEventName = this.showForm.get('eventName')?.value
-    let selectedEventNameObj = this.eventsNameList.filter((event: any) => event.name == selectedEventName)
-    this.languagesArray = selectedEventNameObj[0].languages
+    let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
+console.log(selectedEventNameObj)
+
+    this.languagesArray = selectedEventNameObj.languages
   }
   setToday() {
     let today = new Date()
