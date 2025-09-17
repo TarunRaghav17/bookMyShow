@@ -10,9 +10,7 @@ export class ActivitiesService {
   constructor(private http: HttpClient) { }
 
   base_url = 'http://172.31.252.101:8080/bookmyshow'
-  // {
-  //   "type": "Activities"
-  //  }
+  
   getAllActivities(body: any): Observable<any> {
     return this.http.post(`${this.base_url}/api/events/filter`, body)
   }

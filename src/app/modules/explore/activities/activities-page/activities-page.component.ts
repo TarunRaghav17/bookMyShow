@@ -20,14 +20,9 @@ export class ActivitiesPageComponent {
   filtersArray: any[] = []
   sendPayload: any = {
     "type": "string",
-    "languages": [],
-    "genres": [],
-    "formats": [],
-    "tags": [],
     "categories": [],
     "price": [],
     "morefilter": [],
-    "releaseMonths": [],
     "dateFilters": []
   }
   constructor(public commonService: CommonService, private activitiesService: ActivitiesService, private toastr: ToastrService) {
@@ -79,18 +74,28 @@ export class ActivitiesPageComponent {
       }
     })
   }
+
+
   getFilter(event: any) {
-    console.log(event);
-    if (event.type == 'Date') {
-      this.sendPayload.dateFilters.push(event.filterName.dateFilterId)
-    } else if (event.type == "Categories"){
-      this.sendPayload.categories.push(event.filterName.categoryId)
+    switch (event.type) {
+      case 'Date':
+        this.sendPayload.dateFilters.push(event.filterName.dateFilterId);
+        break;
+
+      case 'Categories':
+        this.sendPayload.categories.push(event.filterName.categoryId);
+        break;
+
+      case 'More Filters':
+        this.sendPayload.categories.push(event.filterName.morefilterId);
+        break;
+
+      case 'Prices':
+        this.sendPayload.categories.push(event.filterName.priceId);
+        break;
     }
-    else if(event.type == "More Filters"){
-this.sendPayload.categories.push(event.filterName.morefilterId)
-    }
-console.log(this.sendPayload);
-      
+    console.log(this.sendPayload);
+
     this.activitiesService.getAllActivities(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

@@ -133,7 +133,6 @@ export class CommonService {
  * @returnType void
  */
   handleEventFilter(filter: any): void {
-    console.log(filter)
     this.filtersSignal().map((item: any) => {
       if (item.type == filter.type) {
         item.data.map((i: any) => {
@@ -219,8 +218,6 @@ export class CommonService {
 
   formatFilters(filters: any): any {
     let filtersArray: any = [];
-
-
     filters.map((filter: any) => {
       let { data, type } = filter;
       let filteredData;

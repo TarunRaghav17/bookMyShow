@@ -18,6 +18,14 @@ export class EventsLandingPageComponent {
   select: any[] = selectedFilters
   originalMovies = movies;
   filtersArray: any[] = [];
+  sendPayload: any = {
+    "type": "string",
+    "dateFilters": [],
+    "languages": [],
+    "categories": [],
+    "morefilter": [],
+    "price": [],
+  }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService) {
     this.dummyMoviesdata = movies;
@@ -33,7 +41,8 @@ export class EventsLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.eventService.getAllEvents().subscribe({
+    this.sendPayload.type = 'Events'
+    this.eventService.getAllEvents(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
@@ -50,7 +59,7 @@ export class EventsLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
   setFilter() {
@@ -62,13 +71,47 @@ export class EventsLandingPageComponent {
       this.eventService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, languages, categories, more_filters, prices]) => {
-       this.filters =[{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
         this.commonService.setFiltersSignal(this.filters)
       },
       error: (err) => {
         this.toastr.error(err.message);
       }
     });
+  }
 
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Date':
+        this.sendPayload.dateFilters.push(event.filterName.dateFilterId);
+        break;
+
+      case 'Language':
+        this.sendPayload.languages.push(event.filterName.languageId);
+        break;
+
+      case 'Categories':
+        this.sendPayload.categories.push(event.filterName.categoryId);
+        break;
+
+      case 'More Filters':
+        this.sendPayload.categories.push(event.filterName.morefilterId);
+        break;
+
+      case 'Prices':
+        this.sendPayload.categories.push(event.filterName.priceId);
+        break;
+    }
+    console.log(this.sendPayload);
+
+    this.eventService.getAllEvents(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }
