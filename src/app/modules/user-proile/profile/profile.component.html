@@ -144,7 +144,7 @@
                                 <label for="form-label">Area Pincode</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g 560001">
+                                <input type="text" class="form-control" placeholder="E.g 560001" formControlName="pincode">
                             </div>
                         </div>
                         <div class="input_box">
@@ -152,7 +152,7 @@
                                 <label for="form-label">Address Line 1</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Flat no., House no., Building,">
+                                <input type="text" class="form-control" placeholder="Flat no., House no., Building," formControlName="addressLine1">
                             </div>
                         </div>
                         <div class="input_box">
@@ -160,7 +160,7 @@
                                 <label for="form-label">Address Line 2</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control"
+                                <input type="text" class="form-control" formControlName="addressLine2"
                                     placeholder="Area, Colony, Street, Sector, Village">
                             </div>
                         </div>
@@ -169,7 +169,7 @@
                                 <label for="form-label">Landmark </label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater">
+                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater" formControlName="landmark">
                             </div>
                         </div>
                         <div class="input_box">
@@ -177,7 +177,7 @@
                                 <label for="form-label">Town / City</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Mumbai">
+                                <input type="text" class="form-control" placeholder="E.g. Mumbai" formControlName="city">
                             </div>
                         </div>
                         <div class="input_box">
@@ -186,8 +186,8 @@
                             </div>
 
                             <div class="input_field">
-                                <select class="form-select" aria-label="Default select example"
-                                    SelectControlValueAccessor="stateData">
+                                <select class="form-select" aria-label="Default select example" 
+                                    formControlName="state">
                                     @for (item of states; track $index) {
                                     <option value="" selected disabled>Select State</option>
                                     <option [value]="item.name" class="d-flex justify-content-between">
