@@ -32,21 +32,12 @@ export class PlaysLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.playService.getFilters('categories').subscribe({
-      next: (res) => {
-        this.topFiltersArray = res.data
-      },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
-
     this.playService.getAllPlays().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch Plays");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     }
     )
@@ -60,7 +51,7 @@ export class PlaysLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
+     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
   setFilter() {
     forkJoin([
@@ -72,10 +63,11 @@ export class PlaysLandingPageComponent {
       this.playService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, languages, genres, categories, more_filters, prices]) => {
-        this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'Genres', data: genres.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        this.commonService.setFiltersSignal(filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
   }

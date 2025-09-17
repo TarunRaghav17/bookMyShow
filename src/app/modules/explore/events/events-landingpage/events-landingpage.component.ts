@@ -33,20 +33,12 @@ export class EventsLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.eventService.getFilters('categories').subscribe({
-      next: (res) => {
-        this.topFiltersArray = res.data
-      },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
     this.eventService.getAllEvents().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch Events");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
@@ -58,7 +50,7 @@ export class EventsLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
+     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
   setFilter() {
@@ -70,10 +62,11 @@ export class EventsLandingPageComponent {
       this.eventService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, languages, categories, more_filters, prices]) => {
-        this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+       this.filters =[{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        this.commonService.setFiltersSignal(this.filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
 

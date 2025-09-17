@@ -27,20 +27,12 @@ export class UpcommingMoviesComponent {
   }
   ngOnInit(): void {
     this.setFilter()
-    this.movieService.getFilters('languages').subscribe({
-      next: (res) => {
-        this.topFiltersArray = res.data
-      },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
     this.movieService.getAllMovies().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch upcoming Movies");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
@@ -53,17 +45,22 @@ export class UpcommingMoviesComponent {
       this.movieService.getFilters('release-months')
     ]).subscribe({
       next: ([languages, genres, tags, formats, releaseMonth]) => {
-        this.filters = [
+        let filters = [
           { type: 'Language', data: languages.data },
           { type: 'Genres', data: genres.data },
           { type: 'Tags', data: tags.data },
           { type: 'Formats', data: formats.data },
           { type: 'Release Month', data: releaseMonth.data }
         ];
+        this.commonService.setFiltersSignal(filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
+  }
+  
+  ngOnDestroy(): void {
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 }

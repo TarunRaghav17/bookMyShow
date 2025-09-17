@@ -21,8 +21,8 @@ export class EventsDetailsComponent implements OnInit {
       next: (res: any) => {
         this.eventDetails = res.data
       },
-      error: () => {
-        this.toastr.error("Failed to fetch Id")
+      error: (err) => {
+        this.toastr.error(err.message)
       }
     })
   }

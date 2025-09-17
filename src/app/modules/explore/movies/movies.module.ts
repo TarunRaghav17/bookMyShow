@@ -7,6 +7,7 @@ import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { TruncatePipe } from '../../../core/pipes/truncate.pipe';
 import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.component';
 import { FilterAccordionComponent } from '../../../shared/components/filter-accordion/filter-accordion.component';
+import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { FilterAccordionComponent } from '../../../shared/components/filter-acco
     MoviesRoutingModule,
     CarouselModule,
     TruncatePipe,
-    FilterAccordionComponent
+    FilterAccordionComponent,
+    NumberFormatPipe
   ]
 })
 export class MoviesModule { }

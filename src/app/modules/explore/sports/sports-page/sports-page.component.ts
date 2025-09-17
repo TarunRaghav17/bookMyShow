@@ -33,8 +33,8 @@ export class SportsPageComponent {
       next: (res) => {
         this.topFiltersArray = res.data
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
 
@@ -42,8 +42,8 @@ export class SportsPageComponent {
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch Sports");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
@@ -55,8 +55,7 @@ export class SportsPageComponent {
 * @returnType void
 */
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
-    localStorage.removeItem('category')
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
   setFilter() {
@@ -67,10 +66,11 @@ export class SportsPageComponent {
       this.sportService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, categories, more_filters, prices]) => {
-        this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }]
-      },
-      error: (res) => {
-        this.toastr.error(res.message);
+       let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }]
+      this.commonService.setFiltersSignal(filters)
+    },
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
   }

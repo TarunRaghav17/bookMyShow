@@ -16,9 +16,8 @@ export class MovieLandingPageComponent implements OnDestroy {
   dummyMoviesdata: any[] = [];
   selectedCity: any = null
   topFiltersArray!: any[]
-  filtersArray: any[] = [] 
+  filtersArray: any[] = []
   originalMovies = movies;
-  filters: any[] = this.filtersArray
   select: any[] = selectedFilters
 
   constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService) {
@@ -36,20 +35,12 @@ export class MovieLandingPageComponent implements OnDestroy {
 
   ngOnInit(): void {
     this.setFilter()
-    this.movieService.getFilters('languages').subscribe({
-      next: (res) => {
-        this.topFiltersArray = res.data
-      },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
     this.movieService.getAllMovies().subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
-      error: () => {
-        this.toastr.error("Failed To Fetch Movies");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
@@ -61,10 +52,11 @@ export class MovieLandingPageComponent implements OnDestroy {
       this.movieService.getFilters('formats')
     ]).subscribe({
       next: ([languages, genres, formats]) => {
-        this.filters = [{ type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Formats', data: formats.data }];
+        let filters = [{ type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Formats', data: formats.data }];
+        this.commonService.setFiltersSignal(filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
   }
@@ -77,6 +69,6 @@ export class MovieLandingPageComponent implements OnDestroy {
 */
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 }
