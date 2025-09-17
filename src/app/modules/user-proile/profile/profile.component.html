@@ -186,9 +186,10 @@
                             </div>
 
                             <div class="input_field">
-                                <select class="form-select" aria-label="Default select example">
+                                <select class="form-select" aria-label="Default select example"
+                                    SelectControlValueAccessor="stateData">
                                     @for (item of states; track $index) {
-                                    <option selected disabled>Select State</option>
+                                    <option value="" selected disabled>Select State</option>
                                     <option [value]="item.name" class="d-flex justify-content-between">
                                         {{item.name}}
                                     </option>
@@ -217,6 +218,12 @@
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
                 <input type="text" class="form-control" id="email" placeholder="Edit your Email Address">
+                @if (editProfileForm.get('email')?.touched && editProfileForm.get('email')?.hasError('required')) {
+                <small class="text-danger">Email is required</small>
+                }
+                @if (editProfileForm.get('email')?.hasError('pattern')) {
+                <small class="text-danger">Invalid email format</small>
+                }
             </div>
             <div class="button_section mt-3">
                 <button type="button" class="btn btn-secondary w-100">Verify</button>
@@ -228,6 +235,19 @@
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
                 <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number ">
+                @if (editProfileForm.get('phoneNumber')?.touched &&
+                editProfileForm.get('phoneNumber')?.hasError('required')) {
+                <small class="text-danger">Phone number is required</small>
+                }
+                @if (editProfileForm.get('phoneNumber')?.hasError('minlength')) {
+                <small class="text-danger">Phone number must be at least 10 digits</small>
+                }
+                @if (editProfileForm.get('phoneNumber')?.hasError('maxlength')) {
+                <small class="text-danger">Phone number cannot exceed 15 digits</small>
+                }
+                @if (editProfileForm.get('phoneNumber')?.hasError('pattern')) {
+                <small class="text-danger">Only digits are allowed</small>
+                }
             </div>
             <div class="button_section mt-3">
                 <button type="button" class="btn btn-secondary w-100">Verify</button>

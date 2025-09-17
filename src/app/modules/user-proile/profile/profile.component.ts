@@ -20,15 +20,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ProfileComponent implements OnInit, OnDestroy {
   @ViewChild('editProfileModal', { static: true })
   editProfileModal!: TemplateRef<any>;
-
   states: any[] = [];
   preview: any;
   base64String: any;
   editNumberFlag: boolean = false;
   private modalRef?: NgbModalRef;
-
   editProfileForm!: FormGroup;
-  modalForm!: FormGroup; // separate form for modal (email / phone)
+  modalForm!: FormGroup; 
 
   constructor(
     private service: CommonService,
@@ -41,7 +39,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.service._profileHeader.set(true);
     this.getAllStates();
-
     this.editProfileForm = this.fb.group({
       profileImg: [''],
       name: ['', Validators.required],
@@ -60,8 +57,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
 
     this.modalForm = this.fb.group({
-      email: ['', [Validators.email]],
-      phone: ['', [Validators.pattern(/^[0-9]{10}$/)]],
+      email: ['', [Validators.email,Validators.pattern(/^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/)]],
+      phone: ['', [Validators.required,Validators.pattern(/^[0-9]{10}$/), Validators.minLength(10), Validators.maxLength(15)]],
     });
   }
 
@@ -69,6 +66,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.service._profileHeader.set(false);
   }
 
+ /**
+  * @description Fetch all states for the state dropdown
+  * @author Gurmeet Kumar
+  * @return void
+  */
   getAllStates(): void {
     this.userService.getAllStates().subscribe({
       next: (res: any) => {
@@ -80,6 +82,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+ /**
+  * @description Open modal to edit email or phone number
+  * @param editProfileModal TemplateRef for the modal content
+  * @param type 'email' or 'number' to determine which field to edit
+  * @author Gurmeet Kumar
+  * @return void
+  */
+
   openEditProfileModal(editProfileModal: TemplateRef<any>, type: 'email' | 'number'): void {
     this.editNumberFlag = type === 'number';
     this.modalForm.reset();
@@ -90,12 +100,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+   /**
+  * @description Close the edit profile modal if it's open
+  * @author Gurmeet Kumar
+  * @return void
+  */
+
   closeEditProfileModal(): void {
     if (this.modalRef) {
       this.modalRef.dismiss();
     }
   }
 
+ /**
+  * @description Handle image upload, convert to base64, and set preview
+  * @author Gurmeet Kumar
+  * @return void
+  */
   onUploadImg(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -115,57 +136,33 @@ export class ProfileComponent implements OnInit, OnDestroy {
     reader.onerror = () => this.toastr.error('Failed to read file');
     reader.readAsDataURL(file);
   }
+ /**
+  * @description Handle profile form submission, validate fields
+  * @author Gurmeet Kumar
+  * @return void
+  */
 
   onSubmitProfile(): void {
     if (this.editProfileForm.invalid) {
-      this.toastr.error('Please fill required fields');
       return;
     }
-
-    // const payload = {
-    //   ...this.editProfileForm.value,
-    //   profileImage: this.base64String || null,
-    // };
-
-    // this.userService.updateProfile(payload).subscribe({
-    //   next: (res: any) => {
-    //     this.toastr.success('Profile updated successfully');
-    //   },
-    //   error: (err: any) => {
-    //     this.toastr.error(err.error.message, 'Error');
-    //   },
-    // });
+ 
   }
 
-  
+ /**
+  * @description Handle modal form submission for email/phone, validate fields
+  * @author Gurmeet Kumar
+  * @return void
+  */
   onSubmitModal(): void {
     if (this.editNumberFlag) {
       if (this.modalForm.get('phone')?.invalid) {
-        this.toastr.error('Enter a valid 10-digit phone number');
         return;
       }
     } else {
       if (this.modalForm.get('email')?.invalid) {
-        this.toastr.error('Enter a valid email');
         return;
       }
     }
-
-    const payload: any = {};
-    if (this.editNumberFlag) {
-      payload.phone = this.modalForm.value.phone;
-    } else {
-      payload.email = this.modalForm.value.email;
-    }
-
-    // this.userService.updateProfile(payload).subscribe({
-    //   next: () => {
-    //     this.toastr.success(`${this.editNumberFlag ? 'Phone' : 'Email'} updated successfully`);
-    //     this.closeEditProfileModal();
-    //   },
-    //   error: (err: any) => {
-    //     this.toastr.error(err.error.message, 'Error');
-    //   },
-    // });
   }
 }
