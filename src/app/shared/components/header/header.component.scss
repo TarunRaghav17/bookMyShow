@@ -184,7 +184,7 @@ span {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 91%;
+  height:100%;
 }
 
 .main_sidebar_data a {
@@ -314,9 +314,7 @@ span {
   color: rgb(59, 59, 59);
 }
 
-.active {
-  background-color: rgb(0, 102, 192);
-}
+
 
 .activeClassBsImage {
   background: black;
@@ -365,4 +363,8 @@ span {
 .selected-other-city{
   font-weight: 700 !important;
   color: rgb(0, 102, 192) !important;
+}
+
+.active{
+  font-weight: 700 !important;
 }

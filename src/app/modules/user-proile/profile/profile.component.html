@@ -1,21 +1,19 @@
 <div class="container-fluid mb-4">
     <div class="row d-flex justify-content-center">
         <div class="col-5">
-            <form action="">
+            <form action="" [formGroup]="editProfileForm">
                 <section class="upload_image_box">
-                    <section class="d-flex align-items-center gap-2 top_container ">
+                    <section class="d-flex align-items-center gap-2 top_container">
                         <div class="circle">
                             <div class="dropzone">
-                                <img [src]="preview" class="upload-icon" />
+                                <img [src]="preview || 'assets/default-avatar.png'" class="upload-icon" />
                                 <p>+Add</p>
-                                <input type="file" class="upload-input" value="" name=""
+                                <input type="file" class="upload-input" accept="image/*"
                                     (change)="onUploadImg($event)" />
                             </div>
                         </div>
                         <p class="text-white fs-5 fw-500">Hi, Guest</p>
                     </section>
-                    <br><br>
-
                 </section>
                 <div class="second_section shadow-sm">
                     <section class="py-2 mt-5 w-100 h-100">
@@ -24,7 +22,7 @@
                             <div class="email_section d-flex justify-content-between gap-5">
                                 <span class="form-label">Email Address</span>
                                 <div class="mail_data">
-                                    <span class="fw-bold" >manushukla83185gmail.com</span>
+                                    <span class="fw-bold">manushukla83185gmail.com</span>
                                     <span class="verified_tag ms-2">Verified</span>
                                 </div>
                             </div>
@@ -52,21 +50,22 @@
                 <div class="third_section px-4 shadow-sm">
                     <section class="py-2 mt-5 w-100 h-100">
                         <p class="second_section_heading">Personal Details</p>
-
                         <div class="input_box">
                             <div class="title_text">
-                                <label for="form-label">Fisrt Name</label>
+                                <label for="form-label">Full Name</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Enter your FirstName">
+                                <input type="text" class="form-control" placeholder="Enter your Full Name"
+                                    formControlName="name">
                             </div>
                         </div>
                         <div class="input_box">
                             <div class="title_text">
-                                <label for="form-label"> Last Name</label>
+                                <label for="form-label">User Name</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Enter your lastName">
+                                <input type="text" class="form-control" placeholder="Enter your User Name"
+                                    formControlName="username">
                             </div>
                         </div>
                         <div class="input_box">
@@ -74,7 +73,7 @@
                                 <label for="form-label">Birthdate (optional)</label>
                             </div>
                             <div class="input_field">
-                                <input type="date" class="form-control" placeholder="Enter your FirstName">
+                                <input type="date" class="form-control" formControlName="dob">
                             </div>
                         </div>
                         <div class="input_box">
@@ -83,19 +82,22 @@
                             </div>
                             <div class="input_field d-flex gap-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="women" value="women"
-                                        checked>
+                                    <input class="form-check-input" type="radio" id="women" value="women"
+                                        formControlName="identity" name="identity">
                                     <label class="form-check-label" for="women">
                                         Women
                                     </label>
                                 </div>
+
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="man" value="man">
+                                    <input class="form-check-input" type="radio" id="man" value="man"
+                                        formControlName="identity" name="identity">
                                     <label class="form-check-label" for="man">
                                         Man
                                     </label>
                                 </div>
                             </div>
+
                         </div>
                         <div class="input_box">
                             <div class="title_text">
@@ -103,20 +105,34 @@
                             </div>
                             <div class="input_field d-flex gap-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="option" id="yes" value="yes"
-                                        checked>
+                                    <input class="form-check-input" type="radio" id="yes" value="yes"
+                                        formControlName="married" name="married">
                                     <label class="form-check-label" for="yes">
                                         Yes
                                     </label>
                                 </div>
+
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="option" id="no" value="no">
+                                    <input class="form-check-input" type="radio" id="no" value="no"
+                                        formControlName="married" name="married">
                                     <label class="form-check-label" for="no">
                                         No
                                     </label>
                                 </div>
                             </div>
                         </div>
+
+
+                        @if(editProfileForm.get('married')?.value === 'yes'){
+                        <div class="input_box">
+                            <div class="title_text">
+                                <label for="form-label">AnniversaryDate (optional)</label>
+                            </div>
+                            <div class="input_field">
+                                <input type="date" class="form-control" formControlName="anniversaryDate">
+                            </div>
+                        </div>
+                        }
 
                     </section>
                 </div>
@@ -172,6 +188,7 @@
                             <div class="input_field">
                                 <select class="form-select" aria-label="Default select example">
                                     @for (item of states; track $index) {
+                                    <option selected disabled>Select State</option>
                                     <option [value]="item.name" class="d-flex justify-content-between">
                                         {{item.name}}
                                     </option>

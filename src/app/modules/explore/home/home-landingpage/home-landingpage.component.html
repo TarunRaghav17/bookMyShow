@@ -47,7 +47,7 @@
       <div class="col-9 py-3">
         <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
           <h4 class="recommended_movie_headding mb-3">Recommended Movies</h4>
-          <a class="seeAll_txt" [routerLink]="['/explore/movies']" (click)="onClickCategory('Movie')">
+          <a class="seeAll_txt" [routerLink]="['/explore/movies']">
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
         </div>
@@ -65,10 +65,10 @@
                 }
               </div>
               <!-- Carousel Content -->
-              <div class="main_filter_card overflow-hidden">
-                <div class="filter_text d-flex gap-3">
+              <div class="main_filter_card ">
+                <div class="d-flex gap-3">
                   @for (item of visibleData['Movie']; track $index) {
-                  <div class=" card_section">
+                  <div class="card_section">
                     <div class="col" [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
                       <div class="card shadow-sm">
                         <div class="img_container">
@@ -80,7 +80,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              {{item.likes | numberFormat}}
+                              {{item.likes | numberFormat}} likes
                             </span>
                           </div>
                         </div>
@@ -101,7 +101,6 @@
                   (click)="next('Movie', movieData)">
                   <i class="fa fa-angle-right" aria-hidden="true"></i>
                   </button>
-
                   }
 
               </div>
@@ -124,7 +123,7 @@
       <div class="col-9 py-3">
         <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
           <h4 class="recommended_movie_headding mb-3">The Latest Shows</h4>
-          <a class="seeAll_txt">
+          <a class="seeAll_txt" [routerLink]="['/explore/plays']">
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
         </div>
@@ -142,11 +141,12 @@
                 }
               </div>
               <!-- Carousel Content -->
-              <div class="main_filter_card overflow-hidden">
-                <div class="filter_text d-flex gap-3">
+              <div class="main_filter_card ">
+                <div class=" d-flex gap-3">
                   @for (item of visibleData['Plays']; track $index) {
                   <div class=" card_section">
-                    <div class="col">
+                    <div class="col"
+                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -157,7 +157,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                             {{item.likes | numberFormat}}
+                              {{item.likes | numberFormat}} likes
                             </span>
                           </div>
                         </div>
@@ -198,7 +198,7 @@
       <div class="col-9 py-3">
         <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
           <h4 class="recommended_movie_headding mb-3">Top Games & Sport Events</h4>
-          <a class="seeAll_txt">
+          <a class="seeAll_txt" [routerLink]="['/explore/sports']">
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
         </div>
@@ -217,11 +217,12 @@
               </div>
 
               <!-- Carousel Content -->
-              <div class="main_filter_card overflow-hidden">
-                <div class="filter_text d-flex gap-3">
+              <div class="main_filter_card ">
+                <div class=" d-flex gap-3">
                   @for (item of visibleData['Sports']; track $index) {
                   <div class=" card_section">
-                    <div class="col">
+                    <div class="col"
+                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -232,7 +233,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              {{item.likes | numberFormat}}
+                              {{item.likes | numberFormat}} likes
                             </span>
                           </div>
                         </div>
@@ -272,7 +273,7 @@
       <div class="col-9 py-3">
         <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
           <h4 class="recommended_movie_headding mb-3">Explore Fun Activities</h4>
-          <a class="seeAll_txt">
+          <a class="seeAll_txt" [routerLink]="['/explore/activities']">
             See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
           </a>
         </div>
@@ -291,11 +292,12 @@
               </div>
 
               <!-- Carousel Content -->
-              <div class="main_filter_card overflow-hidden">
-                <div class="filter_text d-flex gap-3">
+              <div class="main_filter_card ">
+                <div class=" d-flex gap-3">
                   @for (item of visibleData['Activities']; track $index) {
                   <div class=" card_section">
-                    <div class="col">
+                    <div class="col"
+                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -306,7 +308,7 @@
                               <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
                             </span>
                             <span class="text-white">
-                              {{item.likes | numberFormat}}
+                              {{item.likes | numberFormat}} likes
                             </span>
                           </div>
                         </div>
@@ -325,6 +327,80 @@
               <div class="icon_box d-flex justify-content-start ms-3">
                 @if (((pageNoMap['Activities'] ?? 0) + 1) * itemsPerCards < activiesData.length) { <button
                   class="arrow-btn" (click)="next('Activities', activiesData)">
+                  <i class="fa fa-angle-right" aria-hidden="true"></i>
+                  </button>
+
+                  }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Events -->
+<div class="conatiner-fluid">
+  <div class="row g-0">
+    <div class="main_conatiner_box mt-5 d-flex justify-content-center">
+      <div class="col-9 py-3">
+        <div class="top_recommanded_movie_text d-flex justify-content-between align-items-center">
+          <h4 class="recommended_movie_headding mb-3">Outdoor Events</h4>
+          <a class="seeAll_txt" [routerLink]="['/explore/events']">
+            See All <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
+          </a>
+        </div>
+        <div class="col-12 py-3">
+          <div class="d-flex justify-content-center g-0">
+            <div class="main_box_crasoule d-flex align-items-center">
+
+              <!-- Left Arrow -->
+              <div class="icon_box d-flex justify-content-end me-3">
+                @if((pageNoMap['Event'] ?? 0) > 0){
+                <button class="arrow-btn" (click)="prev('Event', eventsData)">
+                  <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </button>
+                }
+
+              </div>
+
+              <!-- Carousel Content -->
+              <div class="main_filter_card ">
+                <div class=" d-flex gap-3">
+                  @for (item of visibleData['Event']; track $index) {
+                  <div class=" card_section">
+                    <div class="col"
+                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                      <div class="card shadow-sm">
+                        <div class="img_container">
+                          <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
+                        </div>
+                        <div class="card-body rounded-bottom bg-dark">
+                          <div class="d-flex gap-2">
+                            <span>
+                              <i class="fa fa-thumbs-up text-success" aria-hidden="true"></i>
+                            </span>
+                            <span class="text-white">
+                              {{item.likes | numberFormat}} likes
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="bottom_text_movie_card">
+                        <h6 class="card-text m-0">{{ item.name | truncate:15 }}</h6>
+                        <span class="m-0">{{ item.Genre }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Right Arrow -->
+              <div class="icon_box d-flex justify-content-start ms-3">
+                @if (((pageNoMap['Event'] ?? 0) + 1) * itemsPerCards < eventsData.length) { <button class="arrow-btn"
+                  (click)="next('Event', eventsData)">
                   <i class="fa fa-angle-right" aria-hidden="true"></i>
                   </button>
 

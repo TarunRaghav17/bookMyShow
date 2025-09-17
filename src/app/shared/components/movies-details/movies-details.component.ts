@@ -72,8 +72,8 @@ export class MoviesDetailsComponent {
       next: (res) => {
         this.movieDetails = res.data
       },
-      error: () => {
-        this.toaster.error('Something went wrong')
+      error: (err) => {
+        this.toaster.error(err.message)
       }
     })
   }

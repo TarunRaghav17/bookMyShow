@@ -17,46 +17,55 @@ const routes: Routes = [
   },
   {
     path: 'explore',
-    loadChildren: () => import('./modules/explore/explore.module').then((m) => m.ExploreModule)
+    loadChildren: () =>
+      import('./modules/explore/explore.module').then((m) => m.ExploreModule),
   },
   {
     path: 'my-profile',
     canActivate: [AuthGuard],
     data: { role: 'USER' },
     loadChildren: () =>
-      import('./modules/user-proile/user-profile.module').then((m) => m.UserProfileModule),
+      import('./modules/user-proile/user-profile.module').then(
+        (m) => m.UserProfileModule
+      ),
   },
   {
     path: 'admin',
     canActivate: [AuthGuard],
     data: { role: 'ADMIN' },
-    loadChildren: () => import('./modules/admin-access/admin-access.module').then((m) => m.AdminAccessModule)
+    loadChildren: () =>
+      import('./modules/admin-access/admin-access.module').then(
+        (m) => m.AdminAccessModule
+      ),
   },
   {
-    path: 'movies/:city/:id', component: MoviesDetailsComponent
+    path: 'movies/:city/:id',
+    component: MoviesDetailsComponent,
   },
   {
-    path: ':city/cinemas', component: TheatreListComponent
+    path: ':city/cinemas',
+    component: TheatreListComponent,
   },
   {
-    path: 'movies/:city/:name/buytickets/:id', component: BuyTicketsComponent
+    path: 'movies/:city/:name/buytickets/:id',
+    component: BuyTicketsComponent,
   },
   {
     path: 'movies/:city/seat-layout/:movieId/:theatreId/:showId/:date',
-    component: SeatLayoutComponent
+    component: SeatLayoutComponent,
   },
   {
     path: ':category/:play-name/:id',
-    component: EventsDetailsComponent
+    component: EventsDetailsComponent,
   },
   {
     path: '**',
-    component: ErrorPageComponent
-  }
+    component: ErrorPageComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
