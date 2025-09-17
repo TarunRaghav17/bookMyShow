@@ -83,7 +83,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
           userId: ["1245", Validators.required],
           userReservationSeats: [["A-01", "A-02"], Validators.required],
         })
-
       ]));
       this.showForm.addControl('price', this.fb.control(0, Validators.required));
       this.showForm.removeControl('categories');
@@ -149,34 +148,17 @@ export class CreateShowComponent implements OnInit, OnDestroy {
       cat.toLowerCase()
     );
     this.formatsArray = supportedCategories
-    //  = this.contents.filter((content: any) => {
-    //   switch (selectedEventType) {
-    //     case 'movie':
-    //       {
-    //         return (
-    //           content.format.some((f: any) =>
-    //             supportedCategories.includes(f.toLowerCase())
-    //           )
-    //         );
-    //       }
-    //     case 'events':
-    //       {
-    //         if (content.eventType.toLowerCase() === selectedEventType.toLowerCase())
-    //           return content
-    //       }
-    //   }
-    // });
+
   }
 
   onEventNameChange() {
     let selectedEventName = this.showForm.get('eventName')?.value
     let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
-    console.log(selectedEventNameObj)
     this.languagesArray = selectedEventNameObj.languages
-    if(selectedEventNameObj.releasedFlag){
+    if (selectedEventNameObj.releasedFlag) {
       this.showForm.get('status')?.setValue('released')
     }
-    else{
+    else {
       this.showForm.get('status')?.setValue('upcoming')
     }
   }
@@ -231,7 +213,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    // if (this.showForm.valid) {
+    if (this.showForm.valid) {
       this.showService.createShow(this.showForm.value).subscribe({
         next: () => {
           this.toaster.success('Show created successfully')
@@ -240,10 +222,10 @@ export class CreateShowComponent implements OnInit, OnDestroy {
           this.toaster.error(err.message)
         }
       })
-    // } else {
-    //   this.toaster.error('Form Invalid Please check all fields')
-    //   this.showForm.markAllAsTouched();
-    // }
+    } else {
+      this.toaster.error('Form Invalid Please check all fields')
+      this.showForm.markAllAsTouched();
+    }
   }
   // utility funct. to reset form controls 
   // takes array of form-control names to reset 

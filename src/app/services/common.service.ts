@@ -13,7 +13,6 @@ export class CommonService {
   select: any[] = selectedFilters
    baseUrl = environment.baseUrl
 
-
   city = sessionStorage.getItem("selectedCity");
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
@@ -27,9 +26,6 @@ export class CommonService {
     private sanitizer: DomSanitizer
   ) { }
 
-
-
-
   setUserLangFormat(payload:any){
     this.userLangFormat.set(payload)
   }
@@ -38,9 +34,7 @@ export class CommonService {
     return this.userLangFormat()
   }
 
-
   movieDetails=signal<any>({})
-
 
   setMovieDetails(payload:any){
     this.movieDetails.set(payload)
@@ -59,9 +53,6 @@ setUserSelectedDate(payload:any){
 getUserSelectedDate(){
   return this.userSelectedDate()
 }
-
-
-
 
   /**
    * @description Get list of all cities from backend
@@ -109,8 +100,6 @@ getUserSelectedDate(){
 * @returnType [Filter] return the filteredArray on the basis of category
 */
   getTopFiltersArray(target: any): Observable<any> {
-
-
     return this.http.get(`${this.baseUrl}/api/events/${target}`)
   }
 
@@ -160,7 +149,6 @@ getUserSelectedDate(){
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`)
   }
-
   
   listYourShowService = [
     {
@@ -204,12 +192,9 @@ getUserSelectedDate(){
 
   formatFilters(filters: any): any {
     let filtersArray: any = [];
-
-
     filters.map((filter: any) => {
       let { data, type } = filter;
       let filteredData;
-
       switch (type) {
          case 'Language':
           filteredData = data.map((i: any) => ({ ...i, text: i.languageName, selected: false }));
