@@ -17,9 +17,40 @@ export class CommonService {
   searchSubject = new Subject<string>();
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
+  userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
  
-   constructor(private http: HttpClient, private sanitizer: DomSanitizer)  {}
+   constructor(private http: HttpClient,
+    private sanitizer: DomSanitizer
+  )  { }
+
+  setUserLangFormat(payload: any) {
+    this.userLangFormat.set(payload)
+  }
+
+  getUserLangFormat() {
+    return this.userLangFormat()
+  }
+
+  movieDetails = signal<any>({})
+
+  setMovieDetails(payload: any) {
+    this.movieDetails.set(payload)
+  }
+
+  getMovieDetails() {
+    return this.movieDetails()
+  }
+
+  userSelectedDate = signal<any>({})
+
+  setUserSelectedDate(payload: any) {
+    this.userSelectedDate.set(payload)
+  }
+
+  getUserSelectedDate() {
+    return this.userSelectedDate()
+  }
   selectedFiltersSignal = signal<any>(
     [
       {
@@ -254,7 +285,6 @@ export class CommonService {
     filters.map((filter: any) => {
       let { data, type } = filter;
       let filteredData;
-
       switch (type) {
         case 'Language':
           filteredData = data.map((i: any) => ({ ...i, text: i.languageName, selected: false, id: i.languageId }));
