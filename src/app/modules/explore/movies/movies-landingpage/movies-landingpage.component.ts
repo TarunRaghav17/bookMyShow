@@ -19,6 +19,12 @@ export class MovieLandingPageComponent implements OnDestroy {
   filtersArray: any[] = []
   originalMovies = movies;
   select: any[] = selectedFilters
+  sendPayload: any = {
+    "type": "string",
+    "languages": [],
+    "genres": [],
+    "formats": [],
+  }
 
   constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService) {
 
@@ -35,7 +41,8 @@ export class MovieLandingPageComponent implements OnDestroy {
 
   ngOnInit(): void {
     this.setFilter()
-    this.movieService.getAllMovies().subscribe({
+    this.sendPayload.type = 'Movies'
+    this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
@@ -70,5 +77,32 @@ export class MovieLandingPageComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+  }
+
+
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Language':
+        this.sendPayload.languageFilters.push(event.filterName.languageId);
+        break;
+
+      case 'Genres':
+        this.sendPayload.genres.push(event.filterName.genresId);
+        break;
+
+      case 'Formats':
+        this.sendPayload.formats.push(event.filterName.formatId);
+        break;
+    }
+    // console.log(this.sendPayload);
+    this.movieService.getAllMovies(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }

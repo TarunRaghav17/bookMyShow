@@ -20,6 +20,12 @@ export class UpcommingMoviesComponent {
   filters: any[] = []
   select: any[] = selectedFilters
   filtersArray: any[] = []
+  sendPayload: any = {
+    "type": "string",
+    "languages": [],
+    "genres": [],
+    "formats": [],
+  }
 
   constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
     this.selectedCity = this.commonService._selectCity()
@@ -27,7 +33,8 @@ export class UpcommingMoviesComponent {
   }
   ngOnInit(): void {
     this.setFilter()
-    this.movieService.getAllMovies().subscribe({
+    this.sendPayload.type = 'upcoming Movies'
+    this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
@@ -62,5 +69,38 @@ export class UpcommingMoviesComponent {
   
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+  }
+   getFilter(event: any) {
+    switch (event.type) {
+      case 'Language':
+        this.sendPayload.languageFilters.push(event.filterName.languageId);
+        break;
+
+      case 'Genres':
+        this.sendPayload.genres.push(event.filterName.genresId);
+        break;
+
+      case 'Formats':
+        this.sendPayload.formats.push(event.filterName.formatId);
+        break;
+
+        case 'Tags':
+        this.sendPayload.tags.push(event.filterName.tagsId);
+        break;
+
+         case 'Release Month':
+        this.sendPayload.releaseMonth.push(event.filterName.releaseMonthId);
+        break;
+    }
+    // console.log(this.sendPayload);
+    this.movieService.getAllMovies(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }

@@ -18,6 +18,15 @@ export class PlaysLandingPageComponent {
   filters: any[] = []
   select: any[] = selectedFilters
   filtersArray: any[] = []
+  sendPayload: any = {
+    "type": "string",
+    "dateFilters": [],
+    "languages": [],
+    "genres": [],
+    "categories": [],
+    "morefilter": [],
+    "price": [],
+  }
 
   constructor(public commonService: CommonService, private playService: PlaysService, private toastr: ToastrService) {
     this.commonService._selectedCategory.set('Plays');
@@ -32,7 +41,8 @@ export class PlaysLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.playService.getAllPlays().subscribe({
+    this.sendPayload.type = 'Plays'
+    this.playService.getAllPlays(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
       },
@@ -51,7 +61,7 @@ export class PlaysLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
   setFilter() {
     forkJoin([
@@ -70,5 +80,42 @@ export class PlaysLandingPageComponent {
         this.toastr.error(err.message);
       }
     });
+  }
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Date':
+        this.sendPayload.dateFilter.push(event.filterName.dateFilterId);
+        break;
+
+      case 'Language':
+        this.sendPayload.languageFilters.push(event.filterName.languageId);
+        break;
+
+      case 'Genres':
+        this.sendPayload.genres.push(event.filterName.genresId);
+        break;
+
+      case 'Categories':
+        this.sendPayload.categories.push(event.filterName.categoryId);
+        break;
+
+      case 'More Filters':
+        this.sendPayload.morefilter.push(event.filterName.morefilterId);
+        break;
+
+      case 'Prices':
+        this.sendPayload.categories.push(event.filterName.priceId);
+        break;
+    }
+    // console.log(this.sendPayload);
+    this.playService.getAllPlays(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }
