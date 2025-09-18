@@ -47,7 +47,6 @@ export class ActivitiesPageComponent {
       }
     })
   }
-
   /**
 * @description Remove Already Selected Filters along with selected Category
 * @author Manu Shukla
@@ -75,26 +74,32 @@ export class ActivitiesPageComponent {
     })
   }
 
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1); 
+    } else {
+      array.push(id);  
+    }
+  }
 
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
-        this.sendPayload.dateFilters.push(event.filterName.dateFilterId);
+        this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
         break;
 
       case 'Categories':
-        this.sendPayload.categories.push(event.filterName.categoryId);
-        break;
+        this.toggleId(this.sendPayload.categories, event.filterName.categoryId); break;
 
       case 'More Filters':
-        this.sendPayload.morefilter.push(event.filterName.morefilterId);
+       this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
       case 'Prices':
-        this.sendPayload.categories.push(event.filterName.priceId);
+       this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-    // console.log(this.sendPayload);
     this.activitiesService.getAllActivities(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

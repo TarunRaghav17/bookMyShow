@@ -21,7 +21,7 @@ export class SportsPageComponent {
     "dateFilters": [],
     "categories": [],
     "morefilter": [],
-    "price": [],
+    "prices": [],
   }
 
   constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService) {
@@ -45,7 +45,6 @@ export class SportsPageComponent {
         this.toastr.error(err.message);
       }
     })
-
     this.sportService.getAllSports(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
@@ -82,25 +81,33 @@ export class SportsPageComponent {
       }
     });
   }
+
+  toggleId(array: any[], id: any): void {
+  const index = array.indexOf(id);
+  if (index > -1) {
+      array.splice(index, 1); 
+  } else {
+      array.push(id);  
+  }
+  }
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
-        this.sendPayload.dateFilter.push(event.filterName.dateFilterId);
+       this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
         break;
 
       case 'Categories':
-        this.sendPayload.categories.push(event.filterName.categoryId);
+      this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
         break;
 
       case 'More Filters':
-        this.sendPayload.morefilter.push(event.filterName.morefilterId);
+        this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
       case 'Prices':
-        this.sendPayload.categories.push(event.filterName.priceId);
+          this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-    // console.log(this.sendPayload);
     this.sportService.getAllSports(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

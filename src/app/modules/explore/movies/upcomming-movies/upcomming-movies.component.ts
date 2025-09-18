@@ -25,6 +25,9 @@ export class UpcommingMoviesComponent {
     "languages": [],
     "genres": [],
     "formats": [],
+    "tags": [],
+    "releaseMonths": [],
+   "dateFilters": []
   }
 
   constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
@@ -33,7 +36,7 @@ export class UpcommingMoviesComponent {
   }
   ngOnInit(): void {
     this.setFilter()
-    this.sendPayload.type = 'upcoming Movies'
+    this.sendPayload.type = 'Movie'
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
@@ -70,29 +73,36 @@ export class UpcommingMoviesComponent {
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
+   toggleId(array: any[], id: any): void {
+  const index = array.indexOf(id);
+  if (index > -1) {
+    array.splice(index, 1); 
+  } else {
+    array.push(id);  
+  }
+}
    getFilter(event: any) {
     switch (event.type) {
       case 'Language':
-        this.sendPayload.languageFilters.push(event.filterName.languageId);
-        break;
+       this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+      break;
 
       case 'Genres':
-        this.sendPayload.genres.push(event.filterName.genresId);
-        break;
+       this.toggleId(this.sendPayload.genres, event.filterName.genresId);
+      break;
 
       case 'Formats':
-        this.sendPayload.formats.push(event.filterName.formatId);
-        break;
+       this.toggleId(this.sendPayload.formats , event.filterName.formatId)
+      break;
 
-        case 'Tags':
-        this.sendPayload.tags.push(event.filterName.tagsId);
-        break;
+      case 'Tags':
+      this.toggleId(this.sendPayload.tags , event.filterName.tagId)
+      break;
 
-         case 'Release Month':
-        this.sendPayload.releaseMonth.push(event.filterName.releaseMonthId);
-        break;
+      case 'Release Month':
+      this.toggleId(this.sendPayload.releaseMonths , event.filterName.releaseMonthId)
+      break;
     }
-    // console.log(this.sendPayload);
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

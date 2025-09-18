@@ -41,7 +41,7 @@ export class EventsLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.sendPayload.type = 'Events'
+    this.sendPayload.type = 'Event'
     this.eventService.getAllEvents(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
@@ -80,37 +80,47 @@ export class EventsLandingPageComponent {
     });
   }
 
-  getFilter(event: any) {
-    switch (event.type) {
-      case 'Date':
-        this.sendPayload.dateFilters.push(event.filterName.dateFilterId);
-        break;
-
-      case 'Language':
-        this.sendPayload.languages.push(event.filterName.languageId);
-        break;
-
-      case 'Categories':
-        this.sendPayload.categories.push(event.filterName.categoryId);
-        break;
-
-      case 'More Filters':
-        this.sendPayload.categories.push(event.filterName.morefilterId);
-        break;
-
-      case 'Prices':
-        this.sendPayload.categories.push(event.filterName.priceId);
-        break;
-    }
-    // console.log(this.sendPayload);
-    this.eventService.getAllEvents(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
-    this.commonService.handleEventFilter(event)
+toggleId(array: any[], id: any): void {
+  const index = array.indexOf(id);
+  if (index > -1) {
+    array.splice(index, 1); 
+  } else {
+    array.push(id);  
   }
+}
+
+getFilter(event: any){
+  switch (event.type) {
+    case 'Date':
+      this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
+      break;
+
+    case 'Language':
+      this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+      break;
+
+    case 'Categories':
+      this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
+      break;
+
+    case 'More Filters':
+      this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
+      break;
+
+    case 'Prices':
+      this.toggleId(this.sendPayload.price, event.filterName.priceId);
+      break;
+  } 
+  
+  this.eventService.getAllEvents(this.sendPayload).subscribe({
+    next: (res) => {
+      this.dummyMoviesdata = res.data;
+    },
+    error: (err) => {
+      this.toastr.error(err.message);
+    }
+  });
+  this.commonService.handleEventFilter(event);
+}
+
 }

@@ -45,12 +45,12 @@
                                 <div class="d-flex justify-content-center g-0">
                                     <div class="main_box_crasoule">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div class="filter_text d-flex flex-wrap gap-5 py-3 justify-content-start">
+                                            <div class="filter_text d-flex flex-wrap gap-5 py-3 justify-content-start align-items-center">
                                                 @for (item of dummyMoviesdata; track $index) {
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
                                                         <div class="card shadow-sm">
-                                                            <a class="img_container rounded-4 rounded-top"
+                                                            <a class="img_container rounded-4 rounded-top justify-content-start"
                                                                 [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
                                                                 <img [src]="commonService.getImageFromBase64(item.imageurl)"
                                                                     [alt]="item.imageurl">

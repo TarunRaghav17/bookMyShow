@@ -9,8 +9,6 @@ import { DomSanitizer } from '@angular/platform-browser';
   providedIn: 'root',
 })
 export class CommonService {
-  filters: any[] = filters;
-  select: any[] = selectedFilters;
   baseUrl = environment.baseUrl;
 
   city = sessionStorage.getItem('selectedCity');
@@ -20,8 +18,8 @@ export class CommonService {
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
   filtersSignal = signal<any[]>([])
-
-
+ 
+   constructor(private http: HttpClient, private sanitizer: DomSanitizer)  {}
   selectedFiltersSignal = signal<any>(
     [
       {
@@ -294,7 +292,6 @@ export class CommonService {
           filteredData = data.map((i: any) => ({ ...i, text: i.releaseMonthName, selected: false }));
           break;
 
-        default:
         default:
           filteredData = data;
       }

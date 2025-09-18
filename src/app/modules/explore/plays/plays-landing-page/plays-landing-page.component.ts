@@ -4,7 +4,6 @@ import { movies, selectedFilters } from '../../../../../../db';
 import { PlaysService } from '../service/plays.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-plays-landing-page',
   standalone: false,
@@ -59,10 +58,10 @@ export class PlaysLandingPageComponent {
 * @params  
 * @returnType void
 */
-
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
+
   setFilter() {
     forkJoin([
       this.playService.getFilters('date_filters'),
@@ -81,33 +80,43 @@ export class PlaysLandingPageComponent {
       }
     });
   }
+
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1); 
+    } else {
+      array.push(id);  
+    }
+  }
+
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
-        this.sendPayload.dateFilter.push(event.filterName.dateFilterId);
+        this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
         break;
 
       case 'Language':
-        this.sendPayload.languageFilters.push(event.filterName.languageId);
+        this.toggleId(this.sendPayload.languages, event.filterName.languageId);
         break;
 
       case 'Genres':
-        this.sendPayload.genres.push(event.filterName.genresId);
+        this.toggleId(this.sendPayload.genres, event.filterName.genresId);
         break;
 
       case 'Categories':
-        this.sendPayload.categories.push(event.filterName.categoryId);
+        this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
         break;
 
       case 'More Filters':
-        this.sendPayload.morefilter.push(event.filterName.morefilterId);
+        this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
       case 'Prices':
-        this.sendPayload.categories.push(event.filterName.priceId);
+        this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-    // console.log(this.sendPayload);
+
     this.playService.getAllPlays(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data

@@ -27,7 +27,6 @@ export class MovieLandingPageComponent implements OnDestroy {
   }
 
   constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService) {
-
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
@@ -41,7 +40,7 @@ export class MovieLandingPageComponent implements OnDestroy {
 
   ngOnInit(): void {
     this.setFilter()
-    this.sendPayload.type = 'Movies'
+    this.sendPayload.type = 'Movie'
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
@@ -79,22 +78,29 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
+  toggleId(array: any[], id: any): void {
+  const index = array.indexOf(id);
+  if (index > -1) {
+    array.splice(index, 1); 
+  } else {
+    array.push(id);  
+  }
+}
 
   getFilter(event: any) {
     switch (event.type) {
       case 'Language':
-        this.sendPayload.languageFilters.push(event.filterName.languageId);
+       this.toggleId(this.sendPayload.languages, event.filterName.languageId);
         break;
 
       case 'Genres':
-        this.sendPayload.genres.push(event.filterName.genresId);
+       this.toggleId(this.sendPayload.genres, event.filterName.genresId);
         break;
 
       case 'Formats':
-        this.sendPayload.formats.push(event.filterName.formatId);
+         this.toggleId(this.sendPayload.formats , event.filterName.formatId)
         break;
     }
-    // console.log(this.sendPayload);
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data
