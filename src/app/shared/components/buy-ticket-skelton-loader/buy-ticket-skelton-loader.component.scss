@@ -1,0 +1,30 @@
+.skeleton {
+  position: relative;
+  background: #e3e3e3;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  position: absolute;
+  top: 0;
+  left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+  border-radius: 6px;
+}
+
+.skeleton-pill {
+  border-radius: 20px;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(300%);
+  }
+}
