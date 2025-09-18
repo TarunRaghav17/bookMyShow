@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { BuyTicketSkeltonLoaderComponent } from '../buy-ticket-skelton-loader/buy-ticket-skelton-loader.component';
 
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule,BuyTicketSkeltonLoaderComponent],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
@@ -44,8 +45,6 @@ export class BuyTicketsComponent {
       "releaseDate": "2022-03-25"
     }
   ];
-
-
 
   theatres = [
     {
@@ -192,27 +191,18 @@ export class BuyTicketsComponent {
 
   ngOnInit() {
     this.movieDetails = this.commonService.movieDetails()
-
     this.initializeDateSelectionArray()
     this.commonService.setUserSelectedDate(this.dateSelectionArray[0])
-    console.log( this.commonService.getUserSelectedDate())
-
     this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
-
       // return theatre with its shows
       return {
         ...theatre,
         shows: theatreShows
       }
-
     });
-
-
-
   }
-
 
   initializeDateSelectionArray() {
     let today = new Date();
@@ -226,7 +216,5 @@ export class BuyTicketsComponent {
       })
     }
   }
-
-
 
 }

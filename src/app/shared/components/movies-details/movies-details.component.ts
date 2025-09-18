@@ -5,9 +5,10 @@ import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { MovieDetailsLoadingSkeltonComponent } from '../movie-details-loading-skelton/movie-details-loading-skelton.component';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule, CommonModule],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
@@ -19,8 +20,7 @@ export class MoviesDetailsComponent {
   ) { }
   private modalRef?: NgbModalRef | null = null
 
-  movieDetails: any = {}
-
+  movieDetails: any | null = null
   ngOnInit() {
     this.fetchContentIdByUrl()
   }
@@ -64,8 +64,8 @@ export class MoviesDetailsComponent {
       next: (res) => {
         this.movieDetails = res.data
       },
-      error: () => {
-        this.toaster.error('Something went wrong')
+      error: (err) => {
+        this.toaster.error(err.error.message)
       }
     })
   }

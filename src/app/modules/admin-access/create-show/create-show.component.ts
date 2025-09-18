@@ -50,8 +50,13 @@ export class CreateShowComponent implements OnInit, OnDestroy {
 
     this.setToday()
     // api to get contents
-    this.contentService.getContents().subscribe((res) => {
-      this.eventsNameList = res
+    this.contentService.getContents().subscribe({
+      next: (res) => {
+        this.eventsNameList = res
+      },
+      error: (err) => {
+        err.error.message
+      }
     })
   }
 
@@ -203,10 +208,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
         cols: [layout.cols, Validators.required],
         price: ['', Validators.required],
         reservedSeats: this.fb.array([
-          this.fb.group({
-            userId: ["1245", Validators.required],
-            userReservationSeats: [["A-01"], Validators.required],
-          })
         ])
       }))
     })
@@ -219,7 +220,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
           this.toaster.success('Show created successfully')
         },
         error: (err) => {
-          this.toaster.error(err.message)
+          this.toaster.error(err.error.message)
         }
       })
     } else {
