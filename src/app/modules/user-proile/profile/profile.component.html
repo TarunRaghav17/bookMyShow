@@ -6,7 +6,7 @@
                     <section class="d-flex align-items-center gap-2 top_container">
                         <div class="circle">
                             <div class="dropzone">
-                                <img [src]="preview || 'assets/default-avatar.png'" class="upload-icon" />
+                                <img [src]="preview || 'assets/avatar.jpg'" class="upload-icon" />
                                 <p>+Add</p>
                                 <input type="file" class="upload-input" accept="image/*"
                                     (change)="onUploadImg($event)" />
@@ -21,8 +21,8 @@
                         <div class=" d-flex justify-content-between ">
                             <div class="email_section d-flex justify-content-between gap-5">
                                 <span class="form-label">Email Address</span>
-                                <div class="mail_data">
-                                    <span class="fw-bold">manushukla83185gmail.com</span>
+                                <div class="mail_data px-3">
+                                    <span class="fw-bold">{{userDetails?.user?.email}}</span>
                                     <span class="verified_tag ms-2">Verified</span>
                                 </div>
                             </div>
@@ -38,9 +38,17 @@
                                 <span class="form-label lable_mobile"> Mobile Number</span>
                                 <div class="add_mobile_number d-flex flex-column"
                                     (click)="openEditProfileModal(editProfileModal, 'number')">
+                                    @if(userDetails?.user?.phoneNumber){
+                                    <div class="d-flex gap-3">
+                                        <span class="fw-bold">+91 {{userDetails?.user?.phoneNumber}}</span>
+                                        <span class="verified_tag ms-2">Verified</span>
+                                    </div>
+
+                                    } @else {
                                     <a>
                                         + Add Mobile Number
                                     </a>
+                                    }
                                     <span>Get a copy of the tickets on Whatsapp/SMS</span>
                                 </div>
                             </div>
@@ -154,7 +162,7 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="Flat no., House no., Building,"
-                                    formControlName="addressLine1">
+                                    formControlName="address1">
                             </div>
                         </div>
                         <div class="input_box">
@@ -162,7 +170,7 @@
                                 <label for="form-label">Address Line 2</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" formControlName="addressLine2"
+                                <input type="text" class="form-control" formControlName="address2"
                                     placeholder="Area, Colony, Street, Sector, Village">
                             </div>
                         </div>
@@ -200,12 +208,14 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="button_section mt-3 mb-4">
+                            <button type="button" class="btn btn-primary w-100" [disabled]="editProfileForm.invalid"
+                                (click)="onSubmitProfile()">Save
+                                Changes</button>
+                        </div>
                     </section>
 
-                    <div class="button_section mt-3 mb-4">
-                        <button type="button" class="btn btn-primary w-100" [disabled]="editProfileForm.invalid" (click)="onSubmitProfile()">Save
-                            Changes</button>
-                    </div>
+
                 </div>
             </form>
         </div>
@@ -219,53 +229,54 @@
     </div>
 
     <div class="modal-body p-0">
-        <form action="" class="p-3">
+        <form [formGroup]="modalForm" class="p-3">
+
             @if (!editNumberFlag) {
             <div class="mb-3">
-                <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Email Address below</label>
+                <label class="form-label">Enter or Edit a valid Email Address below</label>
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
                 <input type="text" class="form-control" id="email" placeholder="Edit your Email Address"
                     formControlName="email">
-                @if (editProfileForm.get('email')?.touched && editProfileForm.get('email')?.hasError('required')) {
+
+                @if (modalForm.get('email')?.touched && modalForm.get('email')?.hasError('required')) {
                 <small class="text-danger">Email is required</small>
                 }
-                @if (editProfileForm.get('email')?.hasError('pattern')) {
+                @if (modalForm.get('email')?.hasError('pattern')) {
                 <small class="text-danger">Invalid email format</small>
                 }
             </div>
             <div class="button_section mt-3">
-                <button type="button" class="btn btn-secondary w-100">Verify</button>
+                <button type="button" class="btn btn-secondary w-100" [disabled]="modalForm.invalid">Verify</button>
             </div>
             }
-            @if( editNumberFlag) {
+
+            @if (editNumberFlag) {
             <div class="mb-3">
-                <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Mobile Number below</label>
+                <label class="form-label">Enter or Edit a valid Mobile Number below</label>
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
-                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number "
+                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number"
                     formControlName="phoneNumber">
-                @if (editProfileForm.get('phoneNumber')?.touched &&
-                editProfileForm.get('phoneNumber')?.hasError('required')) {
+
+                @if (modalForm.get('phoneNumber')?.touched && modalForm.get('phoneNumber')?.hasError('required')) {
                 <small class="text-danger">Phone number is required</small>
                 }
-                @if (editProfileForm.get('phoneNumber')?.hasError('minlength')) {
+                @if (modalForm.get('phoneNumber')?.hasError('minlength')) {
                 <small class="text-danger">Phone number must be at least 10 digits</small>
                 }
-                @if (editProfileForm.get('phoneNumber')?.hasError('maxlength')) {
-                <small class="text-danger">Phone number cannot exceed 15 digits</small>
+                @if (modalForm.get('phoneNumber')?.hasError('maxlength')) {
+                <small class="text-danger">Phone number cannot exceed 10 digits</small>
                 }
-                @if (editProfileForm.get('phoneNumber')?.hasError('pattern')) {
+                @if (modalForm.get('phoneNumber')?.hasError('pattern')) {
                 <small class="text-danger">Only digits are allowed</small>
                 }
             </div>
             <div class="button_section mt-3">
-                <button type="button" class="btn btn-secondary w-100">Verify</button>
+                <button type="button" class="btn btn-secondary w-100" [disabled]="modalForm.invalid">Verify</button>
             </div>
             }
 
         </form>
     </div>
-
-
 </ng-template>
