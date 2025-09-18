@@ -55,13 +55,14 @@
                                     <div class="main_filter_card overflow-hidden">
                                         <div class="filter_text d-flex flex-wrap gap-5 py-5 justify-content-start ">
                                             @for (item of dummyMoviesdata; track $index) {
-                                                @if (!item.releasedFlag) {
-                                                       <ng-container class="overflow-hidden w-50">
+                                            @if (!item.releasedFlag) {
+                                            <ng-container class="overflow-hidden w-50">
                                                 <div class="col card_container">
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.name).split(' ').join('-');}/${item.imdbID}`]">
-                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl">
+                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
+                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)"
+                                                                [alt]="item.imageurl">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">
@@ -70,7 +71,7 @@
                                                                         aria-hidden="true"></i>
                                                                 </span>
                                                                 <span class="text-white">
-                                                                   {{item.likes}}
+                                                                    {{item.likes}}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -81,7 +82,7 @@
                                                     </div>
                                                 </div>
                                             </ng-container>
-                                                }
+                                            }
                                             }
                                         </div>
                                     </div>

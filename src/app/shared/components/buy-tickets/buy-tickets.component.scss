@@ -15,6 +15,14 @@ align-items: center;
 .date_card{
  height: 72px;
  width:60px;
- border: 1px solid rgb(235, 78, 98);
+ border: 1px solid rgb(223, 229, 230);
  cursor: pointer;
+}
+
+
+
+input[type="checkbox"].accent-blue {
+  accent-color: #fd0d0d !important;
+  -webkit-appearance: checkbox; /* ensure native look */
+  appearance: checkbox;
 }

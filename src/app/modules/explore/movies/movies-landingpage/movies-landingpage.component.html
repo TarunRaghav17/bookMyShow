@@ -1,5 +1,4 @@
 <!-- carousel section  -->
-
 <carousel id="carouselExample" class="carousel slide" data-bs-ride="carousel" [interval]="2000" indicators="false"
     [isAnimated]="true">
     <div class="carousel-inner">
@@ -27,7 +26,6 @@
         <span class="visually-hidden">Next</span>
     </button>
 </carousel>
-
 <!-- Movies Section  -->
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
@@ -88,8 +86,9 @@
                                                 <div class="col card_container">
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${2}`]">
-                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl">
+                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
+                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)"
+                                                                [alt]="item.imageurl">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">

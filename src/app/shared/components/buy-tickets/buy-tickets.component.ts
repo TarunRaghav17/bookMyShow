@@ -16,9 +16,13 @@ export class BuyTicketsComponent {
   constructor(public commonService: CommonService,
   ) { }
 
+// -------test data------
+maxPrice=900;
+// ------------------
   selectedMovie = 'movie999'
   movieDetails: any = {}
   dateSelectionArray: any = []
+  userSelectedPreference:any[]=[]
   myMovies = [
     {
       "_id": "movie001",
@@ -191,6 +195,7 @@ export class BuyTicketsComponent {
 
   ngOnInit() {
     this.movieDetails = this.commonService.movieDetails()
+    console.log(this.movieDetails)
     this.initializeDateSelectionArray()
     this.commonService.setUserSelectedDate(this.dateSelectionArray[0])
     this.theatres.map((theatre: any) => {
@@ -216,5 +221,13 @@ export class BuyTicketsComponent {
       })
     }
   }
+
+  // handleUserPreference(preference:any){
+
+  // }
+
+  // initializePriceRangeArray(){
+  //   let PriceRangeArray=[]
+  // }
 
 }

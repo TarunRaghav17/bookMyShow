@@ -281,5 +281,37 @@ export class CreateVenueComponent implements OnInit {
   handleCategoryChange(event: any) {
     this.venueForm.get('supportedCategories')?.setValue([event.target.value])
   }
+
+
+  bulkUploadItems=[
+  {
+    "venueName": "Grand Cinema Hall",
+    "venueCapacity": 300,
+    "venueFor": "Movies",
+    "venueType": "Multiplex",
+    "address": {
+      "street": "MG Road",
+      "city": "Bengaluru",
+      "pin": "560001"
+    },
+    "amenities": ["Parking", "Snacks", "AC"],
+    "supportedCategories": ["3D", "2D"],
+    "screens": [
+      {
+        "screenName": "Screen 1",
+        "layouts": [
+          { "layoutName": "Standard", "rows": ["A","B","C","D"], "cols": 20 }
+        ]
+      }
+    ]
+  },
+ 
+]
+
+
+  handleBulkUpload() {
+    console.log("bulk upload started")
+    this.venuesService.uploadBulk(this.bulkUploadItems)
+}
 }
 

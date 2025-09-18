@@ -16,10 +16,11 @@
     <!-- Date Selector -->
     <div class="d-flex align-items-center gap-1" style="font-size: 12px;">
       @for(date of dateSelectionArray;track $index){
-      <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card " (click)="this.commonService.setUserSelectedDate(date)"
-        [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':
-          $index>3?'backgroundColor':'green'
-        }">
+      <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card "
+        (click)="this.commonService.setUserSelectedDate(date)"
+        [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':''}">
+        <!-- $index>3?'backgroundColor':'green'        }"> -->
+
         <div>{{date.day}}</div>
         <div style="font-weight: bold; font-size:18px ;">{{date?.dateNum}}</div>
         <div>{{date.month}}</div>
@@ -30,21 +31,45 @@
     <!-- Filters -->
     <div class="d-flex   h-100">
       <div class="dropdown  border-start ">
+
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
-          data-bs-toggle="dropdown">Tamil - 2D</button>
+          data-bs-toggle="dropdown">{{commonService.userLangFormat().lang}} -
+          {{commonService.userLangFormat().format}}</button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item">Tamil - 2D</a></li>
-          <li><a class="dropdown-item">Tamil - 3D</a></li>
+
+          @for(lang of movieDetails.languages;track $index ){
+          @for(format of movieDetails.format;track $index){
+          <li><a class="dropdown-item">
+              {{lang}} - {{format}}
+            </a></li>
+          }
+          }
         </ul>
       </div>
+
       <div class="dropdown  border-start">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Price Range</button>
         <ul class="dropdown-menu ">
-          <li><a class="dropdown-item">₹100 - ₹200</a></li>
-          <li><a class="dropdown-item">₹200 - ₹400</a></li>
+
+           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2">
+            <label class="">
+              ₹0 - 200</label>
+              <input type="checkbox" class="form-check-input accent-blue" />
+            </li>
+          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2">
+            <label class="">
+              ₹201 - ₹400</label>
+              <input type="checkbox" class="form-check-input accent-blue" />
+            </li>
+           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2">
+            <label class="">
+              ₹401 - ₹600</label>
+              <input type="checkbox" class="form-check-input accent-blue" />
+            </li>
         </ul>
       </div>
+
       <div class="dropdown  border-start">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Special Formats</button>
@@ -68,7 +93,7 @@
           Range</button>
         <ul class="dropdown-menu ">
           <li><a class="dropdown-item">₹100 - ₹200</a></li>
-          <li><a class="dropdown-item">₹200 - ₹400</a></li>
+          <li><a class="dropdown-item">₹201 - ₹400</a></li>
         </ul>
       </div>
     </div>
