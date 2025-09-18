@@ -1,21 +1,19 @@
 <div class="container-fluid mb-4">
     <div class="row d-flex justify-content-center">
         <div class="col-5">
-            <form action="">
+            <form action="" [formGroup]="editProfileForm">
                 <section class="upload_image_box">
-                    <section class="d-flex align-items-center gap-2 top_container ">
+                    <section class="d-flex align-items-center gap-2 top_container">
                         <div class="circle">
                             <div class="dropzone">
-                                <img [src]="preview" class="upload-icon" />
+                                <img [src]="preview || 'assets/default-avatar.png'" class="upload-icon" />
                                 <p>+Add</p>
-                                <input type="file" class="upload-input" value="" name=""
+                                <input type="file" class="upload-input" accept="image/*"
                                     (change)="onUploadImg($event)" />
                             </div>
                         </div>
                         <p class="text-white fs-5 fw-500">Hi, Guest</p>
                     </section>
-                    <br><br>
-
                 </section>
                 <div class="second_section shadow-sm">
                     <section class="py-2 mt-5 w-100 h-100">
@@ -24,7 +22,7 @@
                             <div class="email_section d-flex justify-content-between gap-5">
                                 <span class="form-label">Email Address</span>
                                 <div class="mail_data">
-                                    <span class="fw-bold" >manushukla83185gmail.com</span>
+                                    <span class="fw-bold">manushukla83185gmail.com</span>
                                     <span class="verified_tag ms-2">Verified</span>
                                 </div>
                             </div>
@@ -52,21 +50,22 @@
                 <div class="third_section px-4 shadow-sm">
                     <section class="py-2 mt-5 w-100 h-100">
                         <p class="second_section_heading">Personal Details</p>
-
                         <div class="input_box">
                             <div class="title_text">
-                                <label for="form-label">Fisrt Name</label>
+                                <label for="form-label">Full Name</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Enter your FirstName">
+                                <input type="text" class="form-control" placeholder="Enter your Full Name"
+                                    formControlName="name">
                             </div>
                         </div>
                         <div class="input_box">
                             <div class="title_text">
-                                <label for="form-label"> Last Name</label>
+                                <label for="form-label">User Name</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Enter your lastName">
+                                <input type="text" class="form-control" placeholder="Enter your User Name"
+                                    formControlName="username">
                             </div>
                         </div>
                         <div class="input_box">
@@ -74,7 +73,7 @@
                                 <label for="form-label">Birthdate (optional)</label>
                             </div>
                             <div class="input_field">
-                                <input type="date" class="form-control" placeholder="Enter your FirstName">
+                                <input type="date" class="form-control" formControlName="dob">
                             </div>
                         </div>
                         <div class="input_box">
@@ -83,19 +82,22 @@
                             </div>
                             <div class="input_field d-flex gap-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="women" value="women"
-                                        checked>
+                                    <input class="form-check-input" type="radio" id="women" value="women"
+                                        formControlName="identity" name="identity">
                                     <label class="form-check-label" for="women">
                                         Women
                                     </label>
                                 </div>
+
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="gender" id="man" value="man">
+                                    <input class="form-check-input" type="radio" id="man" value="man"
+                                        formControlName="identity" name="identity">
                                     <label class="form-check-label" for="man">
                                         Man
                                     </label>
                                 </div>
                             </div>
+
                         </div>
                         <div class="input_box">
                             <div class="title_text">
@@ -103,20 +105,34 @@
                             </div>
                             <div class="input_field d-flex gap-2">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="option" id="yes" value="yes"
-                                        checked>
+                                    <input class="form-check-input" type="radio" id="yes" value="yes"
+                                        formControlName="married" name="married">
                                     <label class="form-check-label" for="yes">
                                         Yes
                                     </label>
                                 </div>
+
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="option" id="no" value="no">
+                                    <input class="form-check-input" type="radio" id="no" value="no"
+                                        formControlName="married" name="married">
                                     <label class="form-check-label" for="no">
                                         No
                                     </label>
                                 </div>
                             </div>
                         </div>
+
+
+                        @if(editProfileForm.get('married')?.value === 'yes'){
+                        <div class="input_box">
+                            <div class="title_text">
+                                <label for="form-label">AnniversaryDate (optional)</label>
+                            </div>
+                            <div class="input_field">
+                                <input type="date" class="form-control" formControlName="anniversaryDate">
+                            </div>
+                        </div>
+                        }
 
                     </section>
                 </div>
@@ -128,7 +144,8 @@
                                 <label for="form-label">Area Pincode</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g 560001">
+                                <input type="text" class="form-control" placeholder="E.g 560001"
+                                    formControlName="pincode">
                             </div>
                         </div>
                         <div class="input_box">
@@ -136,7 +153,8 @@
                                 <label for="form-label">Address Line 1</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Flat no., House no., Building,">
+                                <input type="text" class="form-control" placeholder="Flat no., House no., Building,"
+                                    formControlName="addressLine1">
                             </div>
                         </div>
                         <div class="input_box">
@@ -144,7 +162,7 @@
                                 <label for="form-label">Address Line 2</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control"
+                                <input type="text" class="form-control" formControlName="addressLine2"
                                     placeholder="Area, Colony, Street, Sector, Village">
                             </div>
                         </div>
@@ -153,7 +171,8 @@
                                 <label for="form-label">Landmark </label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater">
+                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater"
+                                    formControlName="landmark">
                             </div>
                         </div>
                         <div class="input_box">
@@ -161,7 +180,8 @@
                                 <label for="form-label">Town / City</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Mumbai">
+                                <input type="text" class="form-control" placeholder="E.g. Mumbai"
+                                    formControlName="city">
                             </div>
                         </div>
                         <div class="input_box">
@@ -170,8 +190,9 @@
                             </div>
 
                             <div class="input_field">
-                                <select class="form-select" aria-label="Default select example">
+                                <select class="form-select" aria-label="Default select example" formControlName="state">
                                     @for (item of states; track $index) {
+                                    <option value="" selected disabled>Select State</option>
                                     <option [value]="item.name" class="d-flex justify-content-between">
                                         {{item.name}}
                                     </option>
@@ -180,6 +201,11 @@
                             </div>
                         </div>
                     </section>
+
+                    <div class="button_section mt-3 mb-4">
+                        <button type="button" class="btn btn-primary w-100" [disabled]="editProfileForm.invalid" (click)="onSubmitProfile()">Save
+                            Changes</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -199,7 +225,14 @@
                 <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Email Address below</label>
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
-                <input type="text" class="form-control" id="email" placeholder="Edit your Email Address">
+                <input type="text" class="form-control" id="email" placeholder="Edit your Email Address"
+                    formControlName="email">
+                @if (editProfileForm.get('email')?.touched && editProfileForm.get('email')?.hasError('required')) {
+                <small class="text-danger">Email is required</small>
+                }
+                @if (editProfileForm.get('email')?.hasError('pattern')) {
+                <small class="text-danger">Invalid email format</small>
+                }
             </div>
             <div class="button_section mt-3">
                 <button type="button" class="btn btn-secondary w-100">Verify</button>
@@ -210,7 +243,21 @@
                 <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Mobile Number below</label>
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
-                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number ">
+                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number "
+                    formControlName="phoneNumber">
+                @if (editProfileForm.get('phoneNumber')?.touched &&
+                editProfileForm.get('phoneNumber')?.hasError('required')) {
+                <small class="text-danger">Phone number is required</small>
+                }
+                @if (editProfileForm.get('phoneNumber')?.hasError('minlength')) {
+                <small class="text-danger">Phone number must be at least 10 digits</small>
+                }
+                @if (editProfileForm.get('phoneNumber')?.hasError('maxlength')) {
+                <small class="text-danger">Phone number cannot exceed 15 digits</small>
+                }
+                @if (editProfileForm.get('phoneNumber')?.hasError('pattern')) {
+                <small class="text-danger">Only digits are allowed</small>
+                }
             </div>
             <div class="button_section mt-3">
                 <button type="button" class="btn btn-secondary w-100">Verify</button>
