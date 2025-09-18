@@ -144,7 +144,8 @@
                                 <label for="form-label">Area Pincode</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g 560001" formControlName="pincode">
+                                <input type="text" class="form-control" placeholder="E.g 560001"
+                                    formControlName="pincode">
                             </div>
                         </div>
                         <div class="input_box">
@@ -152,7 +153,8 @@
                                 <label for="form-label">Address Line 1</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Flat no., House no., Building," formControlName="addressLine1">
+                                <input type="text" class="form-control" placeholder="Flat no., House no., Building,"
+                                    formControlName="addressLine1">
                             </div>
                         </div>
                         <div class="input_box">
@@ -169,7 +171,8 @@
                                 <label for="form-label">Landmark </label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater" formControlName="landmark">
+                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater"
+                                    formControlName="landmark">
                             </div>
                         </div>
                         <div class="input_box">
@@ -177,7 +180,8 @@
                                 <label for="form-label">Town / City</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Mumbai" formControlName="city">
+                                <input type="text" class="form-control" placeholder="E.g. Mumbai"
+                                    formControlName="city">
                             </div>
                         </div>
                         <div class="input_box">
@@ -186,8 +190,7 @@
                             </div>
 
                             <div class="input_field">
-                                <select class="form-select" aria-label="Default select example" 
-                                    formControlName="state">
+                                <select class="form-select" aria-label="Default select example" formControlName="state">
                                     @for (item of states; track $index) {
                                     <option value="" selected disabled>Select State</option>
                                     <option [value]="item.name" class="d-flex justify-content-between">
@@ -198,6 +201,11 @@
                             </div>
                         </div>
                     </section>
+
+                    <div class="button_section mt-3 mb-4">
+                        <button type="button" class="btn btn-primary w-100" [disabled]="editProfileForm.invalid" (click)="onSubmitProfile()">Save
+                            Changes</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -217,7 +225,8 @@
                 <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Email Address below</label>
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
-                <input type="text" class="form-control" id="email" placeholder="Edit your Email Address" formControlName="email">
+                <input type="text" class="form-control" id="email" placeholder="Edit your Email Address"
+                    formControlName="email">
                 @if (editProfileForm.get('email')?.touched && editProfileForm.get('email')?.hasError('required')) {
                 <small class="text-danger">Email is required</small>
                 }
@@ -234,7 +243,8 @@
                 <label for="formGroupExampleInput" class="form-label">Enter or Edit a valid Mobile Number below</label>
             </div>
             <div class="mt-2 d-flex flex-column gap-3">
-                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number " formControlName="phoneNumber">
+                <input type="text" class="form-control" id="mobile" placeholder="Edit your Mobile Number "
+                    formControlName="phoneNumber">
                 @if (editProfileForm.get('phoneNumber')?.touched &&
                 editProfileForm.get('phoneNumber')?.hasError('required')) {
                 <small class="text-danger">Phone number is required</small>
