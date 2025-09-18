@@ -51,22 +51,22 @@
                     <div class="sub_header_left">
                         <div class=" sub_heder_left_links">
                             <a [routerLink]="['explore/movies']" (click)="onClickCategory('Movies')"
-                                [ngClass]="{'fontBold':selectedCategory== 'Movies'}">Movies</a>
+                                routerLinkActive="active">Movies</a>
 
-                            <a [routerLink]="['explore/events']" (click)="onClickCategory('Events')"
-                                [ngClass]="{'fontBold':selectedCategory=='Events'}">Events</a>
+                            <a [routerLink]="['explore/events']" routerLinkActive="active"
+                                (click)="onClickCategory('Events')">Events</a>
 
-                            <a [routerLink]="['explore/plays']" (click)="onClickCategory('Plays')"
-                                [ngClass]="{'fontBold':selectedCategory=='Plays'}">Plays</a>
+                            <a [routerLink]="['explore/plays']" routerLinkActive="active"
+                                (click)="onClickCategory('Plays')">Plays</a>
 
-                            <a [routerLink]="['explore/sports']" (click)="onClickCategory('Sports')"
-                                [ngClass]="{'fontBold': selectedCategory=='Sports'}">Sports</a>
+                            <a [routerLink]="['explore/sports']" routerLinkActive="active"
+                                (click)="onClickCategory('Sports')">Sports</a>
 
-                            <a [routerLink]="['explore/activities']" (click)="onClickCategory('Activities')"
-                                [ngClass]="{'fontBold':selectedCategory=='Activities'}">Activities</a>
+                            <a [routerLink]="['explore/activities']" routerLinkActive="active"
+                                (click)="onClickCategory('Activities')">Activities</a>
 
                             @if (authService.userDetailsSignal()?.role =='ADMIN') {
-                            <a [routerLink]="['/admin/users']">Users</a>
+                            <a [routerLink]="['/admin/users']" routerLinkActive="active">Users</a>
                             }
                         </div>
                     </div>
@@ -74,14 +74,14 @@
                         @if(authService.userDetailsSignal()?.role !='USER' && authService.userDetailsSignal()?.role
                         =='ADMIN'){
                         <div class=" sub_heder_right_links">
-                            <a [routerLink]="['/admin/list-your-show']" (click)="onClickCategory('ListYourShow')"
-                                [ngClass]="{'fontBold':selectedCategory == 'ListYourShow'}">ListYourShow</a>
-                            <a [routerLink]="['/admin/create/venue']" (click)="onClickCategory('Venues')"
-                                [ngClass]="{'fontBold':selectedCategory== 'Venues'}">Venues</a>
-                            <a [routerLink]="['/admin/content']" (click)="onClickCategory('Content')"
-                                [ngClass]="{'fontBold':selectedCategory== 'Content'}">Content</a>
-                            <a [routerLink]="['/admin/create/show']" (click)="onClickCategory('Shows')"
-                                [ngClass]="{'fontBold':selectedCategory== 'Shows'}">Shows</a>
+                            <a [routerLink]="['/admin/list-your-show']" routerLinkActive="active"
+                                (click)="onClickCategory('ListYourShow')">ListYourShow</a>
+                            <a [routerLink]="['/admin/create/venue']" routerLinkActive="active"
+                                (click)="onClickCategory('Venues')">Venues</a>
+                            <a [routerLink]="['/admin/content']" routerLinkActive="active"
+                                (click)="onClickCategory('Content')">Content</a>
+                            <a [routerLink]="['/admin/create/show']" routerLinkActive="active"
+                                (click)="onClickCategory('Shows')">Shows</a>
                         </div>
                         }
                     </div>
@@ -95,8 +95,8 @@
     <div class="col-6">
         <div class="sub_header_profile_cotainer">
             <div class="sub_header_left">
-                <a [routerLink]="['my-profile/your-order']">Your Orders</a>
-                <a [routerLink]="['my-profile/edit']">Profile</a>
+                <a [routerLink]="['my-profile/your-order']" routerLinkActive="active">Your Orders</a>
+                <a [routerLink]="['my-profile/edit']" routerLinkActive="active">Profile</a>
 
             </div>
         </div>
@@ -198,15 +198,22 @@
                 </a>
                 }
             </div>
+
+            @if(authService.userDetailsSignal()) {
             <div class="button_section">
-                <div>
-                    <button class="button_sign_out w-100" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
-                        (click)="logout()">Signout</button>
-                </div>
+                <button class="button_sign_out w-100" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
+                    (click)="logout()">Sign
+                    out</button>
             </div>
+
+            }
         </div>
     </div>
 </div>
+
+
+
+
 
 <!-- City-Dropdown-modal  -->
 <ng-template #cityModal let-modal>
@@ -245,10 +252,14 @@
     </div>
     <div class="modal-body p-0">
         <p class="text-center mt-1">Popular Cities</p>
-        <div class="py-2 d-flex gap-2 px-3">
+
+        <div class="py-2 d-flex gap-2 px-3 justify-content-around">
+
             @for (item of cityData; track $index) {
-            <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)">
-                <div class="flex_direction d-flex flex-column justify-content-center align-items-center">
+
+            <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)"
+                [ngClass]="{'selected-popular-city': item.cityName === selectedCity}">
+                <div class=" d-flex flex-column justify-content-center align-items-center">
                     <img [src]="getImageFromBase64(item.imageUrl)" alt="" class="img-fluid city_section">
                     <p class="p-0 m-0 city_name">{{item.cityName}}</p>
                 </div>
@@ -261,7 +272,7 @@
             <p class="text-center mt-1">Other Cities</p>
             }
             <div class="other_cities_list px-3" [ngClass]="{'other_cities_list': citiesJson}">
-                <div class="list_cities py-2 ">
+                <div class="list_cities py-2">
                     @for (item of citiesJson; track $index) {
                     <p class="m-0" (click)="selectCity(item.cityName,modal)"
                         [ngClass]="{'selected-other-city': item.cityName === selectedCity}"> {{item.cityName}}</p>
