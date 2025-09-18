@@ -52,4 +52,13 @@ export class UserProfileService {
   verifyEmailOrPhone(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/api/user/verifyEmailOrPhone`, data);
   }
+
+   /**
+ * @description get user byId 
+ * @author Gurmeet Kumar
+ * @param id
+ */
+  getUserById(id: any) {
+    return this.http.get(`${this.baseUrl}/api/users/${id}`)
+  }
 }
