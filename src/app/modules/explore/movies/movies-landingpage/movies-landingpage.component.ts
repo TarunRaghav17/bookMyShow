@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './movies-landingpage.component.scss'
 })
 export class MovieLandingPageComponent implements OnDestroy {
+  moviesLandingPage: any | null = null
   dummyMoviesdata: any[] = [];
   selectedCity: any = null
   topFiltersArray!: any[]

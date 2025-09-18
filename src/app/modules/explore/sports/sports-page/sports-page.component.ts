@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './sports-page.component.scss'
 })
 export class SportsPageComponent {
+  sportsPage: any | null = null
   dummyMoviesdata: any[] = [];
   topFiltersArray: any[] = topFilters
   originalMovies = movies
@@ -83,21 +84,21 @@ export class SportsPageComponent {
   }
 
   toggleId(array: any[], id: any): void {
-  const index = array.indexOf(id);
-  if (index > -1) {
-      array.splice(index, 1); 
-  } else {
-      array.push(id);  
-  }
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1);
+    } else {
+      array.push(id);
+    }
   }
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
-       this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
+        this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
         break;
 
       case 'Categories':
-      this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
+        this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
         break;
 
       case 'More Filters':
@@ -105,7 +106,7 @@ export class SportsPageComponent {
         break;
 
       case 'Prices':
-          this.toggleId(this.sendPayload.price, event.filterName.priceId);
+        this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
     this.sportService.getAllSports(this.sendPayload).subscribe({

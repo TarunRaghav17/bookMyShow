@@ -8,6 +8,7 @@ import { TruncatePipe } from '../../../core/pipes/truncate.pipe';
 import { UpcommingMoviesComponent } from './upcomming-movies/upcomming-movies.component';
 import { FilterAccordionComponent } from '../../../shared/components/filter-accordion/filter-accordion.component';
 import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
+import { BuyTicketSkeltonLoaderComponent } from "../../../shared/components/buy-ticket-skelton-loader/buy-ticket-skelton-loader.component";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
     CarouselModule,
     TruncatePipe,
     FilterAccordionComponent,
-    NumberFormatPipe
-  ]
+    NumberFormatPipe,
+    BuyTicketSkeltonLoaderComponent
+]
 })
 export class MoviesModule { }

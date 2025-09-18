@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ExploreRoutingModule } from './explore-routing.module';
-
 
 @NgModule({
   declarations: [
@@ -10,7 +8,7 @@ import { ExploreRoutingModule } from './explore-routing.module';
   ],
   imports: [
     CommonModule,
-    ExploreRoutingModule
+    ExploreRoutingModule,
   ]
 })
 export class ExploreModule { }

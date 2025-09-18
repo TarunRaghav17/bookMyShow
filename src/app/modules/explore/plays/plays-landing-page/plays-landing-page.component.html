@@ -1,3 +1,4 @@
+@if(playsLandingPage){
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
         <div class="main_container_box d-flex justify-content-center ">
@@ -84,3 +85,7 @@
         </div>
     </div>
 </div>
+}
+@else {
+<app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
+}

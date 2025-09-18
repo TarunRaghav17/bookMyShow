@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters} from '../../../../../../db';
+import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './upcomming-movies.component.scss'
 })
 export class UpcommingMoviesComponent {
+  upcomingMovies: any | null = null
   dummyMoviesdata: any[] = [];
   selectedFilters: any[] = []
   selectedCity: any = null
@@ -27,7 +28,7 @@ export class UpcommingMoviesComponent {
     "formats": [],
     "tags": [],
     "releaseMonths": [],
-   "dateFilters": []
+    "dateFilters": []
   }
 
   constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
@@ -69,39 +70,39 @@ export class UpcommingMoviesComponent {
       }
     });
   }
-  
+
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
-   toggleId(array: any[], id: any): void {
-  const index = array.indexOf(id);
-  if (index > -1) {
-    array.splice(index, 1); 
-  } else {
-    array.push(id);  
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1);
+    } else {
+      array.push(id);
+    }
   }
-}
-   getFilter(event: any) {
+  getFilter(event: any) {
     switch (event.type) {
       case 'Language':
-       this.toggleId(this.sendPayload.languages, event.filterName.languageId);
-      break;
+        this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+        break;
 
       case 'Genres':
-       this.toggleId(this.sendPayload.genres, event.filterName.genresId);
-      break;
+        this.toggleId(this.sendPayload.genres, event.filterName.genresId);
+        break;
 
       case 'Formats':
-       this.toggleId(this.sendPayload.formats , event.filterName.formatId)
-      break;
+        this.toggleId(this.sendPayload.formats, event.filterName.formatId)
+        break;
 
       case 'Tags':
-      this.toggleId(this.sendPayload.tags , event.filterName.tagId)
-      break;
+        this.toggleId(this.sendPayload.tags, event.filterName.tagId)
+        break;
 
       case 'Release Month':
-      this.toggleId(this.sendPayload.releaseMonths , event.filterName.releaseMonthId)
-      break;
+        this.toggleId(this.sendPayload.releaseMonths, event.filterName.releaseMonthId)
+        break;
     }
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {

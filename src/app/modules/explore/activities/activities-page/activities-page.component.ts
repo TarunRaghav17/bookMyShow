@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './activities-page.component.scss'
 })
 export class ActivitiesPageComponent {
+  activites: any | null = null
   dummyMoviesdata: any[] = [];
   originalMovies = movies
   filters: any[] = []
@@ -77,9 +78,9 @@ export class ActivitiesPageComponent {
   toggleId(array: any[], id: any): void {
     const index = array.indexOf(id);
     if (index > -1) {
-      array.splice(index, 1); 
+      array.splice(index, 1);
     } else {
-      array.push(id);  
+      array.push(id);
     }
   }
 
@@ -93,11 +94,11 @@ export class ActivitiesPageComponent {
         this.toggleId(this.sendPayload.categories, event.filterName.categoryId); break;
 
       case 'More Filters':
-       this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
+        this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
       case 'Prices':
-       this.toggleId(this.sendPayload.price, event.filterName.priceId);
+        this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
     this.activitiesService.getAllActivities(this.sendPayload).subscribe({
@@ -110,7 +111,4 @@ export class ActivitiesPageComponent {
     })
     this.commonService.handleEventFilter(event)
   }
-
-
-
 }

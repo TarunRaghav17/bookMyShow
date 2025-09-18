@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './events-landingpage.component.scss'
 })
 export class EventsLandingPageComponent {
+  eventsLandingPage: any | null = null
   dummyMoviesdata: any[] = [];
   topFiltersArray!: any[]
   filters!: any[]

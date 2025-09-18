@@ -1,3 +1,4 @@
+@if(activites){
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
         <div class="main_container_box d-flex justify-content-center ">
@@ -45,7 +46,8 @@
                                 <div class="d-flex justify-content-start align-items-start g-0">
                                     <div class="main_box_crasoule w-100 ">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start" >
+                                            <div
+                                                class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start">
                                                 @for (item of dummyMoviesdata; track $index) {
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
@@ -84,3 +86,7 @@
         </div>
     </div>
 </div>
+}
+@else{
+ <app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
+}

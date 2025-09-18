@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './plays-landing-page.component.scss'
 })
 export class PlaysLandingPageComponent {
+  playsLandingPage:any|null = null
   dummyMoviesdata: any[] = [];
   topFiltersArray!: any[]
   originalMovies = movies
