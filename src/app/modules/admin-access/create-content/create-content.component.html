@@ -1,1 +1,200 @@
-<p>create-content works!</p>
+<form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="container mt-4">
+
+
+
+
+
+
+    <!-- General Info -->
+    <div class="card mb-4 shadow-sm border-danger">
+
+        <div class="card-body border">
+            <h4 class="card-title mb-3 text-center">🎬 General Event Info</h4>
+
+
+            <div class="row">
+
+                <!-- Event Type -->
+                <div class="mb-3 w-50">
+                    <label class="form-label">Content Type</label>
+
+                    <select class="form-select" formControlName="eventType">
+                        <option value="" disabled selected>Select</option>
+                        <option value="movies">Movies</option>
+                        <option value="sports">Sports</option>
+                        <option value="events">Events</option>
+                        <option value="activities">Activities</option>
+                    </select>
+                </div>
+
+                <!-- Poster -->
+                <div class="mb-3 w-50">
+                    <label class="form-label">Poster URL</label>
+                    <input type="file" class="form-control" id="hiddenFileInput" formControlName="imageurl" />
+                    <!-- <button class="btn btn-primary" onclick="document.getElementById('hiddenFileInput').click()">Select</button> -->
+                </div>
+            </div>
+
+
+
+            <!-- Name -->
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" formControlName="name" />
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" rows="3" formControlName="description"></textarea>
+            </div>
+
+
+            <div class="row">
+
+                <div class="mb-3 w-50">
+                    <label class="form-label">Run Time</label>
+                    <input type="number" class="form-control" formControlName="runTime" />
+                </div>
+
+                <!-- Dates -->
+
+                <div class="mb-3 w-50">
+                    <label class="form-label">Releasing On </label>
+                    <input type="date" class="form-control" formControlName="releasingOn" />
+                </div>
+
+            </div>
+            <!-- Runtime -->
+
+
+
+        </div>
+
+
+
+        <!-- Rating / Likes / Votes -->
+
+    </div>
+
+    <!-- Arrays Section -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">🎯 Filters</h5>
+
+            <!-- Languages -->
+            <div class="mb-3" formArrayName="languages">
+                <label class="form-label">Languages</label>
+                <div *ngFor="let ctrl of getArrayControl('languages').controls; let i = index" class="input-group mb-2">
+                    <input class="form-control" [formControlName]="i" />
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="removeFormArrayItem('languages', i)">✕</button>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('languages')">+
+                    Add Language</button>
+            </div>
+
+            <!-- Genres -->
+            <div class="mb-3" formArrayName="genres">
+                <label class="form-label">Genres</label>
+                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
+                    <input class="form-control" [formControlName]="i" />
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="removeFormArrayItem('genres', i)">✕</button>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
+                    Genre</button>
+            </div>
+
+            <div class="mb-3" formArrayName="format">
+                <label class="form-label">Formats</label>
+                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
+                    <input class="form-control" [formControlName]="i" />
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="removeFormArrayItem('genres', i)">✕</button>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
+                    Genre</button>
+            </div>
+            <div class="mb-3" formArrayName="tag">
+                <label class="form-label">
+                    Tags
+                </label>
+                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
+                    <input class="form-control" [formControlName]="i" />
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="removeFormArrayItem('genres', i)">✕</button>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
+                    Genre</button>
+            </div>
+
+            <div class="mb-3" formArrayName="categories">
+                <label class="form-label">Categories</label>
+                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
+                    <input class="form-control" [formControlName]="i" />
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="removeFormArrayItem('genres', i)">✕</button>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
+                    Genre</button>
+            </div>
+
+
+             <div class="mb-3" formArrayName="moreFilters">
+                <label class="form-label">More Filters</label>
+                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
+                    <input class="form-control" [formControlName]="i" />
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="removeFormArrayItem('genres', i)">✕</button>
+                </div>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
+                    Genre</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Cast -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body" formArrayName="cast">
+            <h5 class="card-title">🎭 Cast</h5>
+            <div *ngFor="let c of castControls.controls; let i = index" [formGroupName]="i" class="row mb-2">
+                <div class="col">
+                    <input class="form-control" placeholder="Actor Name" formControlName="actorName" />
+                </div>
+                <div class="col">
+                    <input class="form-control" placeholder="Actor Image URL" formControlName="castImg" />
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-outline-danger" type="button" (click)="castControls.removeAt(i)">✕</button>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">+ Add Cast</button>
+        </div>
+    </div>
+
+    <!-- Crew -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body" formArrayName="crew">
+            <h5 class="card-title">🎬 Crew</h5>
+            <div *ngFor="let m of crewControls.controls; let i = index" [formGroupName]="i" class="row mb-2">
+                <div class="col">
+                    <input class="form-control" placeholder="Member Name" formControlName="memberName" />
+                </div>
+                <div class="col">
+                    <input class="form-control" placeholder="Crew Image URL" formControlName="crewImg" />
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-outline-danger" type="button" (click)="crewControls.removeAt(i)">✕</button>
+                </div>
+            </div>
+            <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">+ Add Crew</button>
+        </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="text-end">
+        <button class="btn btn-success px-4" type="submit">Submit</button>
+    </div>
+</form>
