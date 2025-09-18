@@ -91,8 +91,8 @@ export class HeaderComponent implements OnInit {
           this.openCityModal(this.cityModal)
         }
       },
-      error: (error) => {
-        this.toastr.error(error);
+      error: (err) => {
+        this.toastr.error(err.messsage);
       }
     });
   }
@@ -119,6 +119,7 @@ export class HeaderComponent implements OnInit {
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
     if (modalRef) {
       modalRef.close();
+      this.searchControl.setValue('');
     }
   }
   /**
@@ -143,8 +144,8 @@ export class HeaderComponent implements OnInit {
       next: (res) => {
         this.citiesJson = res.data;
       },
-      error: (res) => {
-        this.toastr.error(res.error);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
   }

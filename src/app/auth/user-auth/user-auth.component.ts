@@ -65,7 +65,7 @@ export class UserAuthComponent implements OnInit {
           this.activeModal.close(UserAuthComponent);
         },
         error: (err) =>
-          this.toastr.error(err.error || 'Login failed')
+          this.toastr.error(err.message)
       });
     }
   }
@@ -87,7 +87,7 @@ export class UserAuthComponent implements OnInit {
           this.activeModal.close(UserAuthComponent);
         },
         error: (err) =>
-          this.toastr.error(err.error || 'Signup failed')
+          this.toastr.error(err.message)
       });
     }
   }
@@ -140,7 +140,5 @@ export class UserAuthComponent implements OnInit {
       }
     });
   }
-
-
 
 }

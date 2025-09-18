@@ -14,7 +14,9 @@ export class AuthService {
   encrypted!: string;
   baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) { 
+    
+  }
 
   /**
    * @description Holds decoded user details from token

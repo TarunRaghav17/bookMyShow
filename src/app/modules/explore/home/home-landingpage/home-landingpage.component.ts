@@ -3,6 +3,7 @@ import { HomeService } from '../service/home.service';
 import { forkJoin } from 'rxjs';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonService } from '../../../../services/common.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -14,16 +15,20 @@ export class HomeLandingPageComponent implements OnInit {
   pageNoMap: Record<string, number | undefined> = {};
   itemsPerCards = 5;
   activiesData: any[] = [];
+  eventsData: any[] = [];
   movieData: any[] = [];
   playsData: any[] = [];
   sportsData: any[] = [];
   selectedCategory: string = '';
   visibleData: Record<string, any[]> = {};
+  translateXMap: Record<string, number> = {};
+  visibleCount = this.itemsPerCards;
 
   constructor(
     private homeService: HomeService,
     private sanitizer: DomSanitizer,
-    public commonService: CommonService
+    public commonService: CommonService,
+    private toastr: ToastrService
   ) {
     this.selectedCategory = this.commonService._selectedCategory();
   }
@@ -42,6 +47,7 @@ export class HomeLandingPageComponent implements OnInit {
     const start = this.itemsPerCards * pageNo;
     const end = start + this.itemsPerCards;
     this.visibleData[type] = originalData.slice(start, end);
+    this.updateTransform(type);
   }
 
   /**
@@ -74,24 +80,26 @@ export class HomeLandingPageComponent implements OnInit {
    * @description Fetch event data for all types and initialize pagination
    */
   getAllData() {
-    const types = ['Movie', 'Plays', 'Sports', 'Activities'];
+    const types = ['Movie', 'Plays', 'Sports', 'Activities', 'Event'];
     forkJoin(
       types.map((type) => this.homeService.getEventListByType(type))
     ).subscribe({
       next: (results) => {
-        const [movie, plays, sports, activities] = results;
+        const [movie, plays, sports, activities, events] = results;
         this.movieData = movie?.data;
         this.playsData = plays?.data;
         this.sportsData = sports?.data;
         this.activiesData = activities?.data;
+        this.eventsData = events?.data;
         types.forEach((type) => (this.pageNoMap[type] = 0));
         this.getVisibleCards('Movie', this.movieData);
         this.getVisibleCards('Plays', this.playsData);
         this.getVisibleCards('Sports', this.sportsData);
         this.getVisibleCards('Activities', this.activiesData);
+        this.getVisibleCards('Event', this.eventsData);
       },
-      error: (err) =>{
-        console.error('Error fetching event data:', err);
+      error: (err) => {
+        this.toastr.error(err.message);
       },
     });
   }
@@ -108,8 +116,12 @@ export class HomeLandingPageComponent implements OnInit {
     }
   }
 
-  onClickCategory(category: string) {
-    this.commonService.setCategory(category);
-    this.selectedCategory = this.commonService._selectedCategory();
+  /**
+   * @description Update transform for sliding effect
+   */
+  updateTransform(type: string) {
+    const pageNo = this.pageNoMap[type] ?? 0;
+    const shift = -(pageNo * (100 / this.visibleCount));
+    this.translateXMap[type] = shift;
   }
 }

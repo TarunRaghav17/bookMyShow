@@ -38,7 +38,7 @@ export class UsersComponent implements OnInit {
         this.usersData = res.data.users;
       },
       error: (res) => {
-        this.toastr.error(res.error);
+        this.toastr.error(res.message);
       },
     });
   }
@@ -56,7 +56,7 @@ export class UsersComponent implements OnInit {
         this.selectedRole = res.data.user.roleName;
       },
       error: (res) => {
-        this.toastr.error(res.error);
+        this.toastr.error(res.message);
       },
     });
   }
@@ -87,7 +87,8 @@ export class UsersComponent implements OnInit {
             return;
           }
         },
-        error: () => {
+        error: (err) => {
+          this.toastr.error(err.message);
           this.usersData = [];
         },
       });
@@ -109,7 +110,7 @@ export class UsersComponent implements OnInit {
       next: (res) => {
         this.usersData = res?.data?.users;
       },
-      error: (err) => this.toastr.error(err.error),
+      error: (err) => this.toastr.error(err.message),
     });
   }
 
@@ -126,8 +127,8 @@ export class UsersComponent implements OnInit {
           this.getAllUserData();
         }
       },
-      error: () => {
-        this.toastr.error('Something went wrong');
+      error: (err) => {
+        this.toastr.error(err.message);
       },
     });
   }
