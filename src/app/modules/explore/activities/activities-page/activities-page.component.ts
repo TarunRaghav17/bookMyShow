@@ -110,4 +110,7 @@ export class ActivitiesPageComponent {
     })
     this.commonService.handleEventFilter(event)
   }
+
+
+
 }

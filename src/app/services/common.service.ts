@@ -19,6 +19,7 @@ export class CommonService {
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
   userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
+  
  
    constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
@@ -101,7 +102,7 @@ export class CommonService {
       .filter(group =>
       ({
         type: group.type,
-        data: group.data.filter((item: any) => !item.selected)  // only selected ones
+        data: group.data.filter((item: any) => !item.selected)  
       }))
       .filter(group => group.data.length > 0)
   );
@@ -315,7 +316,7 @@ export class CommonService {
           break;
 
         case 'Tags':
-          filteredData = data.map((i: any) => ({ ...i, text: i.tageName, selected: false }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.tagsName, selected: false }));
           break;
 
         case 'Release Month':
@@ -328,6 +329,11 @@ export class CommonService {
       filtersArray.push({ type, data: filteredData });
     });
     return filtersArray;
+  }
+
+  getAllVenuesBYcity(city:String):Observable<any>{
+    console.log(city)
+    return this.http.get(`${this.baseUrl}/venues/city/noida`)
   }
 }
 

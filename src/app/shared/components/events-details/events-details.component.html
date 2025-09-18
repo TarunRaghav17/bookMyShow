@@ -13,7 +13,7 @@
             <div class="col-8 d-flex justify-content-start gap-5 align-items-start">
                 <div class="col-8 py-3 card_image">
                     <img class="w-100 oject-fill rounded-4 h-100"
-                        [src]="commonService.getImageFromBase64(eventDetails?.imageurl)" [alt]="eventDetails.imageurl">
+                        [src]="commonService.getImageFromBase64(eventDetails?.imageurl)" [alt]="eventDetails?.imageurl">
                     <!-- bottom_text -->
                     <div class="d-flex justify-content-center align-items-start  py-4">
                         <div class="col-8 d-flex gap-2 poster_bottom_txt">
@@ -56,9 +56,9 @@
                     </div>
                     <h3 class="py-3">Terms & Conditions</h3>
                 </div>
-                <div class="col-3 ">
+                <div class="col-3 side_card_details">
                     <div class="border h-100 rounded-4 bg-white ">
-                        <div class="d-flex p-4 flex-column gap-3">
+                        <div class="d-flex p-4 flex-column gap-2">
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-calendar-o" aria-hidden="true"></i>
@@ -67,7 +67,7 @@
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                <span>{{eventDetails?.time}}</span>
+                                <span>{{eventDetails?.starttime}}</span>
                             </div>
 
                             <div class="d-flex align-items-center gap-3">
@@ -77,10 +77,10 @@
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-users" aria-hidden="true"></i>
-                                <span>Age Limit - {{eventDetails?.ageLimit}}yrs +</span>
+                                <span>Age Limit {{eventDetails?.ageLimit}}yrs +</span>
                             </div>
 
-                            <div class="d-flex align-items-center gap-3 flex-wrap">
+                            <div class="d-flex align-items-center gap-2 overflow-hidden  ">
                                 <i class="fa fa-language" aria-hidden="true"></i>
                                 @for (lang of eventDetails?.languages; track $index) {
                                 <span>{{lang}}</span>
@@ -89,7 +89,7 @@
 
                             <div class="d-flex align-items-center gap-3">
                                 <img src="https://assets-in.bmscdn.com/nmcms/synopsis/genre.png" alt="genre"
-                                    style="width: 25px; height:25px;">
+                                    style="width: 20px; height:20px;">
                                 <span>{{eventDetails?.categories}}</span>
                             </div>
 
@@ -100,7 +100,7 @@
                             <hr>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <p class="">{{eventDetails?.pricelist}} onwards</p>
+                                    <p class="">{{eventDetails?.pricelist[0]}} onwards</p>
                                     <span>Filling Fast</span>
                                 </div>
                                 <button class="book_now_btn">Book now</button>

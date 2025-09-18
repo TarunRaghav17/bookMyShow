@@ -42,15 +42,15 @@
                         </div>
                         <div class="col-12">
                             <div class="row">
-                                <div class="d-flex justify-content-center g-0">
-                                    <div class="main_box_crasoule">
+                                <div class="d-flex justify-content-start align-items-start g-0">
+                                    <div class="main_box_crasoule w-100">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div class="filter_text d-flex flex-wrap gap-5 py-3 justify-content-start align-items-center">
+                                            <div class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start">
                                                 @for (item of dummyMoviesdata; track $index) {
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
                                                         <div class="card shadow-sm">
-                                                            <a class="img_container rounded-4 rounded-top align-items-center"
+                                                            <a class="img_container rounded-4 rounded-top justify-content-start"
                                                                 [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
                                                                 <img [src]="commonService.getImageFromBase64(item.imageurl)"
                                                                     [alt]="item.imageurl">
@@ -67,7 +67,7 @@
                                                             <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
                                                             <span class="m-0 d-flex">{{item.venueName[0]}}</span>
                                                             <span class="m-0">{{item.languages}}</span>
-                                                            <small class="m-0">₹ {{item.pricelist}}</small>
+                                                            <small class="m-0">₹ {{item.pricelist[0]}}</small>
                                                         </div>
                                                     </div>
                                                 </ng-container>

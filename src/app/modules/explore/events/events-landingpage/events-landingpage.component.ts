@@ -123,4 +123,8 @@ getFilter(event: any){
   this.commonService.handleEventFilter(event);
 }
 
+getImageFromBase64(){
+  
+}
+
 }
