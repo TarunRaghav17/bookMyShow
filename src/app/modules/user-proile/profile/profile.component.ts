@@ -30,9 +30,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   modalForm!: FormGroup;
   getProfileDataId: any;
   userDetails: any;
+  profileImage:any;
 
   constructor(
-    private commonService: CommonService,
+    public commonService: CommonService,
     private authService: AuthService,
     private userService: UserProfileService,
     private toastr: ToastrService,
@@ -55,9 +56,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       anniversaryDate: [''],
       identity: ['women'],
       pincode: ['', [Validators.pattern(/^[0-9]{6}$/), Validators.maxLength(6)]],
-      address1: ['', [Validators.maxLength(255)]],
-      address2: ['', [Validators.maxLength(255)]],
-      landmark: ['', [Validators.maxLength(100)]],
+      addressLine1: ['', [Validators.maxLength(255)]],
+      addressLine2: ['', [Validators.maxLength(255)]],
       city: ['', [Validators.maxLength(100)]],
       state: [''],
     });
@@ -105,13 +105,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.modalForm.get('phoneNumber')?.setValidators([Validators.required]);
       this.modalForm
         .get('phoneNumber')
-        ?.patchValue(this.userDetails?.user?.phoneNumber || '');
+        ?.patchValue(this.userDetails?.phoneNumber || '');
       this.modalForm.get('email')?.clearValidators();
     } else {
       this.modalForm.get('email')?.setValidators([Validators.required]);
       this.modalForm
         .get('email')
-        ?.patchValue(this.userDetails?.user?.email || '');
+        ?.patchValue(this.userDetails?.email || '');
       this.modalForm.get('phoneNumber')?.clearValidators();
     }
     this.modalForm.get('phoneNumber')?.updateValueAndValidity();
@@ -152,7 +152,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.preview = reader.result;
+      this.preview = reader.result || this.profileImage;
       this.base64String = (reader.result as string).split(',')[1];
       this.toastr.success('Image uploaded successfully');
     };
@@ -186,8 +186,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           next: (res: any) => {
             this.toastr.success(res.message);
             this.getProfileUser();
-            this.base64String = null;
-            this.preview = null;
+
           },
           error: (err: any) => {
             this.toastr.error(err.message);
@@ -235,22 +234,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.getUserById(this.getProfileDataId?.userId).subscribe({
       next: (res: any) => {
         this.userDetails = res.data;
-        this.editProfileForm.patchValue({
-          profileImg: this.userDetails?.profileImg || '',
-          name: this.userDetails?.user?.name || '',
-          username: this.userDetails?.user?.username || '',
-          dob: this.commonService.formatDateToMMDDYYYY(this.userDetails?.dob || ''),
-          anniversaryDate: this.commonService.formatDateToMMDDYYYY(this.userDetails?.anniversaryDate || ''),
-          gender: this.userDetails?.gender || '',
-          married: this.userDetails?.married || 'no',
-          identity: this.userDetails?.identity || 'women',
-          pincode: this.userDetails?.pincode || '',
-          address1: this.userDetails?.addressLine1 || '',
-          address2: this.userDetails?.addressLine2 || '',
-          landmark: this.userDetails?.landmark || '',
-          city: this.userDetails?.city || '',
-          state: this.userDetails?.state || '',
-        });
+        console.log(this.userDetails);
+        this.profileImage = this.userDetails?.profileImg;
+        this.editProfileForm.patchValue(this.userDetails);
       },
       error: (err: any) => {
         this.toastr.error(err.message);

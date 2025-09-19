@@ -82,12 +82,13 @@ export class UserAuthComponent implements OnInit {
         password: this.authService.encryptUsingAES256(this.signupForm.value.password)
       };
       this.authService.signup(encryptedData).subscribe({
-        next: () => {
+        next: (res) => {
           this.signupForm.reset();
+          this.toastr.success(res?.message);
           this.activeModal.close(UserAuthComponent);
         },
         error: (err) =>
-          this.toastr.error(err.message)
+          this.toastr.error(err?.message)
       });
     }
   }

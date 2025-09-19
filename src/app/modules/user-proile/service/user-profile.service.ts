@@ -42,12 +42,10 @@ export class UserProfileService {
   /** 
     * @description Update user email or phone number
     * @param data
-    */
+  */
   updateEmailOrPhone(id: number, data: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/api/users/${id}/profile`, data);
   }
-
-
   /**
 * @description get user byId 
 * @author Gurmeet Kumar
