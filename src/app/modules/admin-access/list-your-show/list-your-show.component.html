@@ -245,13 +245,10 @@
     </div>
 
 
-
-
     <ng-template #serviceModal let-modal>
-
         <div class="modal-body p-0">
             <div class="col-12 d-flex justify-content-end align-itmes-center">
-                <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true"></i>
+                <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
             </div>
             @if (serviceContent) {
             <div class="col-12 d-flex flex-column justify-content-center align-itmes-center modal_container p-3">
@@ -262,13 +259,7 @@
                 <p><span><i class="fa fa-check" aria-hidden="true"></i>
                     </span> {{item}}</p>
                 }
-
-
             </div>
             }
-
-
         </div>
-
-
     </ng-template>

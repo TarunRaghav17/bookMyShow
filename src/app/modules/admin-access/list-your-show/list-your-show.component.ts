@@ -17,7 +17,6 @@ export class ListYourShowComponent {
   constructor(private modalService: NgbModal, private commonService: CommonService) {
     this.serviceData = this.commonService.listYourShowService
 
-
   }
 
   /**
@@ -28,11 +27,16 @@ export class ListYourShowComponent {
   openCityModal(serviceModal: TemplateRef<any>, data: any) {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
+      backdrop: 'static',
     });
     this.serviceContent = data
 
   }
 
+
+  closemodal() {
+    this.modalService.dismissAll();
+  }
 
 
 }

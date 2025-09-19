@@ -1,10 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
-import { Observable} from 'rxjs';
+import { HttpClient, HttpContext } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { jwtDecode } from "jwt-decode";
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
+import { CommonService } from '../services/common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,7 @@ export class AuthService {
   encrypted!: string;
   baseUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient, private router: Router) { 
-    
+  constructor(private http: HttpClient, private router: Router,private commonService:CommonService) {
   }
 
   /**
@@ -30,7 +30,8 @@ export class AuthService {
    * @return Observable<any>
    */
   login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials);
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials,{
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)});
   }
 
   /**
@@ -39,16 +40,20 @@ export class AuthService {
    * @return Observable<any>
    */
   signup(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/register`, data);
+    return this.http.post<any>(`${this.baseUrl}/auth/register`, data,{
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
+    });
   }
 
   /**
-   * @description here is validate userName  check DB is Allow Entred username
+   * @description here is validate userName  check DB is Allow Entred username      
    * @author Gurmeet Kumar
    * @param name
    */
   validateUserName(userName: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`)
+    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`,{
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
+    })
   }
 
   /**
@@ -71,6 +76,22 @@ export class AuthService {
     const token = localStorage.getItem('token');
     if (!token) return null;
     return this.decodeToken(token);
+  }
+  /**
+    * @description Check if token is expired
+    * @author Gurmeet Kumar
+    * @return any | null
+    */
+
+  isTokenExpired(token: string) {
+    try {
+      const decoded: any = JSON.parse(atob(token.split('.')[1]));
+      if (!decoded?.exp) return true;
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decoded.exp < currentTime;
+    } catch {
+      return true;
+    }
   }
 
   /**

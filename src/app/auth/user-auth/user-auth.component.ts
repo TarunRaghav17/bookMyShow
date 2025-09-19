@@ -33,7 +33,6 @@ export class UserAuthComponent implements OnInit {
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)])
   });
-  
   /** @description Signup form controls */
   signupForm = new FormGroup({
     name: new FormControl('', [Validators.required]),
@@ -83,12 +82,13 @@ export class UserAuthComponent implements OnInit {
         password: this.authService.encryptUsingAES256(this.signupForm.value.password)
       };
       this.authService.signup(encryptedData).subscribe({
-        next: () => {
+        next: (res) => {
           this.signupForm.reset();
+          this.toastr.success(res?.message);
           this.activeModal.close(UserAuthComponent);
         },
         error: (err) =>
-          this.toastr.error(err.message)
+          this.toastr.error(err?.message)
       });
     }
   }
@@ -117,7 +117,6 @@ export class UserAuthComponent implements OnInit {
  * @return void
  * @param event
  */
-
 
   onValidateExistUser(): void {
     const usernameControl = this.signupForm.get('username');

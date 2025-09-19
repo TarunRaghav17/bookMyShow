@@ -236,7 +236,8 @@
             </div>
             }
         </div>
-        @if(searchControl.value?.length > 0 && filteredCities.length > 0){
+        @if (searchControl.value?.length > 0) {
+        @if (filteredCities.length > 0) {
         <div class="city_search_list">
             <ul>
                 @for (city of filteredCities; track $index) {
@@ -246,17 +247,20 @@
                 }
             </ul>
         </div>
+        } @else {
+        <div class="city_search_list">
+            <p class="text-center fw-bold">No cities found</p>
+        </div>
         }
+        }
+
         <span class="detect_my_location_text text-danger mt-3"> <i class="fa fa-map-marker me-2" aria-hidden="true"></i>
             Detect my location</span>
     </div>
     <div class="modal-body p-0">
         <p class="text-center mt-1">Popular Cities</p>
-
         <div class="py-2 d-flex gap-2 px-3 justify-content-around">
-
             @for (item of cityData; track $index) {
-
             <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)"
                 [ngClass]="{'selected-popular-city': item.cityName === selectedCity}">
                 <div class=" d-flex flex-column justify-content-center align-items-center">

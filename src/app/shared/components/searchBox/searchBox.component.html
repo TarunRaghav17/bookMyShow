@@ -18,7 +18,7 @@
             </div>
             <div class="input_container col-4">
                 <form class="w-100 me-3" role="search">
-                    <input type="search" class="form-control" [formControl]="seachControl" placeholder="Search..."
+                    <input type="search" class="form-control" [formControl]="searchControl" placeholder="Search for Movies, Events, Plays & more"
                         aria-label="Search">
                 </form>
             </div>
@@ -50,17 +50,31 @@
             <p class="m-0">TRENDING SEARCHES</p>
         </div>
         <div class="movie_list_container">
+            <!-- When movieName has data -->
+            @if (movieName && movieName.length > 0) {
             @for (item of movieName; track $index) {
             <div class="movies_list">
                 <div (click)="getDetailsMovies(item.eventId)" class="movie_name_container">
-                    <span class="movie_name" >{{item.name}}</span>
+                    <span class="movie_name">{{ item.name }}</span>
                 </div>
                 <span class="movie_icon">
                     <i class="fa fa-film" aria-hidden="true"></i>
                 </span>
             </div>
             }
+            } @else {
+        
+            @if (searchControl.value ) {
+            <div class="movies_list">
+                <div class="no_data">
+                    <span>No found in database</span>
+                </div>
+            </div>
+            }
+
+            }
         </div>
+
     </div>
 
 
