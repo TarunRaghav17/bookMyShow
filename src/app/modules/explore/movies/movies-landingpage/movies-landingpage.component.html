@@ -29,7 +29,7 @@
 </carousel>
 
 <!-- Movies Section  -->
-@if(moviesLandingPage){
+@if(  dummyMoviesdata?.length){
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
         <div class="main_container_box d-flex justify-content-center ">
@@ -91,7 +91,7 @@
                                                         <a class="img_container rounded-4 justify-content-start"
                                                             [routerLink]="`/${commonService._selectedCategory()}/${commonService._selectCity()}/${item.eventId}`">
                                                             <img [src]="commonService.getImageFromBase64(item.imageurl)"
-                                                                [alt]="item.imageurl">
+                                                                [alt]="item?.imageurl">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">

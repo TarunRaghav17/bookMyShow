@@ -12,8 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './events-landingpage.component.scss'
 })
 export class EventsLandingPageComponent {
-  eventsLandingPage: any | null = null
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[]|null = null;
   topFiltersArray!: any[]
   filters!: any[]
   select: any[] = selectedFilters
@@ -29,7 +28,6 @@ export class EventsLandingPageComponent {
   }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService) {
-    this.dummyMoviesdata = movies;
     this.commonService._selectedCategory.set('Events');
   }
 
@@ -45,7 +43,7 @@ export class EventsLandingPageComponent {
     this.sendPayload.type = 'Event'
     this.eventService.getAllEvents(this.sendPayload).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.dummyMoviesdata = res.data || []
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -125,7 +123,7 @@ getFilter(event: any){
 }
 
 getImageFromBase64(){
-  
+
 }
 
 }

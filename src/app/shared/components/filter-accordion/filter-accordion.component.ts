@@ -16,6 +16,7 @@ export class FilterAccordionComponent implements OnInit {
   browseBy: any
   openedIndex: number[] = [0];
   filtersArray: any[] = []
+  dummyMoviesdata!:any[];
 
   constructor(public router: Router, public commonService: CommonService) {
     this.selectedCategory = this.commonService._selectedCategory();
@@ -38,4 +39,17 @@ export class FilterAccordionComponent implements OnInit {
   applyFilter(filter: any) {
     this.filterEvent.emit(filter)
   }
+
+  clearAllFilters(item:any, index:number): void {
+    let {selectedType,data}=item
+    data.filter((item:any)=>{
+      item.selected=false
+    })
+    this.commonService.selectedFiltersSignal().filter((item:any)=>{
+      if(item.selectedType==selectedType){
+        item.data=[]
+         this.toggleAccordion(index)
+      }
+    })
+    };
 }

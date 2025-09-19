@@ -89,7 +89,7 @@ export class CommonService {
       {
         type: "Release Month",
         data: []
-      }
+      },
     ])
 
 
@@ -176,7 +176,7 @@ export class CommonService {
     let filterType: any[] = this.selectedFiltersSignal().filter((item: any) =>
       item.type == filter.type
     )
-    if (filterType) {
+    if (filterType.length>0) {
       let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
       if (alreayExist.length == 0) {
         filterType[0].data.push(filter.filterName)
@@ -332,8 +332,7 @@ export class CommonService {
   }
 
   getAllVenuesBYcity(city:String):Observable<any>{
-    console.log(city)
-    return this.http.get(`${this.baseUrl}/venues/city/noida`)
+    return this.http.get(`${this.baseUrl}/venues/city/${city}`)
   }
 }
 

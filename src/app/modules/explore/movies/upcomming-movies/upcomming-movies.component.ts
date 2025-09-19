@@ -12,8 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './upcomming-movies.component.scss'
 })
 export class UpcommingMoviesComponent {
-  upcomingMovies: any | null = null
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[] |null = null
   selectedFilters: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
@@ -40,7 +39,7 @@ export class UpcommingMoviesComponent {
     this.sendPayload.type = 'Movie'
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.dummyMoviesdata = res.data || []
       },
       error: (err) => {
         this.toastr.error(err.message);

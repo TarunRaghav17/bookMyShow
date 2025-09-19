@@ -1,19 +1,23 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, TemplateRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
+import { BuyTicketSkeltonLoaderComponent } from "../buy-ticket-skelton-loader/buy-ticket-skelton-loader.component";
 @Component({
   selector: 'app-events-details',
   standalone: true,
   templateUrl: './events-details.component.html',
-  styleUrl: './events-details.component.scss'
+  styleUrl: './events-details.component.scss',
+  imports: [ActivitiesRoutingModule, NgbModule, BuyTicketSkeltonLoaderComponent]
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
-  constructor(private route: ActivatedRoute, public commonService: CommonService, private toastr: ToastrService) { }
-  eventDetails: any;
-  showHeader = false;
+  eventDetails: any|null = null;
+  showHeader:boolean= false;
+  constructor(private route: ActivatedRoute, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal) { }
+
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id')
@@ -32,4 +36,42 @@ export class EventsDetailsComponent implements OnInit {
     if (!section.length) return;
     this.showHeader = window.scrollY >= (section[0] as HTMLElement).offsetTop;
   }
+
+  /**
+  * @description open service modal 
+  * @author  Gurmeet Kumar
+  */
+
+  openCityModal(serviceModal: TemplateRef<any>) {
+    this.modalService.open(serviceModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'term-and-condition',
+      backdrop: 'static'
+    });
+  }
+  closemodal() {
+    this.modalService.dismissAll();
+  }
+
+  openShareModal(serviceModal: TemplateRef<any>) {
+    this.modalService.open(serviceModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'share-modal',
+      backdrop: 'static'
+    });
+  }
+
+  getCurrentPath() {
+    let url = window.location.href;
+    this.copyLink(url);
+  }
+
+  copyLink(link: string) {
+  navigator.clipboard.writeText(link).then(() => {
+    this.toastr.success("Link copied sucessfully")
+    this.closemodal()
+  }).catch(() => {
+    this.toastr.error('Failed to copy');
+  });
+}
 }

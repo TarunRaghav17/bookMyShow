@@ -11,8 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './plays-landing-page.component.scss'
 })
 export class PlaysLandingPageComponent {
-  playsLandingPage:any|null = null
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[]|null = null;
   topFiltersArray!: any[]
   originalMovies = movies
   filters: any[] = []
@@ -44,7 +43,7 @@ export class PlaysLandingPageComponent {
     this.sendPayload.type = 'Plays'
     this.playService.getAllPlays(this.sendPayload).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.dummyMoviesdata = res.data || []
       },
       error: (err) => {
         this.toastr.error(err.message);

@@ -11,8 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './sports-page.component.scss'
 })
 export class SportsPageComponent {
-  sportsPage: any | null = null
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[] | null = null
   topFiltersArray: any[] = topFilters
   originalMovies = movies
   filters: any[] = []
@@ -40,7 +39,7 @@ export class SportsPageComponent {
     this.sendPayload.type = 'Sports'
     this.sportService.getFilters('categories').subscribe({
       next: (res) => {
-        this.topFiltersArray = res.data
+        this.topFiltersArray = res.data||[]
       },
       error: (err) => {
         this.toastr.error(err.message);

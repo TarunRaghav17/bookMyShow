@@ -12,8 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './activities-page.component.scss'
 })
 export class ActivitiesPageComponent {
-  activites: any | null = null
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[] | null = null;
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
@@ -41,7 +40,7 @@ export class ActivitiesPageComponent {
     this.sendPayload.type = 'Activities'
     this.activitiesService.getAllActivities(this.sendPayload).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.dummyMoviesdata = res.data||[]
       },
       error: (err) => {
         this.toastr.error(err.message);

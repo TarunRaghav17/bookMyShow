@@ -13,8 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './movies-landingpage.component.scss'
 })
 export class MovieLandingPageComponent implements OnDestroy {
-  moviesLandingPage: any | null = null
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[] | null= null;
   selectedCity: any = null
   topFiltersArray!: any[]
   filtersArray: any[] = []
@@ -44,7 +43,7 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.sendPayload.type = 'Movie'
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.dummyMoviesdata = res.data || []
       },
       error: (err) => {
         this.toastr.error(err.message);

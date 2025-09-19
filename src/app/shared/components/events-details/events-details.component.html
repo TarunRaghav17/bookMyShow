@@ -1,3 +1,4 @@
+@if(eventDetails){
 <div class="container-fluid bg-white">
     <div class="row g-0">
         <div class="col-12 d-flex flex-column justify-content-center align-items-center">
@@ -7,7 +8,7 @@
                 </div>
                 <div class="col-4">
                     <i class="fa fa-share" aria-hidden="true"></i>
-                    <span>Share</span>
+                    <span (click)="openShareModal(shareModal)">Share</span>
                 </div>
             </div>
             <div class="col-8 d-flex justify-content-start gap-5 align-items-start">
@@ -54,7 +55,7 @@
                         <i class="fa fa-ticket fs-1 text-danger" aria-hidden="true"></i>
                         <p class="px-3 my-0"> Contactless Ticketing & Fast-track Entry with M-ticket.</p>
                     </div>
-                    <h3 class="py-3">Terms & Conditions</h3>
+                    <h3 class="py-3" (click)="openCityModal(serviceModal)">Terms & Conditions <span>></span></h3>
                 </div>
                 <div class="col-3 side_card_details">
                     <div class="border h-100 rounded-4 bg-white ">
@@ -99,8 +100,8 @@
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="">{{eventDetails?.pricelist[0]}} onwards</p>
+                                <div class="gap-2">
+                                    <h5 class="">₹{{eventDetails?.pricelist[0]}} onwards</h5>
                                     <span>Filling Fast</span>
                                 </div>
                                 <button class="book_now_btn">Book now</button>
@@ -112,6 +113,7 @@
         </div>
     </div>
 </div>
+
 <div class="top_bar d-flex justify-content-center align-items-center bg-white border shadow-sm"
     [class.show]="showHeader">
     <div class="col-8 d-flex align-items-center gap-3 py-3">
@@ -119,3 +121,67 @@
         </span>
     </div>
 </div>
+
+<ng-template #serviceModal let-modal>
+    <div class="modal-header border-bottom-0">
+        <div class="col-12 d-flex justify-content-between align-itmes-center">
+            <h2>Terms & Conditions</h2>
+
+            <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+        </div>
+    </div>
+    <div class="modal-body p-0">
+        <div class="px-2">
+            <p>1. Tickets once booked cannot be exchanged or refunded.</p>
+            <p>2. An Internet handling fee per ticket may be levied. Please check the total amount before payment</p>
+            <p>3. We recommend that you arrive at-least 30 minutes prior at the venue for a seamless entry </p>
+            <p>4. It is mandatory to wear masks at all times and follow social distancing norms</p>
+            <p>5. Please do not purchase tickets if you feel sick</p>
+            <p>6. Unlawful resale (or attempted unlawful resale) of a ticket would lead to seizure or cancellation of
+                that ticket without refund or other compensation</p>
+            <p>7. Rights of admission reserved</p>
+            <p>8. These terms and conditions are subject to change from time to time at the discretion of the organizer
+            </p>
+            <p>9. Use any mobile application of your choice like GoogleFit, Strava, RunKeeper etc and submit a
+                screenshot of your activity. </p>
+        </div>
+    </div>
+</ng-template>
+<ng-template #shareModal let-modal>
+    <div class="modal-header border-bottom-0">
+        <div class="col-12 d-flex justify-content-between align-itmes-center">
+            <h3>Share</h3>
+           <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+        </div>
+    </div>
+    <div class="modal-body p-0">
+        <div class="border-bottom">
+            <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
+                <p class="m-0">Facebook</p>
+                 <a href="https://www.facebook.com" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="border-bottom">
+            <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
+                <p class="m-0">X (Formerly Twitter)</p>
+               <i class="fa fa-twitter" aria-hidden="true"></i>
+            </div>
+        </div>
+         <div class="border-bottom">
+            <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
+                <p class="m-0">Copy Link</p>
+                <i class="fa fa-clipboard" aria-hidden="true"  (click)="getCurrentPath()"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+}
+@else {
+    <app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
+}
+
+
+
+
+
+

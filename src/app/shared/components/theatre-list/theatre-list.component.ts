@@ -17,6 +17,8 @@ export class TheatreListComponent implements OnInit{
   selecetedCity: any;
   toggleButton: boolean = false
   venueListArray:any[] = []
+  originalVenueListArray: any[] = []; 
+  selectedType: string = ''; 
 
   constructor(public commonService: CommonService ,  private toastr: ToastrService) {
     this.selectedCategory = this.commonService._selectedCategory();
@@ -30,15 +32,13 @@ export class TheatreListComponent implements OnInit{
  }
 
   onVenueSearch(event: any) {
-  const searchText = event.target.value.toLowerCase(); 
-
-  if (searchText) {
-    const res = this.venueListArray.filter((cinema) =>
-      cinema.venueName.toLowerCase().includes(searchText)
+    const searchText = event.target.value.toLowerCase();
+   if (searchText) {
+    this.venueListArray = this.originalVenueListArray.filter(cinema =>
+      cinema.venueName.toLowerCase().includes(searchText) || cinema.address.street.toLowerCase().includes(searchText)
     );
-    this.venueListArray = res;
   } else {
-    this.getVenues(); 
+    this.venueListArray = [...this.originalVenueListArray]; 
   }
 }
 
@@ -48,15 +48,20 @@ export class TheatreListComponent implements OnInit{
   getVenues(){
     this.commonService.getAllVenuesBYcity(this.commonService._selectCity()).subscribe({
       next:(res)=>{
-        this.venueListArray = res
+        this.originalVenueListArray = res.filter((venue:any)=>venue.venueFor===this.commonService._selectedCategory())
+         this.venueListArray = [...this.originalVenueListArray]; 
       },
       error:(err)=>{
         this.toastr.error(err.message)
       }
     })
   }
-  
 
+setType(type: string) {
+   this.commonService._selectedCategory.set(type);
+  this.selectedType = type;
+  this.getVenues()
+}
 }
 
 
