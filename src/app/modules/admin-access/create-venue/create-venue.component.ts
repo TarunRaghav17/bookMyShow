@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { VenuesService } from './venues-services/venues.service';
 import { ToastrService } from 'ngx-toastr';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   standalone: false,
@@ -13,7 +14,7 @@ export class CreateVenueComponent implements OnInit {
   tempAmmenity = new FormControl('', [Validators.required])
   venueFor: any[] = []
   venueType: any[] = [];
-
+  citiesArray: any[] = []
   supportedCategoriesArray: any[] = []
 
   alphabets = [
@@ -22,21 +23,21 @@ export class CreateVenueComponent implements OnInit {
   ]
 
   venueTypeMapping = {
-    "movies": [
-      { "value": "theatre", "label": "Theater" }
+    "Movie": [
+      { "value": "theatre", "label": "Theatre" },
     ],
-    "sports": [
+    "Sports": [
       { "value": "stadium", "label": "Stadium" },
       { "value": "ground", "label": "Ground" },
       { "value": "court", "label": "Court" },
     ],
-    "events": [
+    "Event": [
       { "value": "auditorium", "label": "Auditorium" },
       { "value": "banquet_hall", "label": "Banquet Hall" },
       { "value": "open_air", "label": "Open Air Venue" },
       { "value": "exhibition_hall", "label": "Exhibition Hall" }
     ],
-    "activities": [
+    "Activities": [
       { "value": "studio", "label": "Studio" },
       { "value": "classroom", "label": "Classroom" },
       { "value": "workshop_hall", "label": "Workshop Hall" }
@@ -44,10 +45,10 @@ export class CreateVenueComponent implements OnInit {
   }
 
   supportedCategoriesMapping = {
-    "movies": {
+    "Movie": {
       "theatre": [
         {
-          "value": "imax", "label": "imax"
+          "value": "imax", "label": "IMAX"
         },
         {
           "value": "3d", "label": "3D"
@@ -58,10 +59,11 @@ export class CreateVenueComponent implements OnInit {
         {
           "value": "4d", "label": "4D"
         }
-      ]
+      ],
+
     },
 
-    "sports": {
+    "Sports": {
       "ground": [
         { "value": "cricket", "label": "Cricket" },
         { "value": "football", "label": "Football" },
@@ -79,7 +81,7 @@ export class CreateVenueComponent implements OnInit {
         { "value": "basketball", "label": "Basketball" }
       ],
     },
-    "events": {
+    "Event": {
       "auditorium": [
         { "value": "concert", "label": "Concert" },
         { "value": "theatre", "label": "Theatre Play" },
@@ -102,7 +104,7 @@ export class CreateVenueComponent implements OnInit {
         { "value": "book_fair", "label": "Book Fair" }
       ]
     },
-    "activities": {
+    "Activities": {
       "studio": [
         { "value": "yoga", "label": "Yoga" },
         { "value": "dance", "label": "Dance Class" },
@@ -125,7 +127,8 @@ export class CreateVenueComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private venuesService: VenuesService,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
@@ -143,7 +146,21 @@ export class CreateVenueComponent implements OnInit {
       amenities: this.fb.array([])
     });
 
+    this.fetchCities()
+
   }
+  fetchCities() {
+    this.commonService.getAllCities().subscribe({
+      next: (res) => {
+        this.citiesArray = res.data
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+  }
+
+
 
   onVenueForChange() {
     let venueFor = this.venueForm.get('venueFor')?.value as keyof typeof this.venueTypeMapping
@@ -152,7 +169,7 @@ export class CreateVenueComponent implements OnInit {
 
     this.venueType = this.venueTypeMapping[venueFor]
 
-    if (venueFor == 'movies') {
+    if (venueFor == 'Movie') {
       this.venueForm.addControl('screens',
         this.fb.array([this.createScreen()]))
     }
@@ -176,7 +193,6 @@ export class CreateVenueComponent implements OnInit {
     return this.fb.group({
       screenName: ['', Validators.required],
       layouts: this.fb.array([this.createLayout()])
-
     })
   }
 
@@ -186,7 +202,6 @@ export class CreateVenueComponent implements OnInit {
 
   removeScreen(index: number) {
     this.screens.removeAt(index)
-
   }
 
   getLayouts(screen: AbstractControl): FormArray {
@@ -283,35 +298,7 @@ export class CreateVenueComponent implements OnInit {
   }
 
 
-  bulkUploadItems=[
-  {
-    "venueName": "Grand Cinema Hall",
-    "venueCapacity": 300,
-    "venueFor": "Movies",
-    "venueType": "Multiplex",
-    "address": {
-      "street": "MG Road",
-      "city": "Bengaluru",
-      "pin": "560001"
-    },
-    "amenities": ["Parking", "Snacks", "AC"],
-    "supportedCategories": ["3D", "2D"],
-    "screens": [
-      {
-        "screenName": "Screen 1",
-        "layouts": [
-          { "layoutName": "Standard", "rows": ["A","B","C","D"], "cols": 20 }
-        ]
-      }
-    ]
-  },
- 
-]
 
 
-  handleBulkUpload() {
-    console.log("bulk upload started")
-    this.venuesService.uploadBulk(this.bulkUploadItems)
-}
 }
 

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { BuyTicketSkeltonLoaderComponent } from '../buy-ticket-skelton-loader/buy-ticket-skelton-loader.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-buy-tickets',
@@ -13,16 +14,18 @@ import { BuyTicketSkeltonLoaderComponent } from '../buy-ticket-skelton-loader/bu
 })
 export class BuyTicketsComponent {
 
-  constructor(public commonService: CommonService,
+  constructor(public commonService: CommonService,private route:ActivatedRoute,
+    private toaster:ToastrService
   ) { }
 
 // -------test data------
 maxPrice=900;
 // ------------------
   selectedMovie = 'movie999'
-  movieDetails: any = {}
+  movieDetails: any | null = null
   dateSelectionArray: any = []
   userSelectedPreference:any[]=[]
+  isOpen:boolean=false
   myMovies = [
     {
       "_id": "movie001",
@@ -194,10 +197,17 @@ maxPrice=900;
   ]
 
   ngOnInit() {
-    this.movieDetails = this.commonService.movieDetails()
+
+    this.fetchContentIdByUrl();
+
     console.log(this.movieDetails)
+
     this.initializeDateSelectionArray()
-    this.commonService.setUserSelectedDate(this.dateSelectionArray[0])
+
+    this.commonService.setUserSelectedDate(0,this.dateSelectionArray[0])
+    
+    
+    
     this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
@@ -207,6 +217,19 @@ maxPrice=900;
         shows: theatreShows
       }
     });
+  }
+
+  fetchContentIdByUrl(){
+    let contentId=this.route.snapshot.paramMap.get('id');
+    this.commonService.getContentDetailsById(contentId).subscribe({
+      next:(res)=>{
+        this.movieDetails=res.data;
+      },
+      error:(err)=>{
+        this.toaster.error(err.error.message)
+      }
+    })
+
   }
 
   initializeDateSelectionArray() {
@@ -229,5 +252,11 @@ maxPrice=900;
   // initializePriceRangeArray(){
   //   let PriceRangeArray=[]
   // }
+
+
+  toggleSearchBox(event:any,value:boolean){
+    event.stopPropagation()
+    this.isOpen=value
+  }
 
 }

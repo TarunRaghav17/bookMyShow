@@ -1,4 +1,4 @@
-@if(!theatres){
+@if(!movieDetails){
 <app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
 }
 @else {
@@ -12,15 +12,17 @@
     <span class="text-muted small bg-light text-dark  rounded-pill px-2 border ms-2 py-1">{{genre}}</span>
     }
   </div>
-  <div class="d-flex align-items-center justify-content-between mb-3 border-bottom  bg-white" style="height:80px">
+
+  <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-start ps-1  bg-white"
+    style="height:80px">
     <!-- Date Selector -->
     <div class="d-flex align-items-center gap-1" style="font-size: 12px;">
       @for(date of dateSelectionArray;track $index){
       <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card "
-        (click)="this.commonService.setUserSelectedDate(date)"
-        [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':''}">
-        <!-- $index>3?'backgroundColor':'green'        }"> -->
-
+        (click)="this.commonService.setUserSelectedDate($index,date)"
+        [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':'',
+        'not-allowed':'pointer',}"
+        [ngClass]="{'date_disabled':$index>2}"  >
         <div>{{date.day}}</div>
         <div style="font-weight: bold; font-size:18px ;">{{date?.dateNum}}</div>
         <div>{{date.month}}</div>
@@ -39,9 +41,9 @@
 
           @for(lang of movieDetails.languages;track $index ){
           @for(format of movieDetails.format;track $index){
-          <li><a class="dropdown-item">
-              {{lang}} - {{format}}
-            </a></li>
+          <li class="dropdown-item on_hover">
+            {{lang}} - {{format}}
+          </li>
           }
           }
         </ul>
@@ -52,21 +54,21 @@
           data-bs-toggle="dropdown">Price Range</button>
         <ul class="dropdown-menu ">
 
-           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2">
+          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover">
             <label class="">
               ₹0 - 200</label>
-              <input type="checkbox" class="form-check-input accent-blue" />
-            </li>
-          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2">
+            <input type="checkbox" class="form-check-input accent-blue" />
+          </li>
+          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover">
             <label class="">
               ₹201 - ₹400</label>
-              <input type="checkbox" class="form-check-input accent-blue" />
-            </li>
-           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2">
+            <input type="checkbox" class="form-check-input accent-blue" />
+          </li>
+          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover">
             <label class="">
               ₹401 - ₹600</label>
-              <input type="checkbox" class="form-check-input accent-blue" />
-            </li>
+            <input type="checkbox" class="form-check-input accent-blue" />
+          </li>
         </ul>
       </div>
 
@@ -74,27 +76,40 @@
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Special Formats</button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item">IMAX</a></li>
-          <li><a class="dropdown-item">4DX</a></li>
+          <li class="dropdown-item">IMAX</li>
+          <li class="dropdown-item">4DX</li>
         </ul>
       </div>
       <div class="dropdown border-start ">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Preferred Time</button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item">Morning</a></li>
-          <li><a class="dropdown-item">Afternoon</a></li>
+
+          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover ">
+            <label class="">
+              Morning</label>
+            <input type="checkbox" class="form-check-input accent-blue" />
+          </li>
+
+          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover ">
+            <label class="">
+              Afternoon</label>
+            <input type="checkbox" class="form-check-input accent-blue" />
+          </li>
+
         </ul>
       </div>
 
-      <!-- search vala  -->
-      <div class="dropdown  border-start">
-        <button class="btn btn-light bg-white dropdown-toggle w-100 h-100" data-bs-toggle="dropdown">Price
-          Range</button>
-        <ul class="dropdown-menu ">
-          <li><a class="dropdown-item">₹100 - ₹200</a></li>
-          <li><a class="dropdown-item">₹201 - ₹400</a></li>
-        </ul>
+      <!-- search  -->
+      <div class="dropdown  border-start border-end d-flex on_hover
+      align-items-center justify-content-start px-3 gap-4 searchBox 
+      " [ngClass]="{onSearchBox:isOpen}" (click)="toggleSearchBox($event,true)">
+        <i class="fa fa-search fa_search"></i>
+        <input type="text" placeholder="Search by cinema or area" class="form-control" />
+        <div class="">
+          <button class="btn btn-close" (click)="toggleSearchBox($event,false)"></button>
+
+        </div>
       </div>
     </div>
   </div>
@@ -113,11 +128,11 @@
         </div>
         <!-- beverages icon -->
         <div class="d-flex gap-2 mt-2 align-items-center ">
-          <div class="on_hover ">
+          <div class="on_hover_icon ">
             <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/fnb-v1.png" alt=""
               style="width:4rem;" />
           </div>
-          <div class="on_hover ">
+          <div class="on_hover_icon ">
             <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/mticket-v1.png" alt=""
               style="width:5rem;" />
           </div>
@@ -155,11 +170,11 @@
         </div>
         <!-- beverages icon -->
         <div class="d-flex gap-2 mt-2 align-items-center ">
-          <div class="on_hover ">
+          <div class="on_hover_icon ">
             <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/fnb-v1.png" alt=""
               style="width:4rem;" />
           </div>
-          <div class="on_hover ">
+          <div class="on_hover_icon ">
             <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/mticket-v1.png" alt=""
               style="width:5rem;" />
           </div>

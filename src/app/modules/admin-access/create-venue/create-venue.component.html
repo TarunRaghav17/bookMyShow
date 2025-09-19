@@ -1,8 +1,4 @@
-<button (click)="handleBulkUpload()">bulk</button>
-
 <form [formGroup]="venueForm" (ngSubmit)="onSubmit()" novalidate class="container my-4">
-
-    
     <div class="row">
         <!-- Venue Name -->
         <div class="col-md-6 mb-3">
@@ -35,14 +31,13 @@
             <select formControlName="city" class="form-select"
                 [ngClass]="{'is-invalid': venueForm.get('address.city')?.touched && venueForm.get('address.city')?.invalid}">
                 <option value="" disabled>Select</option>
-                <option value="noida">Noida</option>
-                <option value="gurgaon">Gurgaon</option>
-                <option value="kanpur">Kanpur</option>
-                <option value="delhi">Delhi</option>
+                @for(city of citiesArray;track $index){
+                <option [value]="city.cityName | lowercase">{{city.cityName}}</option>
+                }
+
             </select>
             <div class="invalid-feedback">City is required.</div>
         </div>
-
         <div class="col-md-4 mb-3">
             <label class="form-label">PIN</label>
             <input type="text" formControlName="pin" class="form-control"
@@ -58,10 +53,11 @@
             <select formControlName="venueFor" class="form-select" (change)="onVenueForChange()"
                 [ngClass]="{'is-invalid': venueForm.get('venueFor')?.touched && venueForm.get('venueFor')?.invalid}">
                 <option value="" disabled>Select</option>
-                <option value="movies">Movies</option>
-                <option value="sports">Sports</option>
-                <option value="events">Events</option>
-                <option value="activities">Activities</option>
+                <option value="Movie">Movies</option>
+                <option value="Sports">Sports</option>
+                <option value="Event">Events</option>
+                <option value="Activities">Activities</option>
+                <option value="Plays">Plays</option>
             </select>
             <div class="invalid-feedback">Please select a type.</div>
         </div>
@@ -164,7 +160,6 @@
         }
     </div>
     }
-
     <div formArrayName="amenities" class="my-3 ">
         <h5>Amenities</h5>
         <ul class="list-group d-flex flex-row align-items-center justify-content-start gap-3">

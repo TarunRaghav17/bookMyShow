@@ -4,10 +4,11 @@
             <label class="form-label">Event Type</label>
             <select class="form-select" formControlName="eventType" (change)="onEventTypeChange()">
                 <option value="" disabled selected>Select</option>
-                <option value="movies">Movies</option>
-                <option value="sports">Sports</option>
-                <option value="events">Events</option>
-                <option value="activities">Activities</option>
+                <option value="Movie">Movie</option>
+                <option value="Sports">Sports</option>
+                <option value="Event">Event</option>
+                <option value="Plays">Plays</option>
+                <option value="Activities">Activities</option>
             </select>
             @if(showForm.get('eventType')?.touched && showForm.get('eventType')?.invalid){
             <div class="text-danger">
@@ -22,10 +23,14 @@
             <select formControlName="city" class="form-select" (change)="onCityChange()">
                 <option value="" disabled selected>Select</option>
                 @for(city of citiesArray;track $index){
-                <option value="noida">{{city.cityName}}</option>
+                <option [value]="city.cityName | lowercase">{{city.cityName}}</option>
                 }
             </select>
-            <div class="invalid-feedback">City is required.</div>
+            @if(showForm.get('city')?.touched && showForm.get('city')?.invalid){
+            <div class="text-danger">
+                City is required
+            </div>
+            }
         </div>
     </div>
 
@@ -39,7 +44,7 @@
                 <option value="{{venue.venueName}}">{{venue.venueName}}</option>
                 }
             </select>
-            @if(showForm.get('venueId')?.touched && showForm.get('venueId')?.invalid){
+            @if(showForm.get('venueName')?.touched && showForm.get('venueName')?.invalid){
             <div class="text-danger">
                 Venue name is required.
             </div>
@@ -54,7 +59,7 @@
                 <option value="{{event.name}}">{{event.name}}</option>
                 }
             </select>
-            @if(showForm.get('eventId')?.touched && showForm.get('eventId')?.invalid){
+            @if(showForm.get('eventName')?.touched && showForm.get('eventName')?.invalid){
             <div class="text-danger">
                 Event name is required.
             </div>
