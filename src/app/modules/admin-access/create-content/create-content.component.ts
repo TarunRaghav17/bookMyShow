@@ -43,7 +43,7 @@ export class CreateContentComponent implements OnInit {
       deleted: [false],
       ageLimit: [null],
 
-      languages: this.fb.array([],Validators.required),
+      languages: this.fb.array([], Validators.required),
       genres: this.fb.array([]),
       format: this.fb.array([]),
       tag: this.fb.array([]),
@@ -77,6 +77,7 @@ export class CreateContentComponent implements OnInit {
   }
 
   removeFormArrayItem(path: string, index: number) {
+    console.log('removeFormArrayItem', path, index)
     this.getArrayControl(path).removeAt(index);
   }
 
@@ -137,18 +138,26 @@ export class CreateContentComponent implements OnInit {
   }
 
 
-  handleInputBoxChange(event:any,path:string,index:number){
-    console.log(event,path,index)
-    if(event?.target.checked){
-      console.log('add')
-      this.addFormArrayItem(path,Number(event.target.value))
+  handleInputBoxChange(event: any, path: string) {
+    const formArray = this.getArrayControl(path);
 
+    if (event?.target.checked) {
+      // Add value if not already present
+      if (!formArray.value.includes(Number(event.target.value))) {
+        this.addFormArrayItem(path, Number(event.target.value));
+      }
+    } else {
+      // Remove by value, not by index
+      const i = formArray.controls.findIndex(
+        (ctrl) => ctrl.value === Number(event.target.value)
+      );
+      if (i !== -1) {
+        this.removeFormArrayItem(path, i);
+      }
     }
-    else{
-      console.log('remove')
-      this.removeFormArrayItem(path,index)
-    }
-    
+
+
+
   }
   onSubmit() {
     console.log(this.eventForm.value);

@@ -88,10 +88,10 @@
                     @for(lang of languagesArray;track $index){
                     <div class="form-check  w-25">
                         <input type="checkbox" class="form-check-input" value="{{lang.languageId}}"
-                            (change)="handleInputBoxChange($event,'languages',$index)"
+                            (change)="handleInputBoxChange($event,'languages')"
                             [ngClass]="{'is-invalid': eventForm.get('languages')?.touched && eventForm.get('languages')?.invalid }">
                         <label class="form-check-label">{{lang.languageName}}</label>
-                        
+
                     </div>
                     }
                 </div>
@@ -106,7 +106,7 @@
                     @for(genre of genresArray;track $index){
                     <div class="form-check  w-25">
                         <input type="checkbox" class="form-check-input" value="{{genre.genresId}}"
-                            (change)="handleInputBoxChange($event,'genres',$index)"
+                            (change)="handleInputBoxChange($event,'genres')"
                             [ngClass]="{'is-invalid': eventForm.get('genres')?.touched && eventForm.get('genres')?.invalid }">
                         <label class="form-check-label">{{genre.genresName}}</label>
                         <!-- <div class="invalid-feedback">Row is required.</div>? -->
@@ -131,7 +131,7 @@
                     @for(format of formatsArray;track $index){
                     <div class="form-check  w-25">
                         <input type="checkbox" class="form-check-input" value="{{format.formatId}}"
-                        (change)="handleInputBoxChange($event,'format',$index)"
+                            (change)="handleInputBoxChange($event,'format')"
                             [ngClass]="{'is-invalid': eventForm.get('format')?.touched && eventForm.get('format')?.invalid }">
                         <label class="form-check-label">{{format.formatName}}</label>
                         <!-- <div class="invalid-feedback">Row is required.</div>? -->
@@ -153,7 +153,7 @@
                     @for(tags of tagsArray;track $index){
                     <div class="form-check  w-25">
                         <input type="checkbox" class="form-check-input" value="{{tags.tagId}}"
-                        (change)="handleInputBoxChange($event,'tag',$index)"
+                            (change)="handleInputBoxChange($event,'tag')"
                             [ngClass]="{'is-invalid': eventForm.get('tag')?.touched && eventForm.get('tag')?.invalid }">
                         <label class="form-check-label">{{tags.tagName}}</label>
                         <!-- <div class="invalid-feedback">Row is required.</div>? -->
@@ -176,7 +176,7 @@
                     @for(category of categoriesArray;track $index){
                     <div class="form-check  w-25">
                         <input type="checkbox" class="form-check-input" value="{{category.categoryId}}"
-                        (change)="handleInputBoxChange($event,'categories',$index)"
+                            (change)="handleInputBoxChange($event,'categories')"
                             [ngClass]="{'is-invalid': eventForm.get('categories')?.touched && eventForm.get('categories')?.invalid }">
                         <label class="form-check-label">{{category?.categoryName}}</label>
                         <!-- <div class="invalid-feedback">Row is required.</div>? -->
@@ -199,7 +199,7 @@
                     @for(moreFilter of moreFilters;track $index){
                     <div class="form-check  w-25">
                         <input type="checkbox" class="form-check-input" value="{{moreFilter.moreFilterId}}"
-                        (change)="handleInputBoxChange($event,'moreFilters',$index)"
+                            (change)="handleInputBoxChange($event,'moreFilters')"
                             [ngClass]="{'is-invalid': eventForm.get('moreFilters')?.touched && eventForm.get('moreFilters')?.invalid }">
                         <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
                         <!-- <div class="invalid-feedback">Row is required.</div>? -->
