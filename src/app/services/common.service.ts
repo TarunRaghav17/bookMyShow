@@ -19,8 +19,9 @@ export class CommonService {
   searchSubject = new Subject<string>();
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
+  userLangFormat = signal<any>({})
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
 
   /**
    * @description Get list of all cities from backend
@@ -226,7 +227,6 @@ export class CommonService {
     filters.map((filter: any) => {
       let { data, type } = filter;
       let filteredData;
-
       switch (type) {
         case 'Language':
           filteredData = data.map((i: any) => ({

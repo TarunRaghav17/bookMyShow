@@ -50,8 +50,13 @@ export class CreateShowComponent implements OnInit, OnDestroy {
 
     this.setToday()
     // api to get contents
-    this.contentService.getContents().subscribe((res) => {
-      this.contents = res
+    this.contentService.getContents().subscribe({
+      next: (res) => {
+        this.eventsNameList = res
+      },
+      error: (err) => {
+        err.error.message
+      }
     })
   }
 
@@ -83,7 +88,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
           userId: ["1245", Validators.required],
           userReservationSeats: [["A-01", "A-02"], Validators.required],
         })
-
       ]));
       this.showForm.addControl('price', this.fb.control(0, Validators.required));
       this.showForm.removeControl('categories');
@@ -131,9 +135,11 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   }
 
   onVenueNameChange() {
-    const selectedEventType = this.showForm.get('eventType')?.value;
+    // const selectedEventType = this.showForm.get('eventType')?.value;
     const selectedVenueName = this.showForm.get('venueName')?.value;
     this.handleReset(['eventName'])
+    this.contentService.getContentByType('Movie').subscribe((res) => this.eventsNameList = res.data
+    )
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
     );
@@ -147,29 +153,19 @@ export class CreateShowComponent implements OnInit, OnDestroy {
       cat.toLowerCase()
     );
     this.formatsArray = supportedCategories
-    this.eventsNameList = this.contents.filter((content: any) => {
-      switch (content.eventType.toLowerCase()) {
-        case 'movies':
-          {
-            return (
-              content.eventType.toLowerCase() === selectedEventType.toLowerCase() && content.format.some((f: any) =>
-                supportedCategories.includes(f.toLowerCase())
-              )
-            );
-          }
-        case 'events':
-          {
-            if (content.eventType.toLowerCase() === selectedEventType.toLowerCase())
-              return content
-          }
-      }
-    });
+
   }
 
   onEventNameChange() {
     let selectedEventName = this.showForm.get('eventName')?.value
-    let selectedEventNameObj = this.eventsNameList.filter((event: any) => event.name == selectedEventName)
-    this.languagesArray = selectedEventNameObj[0].languages
+    let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
+    this.languagesArray = selectedEventNameObj.languages
+    if (selectedEventNameObj.releasedFlag) {
+      this.showForm.get('status')?.setValue('released')
+    }
+    else {
+      this.showForm.get('status')?.setValue('upcoming')
+    }
   }
   setToday() {
     let today = new Date()
@@ -201,7 +197,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     };
   }
 
-
   onScreenChange(event: any) {
     this.categories.clear();
     let selectedScreen = this.selectedVenueObj[0].screens.find((screen: any) => screen.screenName == event.target.value)
@@ -213,10 +208,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
         cols: [layout.cols, Validators.required],
         price: ['', Validators.required],
         reservedSeats: this.fb.array([
-          this.fb.group({
-            userId: ["1245", Validators.required],
-            userReservationSeats: [["A-01"], Validators.required],
-          })
         ])
       }))
     })
@@ -229,7 +220,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
           this.toaster.success('Show created successfully')
         },
         error: (err) => {
-          this.toaster.error(err.message)
+          this.toaster.error(err.error.message)
         }
       })
     } else {

@@ -4,9 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
+import { MovieDetailsLoadingSkeltonComponent } from '../movie-details-loading-skelton/movie-details-loading-skelton.component';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
@@ -18,23 +20,7 @@ export class MoviesDetailsComponent {
   ) { }
   private modalRef?: NgbModalRef | null = null
 
-  movieDetails: any = {}
-
-  langFormatData: any = [
-    {
-      lang: 'TAMIL',
-      format: ['2D', '4DX', 'IMAX 2D', 'ICE']
-    },
-    {
-      lang: 'ENGLISH',
-      format: ['2D', '4DX', 'IMAX 2D', 'ICE']
-
-    },
-    {
-      lang: 'HINDI',
-      format: ['2D', '4DX', 'IMAX 2D', 'ICE']
-    }
-  ]
+  movieDetails: any | null = null
   ngOnInit() {
     this.fetchContentIdByUrl()
   }
@@ -61,9 +47,15 @@ export class MoviesDetailsComponent {
     }
   }
 
-  navigateToBuyTicket() {
+  navigateToBuyTicket(payload: any) {
+    this.commonService.setMovieDetails(this.movieDetails)
+    this.commonService.setUserLangFormat(payload)
     this.modalRef?.close()
-    this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/war2/buytickets/123`])
+    this.router.navigate(
+      [`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.name.split(' ').join('-')}/buytickets/${this.movieDetails.eventId}`],
+      {
+        state: payload
+      })
   }
 
   fetchContentIdByUrl() {
@@ -73,7 +65,7 @@ export class MoviesDetailsComponent {
         this.movieDetails = res.data
       },
       error: (err) => {
-        this.toaster.error(err.message)
+        this.toaster.error(err.error.message)
       }
     })
   }
