@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { filters, selectedFilters } from '../../../db';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -12,7 +12,7 @@ export class CommonService {
   filters: any[] = filters;
   select: any[] = selectedFilters;
   baseUrl = environment.baseUrl;
-
+  IS_PUBLIC_API = new HttpContextToken<boolean>(() => false);
   city = sessionStorage.getItem('selectedCity');
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
@@ -20,7 +20,7 @@ export class CommonService {
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
+  constructor(private http: HttpClient, private sanitizer: DomSanitizer) { }
 
   /**
    * @description Get list of all cities from backend
@@ -28,7 +28,9 @@ export class CommonService {
    * @return Observable<any>
    */
   getAllCities(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/city/all`);
+    return this.http.get(`${this.baseUrl}/api/city/all`, {
+      context: new HttpContext().set(this.IS_PUBLIC_API, true),
+    });
   }
 
   getContentDetailsById(contentId: string | null): Observable<any> {
@@ -40,7 +42,11 @@ export class CommonService {
    * @return Observable<any>
    */
   getPopularCities(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/city/popular`);
+    return this.http.get(`${this.baseUrl}/api/city/popular`,
+      {
+        context: new HttpContext().set(this.IS_PUBLIC_API, true),
+      }
+    );
   }
   setCategory(category: string | null) {
     this._selectedCategory.set(category);
@@ -118,7 +124,24 @@ export class CommonService {
   }
 
   getEventDetailsById(id: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/events/${id}`);
+    return this.http.get(`${this.baseUrl}/api/events/${id}`, {
+      context: new HttpContext().set(this.IS_PUBLIC_API, true)
+      });
+  }
+  /**
+   * @description Format date to MM/DD/YYYY
+   * @author Gurmeet Kumar  
+   * @param date Input date string
+   * @return string | null Formatted date or null if input is null
+   */
+
+    formatDateToMMDDYYYY(date: string | null): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    const month = (d.getMonth() + 1).toString().padStart(2, '0'); // MM
+    const day = d.getDate().toString().padStart(2, '0'); // DD
+    const year = d.getFullYear();
+    return `${month}/${day}/${year}`;
   }
 
   listYourShowService = [
@@ -195,6 +218,7 @@ export class CommonService {
       ],
     },
   ];
+
 
   formatFilters(filters: any): any {
     let filtersArray: any = [];
@@ -283,4 +307,6 @@ export class CommonService {
     });
     return filtersArray;
   }
+
+
 }

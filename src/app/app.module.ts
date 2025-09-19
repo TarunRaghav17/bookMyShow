@@ -12,12 +12,10 @@ import { MoviesDetailsComponent } from './shared/components/movies-details/movie
 import { CarouselModule } from "ngx-bootstrap/carousel";
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { SearchBoxComponent } from './shared/components/searchBox/searchBox.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
-
 import { ToastrModule } from 'ngx-toastr';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 

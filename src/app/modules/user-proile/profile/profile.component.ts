@@ -32,45 +32,44 @@ export class ProfileComponent implements OnInit, OnDestroy {
   userDetails: any;
 
   constructor(
-    private service: CommonService,
+    private commonService: CommonService,
     private authService: AuthService,
     private userService: UserProfileService,
     private toastr: ToastrService,
     private modalService: NgbModal,
     private fb: FormBuilder
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    this.service._profileHeader.set(true);
+    this.commonService._profileHeader.set(true);
     this.getProfileDataId = this.authService.userDetailsSignal();
     this.getProfileUser();
-
     this.getAllStates();
     this.editProfileForm = this.fb.group({
       profileImg: [''],
-      name: ['', Validators.required],
-      username: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       dob: [''],
       gender: [''],
       married: ['no'],
       anniversaryDate: [''],
       identity: ['women'],
-      pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]],
+      pincode: ['', [Validators.pattern(/^[0-9]{6}$/), Validators.maxLength(6)]],
       address1: ['', [Validators.maxLength(255)]],
       address2: ['', [Validators.maxLength(255)]],
       landmark: ['', [Validators.maxLength(100)]],
       city: ['', [Validators.maxLength(100)]],
-      state: ['', [Validators.maxLength(100)]],
+      state: [''],
+    });
+    this.modalForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email, Validators.pattern(/^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/)]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
     });
 
-    this.modalForm = this.fb.group({
-      email: ['',[ Validators.required,Validators.email,Validators.pattern( /^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/),],],
-      phoneNumber: ['',[ Validators.required, Validators.pattern(/^[0-9]{10}$/),Validators.minLength(10),Validators.maxLength(10),],],
-    });
   }
 
   ngOnDestroy(): void {
-    this.service._profileHeader.set(false);
+    this.commonService._profileHeader.set(false);
   }
 
   /**
@@ -104,11 +103,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.modalForm.reset();
     if (type === 'number') {
       this.modalForm.get('phoneNumber')?.setValidators([Validators.required]);
-      this.modalForm.get('phoneNumber')?.patchValue(this.userDetails?.user?.phoneNumber || '');
+      this.modalForm
+        .get('phoneNumber')
+        ?.patchValue(this.userDetails?.user?.phoneNumber || '');
       this.modalForm.get('email')?.clearValidators();
     } else {
       this.modalForm.get('email')?.setValidators([Validators.required]);
-      this.modalForm.get('email')?.patchValue(this.userDetails?.user?.email || '');
+      this.modalForm
+        .get('email')
+        ?.patchValue(this.userDetails?.user?.email || '');
       this.modalForm.get('phoneNumber')?.clearValidators();
     }
     this.modalForm.get('phoneNumber')?.updateValueAndValidity();
@@ -162,8 +165,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * @return void
    */
   onSubmitProfile(): void {
-    if (this.editProfileForm.invalid) {
-      return;
+    if (this.editProfileForm.valid) {
+      const formData = {
+        ...this.editProfileForm.value,
+        dob: this.commonService.formatDateToMMDDYYYY(
+          this.editProfileForm.get('dob')?.value
+        ),
+        anniversaryDate: this.commonService.formatDateToMMDDYYYY(
+          this.editProfileForm.get('anniversaryDate')?.value
+        ),
+      };
+
+      if (this.base64String) {
+        formData.profileImg = this.base64String;
+      }
+
+      this.userService
+        .updateProfile(this.getProfileDataId?.userId, formData)
+        .subscribe({
+          next: (res: any) => {
+            this.toastr.success(res.message);
+            this.getProfileUser();
+            this.base64String = null;
+            this.preview = null;
+          },
+          error: (err: any) => {
+            this.toastr.error(err.message);
+          },
+        });
     }
   }
 
@@ -172,16 +201,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * @author Gurmeet Kumar
    * @return void
    */
-  onSubmitModal(): void {
+  onVerifyEmailOrPhone(): void {
+    if (this.modalForm.invalid) return;
+    let payload: any = {
+      userId: this.getProfileDataId?.userId,
+    };
+
     if (this.editNumberFlag) {
-      if (this.modalForm.get('phone')?.invalid) {
-        return;
-      }
+      payload.phoneNumber = this.modalForm.value.phoneNumber;
     } else {
-      if (this.modalForm.get('email')?.invalid) {
-        return;
-      }
+      payload.email = this.modalForm.value.email;
     }
+
+    this.userService
+      .updateEmailOrPhone(this.getProfileDataId?.userId, payload)
+      .subscribe({
+        next: (res: any) => {
+          this.toastr.success(res.message);
+          this.closeEditProfileModal();
+          this.getProfileUser();
+        },
+        error: (err: any) => this.toastr.error(err.message),
+      });
   }
 
   /**
@@ -195,8 +236,20 @@ export class ProfileComponent implements OnInit, OnDestroy {
       next: (res: any) => {
         this.userDetails = res.data;
         this.editProfileForm.patchValue({
+          profileImg: this.userDetails?.profileImg || '',
           name: this.userDetails?.user?.name || '',
           username: this.userDetails?.user?.username || '',
+          dob: this.commonService.formatDateToMMDDYYYY(this.userDetails?.dob || ''),
+          anniversaryDate: this.commonService.formatDateToMMDDYYYY(this.userDetails?.anniversaryDate || ''),
+          gender: this.userDetails?.gender || '',
+          married: this.userDetails?.married || 'no',
+          identity: this.userDetails?.identity || 'women',
+          pincode: this.userDetails?.pincode || '',
+          address1: this.userDetails?.addressLine1 || '',
+          address2: this.userDetails?.addressLine2 || '',
+          landmark: this.userDetails?.landmark || '',
+          city: this.userDetails?.city || '',
+          state: this.userDetails?.state || '',
         });
       },
       error: (err: any) => {

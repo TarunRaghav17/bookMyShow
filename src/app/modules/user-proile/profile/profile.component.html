@@ -65,6 +65,22 @@
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="Enter your Full Name"
                                     formControlName="name">
+
+                                @if(editProfileForm.get('name')?.touched &&
+                                editProfileForm.get('name')?.hasError('required')){
+                                <small class="text-danger">Full name is required</small>
+                                }
+
+                                @if(editProfileForm.get('name')?.touched &&
+                                editProfileForm.get('name')?.hasError('minlength')){
+                                <small class="text-danger">Full name must be at least 3 characters</small>
+                                }
+
+                                @if(editProfileForm.get('name')?.touched &&
+                                editProfileForm.get('name')?.hasError('maxlength')){
+                                <small class="text-danger">Full name cannot exceed 50 characters</small>
+                                }
+
                             </div>
                         </div>
                         <div class="input_box">
@@ -74,6 +90,21 @@
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="Enter your User Name"
                                     formControlName="username">
+
+                                @if(editProfileForm.get('username')?.touched &&
+                                editProfileForm.get('username')?.hasError('required')){
+                                <small class="text-danger">User name is required</small>
+                                }
+
+                                @if(editProfileForm.get('username')?.touched &&
+                                editProfileForm.get('username')?.hasError('minlength')){
+                                <small class="text-danger">User name must be at least 3 characters</small>
+                                }
+
+                                @if(editProfileForm.get('username')?.touched &&
+                                editProfileForm.get('username')?.hasError('maxlength')){
+                                <small class="text-danger">User name cannot exceed 50 characters</small>
+                                }
                             </div>
                         </div>
                         <div class="input_box">
@@ -154,6 +185,16 @@
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="E.g 560001"
                                     formControlName="pincode">
+                                @if(editProfileForm.get('pincode')?.touched &&
+                                editProfileForm.get('pincode')?.hasError('pattern')){
+                                <small class="text-danger">Pincode must be 6 digits</small>
+                                }
+                                @if(editProfileForm.get('pincode')?.touched &&
+                                editProfileForm.get('pincode')?.hasError('maxlength')){
+                                <small class="text-danger">Pincode cannot exceed 6 digits</small>
+                                }
+
+
                             </div>
                         </div>
                         <div class="input_box">
@@ -161,8 +202,13 @@
                                 <label for="form-label">Address Line 1</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="Flat no., House no., Building,"
-                                    formControlName="address1">
+                                <input type="text" class="form-control" formControlName="address1"
+                                    placeholder="Flat no., House no., Building,">
+                                @if(editProfileForm.get('address1')?.touched &&
+                                editProfileForm.get('address1')?.hasError('maxlength')){
+                                <small class="text-danger">Address Line 1 cannot exceed 255 characters</small>
+                                }
+
                             </div>
                         </div>
                         <div class="input_box">
@@ -172,6 +218,11 @@
                             <div class="input_field">
                                 <input type="text" class="form-control" formControlName="address2"
                                     placeholder="Area, Colony, Street, Sector, Village">
+                                @if(editProfileForm.get('address2')?.touched &&
+                                editProfileForm.get('address2')?.hasError('maxlength')){
+                                <small class="text-danger">Address Line 2 cannot exceed 255 characters</small>
+                                }
+
                             </div>
                         </div>
                         <div class="input_box">
@@ -179,8 +230,13 @@
                                 <label for="form-label">Landmark </label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Prithvi Theater"
-                                    formControlName="landmark">
+                                <input type="text" class="form-control" formControlName="landmark"
+                                    placeholder="E.g. Prithvi Theater">
+                                @if(editProfileForm.get('landmark')?.touched &&
+                                editProfileForm.get('landmark')?.hasError('maxlength')){
+                                <small class="text-danger">Landmark cannot exceed 100 characters</small>
+                                }
+
                             </div>
                         </div>
                         <div class="input_box">
@@ -199,8 +255,9 @@
 
                             <div class="input_field">
                                 <select class="form-select" aria-label="Default select example" formControlName="state">
-                                    @for (item of states; track $index) {
                                     <option value="" selected disabled>Select State</option>
+
+                                    @for (item of states; track $index) {
                                     <option [value]="item.name" class="d-flex justify-content-between">
                                         {{item.name}}
                                     </option>
@@ -214,8 +271,6 @@
                                 Changes</button>
                         </div>
                     </section>
-
-
                 </div>
             </form>
         </div>
@@ -246,9 +301,6 @@
                 <small class="text-danger">Invalid email format</small>
                 }
             </div>
-            <div class="button_section mt-3">
-                <button type="button" class="btn btn-secondary w-100" [disabled]="modalForm.invalid">Verify</button>
-            </div>
             }
 
             @if (editNumberFlag) {
@@ -272,10 +324,16 @@
                 <small class="text-danger">Only digits are allowed</small>
                 }
             </div>
-            <div class="button_section mt-3">
-                <button type="button" class="btn btn-secondary w-100" [disabled]="modalForm.invalid">Verify</button>
-            </div>
             }
+
+            <div class="button_section mt-3">
+                <button type="button" class="btn btn-secondary w-100" [disabled]="modalForm.invalid"
+                    (click)="onVerifyEmailOrPhone()">
+                    Verify
+                </button>
+            </div>
+
+
 
         </form>
     </div>
