@@ -1,43 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ContentService } from './content-services/content.service';
+import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-create-content',
   templateUrl: './create-content.component.html',
-  standalone:false
+  standalone: false
 })
 export class CreateContentComponent implements OnInit {
   eventForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  selectedEventType: string | null = null;
+  languagesArray: any
+  genresArray: any;
+  formatsArray: any;
+  tagsArray: any;
+  categoriesArray: any;
+  moreFilters: any;
+
+  constructor(private fb: FormBuilder,
+    private contentService: ContentService,
+    private toaster: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.eventForm = this.fb.group({
-      // Top-level general info
+
+      eventType: ['', Validators.required],
+      imageurl: [''],
       name: ['', Validators.required],
       description: [''],
       runTime: [''],
+      releasingOn: [''],
       startDate: [''],
       endDate: [''],
-      eventType: ['', Validators.required],
-      imageurl: [''],
       imdbRating: [null],
       likes: [null],
       votes: [null],
       currentlyPlaying: [false],
       deleted: [false],
       ageLimit: [null],
-      releasingOn: [''],
 
-      // Array fields
-      languages: this.fb.array([]),
+      languages: this.fb.array([],Validators.required),
       genres: this.fb.array([]),
       format: this.fb.array([]),
       tag: this.fb.array([]),
-      releaseMonth: this.fb.array([]),
-      dateFilter: this.fb.array([]),
       categories: this.fb.array([]),
       moreFilters: this.fb.array([]),
+      releaseMonth: this.fb.array([]),
+      dateFilter: this.fb.array([]),
       price: this.fb.array([]),
       city: this.fb.array([]),
 
@@ -54,7 +67,6 @@ export class CreateContentComponent implements OnInit {
   get crewControls() {
     return this.eventForm.get('crew') as FormArray;
   }
-
   getArrayControl(path: string): FormArray {
     return this.eventForm.get(path) as FormArray;
   }
@@ -86,6 +98,58 @@ export class CreateContentComponent implements OnInit {
     );
   }
 
+  onContentTypeChange() {
+
+
+
+    this.selectedEventType = this.eventForm.get('eventType')?.value
+
+
+    forkJoin({
+
+      languages:
+        this.contentService.getLanguagesByContentType(this.selectedEventType),
+
+      genres: this.contentService.getGenresByContentType(this.selectedEventType),
+
+      formats: this.contentService.getFormatsByContentType(this.selectedEventType),
+
+      tags: this.contentService.getTagsByContentType(this.selectedEventType),
+
+      categories:
+        this.contentService.getCategoriesByContentType(this.selectedEventType),
+      moreFilters:
+        this.contentService.getMoreFiltersByContentType(this.selectedEventType)
+    }).subscribe({
+      next: (res) => {
+        this.languagesArray = res.languages.data;
+        this.genresArray = res.genres.data;
+        this.formatsArray = res.formats.data;
+        this.tagsArray = res.tags.data;
+        this.categoriesArray = res.categories.data;
+        this.moreFilters = res.moreFilters.data
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+
+      }
+    })
+  }
+
+
+  handleInputBoxChange(event:any,path:string,index:number){
+    console.log(event,path,index)
+    if(event?.target.checked){
+      console.log('add')
+      this.addFormArrayItem(path,Number(event.target.value))
+
+    }
+    else{
+      console.log('remove')
+      this.removeFormArrayItem(path,index)
+    }
+    
+  }
   onSubmit() {
     console.log(this.eventForm.value);
   }

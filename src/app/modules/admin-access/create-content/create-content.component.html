@@ -18,12 +18,13 @@
                 <div class="mb-3 w-50">
                     <label class="form-label">Content Type</label>
 
-                    <select class="form-select" formControlName="eventType">
+                    <select class="form-select" formControlName="eventType" (change)="onContentTypeChange()">
                         <option value="" disabled selected>Select</option>
-                        <option value="movies">Movies</option>
-                        <option value="sports">Sports</option>
-                        <option value="events">Events</option>
-                        <option value="activities">Activities</option>
+                        <option value="Movie">Movies</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Events">Events</option>
+                        <option value="Activities">Activities</option>
+                        <option value="Plays">Plays</option>
                     </select>
                 </div>
 
@@ -79,78 +80,139 @@
 
     <!-- Arrays Section -->
     <div class="card mb-4 shadow-sm">
-        <div class="card-body">
-            <h5 class="card-title">🎯 Filters</h5>
-
+        <div class="card-body border">
             <!-- Languages -->
-            <div class="mb-3" formArrayName="languages">
-                <label class="form-label">Languages</label>
-                <div *ngFor="let ctrl of getArrayControl('languages').controls; let i = index" class="input-group mb-2">
-                    <input class="form-control" [formControlName]="i" />
-                    <button class="btn btn-outline-danger" type="button"
-                        (click)="removeFormArrayItem('languages', i)">✕</button>
+            <div class="mb-3 border ">
+                <h5 class="form-label">● Languages</h5>
+                <div class="d-flex flex-wrap">
+                    @for(lang of languagesArray;track $index){
+                    <div class="form-check  w-25">
+                        <input type="checkbox" class="form-check-input" value="{{lang.languageId}}"
+                            (change)="handleInputBoxChange($event,'languages',$index)"
+                            [ngClass]="{'is-invalid': eventForm.get('languages')?.touched && eventForm.get('languages')?.invalid }">
+                        <label class="form-check-label">{{lang.languageName}}</label>
+                        
+                    </div>
+                    }
                 </div>
-                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('languages')">+
-                    Add Language</button>
             </div>
+            <div class="invalid-feedback">Language is required.</div>
 
-            <!-- Genres -->
-            <div class="mb-3" formArrayName="genres">
-                <label class="form-label">Genres</label>
-                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
-                    <input class="form-control" [formControlName]="i" />
-                    <button class="btn btn-outline-danger" type="button"
-                        (click)="removeFormArrayItem('genres', i)">✕</button>
-                </div>
-                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
-                    Genre</button>
-            </div>
+            <!-- genres -->
 
-            <div class="mb-3" formArrayName="format">
-                <label class="form-label">Formats</label>
-                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
-                    <input class="form-control" [formControlName]="i" />
-                    <button class="btn btn-outline-danger" type="button"
-                        (click)="removeFormArrayItem('genres', i)">✕</button>
+            <div class="mb-3 border ">
+                <h5 class="form-label">● Genres</h5>
+                <div class="d-flex flex-wrap">
+                    @for(genre of genresArray;track $index){
+                    <div class="form-check  w-25">
+                        <input type="checkbox" class="form-check-input" value="{{genre.genresId}}"
+                            (change)="handleInputBoxChange($event,'genres',$index)"
+                            [ngClass]="{'is-invalid': eventForm.get('genres')?.touched && eventForm.get('genres')?.invalid }">
+                        <label class="form-check-label">{{genre.genresName}}</label>
+                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                    </div>
+                    }
                 </div>
-                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
-                    Genre</button>
-            </div>
-            <div class="mb-3" formArrayName="tag">
-                <label class="form-label">
-                    Tags
-                </label>
-                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
-                    <input class="form-control" [formControlName]="i" />
-                    <button class="btn btn-outline-danger" type="button"
-                        (click)="removeFormArrayItem('genres', i)">✕</button>
-                </div>
-                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
-                    Genre</button>
-            </div>
 
-            <div class="mb-3" formArrayName="categories">
-                <label class="form-label">Categories</label>
-                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
-                    <input class="form-control" [formControlName]="i" />
-                    <button class="btn btn-outline-danger" type="button"
-                        (click)="removeFormArrayItem('genres', i)">✕</button>
-                </div>
-                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
-                    Genre</button>
+                <!-- </select> -->
+
             </div>
 
 
-             <div class="mb-3" formArrayName="moreFilters">
-                <label class="form-label">More Filters</label>
-                <div *ngFor="let ctrl of getArrayControl('genres').controls; let i = index" class="input-group mb-2">
-                    <input class="form-control" [formControlName]="i" />
-                    <button class="btn btn-outline-danger" type="button"
-                        (click)="removeFormArrayItem('genres', i)">✕</button>
+
+
+            <!-- formats -->
+
+            <div class="mb-3 border ">
+                <h5 class="form-label">● Formats</h5>
+                <!-- <select formArrayName="languages" class="form-select">
+                    <option value="" selected disabled>Select</option> -->
+                <div class="d-flex flex-wrap">
+                    @for(format of formatsArray;track $index){
+                    <div class="form-check  w-25">
+                        <input type="checkbox" class="form-check-input" value="{{format.formatId}}"
+                        (change)="handleInputBoxChange($event,'format',$index)"
+                            [ngClass]="{'is-invalid': eventForm.get('format')?.touched && eventForm.get('format')?.invalid }">
+                        <label class="form-check-label">{{format.formatName}}</label>
+                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                    </div>
+                    }
                 </div>
-                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addFormArrayItem('genres')">+ Add
-                    Genre</button>
+
+                <!-- </select> -->
+
             </div>
+
+
+            <!-- tags -->
+            <div class="mb-3 border ">
+                <h5 class="form-label">● Tags</h5>
+                <!-- <select formArrayName="languages" class="form-select">
+                    <option value="" selected disabled>Select</option> -->
+                <div class="d-flex flex-wrap">
+                    @for(tags of tagsArray;track $index){
+                    <div class="form-check  w-25">
+                        <input type="checkbox" class="form-check-input" value="{{tags.tagId}}"
+                        (change)="handleInputBoxChange($event,'tag',$index)"
+                            [ngClass]="{'is-invalid': eventForm.get('tag')?.touched && eventForm.get('tag')?.invalid }">
+                        <label class="form-check-label">{{tags.tagName}}</label>
+                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                    </div>
+                    }
+                </div>
+
+                <!-- </select> -->
+
+            </div>
+
+
+
+            <!-- categories -->
+            <div class="mb-3 border ">
+                <h5 class="form-label">● Categories</h5>
+                <!-- <select formArrayName="languages" class="form-select">
+                    <option value="" selected disabled>Select</option> -->
+                <div class="d-flex flex-wrap">
+                    @for(category of categoriesArray;track $index){
+                    <div class="form-check  w-25">
+                        <input type="checkbox" class="form-check-input" value="{{category.categoryId}}"
+                        (change)="handleInputBoxChange($event,'categories',$index)"
+                            [ngClass]="{'is-invalid': eventForm.get('categories')?.touched && eventForm.get('categories')?.invalid }">
+                        <label class="form-check-label">{{category?.categoryName}}</label>
+                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                    </div>
+                    }
+                </div>
+
+                <!-- </select> -->
+
+            </div>
+
+
+
+            <!-- more filters -->
+            <div class="mb-3 border ">
+                <h5 class="form-label">● More Filters</h5>
+                <!-- <select formArrayName="languages" class="form-select">
+                    <option value="" selected disabled>Select</option> -->
+                <div class="d-flex flex-wrap">
+                    @for(moreFilter of moreFilters;track $index){
+                    <div class="form-check  w-25">
+                        <input type="checkbox" class="form-check-input" value="{{moreFilter.moreFilterId}}"
+                        (change)="handleInputBoxChange($event,'moreFilters',$index)"
+                            [ngClass]="{'is-invalid': eventForm.get('moreFilters')?.touched && eventForm.get('moreFilters')?.invalid }">
+                        <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
+                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                    </div>
+                    }
+                </div>
+
+                <!-- </select> -->
+
+            </div>
+
+
+
 
         </div>
     </div>
