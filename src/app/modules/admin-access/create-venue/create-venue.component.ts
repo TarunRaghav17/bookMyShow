@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { VenuesService } from './venues-services/venues.service';
 import { ToastrService } from 'ngx-toastr';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   standalone: false,
@@ -13,7 +14,7 @@ export class CreateVenueComponent implements OnInit {
   tempAmmenity = new FormControl('', [Validators.required])
   venueFor: any[] = []
   venueType: any[] = [];
-
+  citiesArray: any[] = []
   supportedCategoriesArray: any[] = []
 
   alphabets = [
@@ -22,32 +23,40 @@ export class CreateVenueComponent implements OnInit {
   ]
 
   venueTypeMapping = {
-    "movies": [
-      { "value": "theatre", "label": "Theater" }
+    "Movie": [
+      { "value": "theatre", "label": "Theatre" },
     ],
-    "sports": [
+    "Sports": [
       { "value": "stadium", "label": "Stadium" },
       { "value": "ground", "label": "Ground" },
       { "value": "court", "label": "Court" },
     ],
-    "events": [
+    "Event": [
       { "value": "auditorium", "label": "Auditorium" },
       { "value": "banquet_hall", "label": "Banquet Hall" },
       { "value": "open_air", "label": "Open Air Venue" },
       { "value": "exhibition_hall", "label": "Exhibition Hall" }
     ],
-    "activities": [
+    "Activities": [
       { "value": "studio", "label": "Studio" },
       { "value": "classroom", "label": "Classroom" },
       { "value": "workshop_hall", "label": "Workshop Hall" }
+    ],
+    "Plays": [
+      { "value": "drama_theatre", "label": "Drama Theatre" },
+      { "value": "playhouse", "label": "Playhouse" },
+      { "value": "black_box", "label": "Black Box Theatre" },
+      { "value": "opera_house", "label": "Opera House" },
+      { "value": "community_hall", "label": "Community Hall" }
     ]
+
   }
 
   supportedCategoriesMapping = {
-    "movies": {
+    "Movie": {
       "theatre": [
         {
-          "value": "imax", "label": "imax"
+          "value": "imax", "label": "IMAX"
         },
         {
           "value": "3d", "label": "3D"
@@ -58,10 +67,10 @@ export class CreateVenueComponent implements OnInit {
         {
           "value": "4d", "label": "4D"
         }
-      ]
-    },
+      ],
 
-    "sports": {
+    },
+    "Sports": {
       "ground": [
         { "value": "cricket", "label": "Cricket" },
         { "value": "football", "label": "Football" },
@@ -79,7 +88,7 @@ export class CreateVenueComponent implements OnInit {
         { "value": "basketball", "label": "Basketball" }
       ],
     },
-    "events": {
+    "Event": {
       "auditorium": [
         { "value": "concert", "label": "Concert" },
         { "value": "theatre", "label": "Theatre Play" },
@@ -102,7 +111,7 @@ export class CreateVenueComponent implements OnInit {
         { "value": "book_fair", "label": "Book Fair" }
       ]
     },
-    "activities": {
+    "Activities": {
       "studio": [
         { "value": "yoga", "label": "Yoga" },
         { "value": "dance", "label": "Dance Class" },
@@ -119,13 +128,40 @@ export class CreateVenueComponent implements OnInit {
         { "value": "photography", "label": "Photography Workshop" },
         { "value": "cooking", "label": "Cooking Workshop" }
       ]
+    },
+    "Plays": {
+      "drama_theatre": [
+        { "value": "tragedy", "label": "Tragedy" },
+        { "value": "comedy", "label": "Comedy" },
+        { "value": "musical", "label": "Musical" },
+        { "value": "experimental", "label": "Experimental" }
+      ],
+      "playhouse": [
+        { "value": "comedy", "label": "Comedy" },
+        { "value": "musical", "label": "Musical" },
+        { "value": "improv", "label": "Improv" }
+      ],
+      "black_box": [
+        { "value": "experimental", "label": "Experimental" },
+        { "value": "interactive", "label": "Interactive" }
+      ],
+      "opera_house": [
+        { "value": "musical", "label": "Musical" },
+        { "value": "classical_play", "label": "Classical Play" }
+      ],
+      "community_hall": [
+        { "value": "school_play", "label": "School Play" },
+        { "value": "amateur_drama", "label": "Amateur Drama" }
+      ]
     }
+
 
   }
 
   constructor(private fb: FormBuilder,
     private venuesService: VenuesService,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private commonService: CommonService
   ) { }
 
   ngOnInit(): void {
@@ -143,8 +179,18 @@ export class CreateVenueComponent implements OnInit {
       amenities: this.fb.array([])
     });
 
+    this.fetchCities()
   }
-
+  fetchCities() {
+    this.commonService.getAllCities().subscribe({
+      next: (res) => {
+        this.citiesArray = res.data
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+  }
   onVenueForChange() {
     let venueFor = this.venueForm.get('venueFor')?.value as keyof typeof this.venueTypeMapping
     this.venueForm.get('venueType')?.setValue('')
@@ -152,7 +198,7 @@ export class CreateVenueComponent implements OnInit {
 
     this.venueType = this.venueTypeMapping[venueFor]
 
-    if (venueFor == 'movies') {
+    if (venueFor == 'Movie') {
       this.venueForm.addControl('screens',
         this.fb.array([this.createScreen()]))
     }
@@ -176,7 +222,6 @@ export class CreateVenueComponent implements OnInit {
     return this.fb.group({
       screenName: ['', Validators.required],
       layouts: this.fb.array([this.createLayout()])
-
     })
   }
 
@@ -186,7 +231,6 @@ export class CreateVenueComponent implements OnInit {
 
   removeScreen(index: number) {
     this.screens.removeAt(index)
-
   }
 
   getLayouts(screen: AbstractControl): FormArray {
@@ -227,12 +271,10 @@ export class CreateVenueComponent implements OnInit {
   removeLayout(screen: AbstractControl, $index: number) {
     this.getLayouts(screen).removeAt($index)
   }
-
   // Getter for amenities
   get amenities(): FormArray {
     return this.venueForm.get('amenities') as FormArray;
   }
-
   // Add/Remove amenities
   addAmenity(): void {
     if (this.tempAmmenity.valid) {
@@ -240,7 +282,6 @@ export class CreateVenueComponent implements OnInit {
       this.tempAmmenity.reset()
     }
   }
-
   removeAmenity(index: number): void {
     this.amenities.removeAt(index);
   }

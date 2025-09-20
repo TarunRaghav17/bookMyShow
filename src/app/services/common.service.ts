@@ -45,8 +45,9 @@ export class CommonService {
 
   userSelectedDate = signal<any>({})
 
-  setUserSelectedDate(payload: any) {
-    this.userSelectedDate.set(payload)
+  setUserSelectedDate(index:number,payload: any) {
+    if(index<3) this.userSelectedDate.set(payload)
+      return
   }
 
   getUserSelectedDate() {
