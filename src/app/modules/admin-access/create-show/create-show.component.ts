@@ -54,8 +54,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     });
 
     this.setToday()
-   
-  }
+     }
 
   ngOnDestroy() {
     this.commonService.setCategory(null)
