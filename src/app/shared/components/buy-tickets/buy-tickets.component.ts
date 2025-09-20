@@ -199,14 +199,8 @@ maxPrice=900;
   ngOnInit() {
 
     this.fetchContentIdByUrl();
-
-    console.log(this.movieDetails)
-
     this.initializeDateSelectionArray()
-
     this.commonService.setUserSelectedDate(0,this.dateSelectionArray[0])
-    
-    
     
     this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
@@ -229,7 +223,6 @@ maxPrice=900;
         this.toaster.error(err.error.message)
       }
     })
-
   }
 
   initializeDateSelectionArray() {
@@ -244,16 +237,6 @@ maxPrice=900;
       })
     }
   }
-
-  // handleUserPreference(preference:any){
-
-  // }
-
-  // initializePriceRangeArray(){
-  //   let PriceRangeArray=[]
-  // }
-
-
   toggleSearchBox(event:any,value:boolean){
     event.stopPropagation()
     this.isOpen=value

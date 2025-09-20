@@ -79,12 +79,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
       (res) => this.citiesArray = res.data)
     let selectedEventType = this.showForm.get('eventType')?.value
     if (selectedEventType != 'Movie') {
-      this.showForm.addControl('reservedSeats', this.fb.array([
-        this.fb.group({
-          userId: ["1245", Validators.required],
-          userReservationSeats: [["A-01", "A-02"], Validators.required],
-        })
-      ]));
+     
       this.showForm.addControl('price', this.fb.control(0, Validators.required));
       this.showForm.removeControl('categories');
       this.showForm.removeControl('format')

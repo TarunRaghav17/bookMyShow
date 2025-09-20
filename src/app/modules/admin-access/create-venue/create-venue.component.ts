@@ -41,7 +41,15 @@ export class CreateVenueComponent implements OnInit {
       { "value": "studio", "label": "Studio" },
       { "value": "classroom", "label": "Classroom" },
       { "value": "workshop_hall", "label": "Workshop Hall" }
+    ],
+    "Plays": [
+      { "value": "drama_theatre", "label": "Drama Theatre" },
+      { "value": "playhouse", "label": "Playhouse" },
+      { "value": "black_box", "label": "Black Box Theatre" },
+      { "value": "opera_house", "label": "Opera House" },
+      { "value": "community_hall", "label": "Community Hall" }
     ]
+
   }
 
   supportedCategoriesMapping = {
@@ -62,7 +70,6 @@ export class CreateVenueComponent implements OnInit {
       ],
 
     },
-
     "Sports": {
       "ground": [
         { "value": "cricket", "label": "Cricket" },
@@ -121,7 +128,33 @@ export class CreateVenueComponent implements OnInit {
         { "value": "photography", "label": "Photography Workshop" },
         { "value": "cooking", "label": "Cooking Workshop" }
       ]
+    },
+    "Plays": {
+      "drama_theatre": [
+        { "value": "tragedy", "label": "Tragedy" },
+        { "value": "comedy", "label": "Comedy" },
+        { "value": "musical", "label": "Musical" },
+        { "value": "experimental", "label": "Experimental" }
+      ],
+      "playhouse": [
+        { "value": "comedy", "label": "Comedy" },
+        { "value": "musical", "label": "Musical" },
+        { "value": "improv", "label": "Improv" }
+      ],
+      "black_box": [
+        { "value": "experimental", "label": "Experimental" },
+        { "value": "interactive", "label": "Interactive" }
+      ],
+      "opera_house": [
+        { "value": "musical", "label": "Musical" },
+        { "value": "classical_play", "label": "Classical Play" }
+      ],
+      "community_hall": [
+        { "value": "school_play", "label": "School Play" },
+        { "value": "amateur_drama", "label": "Amateur Drama" }
+      ]
     }
+
 
   }
 
@@ -147,7 +180,6 @@ export class CreateVenueComponent implements OnInit {
     });
 
     this.fetchCities()
-
   }
   fetchCities() {
     this.commonService.getAllCities().subscribe({
@@ -159,9 +191,6 @@ export class CreateVenueComponent implements OnInit {
       }
     })
   }
-
-
-
   onVenueForChange() {
     let venueFor = this.venueForm.get('venueFor')?.value as keyof typeof this.venueTypeMapping
     this.venueForm.get('venueType')?.setValue('')
@@ -242,12 +271,10 @@ export class CreateVenueComponent implements OnInit {
   removeLayout(screen: AbstractControl, $index: number) {
     this.getLayouts(screen).removeAt($index)
   }
-
   // Getter for amenities
   get amenities(): FormArray {
     return this.venueForm.get('amenities') as FormArray;
   }
-
   // Add/Remove amenities
   addAmenity(): void {
     if (this.tempAmmenity.valid) {
@@ -255,7 +282,6 @@ export class CreateVenueComponent implements OnInit {
       this.tempAmmenity.reset()
     }
   }
-
   removeAmenity(index: number): void {
     this.amenities.removeAt(index);
   }
@@ -296,9 +322,5 @@ export class CreateVenueComponent implements OnInit {
   handleCategoryChange(event: any) {
     this.venueForm.get('supportedCategories')?.setValue([event.target.value])
   }
-
-
-
-
 }
 
