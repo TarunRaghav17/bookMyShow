@@ -33,6 +33,7 @@ export class UserAuthComponent implements OnInit {
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)])
   });
+  
   /** @description Signup form controls */
   signupForm = new FormGroup({
     name: new FormControl('', [Validators.required]),

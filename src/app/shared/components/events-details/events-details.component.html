@@ -1,3 +1,4 @@
+@if(eventDetails){
 <div class="container-fluid bg-white">
     <div class="row g-0">
         <div class="col-12 d-flex flex-column justify-content-center align-items-center">
@@ -7,19 +8,17 @@
                 </div>
                 <div class="col-4">
                     <i class="fa fa-share" aria-hidden="true"></i>
-                    <span>Share</span>
+                    <span (click)="openShareModal(shareModal)">Share</span>
                 </div>
             </div>
             <div class="col-8 d-flex justify-content-start gap-5 align-items-start">
-                <div class="col-8 py-3">
+                <div class="col-8 py-3 card_image">
                     <img class="w-100 oject-fill rounded-4 h-100"
-                        [src]="commonService.getImageFromBase64(eventDetails?.imageurl)" [alt]=" eventDetails.imageurl"
-                        alt="">
+                        [src]="commonService.getImageFromBase64(eventDetails?.imageurl)" [alt]="eventDetails?.imageurl">
                     <!-- bottom_text -->
                     <div class="d-flex justify-content-center align-items-start  py-4">
                         <div class="col-8 d-flex gap-2 poster_bottom_txt">
-                            <p>stand up comedy</p>
-                            <p>comedy shows</p>
+                            <p>{{eventDetails?.categories}}</p>
                         </div>
                         <div class="col-4 text-end ">
                             <p class="likes_interested"> <i class="fa fa-thumbs-up me-1 text-success"
@@ -37,27 +36,30 @@
                         <p class="px-3 my-0"> Seating is on a first come first serve basis in
                             that respective section.</p>
                     </div>
+                    @if (commonService._selectedCategory()==='Events') {
                     <div class="py-3">
                         <h3>Artists</h3>
-                        <div class="img-container">
-                            <img [src]="commonService.getImageFromBase64(eventDetails?.cast?.castImg)" [alt]="eventDetails?.cast?.castImg" class="rounded-4">
-                            <h6 class="m-0">{{eventDetails?.cast?.actorName}}</h6>
-                            <span>
-                                Actor
-                            </span>
+                        <div class="img-container d-flex gap-1">
+                            @for (item of eventDetails?.cast; track $index) {
+                            <div class="d-flex flex-column gap-2">
+                                <img [src]="commonService.getImageFromBase64(item.castImg)" [alt]="item.castImg"
+                                    class="rounded-4 w-75 h-75">
+                                <h6 class="m-0">{{item.actorName}}</h6>
+                            </div>
+                            }
                         </div>
                     </div>
-                    <h4 class="py-3">M-Ticket</h4>
+                    }
+                    <h4 class="py-1">M-Ticket</h4>
                     <div class="w-75 rounded-4 d-flex align-items-center p-4 shadow-sm m_ticket">
                         <i class="fa fa-ticket fs-1 text-danger" aria-hidden="true"></i>
-                        <p class="px-3 my-0"> Seating is on a first come first serve
-                            basis in that respective section.</p>
+                        <p class="px-3 my-0"> Contactless Ticketing & Fast-track Entry with M-ticket.</p>
                     </div>
-                    <h3 class="py-3">Terms & Conditions</h3>
+                    <h3 class="py-3" (click)="openCityModal(serviceModal)">Terms & Conditions <span>></span></h3>
                 </div>
-                <div class="col-3 ">
+                <div class="col-3 side_card_details">
                     <div class="border h-100 rounded-4 bg-white ">
-                        <div class="d-flex p-4 flex-column gap-3">
+                        <div class="d-flex p-4 flex-column gap-2">
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-calendar-o" aria-hidden="true"></i>
@@ -66,7 +68,7 @@
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                <span>{{eventDetails?.time}}</span>
+                                <span>{{eventDetails?.starttime}}</span>
                             </div>
 
                             <div class="d-flex align-items-center gap-3">
@@ -76,28 +78,30 @@
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-users" aria-hidden="true"></i>
-                                <span>Age Limit - {{eventDetails?.ageLimit}}yrs +</span>
+                                <span>Age Limit {{eventDetails?.ageLimit}}yrs +</span>
                             </div>
 
-                            <div class="d-flex align-items-center gap-3">
+                            <div class="d-flex align-items-center gap-2 overflow-hidden  ">
                                 <i class="fa fa-language" aria-hidden="true"></i>
-                                <span>{{eventDetails?.language}}</span>
+                                @for (lang of eventDetails?.languages; track $index) {
+                                <span>{{lang}}</span>
+                                }
                             </div>
 
                             <div class="d-flex align-items-center gap-3">
                                 <img src="https://assets-in.bmscdn.com/nmcms/synopsis/genre.png" alt="genre"
-                                    style="width: 25px; height:25px;">
+                                    style="width: 20px; height:20px;">
                                 <span>{{eventDetails?.categories}}</span>
                             </div>
 
                             <div class="d-flex align-items-center gap-3">
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                <span>{{eventDetails?.address}}</span>
+                                <span>{{eventDetails?.venueName[0]}}</span>
                             </div>
                             <hr>
                             <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="">{{eventDetails?.price[0]}} onwards</p>
+                                <div class="gap-2">
+                                    <h5 class="">₹{{eventDetails?.pricelist[0]}} onwards</h5>
                                     <span>Filling Fast</span>
                                 </div>
                                 <button class="book_now_btn">Book now</button>
@@ -109,11 +113,75 @@
         </div>
     </div>
 </div>
+
 <div class="top_bar d-flex justify-content-center align-items-center bg-white border shadow-sm"
     [class.show]="showHeader">
     <div class="col-8 d-flex align-items-center gap-3 py-3">
-        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3"
-                aria-hidden="true"></i>
+        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3" aria-hidden="true"></i>
         </span>
     </div>
 </div>
+
+<ng-template #serviceModal let-modal>
+    <div class="modal-header border-bottom-0">
+        <div class="col-12 d-flex justify-content-between align-itmes-center">
+            <h2>Terms & Conditions</h2>
+
+            <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+        </div>
+    </div>
+    <div class="modal-body p-0">
+        <div class="px-2">
+            <p>1. Tickets once booked cannot be exchanged or refunded.</p>
+            <p>2. An Internet handling fee per ticket may be levied. Please check the total amount before payment</p>
+            <p>3. We recommend that you arrive at-least 30 minutes prior at the venue for a seamless entry </p>
+            <p>4. It is mandatory to wear masks at all times and follow social distancing norms</p>
+            <p>5. Please do not purchase tickets if you feel sick</p>
+            <p>6. Unlawful resale (or attempted unlawful resale) of a ticket would lead to seizure or cancellation of
+                that ticket without refund or other compensation</p>
+            <p>7. Rights of admission reserved</p>
+            <p>8. These terms and conditions are subject to change from time to time at the discretion of the organizer
+            </p>
+            <p>9. Use any mobile application of your choice like GoogleFit, Strava, RunKeeper etc and submit a
+                screenshot of your activity. </p>
+        </div>
+    </div>
+</ng-template>
+<ng-template #shareModal let-modal>
+    <div class="modal-header border-bottom-0">
+        <div class="col-12 d-flex justify-content-between align-itmes-center">
+            <h3>Share</h3>
+           <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+        </div>
+    </div>
+    <div class="modal-body p-0">
+        <div class="border-bottom">
+            <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
+                <p class="m-0">Facebook</p>
+                 <a href="https://www.facebook.com" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="border-bottom">
+            <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
+                <p class="m-0">X (Formerly Twitter)</p>
+               <i class="fa fa-twitter" aria-hidden="true"></i>
+            </div>
+        </div>
+         <div class="border-bottom">
+            <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
+                <p class="m-0">Copy Link</p>
+                <i class="fa fa-clipboard" aria-hidden="true"  (click)="getCurrentPath()"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+}
+@else {
+    <app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
+}
+
+
+
+
+
+
