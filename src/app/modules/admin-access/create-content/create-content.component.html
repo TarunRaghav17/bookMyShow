@@ -1,262 +1,301 @@
 <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="container mt-4">
-
-
-
-
-
-
     <!-- General Info -->
-    <div class="card mb-4 shadow-sm border-danger">
-
+    <div class="card mb-4 shadow-sm ">
         <div class="card-body border">
-            <h4 class="card-title mb-3 text-center">🎬 General Event Info</h4>
-
-
+            <h4 class="card-title mb-3 text-center">General Event Info</h4>
             <div class="row">
-
                 <!-- Event Type -->
                 <div class="mb-3 w-50">
                     <label class="form-label">Content Type</label>
-
-                    <select class="form-select" formControlName="eventType" (change)="onContentTypeChange()">
-                        <option value="" disabled selected>Select</option>
+                    <select class="form-select" formControlName="eventType" (change)="onContentTypeChange()"
+                        [ngClass]="{'is-invalid': isInvalid('eventType')}">
+                        <option value="" disabled>Select</option>
                         <option value="Movie">Movies</option>
                         <option value="Sports">Sports</option>
                         <option value="Events">Events</option>
                         <option value="Activities">Activities</option>
                         <option value="Plays">Plays</option>
                     </select>
+                    @if(isInvalid('eventType')){
+                    <div class="invalid-feedback">
+                        Please select a content type.
+                    </div>
+                    }
                 </div>
 
                 <!-- Poster -->
                 <div class="mb-3 w-50">
-                    <label class="form-label">Poster URL</label>
-                    <input type="file" class="form-control" id="hiddenFileInput" formControlName="imageurl" />
-                    <!-- <button class="btn btn-primary" onclick="document.getElementById('hiddenFileInput').click()">Select</button> -->
+                    <label class="form-label">Poster</label>
+                    <input type="file" class="form-control" (change)="handleImageUpload($event,'imageurl')"
+                        [ngClass]="{'is-invalid': isInvalid('imageurl')}" />
+                    @if(isInvalid('imageurl')){
+                    <div class="invalid-feedback">
+                        Poster is required.
+                    </div>
+                    }
                 </div>
             </div>
-
-
-
             <!-- Name -->
             <div class="mb-3">
                 <label class="form-label">Name</label>
-                <input type="text" class="form-control" formControlName="name" />
+                <input type="text" class="form-control" formControlName="name"
+                    [ngClass]="{'is-invalid': isInvalid('name')}" />
+                @if(isInvalid('name')){
+                <div class="invalid-feedback">
+                    Name is required (min 4 characters).
+                </div>
+                }
             </div>
-
             <!-- Description -->
             <div class="mb-3">
                 <label class="form-label">Description</label>
-                <textarea class="form-control" rows="3" formControlName="description"></textarea>
+                <textarea class="form-control" rows="3" formControlName="description"
+                    [ngClass]="{'is-invalid': isInvalid('description')}"></textarea>
+                @if(isInvalid('description')){
+                <div class="invalid-feedback">
+                    Description is required (min 30 characters).
+                </div>
+                }
             </div>
-
 
             <div class="row">
-
-                <div class="mb-3 w-50">
-                    <label class="form-label">Run Time</label>
-                    <input type="number" class="form-control" formControlName="runTime" />
+                <!-- Run Time -->
+                <div class="mb-3 col-4">
+                    <label class="form-label">Run Time (minutes)</label>
+                    <input type="number" class="form-control" formControlName="runTime"
+                        [ngClass]="{'is-invalid': isInvalid('runTime')}" />
+                    @if(isInvalid('runTime')){
+                    <div class="invalid-feedback">
+                        Runtime must be at least 1 minute.
+                    </div>
+                    }
                 </div>
 
-                <!-- Dates -->
-
-                <div class="mb-3 w-50">
-                    <label class="form-label">Releasing On </label>
-                    <input type="date" class="form-control" formControlName="releasingOn" />
+                <!-- Releasing On -->
+                <div class="mb-3 col-4">
+                    <label class="form-label">Releasing On</label>
+                    <input type="date" class="form-control" formControlName="releasingOn" [min]="setMinDate()"
+                        [ngClass]="{'is-invalid': isInvalid('releasingOn')}" />
+                    @if(isInvalid('releasingOn')){
+                    <div class="invalid-feedback">
+                        Release date is required.
+                    </div>
+                    }
                 </div>
 
+                <!-- age limit -->
+                <div class="mb-3 col-4">
+                    <label class="form-label">Age Limit</label>
+                    <input type="number" class="form-control" formControlName="ageLimit" min="8" max="100"
+                        [ngClass]="{'is-invalid': isInvalid('ageLimit')}" />
+                    @if(isInvalid('ageLimit')){
+                    <div class="invalid-feedback">
+                        Age Limit is required (Min.8-Max.100).
+                    </div>
+                    }
+                </div>
             </div>
-            <!-- Runtime -->
-
-
-
         </div>
-
-
-
-        <!-- Rating / Likes / Votes -->
-
     </div>
 
     <!-- Arrays Section -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body border">
             <!-- Languages -->
-            <div class="mb-3 border ">
+            <div class="mb-3 ">
                 <h5 class="form-label">● Languages</h5>
                 <div class="d-flex flex-wrap">
-                    @for(lang of languagesArray;track $index){
-                    <div class="form-check  w-25">
-                        <input type="checkbox" class="form-check-input" value="{{lang.languageId}}"
+                    @for(lang of languagesArray; track $index) {
+                    <div class="form-check w-25">
+                        <input type="checkbox" class="form-check-input"
                             (change)="handleInputBoxChange($event,'languages')"
-                            [ngClass]="{'is-invalid': eventForm.get('languages')?.touched && eventForm.get('languages')?.invalid }">
+                            [ngClass]="{'is-invalid': isInvalid('languages')}">
                         <label class="form-check-label">{{lang.languageName}}</label>
-
                     </div>
                     }
                 </div>
+                @if(isInvalid('languages')){
+                <div class="invalid-feedback">
+                    At least one language is required.
+                </div>
+                }
             </div>
-            <div class="invalid-feedback">Language is required.</div>
-
-            <!-- genres -->
-
-            <div class="mb-3 border ">
+            <!-- Genres -->
+            @if(eventForm.get('genres')){
+            <div class="mb-3 ">
                 <h5 class="form-label">● Genres</h5>
                 <div class="d-flex flex-wrap">
-                    @for(genre of genresArray;track $index){
-                    <div class="form-check  w-25">
-                        <input type="checkbox" class="form-check-input" value="{{genre.genresId}}"
-                            (change)="handleInputBoxChange($event,'genres')"
-                            [ngClass]="{'is-invalid': eventForm.get('genres')?.touched && eventForm.get('genres')?.invalid }">
+                    @for(genre of genresArray; track $index) {
+                    <div class="form-check w-25">
+                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
+                            [ngClass]="{'is-invalid': isInvalid('genres')}">
                         <label class="form-check-label">{{genre.genresName}}</label>
-                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
                     </div>
                     }
                 </div>
 
-                <!-- </select> -->
-
+                @if(isInvalid('genres')){
+                <div class="invalid-feedback">
+                    At least one genre is required.
+                </div>
+                }
             </div>
+            }
 
 
-
-
-            <!-- formats -->
-
-            <div class="mb-3 border ">
+            <!-- Formats -->
+            @if(eventForm.get('format')){
+            <div class="mb-3 ">
                 <h5 class="form-label">● Formats</h5>
-                <!-- <select formArrayName="languages" class="form-select">
-                    <option value="" selected disabled>Select</option> -->
                 <div class="d-flex flex-wrap">
-                    @for(format of formatsArray;track $index){
-                    <div class="form-check  w-25">
-                        <input type="checkbox" class="form-check-input" value="{{format.formatId}}"
-                            (change)="handleInputBoxChange($event,'format')"
-                            [ngClass]="{'is-invalid': eventForm.get('format')?.touched && eventForm.get('format')?.invalid }">
+                    @for(format of formatsArray; track $index) {
+                    <div class="form-check w-25">
+                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
+                            [ngClass]="{'is-invalid': isInvalid('format')}">
                         <label class="form-check-label">{{format.formatName}}</label>
-                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
                     </div>
                     }
                 </div>
-
-                <!-- </select> -->
-
+                @if(isInvalid('format')){
+                <div class="invalid-feedback">
+                    At least one format is required.
+                </div>
+                }
             </div>
-
-
-            <!-- tags -->
-            <div class="mb-3 border ">
+            }
+            <!-- Tags -->
+            <div class="mb-3 ">
                 <h5 class="form-label">● Tags</h5>
-                <!-- <select formArrayName="languages" class="form-select">
-                    <option value="" selected disabled>Select</option> -->
                 <div class="d-flex flex-wrap">
-                    @for(tags of tagsArray;track $index){
-                    <div class="form-check  w-25">
-                        <input type="checkbox" class="form-check-input" value="{{tags.tagId}}"
-                            (change)="handleInputBoxChange($event,'tag')"
-                            [ngClass]="{'is-invalid': eventForm.get('tag')?.touched && eventForm.get('tag')?.invalid }">
-                        <label class="form-check-label">{{tags.tagName}}</label>
-                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                    @for(tag of tagsArray; track $index) {
+                    <div class="form-check w-25">
+                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'tag')"
+                            [ngClass]="{'is-invalid': isInvalid('tag')}">
+                        <label class="form-check-label">{{tag.tagName}}</label>
                     </div>
                     }
                 </div>
-
-                <!-- </select> -->
-
+                @if(isInvalid('tag')){
+                <div class="invalid-feedback">
+                    At least one tag is required.
+                </div>
+                }
             </div>
 
-
-
-            <!-- categories -->
-            <div class="mb-3 border ">
+            <!-- Categories -->
+            <div class="mb-3 ">
                 <h5 class="form-label">● Categories</h5>
-                <!-- <select formArrayName="languages" class="form-select">
-                    <option value="" selected disabled>Select</option> -->
                 <div class="d-flex flex-wrap">
-                    @for(category of categoriesArray;track $index){
-                    <div class="form-check  w-25">
-                        <input type="checkbox" class="form-check-input" value="{{category.categoryId}}"
+                    @for(category of categoriesArray; track $index) {
+                    <div class="form-check w-25">
+                        <input type="checkbox" class="form-check-input"
                             (change)="handleInputBoxChange($event,'categories')"
-                            [ngClass]="{'is-invalid': eventForm.get('categories')?.touched && eventForm.get('categories')?.invalid }">
-                        <label class="form-check-label">{{category?.categoryName}}</label>
-                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
+                            [ngClass]="{'is-invalid': isInvalid('categories')}">
+                        <label class="form-check-label">{{category.categoryName}}</label>
                     </div>
                     }
                 </div>
-
-                <!-- </select> -->
-
+                @if(isInvalid('categories')){
+                <div class="invalid-feedback">
+                    At least one category is required.
+                </div>
+                }
             </div>
-
-
-
-            <!-- more filters -->
-            <div class="mb-3 border ">
+            <!-- More Filters -->
+            <div class="mb-3 ">
                 <h5 class="form-label">● More Filters</h5>
-                <!-- <select formArrayName="languages" class="form-select">
-                    <option value="" selected disabled>Select</option> -->
                 <div class="d-flex flex-wrap">
-                    @for(moreFilter of moreFilters;track $index){
-                    <div class="form-check  w-25">
-                        <input type="checkbox" class="form-check-input" value="{{moreFilter.moreFilterId}}"
+                    @for(moreFilter of moreFilters; track $index) {
+                    <div class="form-check w-25">
+                        <input type="checkbox" class="form-check-input"
                             (change)="handleInputBoxChange($event,'moreFilters')"
-                            [ngClass]="{'is-invalid': eventForm.get('moreFilters')?.touched && eventForm.get('moreFilters')?.invalid }">
+                            [ngClass]="{'is-invalid': isInvalid('moreFilters')}">
                         <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
-                        <!-- <div class="invalid-feedback">Row is required.</div>? -->
                     </div>
                     }
                 </div>
-
-                <!-- </select> -->
-
+                @if(isInvalid('moreFilters')){
+                <div class="invalid-feedback">
+                    At least one filter is required.
+                </div>
+                }
             </div>
-
-
-
-
         </div>
     </div>
 
     <!-- Cast -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="cast">
-            <h5 class="card-title">🎭 Cast</h5>
-            <div *ngFor="let c of castControls.controls; let i = index" [formGroupName]="i" class="row mb-2">
+            <div class="d-flex mb-3 justify-content-start align-items-center gap-4">
+                <h5 class="card-title mb-0">🎭 Cast</h5>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">Add Cast</button>
+            </div>
+            @for(c of castControls.controls;track $index ){
+
+            <div formGroupName="{{$index}}" class="row mb-2">
                 <div class="col">
-                    <input class="form-control" placeholder="Actor Name" formControlName="actorName" />
+                    <input class="form-control" placeholder="Actor Name" formControlName="actorName"
+                        [ngClass]="{'is-invalid': c.get('actorName')?.invalid && (c.get('actorName')?.touched || c.get('actorName')?.dirty)}" />
+                    @if(c.get('actorName')?.invalid && (c.get('actorName')?.touched || c.get('actorName')?.dirty)){
+                    <div class="invalid-feedback">
+                        Actor name is required.
+                    </div>
+                    }
                 </div>
                 <div class="col">
-                    <input class="form-control" placeholder="Actor Image URL" formControlName="castImg" />
+                    <input type="file" class="form-control" (change)="handleImageUpload($event,'cast',$index)"
+                        [ngClass]="{'is-invalid': c.get('castImg')?.invalid && (c.get('castImg')?.touched || c.get('castImg')?.dirty)}" />
+                    @if(c.get('castImg')?.invalid && (c.get('castImg')?.touched || c.get('castImg')?.dirty)){
+                    <div class="invalid-feedback">
+                        Cast image is required.
+                    </div>
+                    }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button" (click)="castControls.removeAt(i)">✕</button>
+                    <button class="btn btn-outline-danger" type="button" (click)="castControls.removeAt($index)">✕</button>
                 </div>
             </div>
-            <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">+ Add Cast</button>
+            }
         </div>
     </div>
 
     <!-- Crew -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="crew">
-            <h5 class="card-title">🎬 Crew</h5>
-            <div *ngFor="let m of crewControls.controls; let i = index" [formGroupName]="i" class="row mb-2">
+            <div class="d-flex mb-3 justify-content-start align-items-center gap-4">
+                <h5 class="card-title">🎬 Crew</h5>
+                <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">Add Crew</button>
+            </div>
+            @for(m of crewControls.controls;track $index){
+            <div formGroupName="{{$index}}" class="row mb-2">
                 <div class="col">
-                    <input class="form-control" placeholder="Member Name" formControlName="memberName" />
+                    <input class="form-control" placeholder="Member Name" formControlName="memberName"
+                        [ngClass]="{'is-invalid': m.get('memberName')?.invalid && (m.get('memberName')?.touched || m.get('memberName')?.dirty)}" />
+                    @if(m.get('memberName')?.invalid && (m.get('memberName')?.touched || m.get('memberName')?.dirty)){
+                    <div class="invalid-feedback">
+                        Member name is required.
+                    </div>
+                    }
                 </div>
                 <div class="col">
-                    <input class="form-control" placeholder="Crew Image URL" formControlName="crewImg" />
+                    <input type="file" class="form-control" (change)="handleImageUpload($event,'crew',$index)"
+                        [ngClass]="{'is-invalid': m.get('crewImg')?.invalid && (m.get('crewImg')?.touched || m.get('crewImg')?.dirty)}" />
+                    @if(m.get('crewImg')?.invalid && (m.get('crewImg')?.touched || m.get('crewImg')?.dirty)){
+                    <div class="invalid-feedback">
+                        Crew image is required.
+                    </div>
+                    }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button" (click)="crewControls.removeAt(i)">✕</button>
+                    <button class="btn btn-outline-danger" type="button" (click)="crewControls.removeAt($index)">✕</button>
                 </div>
             </div>
-            <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">+ Add Crew</button>
+            }
         </div>
     </div>
 
     <!-- Submit -->
-    <div class="text-end">
-        <button class="btn btn-success px-4" type="submit">Submit</button>
+    <div class="text-end mb-3">
+        <button class="btn btn-primary px-4" type="submit">Submit</button>
     </div>
 </form>

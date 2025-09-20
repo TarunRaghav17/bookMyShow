@@ -49,16 +49,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     });
 
     this.setToday()
-    // api to get contents
-    this.contentService.getContents().subscribe({
-      next: (res) => {
-        this.eventsNameList = res
-      },
-      error: (err) => {
-        err.error.message
-      }
-    })
-  }
+     }
 
   ngOnDestroy() {
     this.commonService.setCategory(null)

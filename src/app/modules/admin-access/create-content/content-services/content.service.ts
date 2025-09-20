@@ -12,10 +12,6 @@ export class ContentService {
 
   baseUrl = environment.baseUrl
 
-  getContents(): Observable<any> {
-    return this.http.get<any>(`http://localhost:3001/contents`)
-  }
-
   getContentByType(eventType: string): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/api/events/filter`, { eventType })
   }
