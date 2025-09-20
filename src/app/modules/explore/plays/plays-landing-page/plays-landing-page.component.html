@@ -1,3 +1,4 @@
+@if(dummyMoviesdata?.length){
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
         <div class="main_container_box d-flex justify-content-center ">
@@ -14,27 +15,27 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion (filterEvent)="commonService.handleEventFilter($event)"
-                                    [filters]="filters"></app-filter-accordion>
+                                <app-filter-accordion (filterEvent)="getFilter($event)">
+                                </app-filter-accordion>
                             </div>
                         </div>
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
                             <div class="d-flex gap-2 language_text py-2 flex-wrap">
-                                @for (item of select; track $index) {
+                                @for (item of commonService.selectedFiltersSignal(); track $index) {
                                 @for(i of item.data;track $index){
-                                <span [ngClass]="{selectedText: i.selected}">
+                                <span [ngClass]="{selectedText: i.selected}" class="border-danger">
                                     {{i.text}}
                                 </span>
                                 }
                                 }
-                                @for (item of topFiltersArray; track $index) {
+                                @for (item of commonService.topFiltersArray()[3]?.data; track $index) {
                                 @if(!item.selected){
 
                                 <span [ngClass]="{selectedText: item.selected}"
                                     (click)="commonService.handleEventFilter(item)">
-                                    {{item.categoryName}}
+                                    {{item.text}}
                                 </span>
                                 }
                                 }
@@ -42,30 +43,32 @@
                         </div>
                         <div class="col-12">
                             <div class="row">
-                                <div class="d-flex justify-content-center g-0">
-                                    <div class="main_box_crasoule">
+                                <div class="d-flex justify-content-start align-items-start g-0">
+                                    <div class="main_box_crasoule w-100">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div class="filter_text d-flex flex-wrap gap-5 py-3 justify-content-start">
+                                            <div class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start">
                                                 @for (item of dummyMoviesdata; track $index) {
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
                                                         <div class="card shadow-sm">
-                                                            <a class="img_container rounded-4 rounded-top"
-                                                              [routerLink]="`/${commonService._selectedCategory()}/${item.name}/${item.eventId}`">
-                                                                <img [src]="commonService.getImageFromBase64(item.imageurl)" [alt]="item.imageurl">
+                                                            <a class="img_container rounded-4 rounded-top justify-content-start"
+                                                                [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                                                                <img [src]="commonService.getImageFromBase64(item.imageurl)"
+                                                                    [alt]="item.imageurl">
                                                             </a>
                                                             <div class="card-body rounded-bottom bg-dark">
                                                                 <div class="d-flex gap-2">
                                                                     <span class="text-white">
-                                                                        {{item.releasingOn}}
+                                                                        {{item.startDate}}
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="bottom_text_movie_card py-3 px-4 d-flex flex-column">
-                                                            <h6 class="card-text m-0">{{item.name | truncate:30}} </h6>
+                                                        <div class="bottom_text_movie_card py-3 d-flex flex-column">
+                                                            <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
+                                                            <span class="m-0 d-flex">{{item.venueName[0]}}</span>
                                                             <span class="m-0">{{item.languages}}</span>
-                                                            <small>{{item.price}}</small>
+                                                            <small class="m-0">₹ {{item.pricelist[0]}}</small>
                                                         </div>
                                                     </div>
                                                 </ng-container>
@@ -82,3 +85,7 @@
         </div>
     </div>
 </div>
+}
+@else {
+<app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
+}

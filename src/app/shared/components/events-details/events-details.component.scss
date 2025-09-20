@@ -56,3 +56,29 @@
 .m_ticket {
   background-color: rgb(254 243 237);
 }
+.img-container img{
+  max-width: 200px;
+}
+.card_image img{
+  max-height: 400px;
+  max-width: 100%;
+}
+.side_card_details{
+  position: sticky;
+  top: 100px;
+}
+
+.modal-body{
+  max-height: 300px;
+  overflow-y: auto;
+}
+.box_container{
+    color: rgb(0, 0, 0);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0.2px;
+}
+.modal-body i{
+  cursor: pointer;
+}

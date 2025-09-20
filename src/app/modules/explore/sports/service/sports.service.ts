@@ -7,18 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class SportsService {
 
-  constructor(private http:HttpClient) { }
-   base_url = 'http://172.31.252.101:8080/bookmyshow'
+  constructor(private http: HttpClient) { }
+  base_url = 'http://172.31.252.101:8080/bookmyshow'
 
-  getAllSports():Observable<any>{
-    return this.http.post(`${this.base_url}/api/events/filter`,{
-      "type":"Sports"
-    })
+  getAllSports(body: any): Observable<any> {
+    return this.http.post(`${this.base_url}/api/events/filter`, body)
   }
-    getFilters(target:string):Observable<any>{
-       let Target= target.split('_').join('-')
+  getFilters(target: string): Observable<any> {
+    let Target = target.split('_').join('-')
 
     return this.http.get(`${this.base_url}/api/events/${Target}?eventType=Sports`)
   }
-  
+
 }

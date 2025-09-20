@@ -1,16 +1,14 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
-import { filters, selectedFilters } from '../../../db';
+// import { filters, selectedFilters } from '../../../db';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommonService {
-  filters: any[] = filters;
-  select: any[] = selectedFilters;
   baseUrl = environment.baseUrl;
 
   city = sessionStorage.getItem('selectedCity');
@@ -20,10 +18,12 @@ export class CommonService {
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
   userLangFormat = signal<any>({})
-
-  constructor(private http: HttpClient,
+  filtersSignal = signal<any[]>([])
+  
+ 
+   constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
-  ) { }
+  )  { }
 
   setUserLangFormat(payload: any) {
     this.userLangFormat.set(payload)
@@ -52,6 +52,60 @@ export class CommonService {
   getUserSelectedDate() {
     return this.userSelectedDate()
   }
+  selectedFiltersSignal = signal<any>(
+    [
+      {
+        type: "Language",
+        data: []
+      },
+      {
+        type: "Genres",
+        data: []
+      },
+      {
+        type: "Formats",
+        data: []
+      },
+      {
+        type: "Categories",
+        data: []
+      },
+      {
+        type: "More Filters",
+        data: []
+      },
+      {
+        type: "Price",
+        data: []
+      },
+      {
+        type: "Tags",
+        data: []
+      },
+      {
+        type: "Date",
+        data: []
+      },
+      {
+        type: "Release Month",
+        data: []
+      },
+    ])
+
+
+  setFiltersSignal(filters: any) {
+    let modifiedFilters = this.formatFilters(filters)
+    this.filtersSignal.set(modifiedFilters)
+  }
+  topFiltersArray = computed(() =>
+    this.filtersSignal()
+      .filter(group =>
+      ({
+        type: group.type,
+        data: group.data.filter((item: any) => !item.selected)  
+      }))
+      .filter(group => group.data.length > 0)
+  );
 
   /**
    * @description Get list of all cities from backend
@@ -109,7 +163,7 @@ export class CommonService {
    * @returnType void
    */
   handleEventFilter(filter: any): void {
-    this.filters.map((item: any) => {
+    this.filtersSignal().map((item: any) => {
       if (item.type == filter.type) {
         item.data.map((i: any) => {
           if (i.text == filter.filterName.text) {
@@ -117,22 +171,20 @@ export class CommonService {
           }
         });
       }
-    });
-    let filterType: any[] = this.select.filter(
-      (item: any) => item.type == filter.type
-    );
-
-    if (filterType) {
-      let alreayExist = filterType[0].data.filter(
-        (i: any) => i.text == filter.text
-      );
+    }
+    )
+    let filterType: any[] = this.selectedFiltersSignal().filter((item: any) =>
+      item.type == filter.type
+    )
+    if (filterType.length>0) {
+      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
       if (alreayExist.length == 0) {
-        filterType[0].data.push(filter);
-        return filterType[0].data.sort((a: any, b: any) => a.index - b.index);
-      } else {
-        filterType[0].data = filterType[0].data.filter(
-          (i: any) => i.text != filter.filterName.text
-        );
+        filterType[0].data.push(filter.filterName)
+        filterType[0].data.sort((a: any, b: any) => a.id - b.id)
+        return filterType[0].data.sort((a: any, b: any) => a.index - b.index)
+      }
+      else {
+        filterType[0].data = filterType[0].data.filter((i: any) => i.text != filter.filterName.text)
       }
     }
   }
@@ -151,6 +203,7 @@ export class CommonService {
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`);
   }
+
 
   listYourShowService = [
     {
@@ -235,75 +288,39 @@ export class CommonService {
       let filteredData;
       switch (type) {
         case 'Language':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.languageName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.languageName, selected: false, id: i.languageId }));
           break;
 
         case 'Genres':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.genresName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.genresName, selected: false, id: i.genresId }));
           break;
 
         case 'Formats':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.formatName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.formatName, selected: false, id: i.formatId }));
           break;
 
         case 'Date':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.dateFilterName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.dateFilterName, selected: false }));
           break;
 
         case 'Categories':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.categoryName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.categoryName, selected: false }));
           break;
 
         case 'More Filters':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.moreFilterName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.moreFilterName, selected: false }));
           break;
 
         case 'Price':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.priceRange,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.priceRange, selected: false }));
           break;
 
         case 'Tags':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.tageName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.tagsName, selected: false }));
           break;
 
         case 'Release Month':
-          filteredData = data.map((i: any) => ({
-            ...i,
-            text: i.releaseMonthName,
-            selected: false,
-          }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.releaseMonthName, selected: false }));
           break;
 
         default:
@@ -313,4 +330,9 @@ export class CommonService {
     });
     return filtersArray;
   }
+
+  getAllVenuesBYcity(city:String):Observable<any>{
+    return this.http.get(`${this.baseUrl}/venues/city/${city}`)
+  }
 }
+
