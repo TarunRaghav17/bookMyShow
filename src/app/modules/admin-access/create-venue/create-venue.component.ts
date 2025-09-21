@@ -288,6 +288,7 @@ export class CreateVenueComponent implements OnInit {
 
   // Submit
   onSubmit(): void {
+    console.log(this.venueForm.value)
     if (this.venueForm.valid) {
       this.venuesService.createVenueService(this.venueForm.value).subscribe({
         next: () => {
