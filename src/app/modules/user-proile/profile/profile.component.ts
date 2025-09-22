@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../auth/auth-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -30,7 +31,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   modalForm!: FormGroup;
   getProfileDataId: any;
   userDetails: any;
-  profileImage:any;
+  profileImage: any;
+  yesterday: any;
 
   constructor(
     public commonService: CommonService,
@@ -38,7 +40,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     private userService: UserProfileService,
     private toastr: ToastrService,
     private modalService: NgbModal,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -186,6 +189,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           next: (res: any) => {
             this.toastr.success(res.message);
             this.getProfileUser();
+            this.router.navigate(['/']);
 
           },
           error: (err: any) => {
@@ -234,7 +238,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.getUserById(this.getProfileDataId?.userId).subscribe({
       next: (res: any) => {
         this.userDetails = res.data;
-        console.log(this.userDetails);
         this.profileImage = this.userDetails?.profileImg;
         this.editProfileForm.patchValue(this.userDetails);
       },
@@ -242,5 +245,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.toastr.error(err.message);
       },
     });
+  }
+
+  /** * @description Set the maximum selectable date for the date input to yesterday's date
+    * @author Gurmeet Kumar
+    * @return void
+    */
+
+  maxDate() {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 2);
+    this.yesterday = currentDate.toISOString().split('T')[0];
   }
 }

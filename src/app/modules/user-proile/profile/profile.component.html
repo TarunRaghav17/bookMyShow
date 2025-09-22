@@ -113,7 +113,7 @@
                                 <label for="form-label">Birthdate (optional)</label>
                             </div>
                             <div class="input_field">
-                                <input type="date" class="form-control" formControlName="dob">
+                                <input type="date" class="form-control" formControlName="dob"  [max]="yesterday">
                             </div>
                         </div>
                         <div class="input_box">
