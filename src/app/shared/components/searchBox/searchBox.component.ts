@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class SearchBoxComponent implements OnInit {
   currentIndex: number = 0;
   visibleCount: number = 6;
-  seachControl: any = new FormControl('');
+  searchControl: any = new FormControl('');
   selectedFilter: any;
   movieName: any;
   eventsFilters: string[] = [
@@ -47,7 +47,7 @@ export class SearchBoxComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.seachControl.valueChanges
+    this.searchControl.valueChanges
       .pipe(
         debounceTime(300),
         tap((query: string) => {

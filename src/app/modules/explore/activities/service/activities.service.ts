@@ -1,22 +1,27 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { CommonService } from '../../../../services/common.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivitiesService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private commonService:CommonService) { }
 
   base_url = 'http://172.31.252.101:8080/bookmyshow'
 
-  getAllActivities(body: any): Observable<any> {
-    return this.http.post(`${this.base_url}/api/events/filter`, body)
+  getAllActivities(body:any): Observable<any> {
+    return this.http.post(`${this.base_url}/api/events/filter`,body,{
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true),
+    })
   }
 
   getFilters(target: string): Observable<any> {
-    let Target = target.split('_').join('-')
-    return this.http.get(`${this.base_url}/api/events/${Target}?eventType=Activities`)
+    let mTarget = target.split('_').join('-')
+    return this.http.get(`${this.base_url}/api/events/${mTarget}?eventType=Activities`,{
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true),
+    })
   }
 }

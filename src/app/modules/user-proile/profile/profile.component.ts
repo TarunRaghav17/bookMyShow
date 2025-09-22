@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../auth/auth-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -30,47 +31,48 @@ export class ProfileComponent implements OnInit, OnDestroy {
   modalForm!: FormGroup;
   getProfileDataId: any;
   userDetails: any;
+  profileImage: any;
+  yesterday: any;
 
   constructor(
-    private service: CommonService,
+    public commonService: CommonService,
     private authService: AuthService,
     private userService: UserProfileService,
     private toastr: ToastrService,
     private modalService: NgbModal,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    this.service._profileHeader.set(true);
+    this.commonService._profileHeader.set(true);
     this.getProfileDataId = this.authService.userDetailsSignal();
     this.getProfileUser();
-
     this.getAllStates();
     this.editProfileForm = this.fb.group({
       profileImg: [''],
-      name: ['', Validators.required],
-      username: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       dob: [''],
       gender: [''],
       married: ['no'],
       anniversaryDate: [''],
       identity: ['women'],
-      pincode: ['', [Validators.pattern(/^[0-9]{6}$/)]],
-      address1: ['', [Validators.maxLength(255)]],
-      address2: ['', [Validators.maxLength(255)]],
-      landmark: ['', [Validators.maxLength(100)]],
+      pincode: ['', [Validators.pattern(/^[0-9]{6}$/), Validators.maxLength(6)]],
+      addressLine1: ['', [Validators.maxLength(255)]],
+      addressLine2: ['', [Validators.maxLength(255)]],
       city: ['', [Validators.maxLength(100)]],
-      state: ['', [Validators.maxLength(100)]],
+      state: [''],
+    });
+    this.modalForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email, Validators.pattern(/^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/)]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
     });
 
-    this.modalForm = this.fb.group({
-      email: ['',[ Validators.required,Validators.email,Validators.pattern( /^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/),],],
-      phoneNumber: ['',[ Validators.required, Validators.pattern(/^[0-9]{10}$/),Validators.minLength(10),Validators.maxLength(10),],],
-    });
   }
 
   ngOnDestroy(): void {
-    this.service._profileHeader.set(false);
+    this.commonService._profileHeader.set(false);
   }
 
   /**
@@ -104,11 +106,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.modalForm.reset();
     if (type === 'number') {
       this.modalForm.get('phoneNumber')?.setValidators([Validators.required]);
-      this.modalForm.get('phoneNumber')?.patchValue(this.userDetails?.user?.phoneNumber || '');
+      this.modalForm
+        .get('phoneNumber')
+        ?.patchValue(this.userDetails?.phoneNumber || '');
       this.modalForm.get('email')?.clearValidators();
     } else {
       this.modalForm.get('email')?.setValidators([Validators.required]);
-      this.modalForm.get('email')?.patchValue(this.userDetails?.user?.email || '');
+      this.modalForm
+        .get('email')
+        ?.patchValue(this.userDetails?.email || '');
       this.modalForm.get('phoneNumber')?.clearValidators();
     }
     this.modalForm.get('phoneNumber')?.updateValueAndValidity();
@@ -149,7 +155,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.preview = reader.result;
+      this.preview = reader.result || this.profileImage;
       this.base64String = (reader.result as string).split(',')[1];
       this.toastr.success('Image uploaded successfully');
     };
@@ -162,8 +168,34 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * @return void
    */
   onSubmitProfile(): void {
-    if (this.editProfileForm.invalid) {
-      return;
+    if (this.editProfileForm.valid) {
+      const formData = {
+        ...this.editProfileForm.value,
+        dob: this.commonService.formatDateToMMDDYYYY(
+          this.editProfileForm.get('dob')?.value
+        ),
+        anniversaryDate: this.commonService.formatDateToMMDDYYYY(
+          this.editProfileForm.get('anniversaryDate')?.value
+        ),
+      };
+
+      if (this.base64String) {
+        formData.profileImg = this.base64String;
+      }
+
+      this.userService
+        .updateProfile(this.getProfileDataId?.userId, formData)
+        .subscribe({
+          next: (res: any) => {
+            this.toastr.success(res.message);
+            this.getProfileUser();
+            this.router.navigate(['/']);
+
+          },
+          error: (err: any) => {
+            this.toastr.error(err.message);
+          },
+        });
     }
   }
 
@@ -172,16 +204,28 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * @author Gurmeet Kumar
    * @return void
    */
-  onSubmitModal(): void {
+  onVerifyEmailOrPhone(): void {
+    if (this.modalForm.invalid) return;
+    let payload: any = {
+      userId: this.getProfileDataId?.userId,
+    };
+
     if (this.editNumberFlag) {
-      if (this.modalForm.get('phone')?.invalid) {
-        return;
-      }
+      payload.phoneNumber = this.modalForm.value.phoneNumber;
     } else {
-      if (this.modalForm.get('email')?.invalid) {
-        return;
-      }
+      payload.email = this.modalForm.value.email;
     }
+
+    this.userService
+      .updateEmailOrPhone(this.getProfileDataId?.userId, payload)
+      .subscribe({
+        next: (res: any) => {
+          this.toastr.success(res.message);
+          this.closeEditProfileModal();
+          this.getProfileUser();
+        },
+        error: (err: any) => this.toastr.error(err.message),
+      });
   }
 
   /**
@@ -194,14 +238,23 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.userService.getUserById(this.getProfileDataId?.userId).subscribe({
       next: (res: any) => {
         this.userDetails = res.data;
-        this.editProfileForm.patchValue({
-          name: this.userDetails?.user?.name || '',
-          username: this.userDetails?.user?.username || '',
-        });
+        this.profileImage = this.userDetails?.profileImg;
+        this.editProfileForm.patchValue(this.userDetails);
       },
       error: (err: any) => {
         this.toastr.error(err.message);
       },
     });
+  }
+
+  /** * @description Set the maximum selectable date for the date input to yesterday's date
+    * @author Gurmeet Kumar
+    * @return void
+    */
+
+  maxDate() {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 2);
+    this.yesterday = currentDate.toISOString().split('T')[0];
   }
 }
