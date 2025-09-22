@@ -61,6 +61,7 @@ setType(type: string) {
    this.commonService._selectedCategory.set(type);
   this.selectedType = type;
   this.getVenues()
+  this.toggleButton = false;
 }
 }
 
