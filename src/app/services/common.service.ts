@@ -18,6 +18,7 @@ export class CommonService {
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
   userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
+  showHeader=signal<boolean>(true)
   
  
    constructor(private http: HttpClient,

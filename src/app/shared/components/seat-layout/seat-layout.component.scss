@@ -1,17 +1,18 @@
 .seatmap-wrap {
-    max-width: 1100px;
+    max-width: 100%;
     margin: 16px auto;
-    padding: 0 12px;
-    border: 2px solid green
+    margin-top: 6rem;
+    background: white;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
     gap: 12px;
+    width: 100%;
     flex-wrap: wrap;
+    background: #f5f5f5;
 }
 
 .times {
@@ -26,11 +27,16 @@
     border-radius: 8px;
     background: #f8fafc;
     cursor: pointer;
+    border: 2px solid #22c55e;
+}
+
+.time:hover{
+     background-color: white;
 }
 
 .time.active {
-    outline: 2px solid #16a34a;
-    background: #ecfdf5;
+    color: #f8fafc;
+    background: #22c55e
 }
 
 .summary {
@@ -51,9 +57,17 @@
 .legend {
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
     gap: 14px;
     color: #475569;
-    margin: 8px 0 12px;
+    position: fixed;
+    bottom: 5px;
+    padding: 5px 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1050;
+    background: rgb(242, 245, 249);
 }
 
 .legend .key {
@@ -80,22 +94,60 @@
 }
 
 .canvas-shell {
-    width: 100%;
-    border: 2px solid #333;
-    border-radius: 12px;
+    width: 90%;
     overflow: hidden;
-    padding: 12px;
-    cursor: pointer;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
     position: relative;
+    margin: 0 auto;
+    background: white;
 }
 
-
 canvas {
+    cursor: pointer;
     display: block;
-    width: 100%;
-    height: 540px;
+    min-width: 100%;
     background: white;
+    margin: 0 auto;
+}
+
+.on_hover {
+    cursor: pointer;
+    color:rgb(124 124 124);
+
+}
+.on_hover:hover{
+    scale: 1.1;
+    color:#b9cce2
+}
+
+.seat-number {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.seat-number.selected {
+    background-color: #ff3b6c;
+    color: #fff;
+    font-weight: bold;
+    border-color: #ff3b6c;
+}
+
+.seat-number:hover {
+    border-color: #ff3b6c;
+}
+
+.select_seat_btn {
+    background-color: rgb(235, 78, 98);
+    color: rgb(255, 255, 255)
+}
+
+.ticket_icon {
+    color: rgb(235, 78, 98);
 
 }
