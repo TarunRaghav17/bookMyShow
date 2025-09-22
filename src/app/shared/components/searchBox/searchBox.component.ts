@@ -109,5 +109,6 @@ export class SearchBoxComponent implements OnInit {
   getDetailsMovies(id: any) {
     this.routes.navigate([`/movies/${this.commonService._selectCity()}/${id}`]);
     this.closeModal();
+    this.searchControl.setValue('');
   }
 }

@@ -66,7 +66,7 @@
                 <div class="d-flex justify-content-around gap-3">
                   @for (item of visibleData['Movie']; track $index) {
                   <div class="card_section">
-                    <div class="col" [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
+                    <div class="col" [routerLink]="['/movie',commonService._selectCity(),item.eventId]">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -137,7 +137,7 @@
                   @for (item of visibleData['Plays']; track $index) {
                   <div class=" card_section">
                     <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                      [routerLink]="`/plays/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -205,7 +205,7 @@
                   @for (item of visibleData['Sports']; track $index) {
                   <div class=" card_section">
                     <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                      [routerLink]="`/sports/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -273,7 +273,7 @@
                   @for (item of visibleData['Activities']; track $index) {
                   <div class=" card_section">
                     <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                      [routerLink]="`/activities/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -346,7 +346,7 @@
                   @for (item of visibleData['Event']; track $index) {
                   <div class=" card_section">
                     <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                      [routerLink]="`/events/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">

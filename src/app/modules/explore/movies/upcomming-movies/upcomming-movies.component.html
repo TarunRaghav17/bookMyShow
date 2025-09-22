@@ -58,7 +58,7 @@
                                                 <div class="col card_container">
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4"
-                                                            [routerLink]="[`/movies/${commonService._selectCity()}/${(item?.name).split(' ').join('-');}/${item.imdbID}`]">
+                                                             [routerLink]="['/movie/',commonService._selectCity(),item.eventId]">
                                                             <img [src]="commonService.getImageFromBase64(item.imageurl)"
                                                                 [alt]="item.imageurl">
                                                         </a>
