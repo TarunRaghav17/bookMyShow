@@ -11,10 +11,8 @@ export class SportsService {
   constructor(private http:HttpClient,private commonService:CommonService) { }
    base_url = 'http://172.31.252.101:8080/bookmyshow'
 
-  getAllSports():Observable<any>{
-    return this.http.post(`${this.base_url}/api/events/filter`,{
-      "type":"Sports"
-    },{
+  getAllSports(body:any):Observable<any>{
+    return this.http.post(`${this.base_url}/api/events/filter`,body,{
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     })
   }

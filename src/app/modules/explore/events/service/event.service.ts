@@ -12,10 +12,8 @@ export class EventService {
 
   base_url = 'http://172.31.252.101:8080/bookmyshow'
 
-   getAllEvents():Observable<any>{
-    return this.http.post(`${this.base_url}/api/events/filter`,{
-      "type":"Event"
-    },{
+   getAllEvents(body:any):Observable<any>{
+    return this.http.post(`${this.base_url}/api/events/filter`,body,{
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     })
    }

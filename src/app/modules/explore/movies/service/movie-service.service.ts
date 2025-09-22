@@ -19,9 +19,8 @@ export class MovieService {
     })
   }
 
-  getAllMovies():Observable<any>{
-    return this.http.post(`${this.base_url}/api/events/filter`,{
-  "type": "Movie"},{
+  getAllMovies(body:any):Observable<any>{
+    return this.http.post(`${this.base_url}/api/events/filter`,body,{
     context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
   })
   }
