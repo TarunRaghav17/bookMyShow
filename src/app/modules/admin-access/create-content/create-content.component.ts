@@ -180,7 +180,6 @@ export class CreateContentComponent implements OnInit {
     reader.readAsDataURL(file);
   }
   onSubmit() {
-console.log(this.eventForm.value)
     if (this.eventForm.valid) {
       this.toaster.success('Content Created Successfully')
     }

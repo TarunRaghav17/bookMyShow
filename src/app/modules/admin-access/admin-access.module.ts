@@ -10,11 +10,12 @@ import { CreateVenueComponent } from './create-venue/create-venue.component';
 import { CreateShowComponent } from './create-show/create-show.component';
 import { ClickOutsideDirective } from '../../core/directive/click-out-side.directive';
 import { CreateContentComponent } from './create-content/create-content.component';
+import { ListVenuesComponent } from './list-venues/list-venues.component';
 
 @NgModule({
   declarations: [
     UsersComponent,
-    ListYourShowComponent, CreateVenueComponent, CreateShowComponent,CreateContentComponent 
+    ListYourShowComponent, CreateVenueComponent, CreateShowComponent,CreateContentComponent,ListVenuesComponent
   ],
   imports: [
     ReactiveFormsModule, CommonModule,
