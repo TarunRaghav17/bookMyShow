@@ -1,4 +1,5 @@
 <!-- Top-Header  -->
+@if(commonService.showHeader()){
 <div class="conatiner-fluid ">
     <div class="row g-0">
         <div class="main_header_container d-flex justify-content-center bg-white">
@@ -290,3 +291,5 @@
         <a class="view_city" (click)="viewAllCities()"> {{viewCitiesText}} </a>
     </div>
 </ng-template>
+
+}
