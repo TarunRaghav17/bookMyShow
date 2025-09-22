@@ -1,20 +1,49 @@
-.on_hover {
-display: flex;
-align-items: center;
+.on_hover_icon {
+  display: flex;
+  align-items: center;
   width: 1.7rem;
   height: 1.7rem;
   overflow: hidden;
   transition: width 0.3s ease;
 }
-.on_hover:hover {
+
+.on_hover_icon:hover {
   width: 20%;
 
   cursor: pointer;
 }
 
-.date_card{
- height: 72px;
- width:60px;
- border: 1px solid rgb(235, 78, 98);
- cursor: pointer;
+.date_card {
+  height: 72px;
+  width: 60px;
+  border: 1px solid rgb(223, 229, 230);
+  cursor: pointer;
+}
+
+input[type="checkbox"].accent-blue {
+  accent-color: #fd0d0d !important;
+  -webkit-appearance: checkbox;
+  /* ensure native look */
+  appearance: checkbox;
+}
+
+.on_hover:hover {
+  cursor: pointer;
+}
+
+.searchBox {
+  width: 3rem;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.onSearchBox {
+  width: 30rem
+}
+
+.date_disabled{
+  opacity:0.5;
+  color:rgb(170, 170, 170);
+  cursor:not-allowed
+
 }

@@ -32,14 +32,19 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   languagesArray: any[] = [];
   formatsArray: any[] = [];
   screenNamesArray: any[] = [];
-  statusArray: any[] = [];
+  statusArray: any[] = [
+    "active",
+    "cancelled",
+    "completed",
+    "ongoing",
+  ];
   citiesArray: any[] = [];
 
   ngOnInit(): void {
     this.showForm = this.fb.group({
       eventName: ['', Validators.required],
       venueName: ['', Validators.required],
-      eventType: ['', Validators.required],  // movies | sports | events | activities
+      eventType: ['', Validators.required],  // Movie | Sports | Event | Plays | Activities
       city: ['', Validators.required],
       date: ['', Validators.required],
       startTime: ['', [Validators.required, this.validateStartTime()]],
@@ -49,16 +54,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     });
 
     this.setToday()
-    // api to get contents
-    this.contentService.getContents().subscribe({
-      next: (res) => {
-        this.eventsNameList = res
-      },
-      error: (err) => {
-        err.error.message
-      }
-    })
-  }
+     }
 
   ngOnDestroy() {
     this.commonService.setCategory(null)
@@ -82,28 +78,14 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     this.commonService.getAllCities().subscribe(
       (res) => this.citiesArray = res.data)
     let selectedEventType = this.showForm.get('eventType')?.value
-    if (selectedEventType != 'movies') {
-      this.showForm.addControl('reservedSeats', this.fb.array([
-        this.fb.group({
-          userId: ["1245", Validators.required],
-          userReservationSeats: [["A-01", "A-02"], Validators.required],
-        })
-      ]));
+    if (selectedEventType != 'Movie') {
+     
       this.showForm.addControl('price', this.fb.control(0, Validators.required));
       this.showForm.removeControl('categories');
       this.showForm.removeControl('format')
       this.showForm.removeControl('screenName')
-      this.statusArray = [
-        "active",
-        "cancelled",
-        "completed",
-        "ongoing",
-      ]
     }
     else {
-      this.statusArray = [
-        "upcoming", "released"
-      ]
       this.showForm.addControl('categories', this.fb.array([]));
       this.showForm.removeControl('reservedSeats');
       this.showForm.removeControl('price')
@@ -119,7 +101,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     this.venuesNameList = []
     this.eventsNameList = []
     this.languagesArray = []
-    this.venuesService.getVenues().subscribe({
+    this.venuesService.getVenues(selectedCity).subscribe({
       next: (res) => {
         this.venuesNameList = res.filter((venue: any) => {
           if (venue.address.city.toLowerCase() == selectedCity.toLowerCase() &&
@@ -135,10 +117,17 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   }
 
   onVenueNameChange() {
-    // const selectedEventType = this.showForm.get('eventType')?.value;
+    const selectedEventType = this.showForm.get('eventType')?.value;
     const selectedVenueName = this.showForm.get('venueName')?.value;
     this.handleReset(['eventName'])
-    this.contentService.getContentByType('Movie').subscribe((res) => this.eventsNameList = res.data
+    this.contentService.getContentByType(selectedEventType).subscribe({
+      next: (res: any) => {
+        this.eventsNameList = res.data
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    }
     )
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
@@ -160,12 +149,7 @@ export class CreateShowComponent implements OnInit, OnDestroy {
     let selectedEventName = this.showForm.get('eventName')?.value
     let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
     this.languagesArray = selectedEventNameObj.languages
-    if (selectedEventNameObj.releasedFlag) {
-      this.showForm.get('status')?.setValue('released')
-    }
-    else {
-      this.showForm.get('status')?.setValue('upcoming')
-    }
+    this.showForm.get('status')?.setValue('active')
   }
   setToday() {
     let today = new Date()

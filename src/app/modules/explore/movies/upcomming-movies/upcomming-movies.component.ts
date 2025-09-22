@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters} from '../../../../../../db';
+import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './upcomming-movies.component.scss'
 })
 export class UpcommingMoviesComponent {
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[] |null = null
   selectedFilters: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
@@ -20,6 +20,15 @@ export class UpcommingMoviesComponent {
   filters: any[] = []
   select: any[] = selectedFilters
   filtersArray: any[] = []
+  sendPayload: any = {
+    "type": "string",
+    "languages": [],
+    "genres": [],
+    "formats": [],
+    "tags": [],
+    "releaseMonths": [],
+    "dateFilters": []
+  }
 
   constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
     this.selectedCity = this.commonService._selectCity()
@@ -27,20 +36,13 @@ export class UpcommingMoviesComponent {
   }
   ngOnInit(): void {
     this.setFilter()
-    this.movieService.getFilters('languages').subscribe({
+    this.sendPayload.type = 'Movie'
+    this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
-        this.topFiltersArray = res.data
+        this.dummyMoviesdata = res.data || []
       },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
-    this.movieService.getAllMovies().subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: () => {
-        this.toastr.error("Failed To Fetch upcoming Movies");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
@@ -53,17 +55,62 @@ export class UpcommingMoviesComponent {
       this.movieService.getFilters('release-months')
     ]).subscribe({
       next: ([languages, genres, tags, formats, releaseMonth]) => {
-        this.filters = [
+        let filters = [
           { type: 'Language', data: languages.data },
           { type: 'Genres', data: genres.data },
           { type: 'Tags', data: tags.data },
           { type: 'Formats', data: formats.data },
           { type: 'Release Month', data: releaseMonth.data }
         ];
+        this.commonService.setFiltersSignal(filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+  }
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1);
+    } else {
+      array.push(id);
+    }
+  }
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Language':
+        this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+        break;
+
+      case 'Genres':
+        this.toggleId(this.sendPayload.genres, event.filterName.genresId);
+        break;
+
+      case 'Formats':
+        this.toggleId(this.sendPayload.formats, event.filterName.formatId)
+        break;
+
+      case 'Tags':
+        this.toggleId(this.sendPayload.tags, event.filterName.tagId)
+        break;
+
+      case 'Release Month':
+        this.toggleId(this.sendPayload.releaseMonths, event.filterName.releaseMonthId)
+        break;
+    }
+    this.movieService.getAllMovies(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }

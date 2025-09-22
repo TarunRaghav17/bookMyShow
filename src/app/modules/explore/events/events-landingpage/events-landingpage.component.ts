@@ -12,15 +12,22 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './events-landingpage.component.scss'
 })
 export class EventsLandingPageComponent {
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[]|null = null;
   topFiltersArray!: any[]
   filters!: any[]
   select: any[] = selectedFilters
   originalMovies = movies;
   filtersArray: any[] = [];
+  sendPayload: any = {
+    "type": "string",
+    "dateFilters": [],
+    "languages": [],
+    "categories": [],
+    "morefilter": [],
+    "price": [],
+  }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService) {
-    this.dummyMoviesdata = movies;
     this.commonService._selectedCategory.set('Events');
   }
 
@@ -33,20 +40,13 @@ export class EventsLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.eventService.getFilters('categories').subscribe({
+    this.sendPayload.type = 'Event'
+    this.eventService.getAllEvents(this.sendPayload).subscribe({
       next: (res) => {
-        this.topFiltersArray = res.data
+        this.dummyMoviesdata = res.data || []
       },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
-    this.eventService.getAllEvents().subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: () => {
-        this.toastr.error("Failed To Fetch Events");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
@@ -58,7 +58,7 @@ export class EventsLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
   setFilter() {
@@ -71,11 +71,59 @@ export class EventsLandingPageComponent {
     ]).subscribe({
       next: ([date_filters, languages, categories, more_filters, prices]) => {
         this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        this.commonService.setFiltersSignal(this.filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
-
   }
+
+toggleId(array: any[], id: any): void {
+  const index = array.indexOf(id);
+  if (index > -1) {
+    array.splice(index, 1); 
+  } else {
+    array.push(id);  
+  }
+}
+
+getFilter(event: any){
+  switch (event.type) {
+    case 'Date':
+      this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
+      break;
+
+    case 'Language':
+      this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+      break;
+
+    case 'Categories':
+      this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
+      break;
+
+    case 'More Filters':
+      this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
+      break;
+
+    case 'Prices':
+      this.toggleId(this.sendPayload.price, event.filterName.priceId);
+      break;
+  } 
+  
+  this.eventService.getAllEvents(this.sendPayload).subscribe({
+    next: (res) => {
+      this.dummyMoviesdata = res.data;
+    },
+    error: (err) => {
+      this.toastr.error(err.message);
+    }
+  });
+  this.commonService.handleEventFilter(event);
+}
+
+getImageFromBase64(){
+
+}
+
 }

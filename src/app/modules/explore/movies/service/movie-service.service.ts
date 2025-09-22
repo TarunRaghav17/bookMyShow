@@ -10,7 +10,7 @@ export class MovieService {
 
   constructor(private http: HttpClient,private commonService:CommonService) { }
 
- base_url = 'http://172.31.252.101:8080/bookmyshow'
+  base_url = 'http://172.31.252.101:8080/bookmyshow'
 
   getFilters(target:string):Observable<any>{
        let Target= target.split('_').join('-')

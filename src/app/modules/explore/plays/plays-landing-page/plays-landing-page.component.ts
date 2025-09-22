@@ -4,7 +4,6 @@ import { movies, selectedFilters } from '../../../../../../db';
 import { PlaysService } from '../service/plays.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
   selector: 'app-plays-landing-page',
   standalone: false,
@@ -12,12 +11,21 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './plays-landing-page.component.scss'
 })
 export class PlaysLandingPageComponent {
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[]|null = null;
   topFiltersArray!: any[]
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
   filtersArray: any[] = []
+  sendPayload: any = {
+    "type": "string",
+    "dateFilters": [],
+    "languages": [],
+    "genres": [],
+    "categories": [],
+    "morefilter": [],
+    "price": [],
+  }
 
   constructor(public commonService: CommonService, private playService: PlaysService, private toastr: ToastrService) {
     this.commonService._selectedCategory.set('Plays');
@@ -32,21 +40,13 @@ export class PlaysLandingPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.playService.getFilters('categories').subscribe({
+    this.sendPayload.type = 'Plays'
+    this.playService.getAllPlays(this.sendPayload).subscribe({
       next: (res) => {
-        this.topFiltersArray = res.data
+        this.dummyMoviesdata = res.data || []
       },
-      error: (res) => {
-        this.toastr.error(res.message);
-      }
-    })
-
-    this.playService.getAllPlays().subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: () => {
-        this.toastr.error("Failed To Fetch Plays");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     }
     )
@@ -58,10 +58,10 @@ export class PlaysLandingPageComponent {
 * @params  
 * @returnType void
 */
-
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
+
   setFilter() {
     forkJoin([
       this.playService.getFilters('date_filters'),
@@ -72,11 +72,59 @@ export class PlaysLandingPageComponent {
       this.playService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, languages, genres, categories, more_filters, prices]) => {
-        this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Categories', data: categories.data }, { type: 'Genres', data: genres.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Language', data: languages.data }, { type: 'Genres', data: genres.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        this.commonService.setFiltersSignal(filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     });
+  }
+
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1); 
+    } else {
+      array.push(id);  
+    }
+  }
+
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Date':
+        this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
+        break;
+
+      case 'Language':
+        this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+        break;
+
+      case 'Genres':
+        this.toggleId(this.sendPayload.genres, event.filterName.genresId);
+        break;
+
+      case 'Categories':
+        this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
+        break;
+
+      case 'More Filters':
+        this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
+        break;
+
+      case 'Prices':
+        this.toggleId(this.sendPayload.price, event.filterName.priceId);
+        break;
+    }
+
+    this.playService.getAllPlays(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }

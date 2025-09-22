@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +10,12 @@ export class VenuesService {
 
   constructor(private http: HttpClient) { }
 
-  createVenueService(payload: any): Observable<any> {
-    return this.http.post('http://localhost:3002/venues', payload)
-  }
+  baseUrl = environment.baseUrl
 
-  getVenues(): Observable<any> {
-    return this.http.get('http://localhost:3002/venues')
+  createVenueService(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/venues/create`, payload)
+  }
+  getVenues(city: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/venues/city/${city}`)
   }
 }

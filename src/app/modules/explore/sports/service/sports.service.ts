@@ -18,12 +18,12 @@ export class SportsService {
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     })
   }
-    getFilters(target:string):Observable<any>{
-       let Target= target.split('_').join('-')
+  getFilters(target: string): Observable<any> {
+    let Target = target.split('_').join('-')
 
     return this.http.get(`${this.base_url}/api/events/${Target}?eventType=Sports`,{
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     })
   }
-  
+
 }

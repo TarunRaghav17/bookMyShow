@@ -33,7 +33,7 @@ const routes: Routes = [
     loadChildren: () => import('./modules/admin-access/admin-access.module').then((m) => m.AdminAccessModule)
   },
   {
-    path: 'movies/:city/:id', component: MoviesDetailsComponent
+    path: 'Movies/:city/:id', component: MoviesDetailsComponent
   },
   {
     path: ':city/cinemas', component: TheatreListComponent
@@ -46,7 +46,7 @@ const routes: Routes = [
     component: SeatLayoutComponent
   },
   {
-    path: ':category/:play-name/:id',
+    path: ':category/:eventname/:id',
     component: EventsDetailsComponent
   },
   {

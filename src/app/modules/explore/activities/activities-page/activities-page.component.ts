@@ -12,13 +12,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './activities-page.component.scss'
 })
 export class ActivitiesPageComponent {
-  dummyMoviesdata: any[] = [];
+  dummyMoviesdata: any[] | null = null;
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
   topFiltersArray!: any[]
   filtersArray: any[] = []
-
+  sendPayload: any = {
+    "type": "string",
+    "categories": [],
+    "price": [],
+    "morefilter": [],
+    "dateFilters": []
+  }
   constructor(public commonService: CommonService, private activitiesService: ActivitiesService, private toastr: ToastrService) {
     this.commonService._selectedCategory.set('Activities');
   }
@@ -31,26 +37,16 @@ export class ActivitiesPageComponent {
 
   ngOnInit(): void {
     this.setFilter()
-    this.activitiesService.getFilters('categories').subscribe({
+    this.sendPayload.type = 'Activities'
+    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
       next: (res) => {
-        this.topFiltersArray = res.data
-        
+        this.dummyMoviesdata = res.data||[]
       },
-      error: (res) => {
-        this.toastr.error(res.message);
-         
-      }
-    })
-    this.activitiesService.getAllActivities().subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error:() => {
-        this.toastr.error("Failed To Fetch Activities");
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
   }
-
   /**
 * @description Remove Already Selected Filters along with selected Category
 * @author Manu Shukla
@@ -58,7 +54,7 @@ export class ActivitiesPageComponent {
 * @returnType void
 */
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.filters)
+    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
   setFilter() {
@@ -69,11 +65,49 @@ export class ActivitiesPageComponent {
       this.activitiesService.getFilters('prices')
     ]).subscribe({
       next: ([date_filters, categories, more_filters, prices]) => {
-        this.filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
+        this.commonService.setFiltersSignal(filters)
       },
-      error: (res) => {
-        this.toastr.error(res.message);
+      error: (err) => {
+        this.toastr.error(err.message);
       }
     })
+  }
+
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1);
+    } else {
+      array.push(id);
+    }
+  }
+
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Date':
+        this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
+        break;
+
+      case 'Categories':
+        this.toggleId(this.sendPayload.categories, event.filterName.categoryId); break;
+
+      case 'More Filters':
+        this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
+        break;
+
+      case 'Prices':
+        this.toggleId(this.sendPayload.price, event.filterName.priceId);
+        break;
+    }
+    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+    this.commonService.handleEventFilter(event)
   }
 }
