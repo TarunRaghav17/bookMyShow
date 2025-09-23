@@ -117,7 +117,7 @@
   <!-- Theatre List -->
   <div class="mb-4  bg-white">
     <!-- Theatre 1 -->
-    <div routerLink="/movies/:city/seat-layout/:movieId/:theatreId/:showId/:date"
+    <div [routerLink]="[`/movies/${commonService._selectCity().toLowerCase()}/seat-layout/${movieDetails.eventId}/:theatreId/:showId/${commonService.userSelectedDate().today}`]"
       class="border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height: 7rem;">
       <div class="d-flex flex-column  " style="width:25rem">
         <div class="fw-semibold   d-flex align-items-center justify-content-center gap-3">

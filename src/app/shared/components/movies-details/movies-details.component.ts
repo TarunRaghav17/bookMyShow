@@ -51,7 +51,7 @@ export class MoviesDetailsComponent {
     this.commonService.setUserLangFormat(payload)
     this.modalRef?.close()
     this.router.navigate(
-      [`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.name.split(' ').join('-')}/buytickets/${this.movieDetails.eventId}`],
+      [`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.name.toLowerCase().split(' ').join('-')}/buytickets/${this.movieDetails.eventId}`],
       {
         state: payload
       })

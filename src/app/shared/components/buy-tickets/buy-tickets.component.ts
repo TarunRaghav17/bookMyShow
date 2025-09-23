@@ -233,7 +233,8 @@ maxPrice=900;
       this.dateSelectionArray.push({
         day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
         dateNum: dateObj.getDate(),
-        month: dateObj.toLocaleDateString('en-US', { month: 'short' })
+        month: dateObj.toLocaleDateString('en-US', { month: 'short' }),
+        today:dateObj.toISOString().split('T')[0]
       })
     }
   }

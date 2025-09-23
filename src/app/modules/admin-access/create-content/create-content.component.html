@@ -1,24 +1,17 @@
-<form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="container mt-4">
+<form [formGroup]="eventForm" (ngSubmit)="onEventFormSubmit()" class="container mt-4">
     <!-- General Info -->
     <div class="card mb-4 shadow-sm ">
         <div class="card-body border">
             <h4 class="card-title mb-3 text-center">General Event Info</h4>
+            <!-- Name -->
             <div class="row">
-                <!-- Event Type -->
                 <div class="mb-3 w-50">
-                    <label class="form-label">Content Type</label>
-                    <select class="form-select" formControlName="eventType" (change)="onContentTypeChange()"
-                        [ngClass]="{'is-invalid': isInvalid('eventType')}">
-                        <option value="" disabled>Select</option>
-                        <option value="Movie">Movies</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Events">Events</option>
-                        <option value="Activities">Activities</option>
-                        <option value="Plays">Plays</option>
-                    </select>
-                    @if(isInvalid('eventType')){
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" formControlName="name"
+                        [ngClass]="{'is-invalid': isInvalid('name')}" />
+                    @if(isInvalid('name')){
                     <div class="invalid-feedback">
-                        Please select a content type.
+                        Name is required (min 4 characters).
                     </div>
                     }
                 </div>
@@ -35,17 +28,6 @@
                     }
                 </div>
             </div>
-            <!-- Name -->
-            <div class="mb-3">
-                <label class="form-label">Name</label>
-                <input type="text" class="form-control" formControlName="name"
-                    [ngClass]="{'is-invalid': isInvalid('name')}" />
-                @if(isInvalid('name')){
-                <div class="invalid-feedback">
-                    Name is required (min 4 characters).
-                </div>
-                }
-            </div>
             <!-- Description -->
             <div class="mb-3">
                 <label class="form-label">Description</label>
@@ -58,19 +40,8 @@
                 }
             </div>
 
+            <!--date-->
             <div class="row">
-                <!-- Run Time -->
-                <div class="mb-3 col-4">
-                    <label class="form-label">Run Time (minutes)</label>
-                    <input type="number" class="form-control" formControlName="runTime"
-                        [ngClass]="{'is-invalid': isInvalid('runTime')}" />
-                    @if(isInvalid('runTime')){
-                    <div class="invalid-feedback">
-                        Runtime must be at least 1 minute.
-                    </div>
-                    }
-                </div>
-
                 <!-- Releasing On -->
                 <div class="mb-3 col-4">
                     <label class="form-label">Releasing On</label>
@@ -83,7 +54,26 @@
                     }
                 </div>
 
-                <!-- age limit -->
+
+
+                <!--duration-->
+                <div class="col-md-4">
+                    <label class="form-label">Duration (min)</label>
+                    <input type="number" class="form-control" formControlName="duration" min="20" />
+                    @if(showForm.get('duration')?.touched && showForm.get('duration')?.hasError('required')){
+                    <div class="text-danger">
+                        Duration is required.
+                    </div>
+                    }
+                    @if(showForm.get('duration')?.touched && showForm.get('duration')?.hasError('min')){
+                    <div class="text-danger">
+                        Duration must be greater than 20.
+                    </div>
+                    }
+                </div>
+
+
+                <!-- Age Limit -->
                 <div class="mb-3 col-4">
                     <label class="form-label">Age Limit</label>
                     <input type="number" class="form-control" formControlName="ageLimit" min="8" max="100"
@@ -94,6 +84,272 @@
                     </div>
                     }
                 </div>
+
+            </div>
+
+
+
+
+
+            <!-- Event Type -->
+            <form [formGroup]="showForm" (ngSubmit)="onShowFormSubmit()" class="p-3">
+                <div class="row">
+                    <div class="mb-3 w-50">
+                        <label class="form-label">Event Type</label>
+                        <select class="form-select" formControlName="eventType" (change)="onEventTypeChange()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="Movie">Movie</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Event">Event</option>
+                            <option value="Plays">Plays</option>
+                            <option value="Activities">Activities</option>
+                        </select>
+                        @if(showForm.get('eventType')?.touched && showForm.get('eventType')?.invalid){
+                        <div class="text-danger">
+                            Event Type is required.
+                        </div>
+                        }
+                    </div>
+
+                    <!--city-->
+                    <div class="w-50 mb-3">
+                        <label class="form-label">City</label>
+                        <select formControlName="city" class="form-select" (change)="onCityChange()">
+                            <option value="" disabled selected>Select</option>
+                            @for(city of citiesArray;track $index){
+                            <option value="noida">{{city.cityName}}</option>
+                            }
+                        </select>
+                        @if(showForm.get('city')?.touched && showForm.get('city')?.invalid){
+                        <div class="text-danger">
+                            City is required
+                        </div>
+                        }
+                    </div>
+                </div>
+
+                <!--venue name -->
+                <div class="row mb-3">
+                    <div class="w-50 mb-3">
+                        <label class="form-label">Venue Name:</label>
+                        <select formControlName="venueName" class="form-select" (change)="onVenueNameChange()">
+                            <option value="" disabled selected>Select</option>
+                            @for(venue of venuesNameList ;track $index){
+                            <option value="{{venue.venueName}}">{{venue.venueName}}</option>
+                            }
+                        </select>
+                        @if(showForm.get('venueName')?.touched && showForm.get('venueName')?.invalid){
+                        <div class="text-danger">
+                            Venue name is required.
+                        </div>
+                        }
+                    </div>
+
+                </div>
+
+
+
+
+
+
+
+                <!-- Content Details -->
+                @if(showForm.get('eventType')?.value =='Movie'){
+                <div class="row my-3 ">
+
+                    <h4>Screens</h4>
+                    <!--screen name-->
+                    <div class="mb-3 w-100  " formArrayName="screens">
+
+                        @for(screen of screens.controls ;track $index){
+
+                        <div class="w-100  card  my-3 mb-1 p-3" [formGroupName]="$index">
+                            <span class="fs-5 fw-semibold  mb-2"> {{screen.get('screenName')?.value}} </span>
+
+
+                            <div formArrayName="layouts" class="mb-1 w-100">
+                                <span class="fs-5 fw-semibold">Categories</span>
+                                @for(layout of getLayouts(screen).controls ;track $index){
+
+                                <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
+
+
+
+
+                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                        <span class="my-0 fw-semibold"> Name: </span>
+                                        <span class="bg-white text-dark  rounded   w-75">
+                                            {{layout.get('layoutName')?.value}}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                        <span class="my-0 fw-semibold"> Rows: </span>
+                                        <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
+                                            {{layout.get('rows')?.value}}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                        <span class="my-0 fw-semibold"> Cols: </span>
+                                        <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                            {{layout.get('cols')?.value}}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                        <span class="my-0 fw-semibold"> Total Seats: </span>
+                                        <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                            {{+layout.get('cols')?.value * +getRows(layout)}}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                        <span class="my-0 fw-semibold"> Price: </span>
+                                        <input type="number" formControlName="price" min="0"
+                                            class="form-control px-3 py-2 w-75 my-1">
+                                        @if(layout.get('price')?.touched && layout.get('price')?.invalid){
+                                        <div class="text-danger">
+                                            Price is required.
+                                        </div>
+                                        }
+                                    </div>
+                                </div>
+
+
+
+                                }
+                            </div>
+
+
+
+                            <span class="fs-5 fw-semibold">Shows</span>
+                            <div class="row">
+                                @for(show of getShows(screen).controls ;track $index){
+
+                                <div [formGroupName]="$index" class="row my-3 d-flex border  w-100 mx-auto px-3">
+
+
+                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                        <span class="my-0 fw-semibold"> Date: </span>
+                                        <input type="date" class="form-control" formControlName="date">
+                                        <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                            {{show.get('startTime')?.value}}
+                                        </span>
+                                    </div>
+                                    <div class=""formArrayName="startTime">
+                                        @for(time of getTime(show).controls ;track $index){
+
+
+                                        <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                            <span class="my-0 fw-semibold"> Start Time: </span>
+                                            <input type="time" class="form-control" [formControlName]="$index">
+
+                                        </div>
+                                        }
+
+
+                                        <button class="btn btn-primary col-1" (click)="addTime(show)">Add </button>
+
+                                    </div>
+
+                                </div>
+                                }
+
+
+                            </div>
+
+
+
+
+                        </div>
+                        }
+                    </div>
+
+
+
+
+
+
+
+
+                </div>
+                }
+                <!-- categories -->
+                @if(showForm.get('categories')){
+                <div formArrayName="categories" class="mb-4">
+                    <h5>Categories</h5>
+                    @for(category of categories.controls ;track $index){
+
+                    <div formGroupName="{{$index}}" class="row my-3 d-flex  w-75 mx-auto px-3">
+
+                        <div class=" row col-3">
+                            <h6>Category Name : </h6>
+                            <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                {{category.get('layoutName')?.value}}
+                            </span>
+                        </div>
+
+                        <div class=" row col-2">
+                            <h6>Rows : </h6>
+                            <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
+                                {{category.get('rows')?.value}}
+                            </span>
+                        </div>
+
+                        <div class="col-2 row">
+                            <h6>Cols : </h6>
+                            <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                {{category.get('cols')?.value}}
+                            </span>
+                        </div>
+
+                        <div class="col-2 row">
+                            <h6>Total Seats : </h6>
+                            <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                {{+category.get('cols')?.value * +getRows(category)}}
+                            </span>
+                        </div>
+
+                        <div class="col-3 row">
+                            <h6>Price : ₹</h6>
+                            <input type="number" formControlName="price" min="0"
+                                class="form-control px-3 py-2 w-75 my-1">
+                            @if(category.get('price')?.touched && category.get('price')?.invalid){
+                            <div class="text-danger">
+                                Price is required.
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+                <!-- Status -->
+                <div class="my-2 row  d-flex align-items-center">
+                    @if(showForm.get('price')){
+                    <div class="w-50">
+                        <label class="form-label">Price : ₹</label>
+                        <input type="number" formControlName="price" min="0" class="form-control px-3 w-75 ">
+                    </div>
+                    }
+                </div>
+                <!-- Submit -->
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+
+
+
+
+
+            <div class="row">
+                <!-- Run Time -->
+
+
+
+
+                <!-- age limit -->
+
             </div>
         </div>
     </div>
@@ -252,7 +508,8 @@
                     }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button" (click)="castControls.removeAt($index)">✕</button>
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="castControls.removeAt($index)">✕</button>
                 </div>
             </div>
             }
@@ -287,7 +544,8 @@
                     }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button" (click)="crewControls.removeAt($index)">✕</button>
+                    <button class="btn btn-outline-danger" type="button"
+                        (click)="crewControls.removeAt($index)">✕</button>
                 </div>
             </div>
             }
