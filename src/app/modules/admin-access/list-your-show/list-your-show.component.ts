@@ -28,11 +28,14 @@ export class ListYourShowComponent {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
       backdrop: 'static',
+      centered: true
     });
     this.serviceContent = data
-
   }
-
+  /**
+    * @description Close current openModal  
+    * @author  Gurmeet Kumar
+    */
 
   closemodal() {
     this.modalService.dismissAll();

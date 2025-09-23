@@ -13,7 +13,7 @@
                                     (change)="onUploadImg($event)" />
                             </div>
                         </div>
-                        <p class="text-white fs-5 fw-500">Hi, Guest</p>
+                        <p class="text-white fs-5 fw-500">Hi, {{userDetails?.name}}</p>
                     </section>
                 </section>
                 <div class="second_section shadow-sm">
@@ -65,7 +65,7 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="Enter your Full Name"
-                                    formControlName="name">
+                                    formControlName="name" >
 
                                 @if(editProfileForm.get('name')?.touched &&
                                 editProfileForm.get('name')?.hasError('required')){
@@ -113,7 +113,7 @@
                                 <label for="form-label">Birthdate (optional)</label>
                             </div>
                             <div class="input_field">
-                                <input type="date" class="form-control" formControlName="dob"  [max]="yesterday">
+                                <input type="date" class="form-control" formControlName="dob" [max]="maxDateValue">
                             </div>
                         </div>
                         <div class="input_box">

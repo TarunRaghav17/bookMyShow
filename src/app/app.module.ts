@@ -1,3 +1,4 @@
+import { LoadingInterceptor } from './auth/interceptor/loader.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +19,7 @@ import { TheatreListComponent } from './shared/components/theatre-list/theatre-l
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 
 @NgModule({
@@ -28,21 +30,32 @@ import { EventsDetailsComponent } from './shared/components/events-details/event
     ErrorPageComponent,
     SearchBoxComponent,
     TheatreListComponent,
+    LoaderComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
     AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule,
-     FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
-    ToastrModule.forRoot({    
+    FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
+    ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
   ],
-  providers: [provideHttpClient(withFetch()), {
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  }],
+  providers: [
+    provideHttpClient(withFetch()),
+
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    }
+  ]
+  ,
   bootstrap: [AppComponent],
 })
 export class AppModule { }

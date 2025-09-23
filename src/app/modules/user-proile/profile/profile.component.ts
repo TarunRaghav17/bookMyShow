@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   getProfileDataId: any;
   userDetails: any;
   profileImage: any;
-  yesterday: any;
+  maxDateValue: any;
 
   constructor(
     public commonService: CommonService,
@@ -49,9 +49,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.getProfileDataId = this.authService.userDetailsSignal();
     this.getProfileUser();
     this.getAllStates();
+    this.setMaxDate()
     this.editProfileForm = this.fb.group({
       profileImg: [''],
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      name: [{ value: '', disabled: !this.userDetails?.name }, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       dob: [''],
       gender: [''],
@@ -148,11 +149,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      this.toastr.error('Please upload a valid image file');
+    const allowedTypes = ['image/jpeg', 'image/png'];
+
+    if (!allowedTypes.includes(file.type)) {
+      this.toastr.error('Only JPG and PNG images are allowed');
       return;
     }
-
     const reader = new FileReader();
     reader.onload = () => {
       this.preview = reader.result || this.profileImage;
@@ -162,6 +164,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     reader.onerror = () => this.toastr.error('Failed to read file');
     reader.readAsDataURL(file);
   }
+
   /**
    * @description Handle profile form submission, validate fields
    * @author Gurmeet Kumar
@@ -233,13 +236,32 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * @author Gurmeet Kumar
    * @return void
    */
-
   getProfileUser() {
     this.userService.getUserById(this.getProfileDataId?.userId).subscribe({
       next: (res: any) => {
         this.userDetails = res.data;
         this.profileImage = this.userDetails?.profileImg;
-        this.editProfileForm.patchValue(this.userDetails);
+        this.editProfileForm.patchValue({
+          name: this.userDetails?.name,
+          username: this.userDetails?.username,
+          dob: this.commonService.formatDateForPatch(this.userDetails?.dob),
+          anniversaryDate: this.commonService.formatDateForPatch(this.userDetails?.anniversaryDate),
+          gender: this.userDetails?.gender,
+          married: this.userDetails?.married,
+          identity: this.userDetails?.identity,
+          pincode: this.userDetails?.pincode,
+          addressLine1: this.userDetails?.addressLine1,
+          addressLine2: this.userDetails?.addressLine2,
+          city: this.userDetails?.city,
+          state: this.userDetails?.state,
+          profileImg: this.userDetails?.profileImg
+        });
+        if (this.userDetails?.dob) {
+          this.editProfileForm.get('dob')?.disable();
+        }
+        if (this.userDetails?.name) {
+          this.editProfileForm.get('name')?.disable();
+        }
       },
       error: (err: any) => {
         this.toastr.error(err.message);
@@ -247,14 +269,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /** * @description Set the maximum selectable date for the date input to yesterday's date
     * @author Gurmeet Kumar
     * @return void
     */
 
-  maxDate() {
+  setMaxDate() {
     const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 2);
-    this.yesterday = currentDate.toISOString().split('T')[0];
+    currentDate.setDate(currentDate.getDate() - 1);
+    this.maxDateValue = currentDate.toISOString().split('T')[0];
   }
+
 }

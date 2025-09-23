@@ -1,9 +1,7 @@
 import { ToastrService } from 'ngx-toastr';
-// auth.guard.ts
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthService } from '../auth-service.service';
-
 
 @Injectable({
   providedIn: 'root'

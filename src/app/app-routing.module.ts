@@ -21,8 +21,6 @@ const routes: Routes = [
   },
   {
     path: 'my-profile',
-    canActivate: [AuthGuard],
-    data: { role: 'USER' },
     loadChildren: () =>
       import('./modules/user-proile/user-profile.module').then((m) => m.UserProfileModule),
   },

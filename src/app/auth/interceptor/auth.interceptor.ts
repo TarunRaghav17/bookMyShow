@@ -1,5 +1,5 @@
 import { AuthService } from './../auth-service.service';
-import { Injectable } from '@angular/core';
+import { effect, Injectable } from '@angular/core';
 import {
   HttpHandler,
   HttpInterceptor,
@@ -16,7 +16,11 @@ import { CommonService } from '../../services/common.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private toastr: ToastrService, private commonService: CommonService, private AuthService :AuthService) { }
+  constructor(private router: Router, private toastr: ToastrService, private commonService: CommonService, private authService: AuthService) {
+    effect(() => {
+      this.authService.userDetailsSignal();
+    })
+  }
 
   intercept(
     req: HttpRequest<any>,
@@ -40,11 +44,12 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401) {
           this.toastr.error('Session Expired, Please login again.');
           localStorage.removeItem('token');
-          this.AuthService.userDetailsSignal().set(null);
           this.router.navigate(['/']);
+          this.authService.userDetailsSignal().set(null);
         }
         return throwError(() => error);
       })
     );
   }
+
 }

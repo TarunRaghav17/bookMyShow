@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,8 +14,14 @@ export class AuthService {
   private secretKey = environment.secretKey;
   encrypted!: string;
   baseUrl = environment.baseUrl;
+  tokenSignal = signal<string | null>(localStorage.getItem('token'));
 
-  constructor(private http: HttpClient, private router: Router,private commonService:CommonService) {
+
+
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService) {
+    effect(() => {
+      this.userDetailsSignal();
+    })
   }
 
   /**
@@ -30,8 +36,9 @@ export class AuthService {
    * @return Observable<any>
    */
   login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials,{
-      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)});
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials, {
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
+    });
   }
 
   /**
@@ -40,7 +47,7 @@ export class AuthService {
    * @return Observable<any>
    */
   signup(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/register`, data,{
+    return this.http.post<any>(`${this.baseUrl}/auth/register`, data, {
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     });
   }
@@ -51,7 +58,7 @@ export class AuthService {
    * @param name
    */
   validateUserName(userName: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`,{
+    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`, {
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     })
   }
