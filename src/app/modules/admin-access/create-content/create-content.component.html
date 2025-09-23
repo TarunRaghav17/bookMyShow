@@ -159,11 +159,11 @@
 
                     <h4>Screens</h4>
                     <!--screen name-->
-                    <div class="mb-3 w-100  " formArrayName="screens">
+                    <div class="mb-3 w-100 " formArrayName="screens">
 
                         @for(screen of screens.controls ;track $index){
 
-                        <div class="w-100  card  my-3 mb-1 p-3" [formGroupName]="$index">
+                        <div class="w-100  card my-3 mb-1 p-3" [formGroupName]="$index">
                             <span class="fs-5 fw-semibold  mb-2"> {{screen.get('screenName')?.value}} </span>
 
 
@@ -171,10 +171,8 @@
                                 <span class="fs-5 fw-semibold">Categories</span>
                                 @for(layout of getLayouts(screen).controls ;track $index){
 
-                                <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
-
-
-
+                                <div [formGroupName]="$index"
+                                    class="row my-3 d-flex  w-100 mx-auto px-3">
 
                                     <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                         <span class="my-0 fw-semibold"> Name: </span>
@@ -203,57 +201,54 @@
                                             {{+layout.get('cols')?.value * +getRows(layout)}}
                                         </span>
                                     </div>
-
                                     <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                         <span class="my-0 fw-semibold"> Price: </span>
                                         <input type="number" formControlName="price" min="0"
                                             class="form-control px-3 py-2 w-75 my-1">
-                                        @if(layout.get('price')?.touched && layout.get('price')?.invalid){
+                                        <!-- @if(layout.get('price')?.touched && layout.get('price')?.invalid){
                                         <div class="text-danger">
                                             Price is required.
-                                        </div>
-                                        }
+                                        </div> -->
+                                        <!-- } -->
                                     </div>
                                 </div>
-
-
-
                                 }
                             </div>
+                            <div class="col-3  d-flex align-items-center ">
+                                <span class="fs-5 fw-semibold  w-50">Shows</span>
+                                <button class="btn btn-outline-success w-50" (click)="addShow(screen)">Add</button>
 
+                            </div>
 
-
-                            <span class="fs-5 fw-semibold">Shows</span>
-                            <div class="row">
+                            <!-- shows array -->
+                            <div class="" formArrayName="shows">
                                 @for(show of getShows(screen).controls ;track $index){
 
-                                <div [formGroupName]="$index" class="row my-3 d-flex border  w-100 mx-auto px-3">
+                                    <!-- one particualr show =  date & [times] -->
+                                <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-100 ">
 
-
-                                    <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                        <span class="my-0 fw-semibold"> Date: </span>
-                                        <input type="date" class="form-control" formControlName="date">
-                                        <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
-                                            {{show.get('startTime')?.value}}
-                                        </span>
+                                    <!-- date control -->
+                                    <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 "> 
+                                        <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
+                                        <input type="date" class="form-control me-3 w-25" formControlName="date">
+                                        <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add </button>
+                                        <button class="btn btn-outline-danger ms-3" (click)="removeShow(screen,$index)">Remove</button>
                                     </div>
-                                    <div class=""formArrayName="startTime">
-                                        @for(time of getTime(show).controls ;track $index){
+                                    
 
-
-                                        <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                            <span class="my-0 fw-semibold"> Start Time: </span>
+                                    <!-- start-time array -->
+                                    <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap" formArrayName="startTime">
+                                        @for(time of getStartTime(show).controls ;track $index){
+                                        <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
+                                            <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
                                             <input type="time" class="form-control" [formControlName]="$index">
-
+                                            <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
                                         </div>
                                         }
-
-
-                                        <button class="btn btn-primary col-1" (click)="addTime(show)">Add </button>
-
+                                        
                                     </div>
-
                                 </div>
+
                                 }
 
 

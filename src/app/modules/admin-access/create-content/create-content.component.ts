@@ -14,6 +14,10 @@ import { CommonService } from '../../../services/common.service';
 })
 export class CreateContentComponent implements OnInit {
 
+
+
+
+
   eventForm!: FormGroup;
 
   selectedEventType: string | null = null;
@@ -59,6 +63,27 @@ export class CreateContentComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.venuesService.getVenuesTest().subscribe({
+      next: (res) => {
+
+        this.venuesNameList = res
+
+        //   .filter((venue: any) => {
+        //     console.log(venue)
+        //     if (venue.address.city.toLowerCase() == selectedCity.toLowerCase() &&
+        //       venue.venueFor.toLowerCase() == selectedEventType.toLowerCase()) {
+        //       return venue
+        //     }
+        //   });
+      },
+      error: (err) => {
+        this.toaster.error(err)
+      }
+    })
+
+
+
+
     this.setMinDate();
 
 
@@ -102,17 +127,24 @@ export class CreateContentComponent implements OnInit {
 
     this.setToday()
 
+
+
   }
 
 
-  get screens(): FormArray {
-    return this.showForm.get('screens') as FormArray;
-  }
+
+ 
+
+
 
   getLayouts(screen: AbstractControl): FormArray {
     return screen.get('layouts') as FormArray;
   }
 
+
+   get screens(): FormArray {
+    return this.showForm.get('screens') as FormArray;
+  }
   createScreen(screen: any): FormGroup {
     return this.fb.group({
       screenName: [screen.screenName, Validators.required],
@@ -132,18 +164,14 @@ export class CreateContentComponent implements OnInit {
     });
   }
 
+
   onVenueNameChange() {
     const selectedVenueName = this.showForm.get('venueName')?.value;
-    this.handleReset(['eventName']); // reset dependent fields
+    // this.handleReset(['eventName']); // reset dependent fields
 
     this.selectedVenueObj = this.venuesNameList.filter(
       (venue) => venue.venueName === selectedVenueName
     );
-
-    if (!this.selectedVenueObj.length) {
-      this.eventsNameList = [];
-      return;
-    }
 
     const venue = this.selectedVenueObj[0];
 
@@ -151,20 +179,19 @@ export class CreateContentComponent implements OnInit {
 
     venue.screens.forEach((screen: any) => {
 
-
       this.screens.push(this.createScreen(screen))
 
     });
 
 
-    console.log((this.showForm.get('screens') as FormArray).value)
+    console.log((this.screens ).value)
 
   }
 
   createShow() {
     return this.fb.group({
-      date: this.fb.array([]),
-      startTime: this.fb.array([[], [Validators.required]]),
+      date:['',Validators.required],
+      startTime: this.fb.array([this.createTime()]),
     })
   }
 
@@ -172,7 +199,18 @@ export class CreateContentComponent implements OnInit {
     return screen.get('shows') as FormArray;
   }
 
-  getTime(show: AbstractControl): FormArray {
+
+  addShow(screen:AbstractControl){
+    this.getShows(screen).push(this.createShow())
+  }
+
+  removeShow(screen:AbstractControl,index:number){
+    console.log('remove show called')
+    this.getShows(screen).removeAt(index)
+  }
+
+
+  getStartTime(show: AbstractControl): FormArray {
     return show.get('startTime') as FormArray
   }
 
@@ -182,7 +220,12 @@ export class CreateContentComponent implements OnInit {
 
   addTime(show: AbstractControl) {
     (show.get('startTime') as FormArray).push(this.createTime())
-      // this.showForm.get('startTime') as FormArray).push(this.createTime())
+    // this.showForm.get('startTime') as FormArray).push(this.createTime())
+  }
+
+  removeTime(show:AbstractControl,index:number){
+    this.getStartTime(show).removeAt(index)
+
   }
 
 
@@ -197,10 +240,10 @@ export class CreateContentComponent implements OnInit {
 
 
   onEventTypeChange() {
-    this.handleReset(['city', 'status', 'venueName', 'eventName'])
-    this.venuesNameList = []
-    this.eventsNameList = []
-    this.languagesArray = []
+    // this.handleReset(['city', 'status', 'venueName', 'eventName'])
+    // this.venuesNameList = []
+    // this.eventsNameList = []
+    // this.languagesArray = []
     // api to get cities
     this.commonService.getAllCities().subscribe(
       (res) => this.citiesArray = res.data)
@@ -230,23 +273,7 @@ export class CreateContentComponent implements OnInit {
     this.venuesNameList = []
     this.eventsNameList = []
     this.languagesArray = []
-    this.venuesService.getVenuesTest().subscribe({
-      next: (res) => {
 
-        this.venuesNameList = res
-
-        //   .filter((venue: any) => {
-        //     console.log(venue)
-        //     if (venue.address.city.toLowerCase() == selectedCity.toLowerCase() &&
-        //       venue.venueFor.toLowerCase() == selectedEventType.toLowerCase()) {
-        //       return venue
-        //     }
-        //   });
-      },
-      error: (err) => {
-        this.toaster.error(err)
-      }
-    })
   }
 
 
