@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './movies-landingpage.component.scss'
 })
 export class MovieLandingPageComponent implements OnDestroy {
-  dummyMoviesdata: any[] | null= null;
+  dummyMoviesdata: any[] | null = null;
   selectedCity: any = null
   topFiltersArray!: any[]
   filtersArray: any[] = []
@@ -41,14 +41,7 @@ export class MovieLandingPageComponent implements OnDestroy {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Movie'
-    this.movieService.getAllMovies(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data || []
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllMovies()
   }
 
   setFilter() {
@@ -79,36 +72,56 @@ export class MovieLandingPageComponent implements OnDestroy {
   }
 
   toggleId(array: any[], id: any): void {
-  const index = array.indexOf(id);
-  if (index > -1) {
-    array.splice(index, 1); 
-  } else {
-    array.push(id);  
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1);
+    } else {
+      array.push(id);
+    }
   }
-}
 
   getFilter(event: any) {
     switch (event.type) {
       case 'Language':
-       this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+        this.toggleId(this.sendPayload.languages, event.filterName.languageId);
         break;
 
       case 'Genres':
-       this.toggleId(this.sendPayload.genres, event.filterName.genresId);
+        this.toggleId(this.sendPayload.genres, event.filterName.genresId);
         break;
 
       case 'Formats':
-         this.toggleId(this.sendPayload.formats , event.filterName.formatId)
+        this.toggleId(this.sendPayload.formats, event.filterName.formatId)
         break;
     }
+    this.getAllMovies()
+    this.commonService.handleEventFilter(event)
+  }
+
+  clearFilter(item: any) {
+    if (!item) return;
+    switch (item) {
+       case 'Language':
+       this.sendPayload.languages = [];
+       break;
+       case 'Genres':
+        this.sendPayload.genres = []; 
+       break;
+       case 'Formats':
+        this.sendPayload.formats = [];
+       break;
+    }
+        this.getAllMovies()
+  }
+
+  getAllMovies() {
     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.dummyMoviesdata = res.data || [];
       },
       error: (err) => {
         this.toastr.error(err.message);
       }
-    })
-    this.commonService.handleEventFilter(event)
+    });
   }
 }

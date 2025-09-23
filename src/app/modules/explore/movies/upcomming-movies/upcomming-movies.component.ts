@@ -37,7 +37,11 @@ export class UpcommingMoviesComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Movie'
-    this.movieService.getAllMovies(this.sendPayload).subscribe({
+    this.getAllUpcomingMovies()
+   
+  }
+  getAllUpcomingMovies(){
+     this.movieService.getAllMovies(this.sendPayload).subscribe({
       next: (res) => {
         this.dummyMoviesdata = res.data || []
       },
@@ -103,14 +107,33 @@ export class UpcommingMoviesComponent {
         this.toggleId(this.sendPayload.releaseMonths, event.filterName.releaseMonthId)
         break;
     }
-    this.movieService.getAllMovies(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+     this.getAllUpcomingMovies()
     this.commonService.handleEventFilter(event)
+  }
+
+  clearFilter(item:any){
+    if(!item) return
+    switch(item){
+       case 'Language':
+        this.sendPayload.languages =[]
+        break;
+
+      case 'Genres':
+       this.sendPayload.genres =[]
+        break;
+
+      case 'Formats':
+        this.sendPayload.formats =[]
+        break;
+
+      case 'Tags':
+       this.sendPayload.tags =[]
+        break;
+
+      case 'Release Month':
+        this.sendPayload.releaseMonths =[]
+        break;
+    }
+    this.getAllUpcomingMovies()
   }
 }

@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './plays-landing-page.component.scss'
 })
 export class PlaysLandingPageComponent {
-  dummyMoviesdata: any[]|null = null;
+  dummyMoviesdata: any[] | null = null;
   topFiltersArray!: any[]
   originalMovies = movies
   filters: any[] = []
@@ -41,15 +41,7 @@ export class PlaysLandingPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Plays'
-    this.playService.getAllPlays(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data || []
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    }
-    )
+    this.getAllPlays()
   }
 
   /**
@@ -60,6 +52,18 @@ export class PlaysLandingPageComponent {
 */
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+  }
+
+  getAllPlays() {
+    this.playService.getAllPlays(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data || []
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    }
+    )
   }
 
   setFilter() {
@@ -84,9 +88,9 @@ export class PlaysLandingPageComponent {
   toggleId(array: any[], id: any): void {
     const index = array.indexOf(id);
     if (index > -1) {
-      array.splice(index, 1); 
+      array.splice(index, 1);
     } else {
-      array.push(id);  
+      array.push(id);
     }
   }
 
@@ -116,15 +120,38 @@ export class PlaysLandingPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-
-    this.playService.getAllPlays(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllPlays()
     this.commonService.handleEventFilter(event)
   }
+  clearFilter(item: any) {
+    if (!item) return;
+    switch (item) {
+      case 'Date':
+        this.sendPayload.dateFilters = []
+        break;
+
+      case 'Language':
+        this.sendPayload.languages = []
+        break;
+
+      case 'Genres':
+        this.sendPayload.genres = []
+        break;
+
+      case 'Categories':
+        this.sendPayload.categories = []
+        break;
+
+      case 'More Filters':
+        this.sendPayload.morefilter = []
+        break;
+
+      case 'Prices':
+        this.sendPayload.price = []
+        break;
+
+    }
+    this.getAllPlays()
+  }
 }
+

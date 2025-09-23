@@ -3,11 +3,12 @@
     <div class="main_container_accordion d-block ">
         <div class="d-flex justify-content-between border accordion_box border-bottom-0 shadow-sm border">
             <div class="d-flex gap-2 align-items-center " (click)="toggleAccordion($index)">
-               <i class="fa fa-angle-down" aria-hidden="true" [ngClass]="{'tranform_icon': openedIndex.includes($index)}"></i>
+                <i class="fa fa-angle-down" aria-hidden="true"
+                    [ngClass]="{'tranform_icon': openedIndex.includes($index)}"></i>
                 <p class="m-0 filter_text" [ngClass]="{'text_changColor': filterShowButtons}">{{item.type}}</p>
             </div>
             <div>
-                <span (click)="clearAllFilters(item , $index)">Clear</span>
+                <span (click)="clearAllFilters(item , $index,item.type)">Clear</span>
             </div>
         </div>
         @if(openedIndex.includes($index)) {
@@ -23,10 +24,10 @@
     </div>
     }
     <div>
-        <a><button (click)="handleNavigate()" type="button" class="btn w-100 border-danger text-danger">
+        <a>
+            <button (click)="handleNavigate()" type="button" class="btn w-100 border-danger text-danger">
                 Browse by {{browseBy}}
             </button>
         </a>
     </div>
 </div>
- 

@@ -44,7 +44,7 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion (filterEvent)="getFilter($event)">
+                                <app-filter-accordion (filterEvent)="getFilter($event)" (clearFilterEvent)="clearFilter($event)">
                                 </app-filter-accordion>
                             </div>
                         </div>
@@ -105,6 +105,7 @@
                                                     </div>
                                                     <div class="bottom_text_movie_card py-3">
                                                         <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
+                                                        <span>UA{{item.ageLimit}}+</span>
                                                         <div class="d-flex flex-wrap gap-1">
                                                             @for (lang of item.languages; track $index) {
                                                             <span class="m-0">{{lang}}</span>

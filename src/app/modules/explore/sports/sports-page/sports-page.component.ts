@@ -37,22 +37,8 @@ export class SportsPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Sports'
-    this.sportService.getFilters('categories').subscribe({
-      next: (res) => {
-        this.topFiltersArray = res.data||[]
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
-    this.sportService.getAllSports(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllSports()
+
   }
 
   /**
@@ -65,6 +51,16 @@ export class SportsPageComponent {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
   }
 
+  getAllSports() {
+    this.sportService.getAllSports(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+  }
   setFilter() {
     forkJoin([
       this.sportService.getFilters('date_filters'),
@@ -108,14 +104,30 @@ export class SportsPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-    this.sportService.getAllSports(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllSports()
     this.commonService.handleEventFilter(event)
   }
+  clearFilter(item: any) {
+    if(!item.type) return ;
+    switch(item){
+      case 'Date':
+      this.sendPayload.dateFilters=[]
+      break;
+
+      case 'Categories':
+      this.sendPayload.categories=[]
+      break;
+
+      case 'More Filters':
+      this.sendPayload.morefilter=[]
+      break;
+
+      case 'Prices':
+      this.sendPayload.Price=[]
+      break;
+
+    }
+    this.getAllSports()
+  }
+
 }

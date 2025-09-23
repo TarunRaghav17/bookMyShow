@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './events-landingpage.component.scss'
 })
 export class EventsLandingPageComponent {
-  dummyMoviesdata: any[]|null = null;
+  dummyMoviesdata: any[] | null = null;
   topFiltersArray!: any[]
   filters!: any[]
   select: any[] = selectedFilters
@@ -29,6 +29,7 @@ export class EventsLandingPageComponent {
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService) {
     this.commonService._selectedCategory.set('Events');
+   
   }
 
   /**
@@ -41,14 +42,8 @@ export class EventsLandingPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Event'
-    this.eventService.getAllEvents(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data || []
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+     this.getAllEvents()
+
   }
   /**
 * @description Remove Already Selected Filters
@@ -59,6 +54,17 @@ export class EventsLandingPageComponent {
 
   ngOnDestroy(): void {
     this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+  }
+  
+  getAllEvents() {
+    this.eventService.getAllEvents(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data || []
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
   }
 
   setFilter() {
@@ -79,51 +85,62 @@ export class EventsLandingPageComponent {
     });
   }
 
-toggleId(array: any[], id: any): void {
-  const index = array.indexOf(id);
-  if (index > -1) {
-    array.splice(index, 1); 
-  } else {
-    array.push(id);  
-  }
-}
-
-getFilter(event: any){
-  switch (event.type) {
-    case 'Date':
-      this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
-      break;
-
-    case 'Language':
-      this.toggleId(this.sendPayload.languages, event.filterName.languageId);
-      break;
-
-    case 'Categories':
-      this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
-      break;
-
-    case 'More Filters':
-      this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
-      break;
-
-    case 'Prices':
-      this.toggleId(this.sendPayload.price, event.filterName.priceId);
-      break;
-  } 
-  
-  this.eventService.getAllEvents(this.sendPayload).subscribe({
-    next: (res) => {
-      this.dummyMoviesdata = res.data;
-    },
-    error: (err) => {
-      this.toastr.error(err.message);
+  toggleId(array: any[], id: any): void {
+    const index = array.indexOf(id);
+    if (index > -1) {
+      array.splice(index, 1);
+    } else {
+      array.push(id);
     }
-  });
-  this.commonService.handleEventFilter(event);
-}
+  }
 
-getImageFromBase64(){
+  getFilter(event: any) {
+    switch (event.type) {
+      case 'Date':
+        this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
+        break;
 
-}
+      case 'Language':
+        this.toggleId(this.sendPayload.languages, event.filterName.languageId);
+        break;
+
+      case 'Categories':
+        this.toggleId(this.sendPayload.categories, event.filterName.categoryId);
+        break;
+
+      case 'More Filters':
+        this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
+        break;
+
+      case 'Prices':
+        this.toggleId(this.sendPayload.price, event.filterName.priceId);
+        break;
+    }
+
+    this.getAllEvents()
+    this.commonService.handleEventFilter(event)
+  }
+
+  clearFilter(item: any) {
+    if (!item) return;
+    switch (item) {
+      case 'Date':
+        this.sendPayload.dateFilters = [];
+        break;
+      case 'Language':
+        this.sendPayload.languages = [];
+        break;
+      case 'Categories':
+        this.sendPayload.categories = [];
+        break;
+      case 'More Filters':
+        this.sendPayload.morefilter = [];
+        break;
+      case 'Prices':
+        this.sendPayload.price = [];
+        break;
+    }
+    this.getAllEvents()
+  }
 
 }

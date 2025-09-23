@@ -38,14 +38,7 @@ export class ActivitiesPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Activities'
-    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data||[]
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllActivities()
   }
   /**
 * @description Remove Already Selected Filters along with selected Category
@@ -67,6 +60,16 @@ export class ActivitiesPageComponent {
       next: ([date_filters, categories, more_filters, prices]) => {
         let filters = [{ type: 'Date', data: date_filters.data }, { type: 'Categories', data: categories.data }, { type: 'More Filters', data: more_filters.data }, { type: 'Price', data: prices.data }];
         this.commonService.setFiltersSignal(filters)
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    })
+  }
+  getAllActivities() {
+    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
+      next: (res) => {
+        this.dummyMoviesdata = res.data || []
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -100,14 +103,26 @@ export class ActivitiesPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllActivities()
     this.commonService.handleEventFilter(event)
   }
+  clearFilter(item: any) {
+      if (!item) return;
+    switch (item) {
+       case 'Date':
+       this.sendPayload.dateFilters = [];
+       break;
+       case 'Categories':
+        this.sendPayload.categories = []; 
+       break;
+       case ' More Filters':
+        this.sendPayload.morefilter = [];
+       break;
+       case 'Prices':
+        this.sendPayload.price = [];
+       break;
+    }
+    this.getAllActivities()
+  }
+
 }
