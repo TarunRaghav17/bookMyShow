@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.setMaxDate()
     this.editProfileForm = this.fb.group({
       profileImg: [''],
-      name: [{ value: '', disabled: !this.userDetails?.name }, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(30)]],
       dob: [''],
       gender: [''],
@@ -261,6 +261,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
         if (this.userDetails?.name) {
           this.editProfileForm.get('name')?.disable();
+        } if (this.userDetails?.identity) {
+          this.editProfileForm.get('identity')?.disable();
+        }
+        if (this.userDetails?.state) {
+          this.editProfileForm.get('state')?.patchValue(this.userDetails.state);
+        } else {
+          this.editProfileForm.get('state')?.patchValue('');
         }
       },
       error: (err: any) => {
@@ -270,7 +277,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
 
-  /** * @description Set the maximum selectable date for the date input to yesterday's date
+  /**
+    *  @description Set the maximum selectable date for the date input to yesterday's date
     * @author Gurmeet Kumar
     * @return void
     */
@@ -279,6 +287,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
     this.maxDateValue = currentDate.toISOString().split('T')[0];
-  }
+  }  
 
 }
