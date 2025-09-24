@@ -1,4 +1,3 @@
-import { LoadingInterceptor } from './auth/interceptor/loader.interceptor';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +18,7 @@ import { TheatreListComponent } from './shared/components/theatre-list/theatre-l
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
-import { LoaderComponent } from './shared/components/loader/loader.component';
+import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
 
 
 @NgModule({
@@ -30,7 +29,7 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
     ErrorPageComponent,
     SearchBoxComponent,
     TheatreListComponent,
-    LoaderComponent,
+    BookingEventsComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
     AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule,
@@ -47,11 +46,6 @@ import { LoaderComponent } from './shared/components/loader/loader.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoadingInterceptor,
       multi: true
     }
   ]

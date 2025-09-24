@@ -3,7 +3,14 @@
         <app-header></app-header>
     </header>
     <main>
-         <app-loader></app-loader>
+
+        @if(loaderService.loading()){
+        <div class="loader-overlay">
+            <div class="spinner">
+            </div>
+        </div>
+        }
+
         <router-outlet></router-outlet>
     </main>
     <footer>

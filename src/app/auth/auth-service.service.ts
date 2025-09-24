@@ -1,4 +1,4 @@
-import { effect, Injectable, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -19,9 +19,6 @@ export class AuthService {
 
 
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService) {
-    effect(() => {
-      this.userDetailsSignal();
-    })
   }
 
   /**
@@ -30,6 +27,13 @@ export class AuthService {
    */
   userDetailsSignal = signal<any>(this.getUserFromToken());
 
+  /**
+   * Clear decoded user details from token
+   * @author Gurmeet Kumar
+   */
+  clearUserDetails() {
+    this.userDetailsSignal.set(null);
+  }
   /**
    * @description Send login request to backend
    * @author Gurmeet Kumar
