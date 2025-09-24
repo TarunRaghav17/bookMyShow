@@ -15,26 +15,28 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion (filterEvent)="getFilter($event)" (clearFilterEvent)="clearFilter($event)">
+                                <app-filter-accordion (filterEvent)="getFilter($event)"
+                                    (clearFilterEvent)="clearFilter($event)">
                                 </app-filter-accordion>
                             </div>
                         </div>
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
-                            <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                            <div class="d-flex gap-2 language_text py-2 flex-wrap border border-danger">
+
                                 @for (item of commonService.selectedFiltersSignal(); track $index) {
                                 @for(i of item.data;track $index){
-                                <span [ngClass]="{selectedText: i.selected}" class="border-danger">
+                                <span [ngClass]="{selectedText: i.selected}" class="border-danger" (click)="onClickTopFilter(item)">
                                     {{i.text}}
                                 </span>
                                 }
                                 }
+                                <!-- {{commonService.topFiltersArray()[1]?.data | json}} -->
                                 @for (item of commonService.topFiltersArray()[1]?.data; track $index) {
                                 @if(!item.selected){
 
-                                <span [ngClass]="{selectedText: item.selected}"
-                                    (click)="commonService.handleEventFilter(item)">
+                                <span [ngClass]="{selectedText: item.selected}" (click)="onClickTopFilter(item)">
                                     {{item.text}}
                                 </span>
                                 }
@@ -74,7 +76,7 @@
                                                     </div>
                                                 </ng-container>
                                                 }
-                                                
+
                                             </div>
                                         </div>
                                     </div>
@@ -89,5 +91,5 @@
 </div>
 }
 @else{
- <app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
+<app-buy-ticket-skelton-loader></app-buy-ticket-skelton-loader>
 }

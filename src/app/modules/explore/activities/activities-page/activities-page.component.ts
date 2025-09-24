@@ -39,6 +39,7 @@ export class ActivitiesPageComponent {
     this.setFilter()
     this.sendPayload.type = 'Activities'
     this.getAllActivities()
+ 
   }
   /**
 * @description Remove Already Selected Filters along with selected Category
@@ -47,8 +48,10 @@ export class ActivitiesPageComponent {
 * @returnType void
 */
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
-  }
+  // this.commonService.resetfilterAccordian(this.commonService.selectedFiltersSignal()) 
+  this.commonService.resetSelectedFiltersSignal()
+  
+}
 
   setFilter() {
     forkJoin([
@@ -87,6 +90,7 @@ export class ActivitiesPageComponent {
   }
 
   getFilter(event: any) {
+    console.log(event);
     switch (event.type) {
       case 'Date':
         this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
@@ -107,22 +111,37 @@ export class ActivitiesPageComponent {
     this.commonService.handleEventFilter(event)
   }
   clearFilter(item: any) {
-      if (!item) return;
+    if (!item) return;
     switch (item) {
-       case 'Date':
-       this.sendPayload.dateFilters = [];
-       break;
-       case 'Categories':
-        this.sendPayload.categories = []; 
-       break;
-       case ' More Filters':
+      case 'Date':
+        this.sendPayload.dateFilters = [];
+        break;
+      case 'Categories':
+        this.sendPayload.categories = [];
+        break;
+      case ' More Filters':
         this.sendPayload.morefilter = [];
-       break;
-       case 'Prices':
+        break;
+      case 'Prices':
         this.sendPayload.price = [];
-       break;
+        break;
     }
     this.getAllActivities()
   }
+  onClickTopFilter(item: any,) {
+    console.log('top filter array',this.commonService.topFiltersArray())
+    // console.log(item);
+    
+    let data = {
+      filterName:item,
+      index: 1,
+      type: "Categories"
+    }
+      this.commonService.handleEventFilter(item)
+    this.getFilter(data)
+  }
+ 
+    
+   
 
 }

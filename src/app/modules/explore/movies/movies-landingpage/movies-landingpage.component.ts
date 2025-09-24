@@ -68,7 +68,8 @@ export class MovieLandingPageComponent implements OnDestroy {
 */
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    // this.commonService.resetfilterAccordian(this.commonService.filtersSignal());
+    this.commonService.resetSelectedFiltersSignal()
   }
 
   toggleId(array: any[], id: any): void {
@@ -101,17 +102,17 @@ export class MovieLandingPageComponent implements OnDestroy {
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
-       case 'Language':
-       this.sendPayload.languages = [];
-       break;
-       case 'Genres':
-        this.sendPayload.genres = []; 
-       break;
-       case 'Formats':
+      case 'Language':
+        this.sendPayload.languages = [];
+        break;
+      case 'Genres':
+        this.sendPayload.genres = [];
+        break;
+      case 'Formats':
         this.sendPayload.formats = [];
-       break;
+        break;
     }
-        this.getAllMovies()
+    this.getAllMovies()
   }
 
   getAllMovies() {
