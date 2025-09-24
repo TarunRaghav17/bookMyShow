@@ -18,6 +18,7 @@ import { TheatreListComponent } from './shared/components/theatre-list/theatre-l
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
+import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
 
 
 @NgModule({
@@ -28,21 +29,27 @@ import { EventsDetailsComponent } from './shared/components/events-details/event
     ErrorPageComponent,
     SearchBoxComponent,
     TheatreListComponent,
+    BookingEventsComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
     AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule,
-     FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
-    ToastrModule.forRoot({    
+    FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
+    ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
   ],
-  providers: [provideHttpClient(withFetch()), {
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  }],
+  providers: [
+    provideHttpClient(withFetch()),
+
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ]
+  ,
   bootstrap: [AppComponent],
 })
 export class AppModule { }

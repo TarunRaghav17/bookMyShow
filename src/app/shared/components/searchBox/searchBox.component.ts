@@ -20,8 +20,8 @@ export class SearchBoxComponent implements OnInit {
   selectedFilter: any;
   movieName: any;
   eventsFilters: string[] = [
-    'Movies',
-    'Events',
+    'Movie',
+    'Event',
     'Plays',
     'Sports',
     'Activities',

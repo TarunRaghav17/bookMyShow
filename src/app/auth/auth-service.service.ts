@@ -14,8 +14,11 @@ export class AuthService {
   private secretKey = environment.secretKey;
   encrypted!: string;
   baseUrl = environment.baseUrl;
+  tokenSignal = signal<string | null>(localStorage.getItem('token'));
 
-  constructor(private http: HttpClient, private router: Router,private commonService:CommonService) {
+
+
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService) {
   }
 
   /**
@@ -25,13 +28,21 @@ export class AuthService {
   userDetailsSignal = signal<any>(this.getUserFromToken());
 
   /**
+   * Clear decoded user details from token
+   * @author Gurmeet Kumar
+   */
+  clearUserDetails() {
+    this.userDetailsSignal.set(null);
+  }
+  /**
    * @description Send login request to backend
    * @author Gurmeet Kumar
    * @return Observable<any>
    */
   login(credentials: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials,{
-      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)});
+    return this.http.post<any>(`${this.baseUrl}/auth/login`, credentials, {
+      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
+    });
   }
 
   /**
@@ -40,7 +51,7 @@ export class AuthService {
    * @return Observable<any>
    */
   signup(data: any): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/auth/register`, data,{
+    return this.http.post<any>(`${this.baseUrl}/auth/register`, data, {
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     });
   }
@@ -51,7 +62,7 @@ export class AuthService {
    * @param name
    */
   validateUserName(userName: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`,{
+    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`, {
       context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
     })
   }
