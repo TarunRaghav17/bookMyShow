@@ -96,9 +96,12 @@
     <div class="col-6">
         <div class="sub_header_profile_cotainer">
             <div class="sub_header_left">
+                @if (authService.getUserFromToken()?.role == 'USER') {
                 <a [routerLink]="['my-profile/your-order']" routerLinkActive="active">Your Orders</a>
+                }@else {
+                <a [routerLink]="['my-profile/your-show-list']" routerLinkActive="active">Your ShowList</a>
+                }
                 <a [routerLink]="['my-profile/edit']" routerLinkActive="active">Profile</a>
-
             </div>
         </div>
     </div>
@@ -111,12 +114,11 @@
         <div class="full_with d-flex justify-content-between align-items-center">
             <div class="hey_text">
                 <h5 class="offcanvas-title fw-bold" id="offcanvasExampleLabel">Hey!</h5>
-                @if (authService.userDetailsSignal()?.role =='USER') {
                 <span class="edit_profile" routerLink="my-profile" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasExample">Edit-Profile <i class="fa fa-angle-right ms-1"
                         aria-hidden="true"></i>
                 </span>
-                }
+
             </div>
             <div class="user_icon">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
@@ -288,4 +290,3 @@
         <a class="view_city" (click)="viewAllCities()"> {{viewCitiesText}} </a>
     </div>
 </ng-template>
-

@@ -4,13 +4,12 @@ import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
-import { BuyTicketSkeltonLoaderComponent } from "../buy-ticket-skelton-loader/buy-ticket-skelton-loader.component";
 @Component({
   selector: 'app-events-details',
   standalone: true,
   templateUrl: './events-details.component.html',
   styleUrl: './events-details.component.scss',
-  imports: [ActivitiesRoutingModule, NgbModule, BuyTicketSkeltonLoaderComponent]
+  imports: [ActivitiesRoutingModule, NgbModule]
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;

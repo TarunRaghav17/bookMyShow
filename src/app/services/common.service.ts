@@ -249,7 +249,22 @@ export class CommonService {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   }
+  /**
+   * @description Format data to patch YYYY/DD/MM
+   * @author Gurmeet Kumar  
+   * @param date Input date string
+   * @return string | null Formatted date or null if input is null
+   */
+  formatDateForPatch(date: string | null): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return null;
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    const year = d.getFullYear();
 
+    return `${year}-${month}-${day}`;
+  }
 
   listYourShowService = [
     {
