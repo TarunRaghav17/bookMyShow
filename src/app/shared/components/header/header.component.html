@@ -126,7 +126,6 @@
             </div>
         </div>
     </div>
-
     <div class="offcanvas-body p-0">
         @if(!authService.userDetailsSignal()) {
         <div class="unlock_special_offer_box border-top">
@@ -202,14 +201,12 @@
                 </a>
                 }
             </div>
-
             @if(authService.userDetailsSignal()) {
             <div class="button_section">
                 <button class="button_sign_out w-100" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
                     (click)="logout()">Sign
                     out</button>
             </div>
-
             }
         </div>
     </div>

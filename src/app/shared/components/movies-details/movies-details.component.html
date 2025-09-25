@@ -85,7 +85,7 @@
                 <h2 class="section-title">Cast</h2>
                 <div class="d-flex justify-content-start align-items-center gap-4">
                     @for(cast of movieDetails?.cast;track $index){
-                    <div class="cast-card">
+                    <div class="cast-card ">
                         <img [src]="cast?.castImg? commonService.getImageFromBase64(cast?.castImg):'https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png' "
                             class="cast-img" alt="">
                         <p class="cast-name">{{cast?.actorName}}</p>

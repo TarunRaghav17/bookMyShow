@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="row main_table_container">
+        <div class="col-10">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h4> Venues List</h4>
+                <div class="w-25  me-auto ms-2">
+                    <input type="text" class=" form-control w-100"
+                        placeholder="Search by name, username, email & phoneNumber">
+
+                </div>
+
+                <div class=" py-3 px-2 d-flex w-50  ">
+
+                    <div class="col-3 d-flex gap-4 align-items-center justify-content-center w-50 px-1">
+                        <span>
+                            City
+                        </span>
+                        <select class="form-select w-50" aria-label="Default select example"
+                            (change)="setUserSelectedCity($event)">
+
+                            <!-- (change)="selectRoleByList($event)" -->
+                            <option value="" selected>All</option>
+                            @for(city of cityList;track $index){
+
+                            <option value="{{city.cityName | lowercase}}">{{city.cityName | titlecase}}</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-3 d-flex gap-4 align-items-center justify-content-center w-50 px-1">
+                        <span>
+                            Type
+
+                        </span>
+                        <select class="form-select w-50" aria-label="Default select example"
+                            (change)="setUserSelectedVenueType($event)">
+                            <option value="" selected>All</option>
+                            @for(venueType of venueTypeList;track $index){
+                            <option value="{{venueType}}">{{venueType}}</option>
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Users Table -->
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Sr.No</th>
+                        <th>Venue-Name</th>
+                        <th>Venue-For</th>
+                        <th>Venue-Type</th>
+                        <!-- <th>Screens</th> -->
+                        <th>Venue-Capacity</th>
+                        <th>Venue-Address</th>
+                        <th>Amenities</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (venue of filteredVenuesList || venuesList; track $index) {
+                    <tr>
+                        <td>{{ $index +1}}</td>
+                        <td>{{ venue.venueName }}</td>
+                        <td>{{ venue.venueFor ?? 'N/A' }}</td>
+                        <td>{{ venue.venueType ?? 'N/A' }}</td>
+                        <td>{{ venue.venueCapacity }}</td>
+                        <td>{{ transformAddress(venue.address) }}</td>
+
+                        <td>
+                            @for(a of venue.amenities;track $index){
+                            {{a}}
+                            }
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
