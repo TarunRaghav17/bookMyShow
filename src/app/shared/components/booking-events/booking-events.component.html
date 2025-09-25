@@ -1,0 +1,107 @@
+<div class="container-fluid">
+    <div class="row g-0">
+        <div class="header-section">
+            <div class="col-12 main_conatiner">
+                <div class="col-4">
+                    <div class="logo_container">
+                        <img src="assets/images/logo.png" class="logo" alt="">
+                    </div>
+                </div>
+                <div class="col-4 center_title_moviename">
+                    <div class="sicon_container">
+                        <i class="fa fa-angle-left left_aarow" aria-hidden="true"></i>
+                    </div>
+                    <div class="tittle_container">
+                        <h1 class="events_name_tittle">Alwa</h1>
+                    </div>
+                </div>
+                <div class="col-4">
+
+                </div>
+            </div>
+
+            <div class="sub_header bg-white d-flex justify-content-center gap-2">
+        <div class="sub_content">
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <span class="conuter_forms_number">1</span>
+                <span class="sub_header_tittle">Ticket</span>
+            </div>
+            <div class="sc-juv17n-6 sExVX">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </div>
+            <div class="d-flex justify-content-center align-items-center gap-2">
+                <div class="conuter_forms_number">2</div>
+                <div class="sub_header_tittle">Review &amp; Proceed to Pay </div>
+            </div>
+        </div>
+    </div>
+            <div class="theater_detail_info">
+                <div class="col-4 titles_theater_box">
+                    <h4 class="theater_name_text">Raja Annamalai Mandram: Chennai</h4>
+                    <p class="theater_name_text">Sun 12 Oct | 07:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row d-flex flex-column justify-content-between g-0">
+        <div class="main_container_box_content">
+            <div class="events_priceList d-flex justify-content-center align-items-center">
+                <div class="col-4 titles_theater_box">
+                    <div class="theater_name_text">Select Tickets</div>
+                    <span class="theater_sub_name">You can add up to 10 tickets only</span>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="col-4 titles_theater_box">
+                    <div class="select_ticket_sloats mt-3">
+                        <div class="rate_seatting_text">
+                            <span class="seatting_type">ENTRY PASS</span>
+                            <span class="seatting_price">{{money | currency:'INR'}}</span>
+                        </div>
+                        <div>
+                            @if(!add){
+                            <button class="btn_add" (click)="addMamber()">Add</button>
+                            }@else {
+                            <div class="counters_ticket">
+                                <span class="shine_text" (click)="decreaseCounter()">
+                                    -
+                                </span>
+                                <span>
+                                    {{value}}
+                                </span>
+                                <span class="shine_text" (click)="increaseCounter()">
+                                    +
+                                </span>
+                            </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="procceed_button_section">
+  @if(add){
+  <div class="col-4 d-flex justify-content-between align-items-center">
+    <div class="d-flex flex-column gap-1">
+      <span class="seatting_type">ENTRY PASS</span>
+      <!-- yaha totalMoney show hoga -->
+      <span class="seatting_price">{{totalMoney | currency:'INR'}}</span>
+    </div>
+    <div class="button_section">
+      <button class="btn btn-danger">BOOK</button>
+    </div>
+  </div>
+  }
+  @else {
+  <div class="col-4">
+    <button class="btn btn-secondary w-100">Proceed</button>
+  </div>
+  }
+</div>

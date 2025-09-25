@@ -65,7 +65,7 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="Enter your Full Name"
-                                    formControlName="name" >
+                                    formControlName="name">
 
                                 @if(editProfileForm.get('name')?.touched &&
                                 editProfileForm.get('name')?.hasError('required')){
@@ -242,8 +242,7 @@
 
                             <div class="input_field">
                                 <select class="form-select" aria-label="Default select example" formControlName="state">
-                                    <option value="" selected disabled>Select State</option>
-
+                                    <option value="" disabled>Select State</option>
                                     @for (item of states; track $index) {
                                     <option [value]="item.name" class="d-flex justify-content-between">
                                         {{item.name}}
@@ -272,7 +271,6 @@
 
     <div class="modal-body p-0">
         <form [formGroup]="modalForm" class="p-3">
-
             @if (!editNumberFlag) {
             <div class="mb-3">
                 <label class="form-label">Enter or Edit a valid Email Address below</label>
@@ -319,9 +317,6 @@
                     Verify
                 </button>
             </div>
-
-
-
         </form>
     </div>
 </ng-template>
