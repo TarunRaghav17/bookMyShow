@@ -66,10 +66,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
       state: [''],
     });
     this.modalForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email, Validators.pattern(/^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/)]],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      email: [''],
+      phoneNumber: [''],
     });
-
   }
 
   ngOnDestroy(): void {
@@ -106,13 +105,24 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.editNumberFlag = type === 'number';
     this.modalForm.reset();
     if (type === 'number') {
-      this.modalForm.get('phoneNumber')?.setValidators([Validators.required]);
+      this.modalForm.get('phoneNumber')?.setValidators([
+        Validators.required,
+        Validators.pattern(/^[0-9]+$/),
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]);
       this.modalForm
         .get('phoneNumber')
         ?.patchValue(this.userDetails?.phoneNumber || '');
       this.modalForm.get('email')?.clearValidators();
     } else {
-      this.modalForm.get('email')?.setValidators([Validators.required]);
+      this.modalForm.get('email')?.setValidators([
+        Validators.required,
+        Validators.email,
+        Validators.pattern(
+          /^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/
+        ),
+      ]);
       this.modalForm
         .get('email')
         ?.patchValue(this.userDetails?.email || '');
@@ -287,6 +297,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
     this.maxDateValue = currentDate.toISOString().split('T')[0];
-  }  
+  }
 
 }

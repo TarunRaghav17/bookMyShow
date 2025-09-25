@@ -8,6 +8,7 @@ import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets
 import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout.component';
 import { AuthGuard } from './auth/gaurds/auth.guard';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
+import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'movies/:city/seat-layout/:movieId/:theatreId/:showId/:date',
     component: SeatLayoutComponent
+  },
+  {
+    path: 'book-events/:category/:eventname/:id',
+    component: BookingEventsComponent
   },
   {
     path: ':category/:eventname/:id',
