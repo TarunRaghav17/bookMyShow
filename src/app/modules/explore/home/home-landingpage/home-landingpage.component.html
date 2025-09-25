@@ -66,7 +66,7 @@
                 <div class="d-flex justify-content-around gap-3">
                   @for (item of visibleData['Movie']; track $index) {
                   <div class="card_section">
-                    <div class="col" [routerLink]="[`/movies/${commonService._selectCity()}/${item.eventId}`]">
+                    <div class="col" [routerLink]="['/movie',commonService._selectCity(),item.eventId]">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -84,7 +84,7 @@
                       </div>
                       <div class="bottom_text_movie_card">
                         <h6 class="card-text m-0">{{ item.name | truncate:15 }}</h6>
-                        <span class="m-0">{{ item.Genre }}</span>
+                        <span class="m-0">{{ item.genres }}</span>
                       </div>
                     </div>
                   </div>
@@ -136,8 +136,7 @@
                 <div class=" d-flex justify-content-around gap-3">
                   @for (item of visibleData['Plays']; track $index) {
                   <div class=" card_section">
-                    <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                    <div class="col" [routerLink]="`/plays/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -155,7 +154,8 @@
                       </div>
                       <div class="bottom_text_movie_card">
                         <h6 class="card-text m-0">{{ item.name | truncate:15 }}</h6>
-                        <span class="m-0">{{ item.Genre }}</span>
+                        <span class="m-0">{{ item.venueName }}</span>
+                        <span class="m-0">{{ item.genres }}</span>
                       </div>
                     </div>
                   </div>
@@ -204,8 +204,7 @@
                 <div class=" d-flex justify-content-around gap-3">
                   @for (item of visibleData['Sports']; track $index) {
                   <div class=" card_section">
-                    <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                    <div class="col" [routerLink]="`/sports/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -223,7 +222,8 @@
                       </div>
                       <div class="bottom_text_movie_card">
                         <h6 class="card-text m-0">{{ item.name | truncate:15 }}</h6>
-                        <span class="m-0">{{ item.Genre }}</span>
+                        <span class="m-0">{{ item.venueName }}</span>
+                        <span class="m-0">{{ item.categories }}</span>
                       </div>
                     </div>
                   </div>
@@ -272,8 +272,7 @@
                 <div class=" d-flex justify-content-around gap-3">
                   @for (item of visibleData['Activities']; track $index) {
                   <div class=" card_section">
-                    <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                    <div class="col" [routerLink]="`/activities/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -291,7 +290,7 @@
                       </div>
                       <div class="bottom_text_movie_card">
                         <h6 class="card-text m-0">{{ item.name | truncate:15 }}</h6>
-                        <span class="m-0">{{ item.Genre }}</span>
+                        <span class="m-0">{{ item.venueName[0] }}</span>
                       </div>
                     </div>
                   </div>
@@ -345,8 +344,7 @@
                 <div class=" d-flex justify-content-around gap-3">
                   @for (item of visibleData['Event']; track $index) {
                   <div class=" card_section">
-                    <div class="col"
-                      [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
+                    <div class="col" [routerLink]="`/events/${item.name.split(' ').join('-')}/${item.eventId}`">
                       <div class="card shadow-sm">
                         <div class="img_container">
                           <img [src]="getImageFromBase64(item.imageurl)" [alt]="item.imageUrl" class="img-fluid">
@@ -364,7 +362,7 @@
                       </div>
                       <div class="bottom_text_movie_card">
                         <h6 class="card-text m-0">{{ item.name | truncate:15 }}</h6>
-                        <span class="m-0">{{ item.Genre }}</span>
+                        <span class="m-0">{{ item.genres }} ({{item.languages}})</span>
                       </div>
                     </div>
                   </div>

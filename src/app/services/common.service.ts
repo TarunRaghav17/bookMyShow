@@ -18,12 +18,11 @@ export class CommonService {
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
   userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
-  showHeader=signal<boolean>(true)
-  
- 
-   constructor(private http: HttpClient,
+  showHeader = signal<boolean>(true)
+
+  constructor(private http: HttpClient,
     private sanitizer: DomSanitizer
-  )  { }
+  ) { }
 
   setUserLangFormat(payload: any) {
     this.userLangFormat.set(payload)
@@ -45,9 +44,9 @@ export class CommonService {
 
   userSelectedDate = signal<any>({})
 
-  setUserSelectedDate(index:number,payload: any) {
-    if(index<3) this.userSelectedDate.set(payload)
-      return
+  setUserSelectedDate(index: number, payload: any) {
+    if (index < 3) this.userSelectedDate.set(payload)
+    return
   }
 
   getUserSelectedDate() {
@@ -103,7 +102,7 @@ export class CommonService {
       .filter(group =>
       ({
         type: group.type,
-        data: group.data.filter((item: any) => !item.selected)  
+        data: group.data.filter((item: any) => !item.selected)
       }))
       .filter(group => group.data.length > 0)
   );
@@ -183,7 +182,7 @@ export class CommonService {
     let filterType: any[] = this.selectedFiltersSignal().filter((item: any) =>
       item.type == filter.type
     )
-    if (filterType.length>0) {
+    if (filterType.length > 0) {
       let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
       if (alreayExist.length == 0) {
         filterType[0].data.push(filter.filterName)
@@ -210,7 +209,7 @@ export class CommonService {
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`, {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
-      });
+    });
   }
   /**
    * @description Format date to MM/DD/YYYY
@@ -219,7 +218,7 @@ export class CommonService {
    * @return string | null Formatted date or null if input is null
    */
 
-    formatDateToMMDDYYYY(date: string | null): string | null {
+  formatDateToMMDDYYYY(date: string | null): string | null {
     if (!date) return null;
     const d = new Date(date);
     const month = (d.getMonth() + 1).toString().padStart(2, '0'); // MM
@@ -227,7 +226,22 @@ export class CommonService {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   }
+  /**
+   * @description Format data to patch YYYY/DD/MM
+   * @author Gurmeet Kumar  
+   * @param date Input date string
+   * @return string | null Formatted date or null if input is null
+   */
+  formatDateForPatch(date: string | null): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return null;
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    const year = d.getFullYear();
 
+    return `${year}-${month}-${day}`;
+  }
 
   listYourShowService = [
     {
@@ -356,7 +370,7 @@ export class CommonService {
     return filtersArray;
   }
 
-  getAllVenuesBYcity(city:String):Observable<any>{
+  getAllVenuesBYcity(city: String): Observable<any> {
     return this.http.get(`${this.baseUrl}/venues/city/${city}`)
   }
 }

@@ -115,7 +115,6 @@ export class HomeLandingPageComponent implements OnInit {
       return this.sanitizer.bypassSecurityTrustUrl(fullBase64String);
     }
   }
-
   /**
    * @description Update transform for sliding effect
    */

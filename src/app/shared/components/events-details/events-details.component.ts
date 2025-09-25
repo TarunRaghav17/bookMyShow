@@ -4,31 +4,35 @@ import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
-import { BuyTicketSkeltonLoaderComponent } from "../buy-ticket-skelton-loader/buy-ticket-skelton-loader.component";
 @Component({
   selector: 'app-events-details',
   standalone: true,
   templateUrl: './events-details.component.html',
   styleUrl: './events-details.component.scss',
-  imports: [ActivitiesRoutingModule, NgbModule, BuyTicketSkeltonLoaderComponent]
+  imports: [ActivitiesRoutingModule, NgbModule]
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
-  eventDetails: any|null = null;
-  showHeader:boolean= false;
+  eventDetails: any | null = null;
+  showHeader: boolean = false;
   constructor(private route: ActivatedRoute, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal) { }
 
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id')
-    this.commonService.getEventDetailsById(this.id).subscribe({
-      next: (res: any) => {
-        this.eventDetails = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message)
+    this.route.paramMap.subscribe(params => {
+      this.id = params.get('id');
+      if (this.id) {
+        this.commonService.getEventDetailsById(this.id).subscribe({
+          next: (res: any) => {
+            this.eventDetails = res.data
+          },
+          error: (err) => {
+            this.toastr.error(err.message)
+          }
+        })
       }
-    })
+    });
+
   }
   @HostListener('window:scroll')
   onScroll() {
@@ -67,11 +71,11 @@ export class EventsDetailsComponent implements OnInit {
   }
 
   copyLink(link: string) {
-  navigator.clipboard.writeText(link).then(() => {
-    this.toastr.success("Link copied sucessfully")
-    this.closemodal()
-  }).catch(() => {
-    this.toastr.error('Failed to copy');
-  });
-}
+    navigator.clipboard.writeText(link).then(() => {
+      this.toastr.success("Link copied sucessfully")
+      this.closemodal()
+    }).catch(() => {
+      this.toastr.error('Failed to copy');
+    });
+  }
 }

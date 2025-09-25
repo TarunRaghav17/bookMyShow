@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { BuyTicketSkeltonLoaderComponent } from '../buy-ticket-skelton-loader/buy-ticket-skelton-loader.component';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule, RouterModule,BuyTicketSkeltonLoaderComponent],
+  imports: [CommonModule, RouterModule],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
