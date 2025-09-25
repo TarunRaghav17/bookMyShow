@@ -75,7 +75,7 @@ export class UpcommingMoviesComponent {
   }
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetSelectedFiltersSignal()
   }
   toggleId(array: any[], id: any): void {
     const index = array.indexOf(id);

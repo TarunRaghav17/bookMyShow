@@ -51,7 +51,7 @@ export class PlaysLandingPageComponent {
 * @returnType void
 */
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetSelectedFiltersSignal()
   }
 
   getAllPlays() {

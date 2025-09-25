@@ -68,7 +68,6 @@ export class MovieLandingPageComponent implements OnDestroy {
 */
 
   ngOnDestroy(): void {
-    // this.commonService.resetfilterAccordian(this.commonService.filtersSignal());
     this.commonService.resetSelectedFiltersSignal()
   }
 

@@ -17,7 +17,7 @@ const routes: Routes = [
     component: YourOrderComponent,
   },
   {
-    path: 'your-show-list',
+    path: 'your-events-list',
     canActivate: [AuthGuard],
     data: { role: 'ADMIN' },
     component: YourOrderComponent

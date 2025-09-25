@@ -93,13 +93,9 @@ export class CommonService {
     ])
 
   resetSelectedFiltersSignal() {
-  const reset = this.selectedFiltersSignal().map((group:any) => ({
-    ...group,
-    data: []  // Clear the selected data for each filter type
-  }));
+  const reset = this.selectedFiltersSignal().map((group:any) => ({...group,data: [] }));
   this.selectedFiltersSignal.set(reset);
 }
-
 
   setFiltersSignal(filters: any) {
     let modifiedFilters = this.formatFilters(filters)
@@ -160,17 +156,7 @@ export class CommonService {
       });
     });
   }
-  //  resetfilter(filters: any) {
-  //   filters.filter((item: any) => {
-  //     item.data.filter((i: any) => {
-  //       i.selected = false;
-  //       return item;
-  //     });
-  //   });
-  // }
-
  
-
 
   /**
    * @description iniitalizes the topFilterArray

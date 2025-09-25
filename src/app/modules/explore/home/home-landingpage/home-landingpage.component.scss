@@ -9,6 +9,12 @@
   cursor: pointer;
 }
 
+.bottom_text_movie_card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .bottom_text_movie_card h6 {
   margin: 0px 0px 4px;
   word-break: break-word;
@@ -20,6 +26,7 @@
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
 }
+
 .card_section .col {
   width: 250px;
   max-width: 250px;

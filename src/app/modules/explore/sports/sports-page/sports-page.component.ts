@@ -48,7 +48,7 @@ export class SportsPageComponent {
 * @returnType void
 */
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetSelectedFiltersSignal()
   }
 
   getAllSports() {

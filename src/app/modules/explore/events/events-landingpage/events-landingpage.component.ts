@@ -53,7 +53,7 @@ export class EventsLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService. resetSelectedFiltersSignal()
   }
   
   getAllEvents() {
