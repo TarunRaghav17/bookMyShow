@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { Router } from '@angular/router';
@@ -13,12 +13,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './movies-landingpage.component.scss'
 })
 export class MovieLandingPageComponent implements OnDestroy {
-  dummyMoviesdata: any[] | null = null;
+  dummyMoviesdata: any[] =[]
   selectedCity: any = null
   topFiltersArray!: any[]
   filtersArray: any[] = []
   originalMovies = movies;
   select: any[] = selectedFilters
+  page:number = 0;
+  size:number = 5;
   sendPayload: any = {
     "type": "string",
     "languages": [],
@@ -114,14 +116,26 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.getAllMovies()
   }
 
-  getAllMovies() {
-    this.movieService.getAllMovies(this.sendPayload).subscribe({
+  getAllMovies(page? :number,size? :number){ {
+    this.movieService.getAllMovies(this.sendPayload,page,size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data || [];
+        let resData = res.data.content
+        this.dummyMoviesdata = [...this.dummyMoviesdata,...resData].flat() 
+            console.log(this.dummyMoviesdata)
       },
       error: (err) => {
         this.toastr.error(err.message);
       }
     });
+  }
+}
+
+   @HostListener('window:scroll',['$event'])
+   onScroll(event:any) {
+     const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
+     this.page++
+   this.getAllMovies(this.page)
+    }
   }
 }

@@ -27,16 +27,15 @@
 
                                 @for (item of commonService.selectedFiltersSignal(); track $index) {
                                 @for(i of item.data;track $index){
-                                <span [ngClass]="{selectedText: i.selected}" class="border-danger" (click)="onClickTopFilter(item)">
+                                <span [ngClass]="{selectedText: i.selected}" class="border-danger">
                                     {{i.text}}
                                 </span>
                                 }
                                 }
-                                <!-- {{commonService.topFiltersArray()[1]?.data | json}} -->
                                 @for (item of commonService.topFiltersArray()[1]?.data; track $index) {
                                 @if(!item.selected){
 
-                                <span [ngClass]="{selectedText: item.selected}" (click)="onClickTopFilter(item)">
+                                <span [ngClass]="{selectedText: item.selected}" (click)="commonService.handleEventFilter(item)">
                                     {{item.text}}
                                 </span>
                                 }
@@ -48,8 +47,9 @@
                                 <div class="d-flex justify-content-start align-items-start g-0">
                                     <div class="main_box_crasoule w-100 ">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div
-                                                class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start">
+                                            <div 
+                                                class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start"     
+                                                (scroll)="onScroll($event)">
                                                 @for (item of dummyMoviesdata; track $index) {
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
@@ -76,7 +76,6 @@
                                                     </div>
                                                 </ng-container>
                                                 }
-
                                             </div>
                                         </div>
                                     </div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { ActivitiesService } from '../service/activities.service';
@@ -12,12 +12,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './activities-page.component.scss'
 })
 export class ActivitiesPageComponent {
-  dummyMoviesdata: any[] | null = null;
+  dummyMoviesdata: any[]  =[]
   originalMovies = movies
   filters: any[] = []
   select: any[] = selectedFilters
   topFiltersArray!: any[]
   filtersArray: any[] = []
+  page: number = 0
+  size: number = 5
   sendPayload: any = {
     "type": "string",
     "categories": [],
@@ -39,7 +41,6 @@ export class ActivitiesPageComponent {
     this.setFilter()
     this.sendPayload.type = 'Activities'
     this.getAllActivities()
- 
   }
   /**
 * @description Remove Already Selected Filters along with selected Category
@@ -48,10 +49,8 @@ export class ActivitiesPageComponent {
 * @returnType void
 */
   ngOnDestroy(): void {
-  // this.commonService.resetfilterAccordian(this.commonService.selectedFiltersSignal()) 
-  this.commonService.resetSelectedFiltersSignal()
-  
-}
+    this.commonService.resetSelectedFiltersSignal()
+  }
 
   setFilter() {
     forkJoin([
@@ -69,10 +68,11 @@ export class ActivitiesPageComponent {
       }
     })
   }
-  getAllActivities() {
-    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
+  getAllActivities(page?: number, size?: number) {
+    this.activitiesService.getAllActivities(this.sendPayload, page, size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data || []
+        let resData=res.data.content
+        this.dummyMoviesdata = [this.dummyMoviesdata,...resData].flat()
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -128,20 +128,17 @@ export class ActivitiesPageComponent {
     }
     this.getAllActivities()
   }
-  onClickTopFilter(item: any,) {
-    console.log('top filter array',this.commonService.topFiltersArray())
-    // console.log(item);
-    
-    let data = {
-      filterName:item,
-      index: 1,
-      type: "Categories"
+  @HostListener('window:scroll', ['$event'])
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
+    this.page++
+   this.getAllActivities(this.page)
     }
-      this.commonService.handleEventFilter(item)
-    this.getFilter(data)
   }
- 
-    
-   
 
 }
+
+
+
+

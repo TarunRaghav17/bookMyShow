@@ -81,7 +81,8 @@
                                 <div class="main_box_crasoule">
                                     <div class="main_filter_card overflow-hidden">
                                         <div
-                                            class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start align-items-start">
+                                            class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start align-items-start" 
+                                            (scroll)="onScroll($event)">
                                             @for (item of dummyMoviesdata; track $index) {
                                             <ng-container class="overflow-hidden w-50">
                                                 <div class="col card_container">
