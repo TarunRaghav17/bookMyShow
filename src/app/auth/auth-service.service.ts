@@ -15,9 +15,6 @@ export class AuthService {
   encrypted!: string;
   baseUrl = environment.baseUrl;
   tokenSignal = signal<string | null>(localStorage.getItem('token'));
-
-
-
   constructor(private http: HttpClient, private router: Router, private commonService: CommonService) {
   }
 

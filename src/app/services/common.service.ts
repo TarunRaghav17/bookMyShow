@@ -1,3 +1,4 @@
+import { LoaderService } from './loader.service';
 import { computed, Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
@@ -20,8 +21,10 @@ export class CommonService {
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
  
-  constructor(private http: HttpClient,
-    private sanitizer: DomSanitizer
+  constructor(
+    private http: HttpClient,
+    private sanitizer: DomSanitizer,
+    private loaderService: LoaderService
   ) { }
 
   setUserLangFormat(payload: any) {
@@ -383,5 +386,33 @@ export class CommonService {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
     })
   }
+
+  /**
+  * @description get all notification by userId
+  * @author Gurmeet Kumar  
+  * @return Notification json data
+  */
+  getAllnotification(userId?: number, pageNumber?: number, size?: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/notifications/get-notification/${userId}?page=${pageNumber}&size=${size}`,
+      { context: new HttpContext().set(this.loaderService.NO_LOADER, false) }
+    )
+  }
+  /**
+* @description Change  Notification Read flag
+* @author Gurmeet Kumar  
+*/
+  readNotification(userID: number, notificationId: number): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/api/notifications/${userID}/${notificationId}/read`, { userID, notificationId })
+  }
+  /**
+  * @description  Notification unreadRead get count  
+  * @author Gurmeet Kumar  
+  */
+  unReadNotification(userId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/notifications/get-notification-unread-count/${userId}`,
+      { context: new HttpContext().set(this.loaderService.NO_LOADER, false) }
+    )
+  }
+
 }
 
