@@ -2,7 +2,7 @@
     <!-- General Info -->
     <div class="card mb-4 shadow-sm ">
         <div class="card-body ">
-            <h4 class="card-title mb-3 text-center">General Event Info</h4>
+            <h4 class="card-title mb-3 text-center">Event Creation Info</h4>
             <!-- Name -->
             <div class="row">
                 <div class="mb-3 w-50">
@@ -81,7 +81,6 @@
                     }
                 </div>
             </div>
-
         </div>
         <!-- Event Type -->
         <div class="row px-3 my-3 ">
@@ -110,10 +109,9 @@
                 <button class="btn btn-light border w-100 text-start" ngbDropdownToggle>
                     {{ city.controls.length > 0 ? eventShowForm.get('city')?.value.join(', ') : 'Select Cities' }}
                 </button>
-
-                <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
+                @if(citiesArray){
+  <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
                     style="max-height: 200px; overflow-y: auto;">
-
                     @for(city of citiesArray; track $index) {
                     <div class="dropdown-item">
                         <div class="form-check">
@@ -127,6 +125,8 @@
                     </div>
                     }
                 </div>
+                }
+              
             </div>
         </div>
 
@@ -135,10 +135,9 @@
             <div ngbDropdown [autoClose]="'outside'" class="w-50 ">
                 <label class="form-label">Venue Name:</label>
                 <button class="btn btn-light border w-100 text-start" ngbDropdownToggle>
-                    {{ venueName.controls.length > 0 ? eventShowForm.get('venueName')?.value.join(', ') : 'Select
-                    Venues' }}
+                    {{ venueName.controls.length > 0 ? eventShowForm.get('venueName')?.value.join(', ') :
+                    'Select Venues' }}
                 </button>
-
                 <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
                     style="max-height: 200px; overflow-y: auto;">
                     <!-- onVenueNameChange() -->
@@ -156,31 +155,24 @@
                     }
                 </div>
             </div>
-
             @if(eventShowForm.get('venueName')?.touched && eventShowForm.get('venueName')?.invalid){
             <div class="text-danger">
                 Venue name is required.
             </div>
             }
         </div>
-
-
-
         <!-- Content Details -->
         @if(eventShowForm.get('eventType')?.value =='Movie' && eventShowForm.get('venueName')?.value !=''){
         <div class="row my-3 ">
-
             <!--screen name-->
             <div class="mb-3 w-100 px-5 " formArrayName="screens">
                 @for(screen of screens.controls ;track $index){
-
                 <div class="w-100  card my-3 mx-auto  mb-1 p-3" [formGroupName]="$index">
                     <h4> Venue Name: {{screen.get('venueName')?.value}}</h4>
                     <span class="fs-5 fw-semibold  mb-2">Screen Name: {{screen.get('screenName')?.value}} </span>
                     <div formArrayName="layouts" class="mb-1 w-100">
                         <span class="fs-5 fw-semibold">Categories</span>
                         @for(layout of getLayouts(screen).controls ;track $index){
-
                         <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
                             <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                 <span class="my-0 fw-semibold"> Name: </span>
@@ -223,11 +215,9 @@
                         <span class="fs-5 fw-semibold  w-50">Shows</span>
                         <button class="btn btn-outline-success w-50" (click)="addShow(screen)">Add</button>
                     </div>
-
                     <!-- shows array -->
                     <div class="" formArrayName="shows">
                         @for(show of getShows(screen).controls ;track $index){
-
                         <!-- one particualr show =  date & [times] -->
                         <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
                             <!-- date control -->
@@ -240,7 +230,6 @@
                                 <button class="btn btn-outline-danger ms-3"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
-
                             <!-- start-time array -->
                             <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
                                 formArrayName="startTime">
@@ -254,8 +243,6 @@
                                             {{slot}}
                                         </option>
                                         }
-
-
                                     </select>
                                     <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
                                 </div>
@@ -269,21 +256,17 @@
             </div>
         </div>
         }
-
         <!-- event type != movie -->
         @if(eventShowForm.get('shows')?.value && eventShowForm.get('eventType')?.value != ''){
         <div class="d-flex align-items-center gap-4 my-3 px-3 w-auto">
             <h4>Shows</h4>
             <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
         </div>
-
         <!-- shows array -->
         <div class=" w-100" formArrayName="shows">
             @for(show of shows.controls ;track $index){
-
             <!-- one particualr show =  date & [times] -->
             <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-75 mx-auto ">
-
                 <!-- date control -->
                 <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
                     <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
@@ -292,7 +275,6 @@
                     <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add </button>
                     <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
                 </div>
-
                 <!-- start-time array -->
                 <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
                     formArrayName="startTime">
@@ -316,25 +298,21 @@
             }
         </div>
         }
-        @if(eventShowForm.get('price')?.value && eventShowForm.get('eventType')?.value != ''){
-
-        <div class="my-2 row  d-flex align-items-center">
-            @if(eventShowForm.get('price')){
-            <div class="w-50">
-                <label class="form-label">Price : ₹</label>
-                <input type="number" formControlName="price" min="0" class="form-control px-3 w-75 ">
+        @if(eventShowForm.get('price') && eventShowForm.get('eventType')?.value != ''){
+        <div class="my-2 row  d-flex align-items-center p-3">
+            <div class="w-75 border ">
+                      <h4>Price : ₹</h4>
+                <input type="number" formControlName="price" min="0" class="form-control px-3 w-25 ">
             </div>
-            }
         </div>
         }
     </div>
-
     <!-- Arrays Section -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body border">
-            <!-- Languages -->
-            @if(eventShowForm.get('languages')){
-            <div class="mb-3 ">
+    @if(eventShowForm.get('eventType')?.value != ''){
+    <div class="card border mb-4 shadow-sm p-3">
+        <!-- Languages -->
+        @if(eventShowForm.get('languages')){
+                <div class="mb-3 ">
                 <h5 class="form-label">● Languages</h5>
                 <div class="d-flex flex-wrap">
                     @for(lang of languagesArray; track $index) {
@@ -353,116 +331,110 @@
                 }
             </div>
             }
-            <!-- Genres -->
-            @if(eventShowForm.get('genres')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Genres</h5>
-                <div class="d-flex flex-wrap">
-                    @for(genre of genresArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
-                            [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}">
-                        <label class="form-check-label">{{genre.genresName}}</label>
-                    </div>
-                    }
-                </div>
-
-                @if(isInvalid('genres')){
-                <div class="invalid-feedback">
-                    At least one genre is required.
+        <!-- Genres -->
+        @if(eventShowForm.get('genres')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Genres</h5>
+            <div class="d-flex flex-wrap">
+                @for(genre of genresArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
+                        [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}">
+                    <label class="form-check-label">{{genre.genresName}}</label>
                 </div>
                 }
             </div>
-            }
-
-            <!-- Formats -->
-            @if(eventShowForm.get('format')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Formats</h5>
-                <div class="d-flex flex-wrap">
-                    @for(format of formatsArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
-                            [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}">
-                        <label class="form-check-label">{{format.formatName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('format')){
-                <div class="invalid-feedback">
-                    At least one format is required.
-                </div>
-                }
-            </div>
-            }
-
-            <!-- Tags -->
-            @if(eventShowForm.get('tag')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Tags</h5>
-                <div class="d-flex flex-wrap">
-                    @for(tag of tagsArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input" [value]="tag.tagId"
-                            (change)="handleInputBoxChange($event,'tag')" [value]="tag.tagId"
-                            [ngClass]="{'is-invalid': isInvalid('tag')}">
-                        <label class="form-check-label">{{tag.tagName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('tag')){
-                <div class="invalid-feedback">
-                    At least one tag is required.
-                </div>
-                }
-            </div>
-            }
-
-            <!-- Categories -->
-            @if(eventShowForm.get('categories')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Categories</h5>
-                <div class="d-flex flex-wrap">
-                    @for(category of categoriesArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input"
-                            (change)="handleInputBoxChange($event,'categories')" [value]="category.categoryId"
-                            [ngClass]="{'is-invalid': isInvalid('categories')}">
-                        <label class="form-check-label">{{category.categoryName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('categories')){
-                <div class="invalid-feedback">
-                    At least one category is required.
-                </div>
-                }
-            </div>
-            }
-            <!-- More Filters -->
-            @if(eventShowForm.get('moreFilters')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● More Filters</h5>
-                <div class="d-flex flex-wrap">
-                    @for(moreFilter of moreFilters; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input"
-                            (change)="handleInputBoxChange($event,'moreFilters')" [value]="moreFilter.moreFilterId"
-                            [ngClass]="{'is-invalid': isInvalid('moreFilters')}">
-                        <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('moreFilters')){
-                <div class="invalid-feedback">
-                    At least one filter is required.
-                </div>
-                }
+            @if(isInvalid('genres')){
+            <div class="invalid-feedback">
+                At least one genre is required.
             </div>
             }
         </div>
+        }
+        <!-- Formats -->
+        @if(eventShowForm.get('format')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Formats</h5>
+            <div class="d-flex flex-wrap">
+                @for(format of formatsArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
+                        [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}">
+                    <label class="form-check-label">{{format.formatName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('format')){
+            <div class="invalid-feedback">
+                At least one format is required.
+            </div>
+            }
+        </div>
+        }
+        <!-- Tags -->
+        @if(eventShowForm.get('tag')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Tags</h5>
+            <div class="d-flex flex-wrap">
+                @for(tag of tagsArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" [value]="tag.tagId"
+                        (change)="handleInputBoxChange($event,'tag')" [value]="tag.tagId"
+                        [ngClass]="{'is-invalid': isInvalid('tag')}">
+                    <label class="form-check-label">{{tag.tagName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('tag')){
+            <div class="invalid-feedback">
+                At least one tag is required.
+            </div>
+            }
+        </div>
+        }
+        <!-- Categories -->
+        @if(eventShowForm.get('categories')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Categories</h5>
+            <div class="d-flex flex-wrap">
+                @for(category of categoriesArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'categories')"
+                        [value]="category.categoryId" [ngClass]="{'is-invalid': isInvalid('categories')}">
+                    <label class="form-check-label">{{category.categoryName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('categories')){
+            <div class="invalid-feedback">
+                At least one category is required.
+            </div>
+            }
+        </div>
+        }
+        <!-- More Filters -->
+        @if(eventShowForm.get('moreFilters')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● More Filters</h5>
+            <div class="d-flex flex-wrap">
+                @for(moreFilter of moreFilters; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input"
+                        (change)="handleInputBoxChange($event,'moreFilters')" [value]="moreFilter.moreFilterId"
+                        [ngClass]="{'is-invalid': isInvalid('moreFilters')}">
+                    <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('moreFilters')){
+            <div class="invalid-feedback">
+                At least one filter is required.
+            </div>
+            }
+        </div>
+        }
     </div>
-
+    }
     <!-- Cast -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="cast">
@@ -498,7 +470,6 @@
             }
         </div>
     </div>
-
     <!-- Crew -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="crew">

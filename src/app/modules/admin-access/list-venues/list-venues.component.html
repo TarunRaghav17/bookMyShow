@@ -1,17 +1,15 @@
 <div class="container-fluid">
     <div class="row main_table_container">
-        <div class="col-10">
-            <div class="col-12 d-flex justify-content-between align-items-center">
+        <div class="col-10 ">
+            <div class="w-100 d-flex justify-content-between align-items-center">
                 <h4> Venues List</h4>
                 <div class="w-25  me-auto ms-2">
-                    <input type="text" class=" form-control w-100"
-                        placeholder="Search by name, username, email & phoneNumber">
-
+                    <input type="text" class=" form-control w-100" placeholder="Search by Name, Type, City ">
                 </div>
 
-                <div class=" py-3 px-2 d-flex w-50  ">
+                <div class=" py-3 d-flex w-50  d-flex align-items-center justify-content-start ">
 
-                    <div class="col-3 d-flex gap-4 align-items-center justify-content-center w-50 px-1">
+                    <div class=" d-flex gap-4 align-items-center justify-content-center w-50 px-1">
                         <span>
                             City
                         </span>
@@ -27,7 +25,7 @@
                         </select>
                     </div>
 
-                    <div class="col-3 d-flex gap-4 align-items-center justify-content-center w-50 px-1">
+                    <div class="d-flex  gap-4 align-items-center justify-content-center w-50 px-1">
                         <span>
                             Type
 
@@ -42,6 +40,7 @@
                         </select>
                     </div>
 
+                    <button class="btn btn-outline-primary w-25" [routerLink]="['/admin/create/venue']">Add New</button>
                 </div>
             </div>
             <!-- Users Table -->

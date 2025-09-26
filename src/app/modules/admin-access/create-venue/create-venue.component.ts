@@ -10,51 +10,21 @@ import { CommonService } from '../../../services/common.service';
   templateUrl: './create-venue.component.html'
 })
 export class CreateVenueComponent implements OnInit {
+
   venueForm!: FormGroup;
   tempAmmenity = new FormControl('', [Validators.required])
-  venueFor: any[] = []
   venueType: any[] = [];
   citiesArray: any[] = []
-  supportedCategoriesArray: any[] = []
+  supportedCategoriesArray: any[] | null = null
+  slotDuration: any = 60
 
   alphabets = [
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
     "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
   ]
-
-  venueTypeMapping = {
-    "Movie": [
-      { "value": "theatre", "label": "Theatre" },
-    ],
-    "Sports": [
-      { "value": "stadium", "label": "Stadium" },
-      { "value": "ground", "label": "Ground" },
-      { "value": "court", "label": "Court" },
-    ],
-    "Event": [
-      { "value": "auditorium", "label": "Auditorium" },
-      { "value": "banquet_hall", "label": "Banquet Hall" },
-      { "value": "open_air", "label": "Open Air Venue" },
-      { "value": "exhibition_hall", "label": "Exhibition Hall" }
-    ],
-    "Activities": [
-      { "value": "studio", "label": "Studio" },
-      { "value": "classroom", "label": "Classroom" },
-      { "value": "workshop_hall", "label": "Workshop Hall" }
-    ],
-    "Plays": [
-      { "value": "drama_theatre", "label": "Drama Theatre" },
-      { "value": "playhouse", "label": "Playhouse" },
-      { "value": "black_box", "label": "Black Box Theatre" },
-      { "value": "opera_house", "label": "Opera House" },
-      { "value": "community_hall", "label": "Community Hall" }
-    ]
-
-  }
-
   supportedCategoriesMapping = {
-    "Movie": {
-      "theatre": [
+    "Movie":
+      [
         {
           "value": "imax", "label": "IMAX"
         },
@@ -68,94 +38,46 @@ export class CreateVenueComponent implements OnInit {
           "value": "4d", "label": "4D"
         }
       ],
-
-    },
-    "Sports": {
-      "ground": [
+    "Sports":
+      [
         { "value": "cricket", "label": "Cricket" },
         { "value": "football", "label": "Football" },
         { "value": "hockey", "label": "Hockey" },
-      ],
-      "stadium": [
-        { "value": "cricket", "label": "Cricket" },
-        { "value": "football", "label": "Football" },
-        { "value": "rugby", "label": "Rugby" },
-
-      ],
-      "court": [
         { "value": "tennis", "label": "Tennis" },
         { "value": "badminton", "label": "Badminton" },
         { "value": "basketball", "label": "Basketball" }
       ],
-    },
-    "Event": {
-      "auditorium": [
+    "Event":
+      [
         { "value": "concert", "label": "Concert" },
         { "value": "theatre", "label": "Theatre Play" },
-        { "value": "dance", "label": "Dance Show" }
-      ],
-
-      "banquet_hall": [
+        { "value": "dance", "label": "Dance Show" },
         { "value": "wedding", "label": "Wedding" },
         { "value": "reception", "label": "Reception" },
-        { "value": "party", "label": "Private Party" }
       ],
-      "open_air": [
-        { "value": "festival", "label": "Festival" },
-        { "value": "music_show", "label": "Music Show" },
-        { "value": "fair", "label": "Fair / Carnival" }
-      ],
-      "exhibition_hall": [
-        { "value": "art_show", "label": "Art Exhibition" },
-        { "value": "tech_expo", "label": "Tech Expo" },
-        { "value": "book_fair", "label": "Book Fair" }
-      ]
-    },
-    "Activities": {
-      "studio": [
+    "Activities":
+      [
         { "value": "yoga", "label": "Yoga" },
         { "value": "dance", "label": "Dance Class" },
-        { "value": "aerobics", "label": "Aerobics" }
-      ],
-      "classroom": [
         { "value": "coding", "label": "Coding Bootcamp" },
-        { "value": "art", "label": "Art Class" },
-        { "value": "music", "label": "Music Class" }
-      ],
-
-      "workshop_hall": [
-        { "value": "craft", "label": "Craft Workshop" },
+        { "value": "music", "label": "Music Class" },
         { "value": "photography", "label": "Photography Workshop" },
         { "value": "cooking", "label": "Cooking Workshop" }
-      ]
-    },
-    "Plays": {
-      "drama_theatre": [
+      ],
+
+    "Plays":
+      [
         { "value": "tragedy", "label": "Tragedy" },
         { "value": "comedy", "label": "Comedy" },
         { "value": "musical", "label": "Musical" },
-        { "value": "experimental", "label": "Experimental" }
-      ],
-      "playhouse": [
         { "value": "comedy", "label": "Comedy" },
         { "value": "musical", "label": "Musical" },
-        { "value": "improv", "label": "Improv" }
-      ],
-      "black_box": [
         { "value": "experimental", "label": "Experimental" },
-        { "value": "interactive", "label": "Interactive" }
-      ],
-      "opera_house": [
+        { "value": "interactive", "label": "Interactive" },
         { "value": "musical", "label": "Musical" },
-        { "value": "classical_play", "label": "Classical Play" }
-      ],
-      "community_hall": [
+        { "value": "classical_play", "label": "Classical Play" },
         { "value": "school_play", "label": "School Play" },
-        { "value": "amateur_drama", "label": "Amateur Drama" }
       ]
-    }
-
-
   }
 
   constructor(private fb: FormBuilder,
@@ -172,11 +94,11 @@ export class CreateVenueComponent implements OnInit {
         city: ['', Validators.required],
         pin: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
       }),
-      venueCapacity: ['', [Validators.required, Validators.min(1)]],
-      venueFor: ['', Validators.required],
+      venueCapacity: ['', [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)]],
       venueType: ['', Validators.required],
-      supportedCategories: [[], Validators.required],
-      amenities: this.fb.array([])
+      supportedCategories: this.fb.array([], [Validators.required]),
+      amenities: this.fb.array([]),
+      timeSlots: this.fb.array([this.createTimeSlots(), this.createTimeSlots(), this.createTimeSlots()])
     });
 
     this.fetchCities()
@@ -191,14 +113,11 @@ export class CreateVenueComponent implements OnInit {
       }
     })
   }
-  onVenueForChange() {
-    let venueFor = this.venueForm.get('venueFor')?.value as keyof typeof this.venueTypeMapping
-    this.venueForm.get('venueType')?.setValue('')
-    this.venueForm.get('supportedCategories')?.setValue('')
-
-    this.venueType = this.venueTypeMapping[venueFor]
-
-    if (venueFor == 'Movie') {
+  onVenueTypeChange() {
+    let venueType = this.venueForm.get('venueType')?.value as keyof typeof this.supportedCategoriesMapping
+    this.categories.clear()
+    this.supportedCategoriesArray = this.supportedCategoriesMapping[venueType]
+    if (venueType == 'Movie') {
       this.venueForm.addControl('screens',
         this.fb.array([this.createScreen()]))
     }
@@ -207,11 +126,67 @@ export class CreateVenueComponent implements OnInit {
     }
   }
 
-  onVenueTypeChange() {
-    this.venueForm.get('supportedCategories')?.setValue('')
-    let venueForValue = this.venueForm.get('venueFor')?.value as keyof typeof this.supportedCategoriesMapping
-    let venueTypeValue = this.venueForm.get('venueType')?.value as keyof typeof this.supportedCategoriesMapping[typeof venueForValue]
-    this.supportedCategoriesArray = this.supportedCategoriesMapping[venueForValue][venueTypeValue]
+  get categories() {
+    return this.venueForm.get('supportedCategories') as FormArray
+  }
+
+  createTimeSlots() {
+    return this.fb.group({
+      startTime: ['', [Validators.required]],
+      endTime: [{ value: '', disabled: true }, [Validators.required]]
+    })
+  }
+  get timeSlots() {
+    return this.venueForm.get('timeSlots') as FormArray
+  }
+  addTimeSlot() {
+    if (this.timeSlots.length < 10) {
+      this.timeSlots.push(this.createTimeSlots())
+    }
+    return
+  }
+  removeTimeSlot(index: number) {
+    this.timeSlots.removeAt(index);
+  }
+
+  onSlotDurationChange(event: any) {
+    this.slotDuration = Number(event.target.value)
+    console.log(this.slotDuration)
+  }
+
+  onSlotStartTimeChange(slot: AbstractControl, slotIndex: number) {
+    let startTime = slot.get('startTime')?.value;
+
+    // enforce startTime >= prev endTime
+    let prevEnd = this.getPrevEndTime(slotIndex);
+    console.log(prevEnd)
+    if (startTime < prevEnd) {
+      slot.get('startTime')?.setValue(this.addMinutes(prevEnd, 30));
+      startTime = prevEnd;
+    }
+    let endTime = this.addMinutes(startTime, this.slotDuration);
+    slot.get('endTime')?.setValue(endTime);
+  }
+
+  getPrevEndTime(slotIndex: number): string {
+    if (slotIndex === 0) return "00:00";
+    const prevSlot = this.timeSlots.at(slotIndex - 1)?.getRawValue();
+    return prevSlot?.endTime || "00:00";
+  }
+
+  addMinutes(start: string, minutes: number): string {
+    const [h, m] = start.split(':').map(Number);
+    const date = new Date(0, 0, 0, h, m);
+    date.setMinutes(date.getMinutes() + minutes);
+    return date.toTimeString().substring(0, 5); // "HH:mm"
+  }
+  handleCategoryChange(event: any) {
+    if (event.target.checked) {
+      this.categories.push(this.fb.control(event.target.value));
+    } else {
+      let index = this.categories.controls.findIndex((ctrl) => ctrl.value === event.target.value)
+      if (index != -1) this.categories.removeAt(index);
+    }
   }
 
   get screens() {
@@ -261,7 +236,7 @@ export class CreateVenueComponent implements OnInit {
     return this.fb.group({
       layoutName: ['', Validators.required],
       rows: this.fb.array([], Validators.required),
-      cols: ['12', Validators.required]
+      cols: ['12', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
     })
   }
 
@@ -288,6 +263,7 @@ export class CreateVenueComponent implements OnInit {
 
   // Submit
   onSubmit(): void {
+    console.log(this.venueForm.value)
     if (this.venueForm.valid) {
       this.venuesService.createVenueService(this.venueForm.value).subscribe({
         next: () => {
@@ -319,8 +295,6 @@ export class CreateVenueComponent implements OnInit {
     }
   }
 
-  handleCategoryChange(event: any) {
-    this.venueForm.get('supportedCategories')?.setValue([event.target.value])
-  }
+
 }
 

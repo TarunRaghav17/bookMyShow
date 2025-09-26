@@ -39,7 +39,7 @@ export class CreateContentComponent implements OnInit {
     "completed",
     "ongoing",
   ];
-  citiesArray: any[] = [];
+  citiesArray: any[] | null = null;
 
   constructor(private fb: FormBuilder,
     private toaster: ToastrService,
@@ -244,8 +244,8 @@ export class CreateContentComponent implements OnInit {
 
     this.removeControls(this.eventShowForm, ['languages', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens','shows','price']);
 
-    // this.eventShowForm.addControl('shows', this.fb.array([], [Validators.required]))
-    // this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
+    this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
+    this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
 
 
     // this.handleReset(['city', 'status', 'venueName', 'eventName'])
