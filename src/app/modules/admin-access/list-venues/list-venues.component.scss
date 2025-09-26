@@ -1,0 +1,127 @@
+.main_table_container {
+  width: calc(100%);
+  max-width: calc(100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-inline: 10px;
+}
+
+/* Container Styling */
+.container-fluid {
+  padding: 20px;
+  background: #f9f9f9;
+}
+
+/* Table Wrapper */
+.main_table_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+thead {
+  background: #909090;
+  color: #fff;
+}
+
+thead th {
+  padding: 12px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+tbody td {
+  padding: 12px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #f7faff;
+}
+
+tbody tr:hover {
+  background-color: #eaf4ff;
+  transition: 0.3s;
+}
+
+td button {
+  padding: 6px 12px;
+  margin: 2px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+::placeholder {
+  color: #d4d3d3;
+  font-size: small;
+}
+
+td button:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.rolename {
+  color: rgb(255, 255, 255);
+  background: #198754;
+  padding-inline: 10px;
+  width: max-content;
+  border-radius: 5px;
+}
+
+.admin_color {
+  color: white;
+  background: rgb(253, 71, 47);
+  padding-inline: 10px;
+}
+
+.dropdown {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: fit-content;
+  border-radius: 4px;
+}
+
+.delete-btn {
+  cursor: pointer;
+  color: #d9534f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.delete-btn:hover {
+  color: #c9302c;
+}
+
+.dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+tbody tr:last-child .dropdown {
+  top: -125px;
+}

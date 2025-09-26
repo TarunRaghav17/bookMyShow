@@ -18,4 +18,13 @@ export class VenuesService {
   getVenues(city: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/venues/city/${city}`)
   }
+
+  getAllVenues():Observable<any>{
+    return this.http.get(`${this.baseUrl}/venues/getAll`)
+  }
+
+   getVenuesTest(): Observable<any> {
+    return this.http.get(`http://localhost:3000/venues`)
+  }
+
 }

@@ -86,7 +86,9 @@ export class SeatLayoutComponent {
     this.initializeCanvas()
     this.open(this.seatModal)
   }
-
+ngOnDestroy(){
+  this.commonService.showHeader.set(true)
+}
   get totalPrice() {
     return this.seats
       .filter(s => s.status === 'selected')

@@ -56,11 +56,9 @@ export class HeaderComponent implements OnInit {
     private router: Router,
 
   ) {
-
     this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
     this.checkedLogin.set(this.authService.getUserFromToken());
-
     effect((onCleanup) => {
       const user = this.authService.userDetailsSignal();
       if (user) {
@@ -71,8 +69,6 @@ export class HeaderComponent implements OnInit {
       }
     });
   }
-
-
 
   ngOnInit(): void {
     this.getAllPopularCity()
@@ -179,8 +175,6 @@ export class HeaderComponent implements OnInit {
    * @author Gurmeet Kumar
    * @return void
    */
-
-
   /**
 * @description Handles user search with debounce. Fetches all users if search input is empty, or searches users based on query.
 * @author Gurmeet Kumar
@@ -224,8 +218,6 @@ export class HeaderComponent implements OnInit {
     this.commonService.setCategory(category)
     this.selectedCategory = this.commonService._selectedCategory()
   }
-
-
   /**
    * @description Convert base64 string to safe image URL for display
    * @author Gurmeet Kumar
