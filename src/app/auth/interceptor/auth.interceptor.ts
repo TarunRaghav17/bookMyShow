@@ -28,8 +28,10 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    this.loaderService.showLoader();
-
+    const bypassLoader = req.context.get(this.loaderService.NO_LOADER)
+    if (bypassLoader) {
+      this.loaderService.showLoader();
+    }
     const shouldBypass = req.context.get(this.commonService.IS_PUBLIC_API);
     let authReq = req;
     if (!shouldBypass) {
@@ -42,6 +44,7 @@ export class AuthInterceptor implements HttpInterceptor {
         });
       }
     }
+
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
@@ -49,11 +52,13 @@ export class AuthInterceptor implements HttpInterceptor {
           localStorage.removeItem('token');
           this.router.navigate(['/']);
           this.authService.clearUserDetails();
-        } 
+        }
         return throwError(() => error);
       }),
       finalize(() => {
-        this.loaderService.hideLoader();
+        if (bypassLoader) {
+          this.loaderService.hideLoader();
+        }
       })
     );
   }

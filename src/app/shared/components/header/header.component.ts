@@ -1,6 +1,8 @@
 import {
   Component,
+  effect,
   OnInit,
+  signal,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -17,7 +19,6 @@ import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { FormControl } from '@angular/forms';
-
 @Component({
   selector: 'app-header',
   standalone: false,
@@ -36,7 +37,16 @@ export class HeaderComponent implements OnInit {
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
   showProfileheader: any;
+  notifications: boolean = false;
+  notificationCount: number = 0;
+  showNotificationData: any[] = [];
   public selectedCategory: string
+  checkedLogin = signal<any | null>(null);
+  page: number = 0;
+  size: number = 10;
+  totalCount: any;
+  hasMoreData: boolean = true;
+
   constructor(
     private modalService: NgbModal,
     public commonService: CommonService,
@@ -44,18 +54,32 @@ export class HeaderComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
     private router: Router,
+
   ) {
 
     this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
+    this.checkedLogin.set(this.authService.getUserFromToken());
+
+    effect((onCleanup) => {
+      const user = this.authService.userDetailsSignal();
+      if (user) {
+        const intervalId = setInterval(() => {
+          this.getAllNotificationData();
+        }, 5000);
+        onCleanup(() => clearInterval(intervalId));
+      }
+    });
   }
+
+
 
   ngOnInit(): void {
     this.getAllPopularCity()
     this.getAllCitiesData()
     this.onSearchHandler()
     this.showProfileheader = this.commonService._profileHeader()
-    }
+  }
   /**
      * @description Open city selection modal popup
      * @author Gurmeet Kumar
@@ -165,16 +189,16 @@ export class HeaderComponent implements OnInit {
   onSearchHandler() {
     this.searchControl.valueChanges.pipe(
       debounceTime(600),
-      map((val) => val?.trim().toLowerCase() || ''), 
+      map((val) => val?.trim().toLowerCase() || ''),
       distinctUntilChanged(),
     ).subscribe({
       next: (val: string) => {
-        this.searchText = val; 
+        this.searchText = val;
         if (!val) {
-         
+
           this.filteredCities = [...this.citiesJson];
         } else {
-    
+
           this.filteredCities = this.citiesJson.filter((city: any) =>
             city.cityName.toLowerCase().includes(val)
           );
@@ -214,18 +238,135 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-   /**
-   * @description Close cityModal 
-   * @author Gurmeet Kumar
-   * @return any
-   * @param modalRef
-   */
-   
+  /**
+  * @description Close cityModal 
+  * @author Gurmeet Kumar
+  * @return any
+  * @param modalRef
+  */
+
   closeCityModal(modalRef: NgbModalRef): void {
     if (modalRef) {
       modalRef.dismiss();
     }
   }
 
+  /**
+    * @description toggle for show Notification 
+    * @author Gurmeet Kumar
+    */
+  showNotifications() {
+    this.notifications = !this.notifications
+  }
 
-}
+  /**
+   * @description Get all notification data 
+   * @author Gurmeet Kumar
+   * @param userId pageNumber Count
+   */
+  getAllNotificationData() {
+    const user = this.authService.userDetailsSignal();
+    if (!user?.userId) return;
+
+    this.commonService.getAllnotification(user.userId, this.page, this.size).subscribe({
+      next: (res: any) => {
+        this.totalCount = res.data.count;
+
+        if (this.page === 0) {
+          this.showNotificationData = res.data.content;
+        } else {
+          this.showNotificationData = [
+            ...this.showNotificationData,
+            ...res.data.content,
+          ];
+        }
+        if (this.showNotificationData.length >= this.totalCount) {
+          this.hasMoreData = false;
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    });
+    this.unreadNotifications();
+  }
+  /**
+   * @description Mark as Read to notification  
+   * @author Gurmeet Kumar
+   * @params userId ,notificationId
+   */
+  markAsRead(notificationId: number) {
+    const userId = this.authService.userDetailsSignal().userId
+    this.commonService.readNotification(userId, notificationId).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message)
+        this.getAllNotificationData()
+      }, error: (err) => {
+        console.log(err.message)
+      }
+    })
+  }
+  /**
+ * @description unread Notification Data Count 
+ * @author Gurmeet Kumar
+ * @param userId pageNumber Count
+ */
+
+  unreadNotifications() {
+    const userId = this.authService.userDetailsSignal().userId
+    this.commonService.unReadNotification(userId).subscribe({
+      next: (res: any) => {
+        this.notificationCount = res.data
+      }
+    })
+  }
+
+  /**
+  * @description timeFormate Convert to actualdate
+  * @author Gurmeet Kumar
+  * @param userId pageNumber Count
+  */
+  getShortTimeAgo(dateString: string | Date): string {
+    const date = typeof dateString === 'string'
+      ? new Date(dateString.replace(/\.(\d{3})\d+/, '.$1'))
+      : dateString;
+    const now = new Date();
+    let diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    if (diffInSeconds < 0) diffInSeconds = 0;
+    const minutes = Math.floor(diffInSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(months / 12);
+    if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
+    if (minutes < 60) return `${minutes}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days < 30) return `${days}d ago`;
+    if (months < 12) return `${months}M ago`;
+    return `${years}y ago`;
+  }
+
+  /**
+  * @description Scroll Event to load the data
+  * @author Gurmeet Kumar
+  * @param userId pageNumber Count
+  */
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight - 1) {
+      if (this.hasMoreData) {
+        this.page++;
+        this.getAllNotificationData();
+      }
+    }
+  }
+
+  /**
+   * @description notications container Show 
+   * @author Gurmeet
+   */
+  openCanvas() {
+    this.notifications = false;
+  }
+
+} 

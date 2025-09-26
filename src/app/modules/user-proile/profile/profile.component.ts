@@ -285,8 +285,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
       },
     });
   }
-
-
   /**
     *  @description Set the maximum selectable date for the date input to yesterday's date
     * @author Gurmeet Kumar

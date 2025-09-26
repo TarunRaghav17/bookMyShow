@@ -32,7 +32,8 @@
                         <p class="d-flex gap-1 align-items-center mt-1 ps-1 m-0" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
                             <i class="fa fa-user-circle fa-circle_header" aria-hidden="true"></i>
-                            <span class="fa-circle_header">Hi, {{ authService.userDetailsSignal()?.sub || 'User'
+                            <span class="fa-circle_header" (click)="openCanvas()">Hi, {{
+                                authService.userDetailsSignal()?.sub || 'User'
                                 }}</span>
                         </p>
                         }
@@ -153,17 +154,7 @@
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
-                <a class="d-flex justify-content-between align-items-center links_sidebar" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasExample">
-                    <div class="d-flex gap-2 align-items-center">
-                        <i class="fa fa-bell-o" aria-hidden="true"></i>
 
-                        <div class="info_text">
-                            <p class="m-0">Notifications</p>
-                        </div>
-                    </div>
-                    <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
-                </a>
                 @if(authService.getUserFromToken()?.role == 'USER'){
                 <a class="d-flex justify-content-between align-items-center links_sidebar" data-bs-toggle="offcanvas"
                     [routerLink]="['/my-profile/your-order']" data-bs-target="#offcanvasExample">
@@ -200,6 +191,47 @@
                     </div>
                     <i class="fa fa-angle-right ms-1" aria-hidden="true"></i>
                 </a>
+                }
+                <a class="d-flex justify-content-between align-items-center links_sidebar"
+                    (click)="showNotifications()">
+                    <div class="d-flex gap-2 align-items-center">
+                        <i class="fa fa-bell-o position-relative" aria-hidden="true">
+                            <span class="translate-middle badge rounded-pill bg-danger badges_notification_count">
+                                {{notificationCount}}+
+                                <span class="visually-hidden">unread messages</span>
+                            </span>
+                        </i>
+                        <div class="info_text">
+                            <p class="m-0">Notifications</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-angle-right ms-1" aria-hidden="true"
+                        [ngClass]="{'toggle_notification':notifications}"></i>
+                </a>
+                @if(notifications){
+                <div class="notification-list" (scroll)="onScroll($event)">
+                    @for (item of showNotificationData; track $index) {
+                    <a class="d-flex justify-content-between align-items-center links_sidebar"
+                        (click)="markAsRead(item.notificationId)">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="col-1">
+                                <img src="assets/notification_iconImage.png" alt="" class="img-fluid">
+                            </div>
+                            <div class="col-10" [ngClass]="{'readmark':item?.read}">
+                                <small class="d-flex justify-content-between">
+                                    <span class="fw-bold">
+                                        {{item.title}}
+                                    </span>
+                                    <span class="fw-bold">
+                                        {{getShortTimeAgo(item.createdOn)}}
+                                    </span>
+                                </small>
+                                <p class="title m-0 fw-bold">{{item.message}}</p>
+                            </div>
+                        </div>
+                    </a>
+                    }
+                </div>
                 }
             </div>
 
