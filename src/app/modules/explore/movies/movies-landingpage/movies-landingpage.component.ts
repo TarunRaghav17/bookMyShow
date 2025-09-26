@@ -120,7 +120,7 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.getAllMovies()
   }
 
-  getAllMovies(_isScrollEvent?: boolean) {
+  getAllMovies() {
     {
       this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
         next: (res) => {
@@ -139,7 +139,7 @@ export class MovieLandingPageComponent implements OnDestroy {
     const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
       this.page++
-      this.getAllMovies(true)
+      this.getAllMovies()
     }
   }
 }

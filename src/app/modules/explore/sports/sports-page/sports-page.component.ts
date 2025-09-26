@@ -113,7 +113,7 @@ export class SportsPageComponent {
   }
 
   clearFilter(item: any) {
-    if (!item.type) return;
+    if (!item) return;
     switch (item) {
       case 'Date':
         this.sendPayload.dateFilters = []

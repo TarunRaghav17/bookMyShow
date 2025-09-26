@@ -43,13 +43,15 @@ export class ActivitiesPageComponent {
   /**
 * @description Remove Already Selected Filters along with selected Category
 * @author Manu Shukla
-* @params  
-* @returnType void
 */
   ngOnDestroy(): void {
     this.commonService.resetSelectedFiltersSignal()
   }
 
+  /**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.activitiesService.getFilters('date_filters'),
@@ -66,6 +68,11 @@ export class ActivitiesPageComponent {
       }
     })
   }
+
+/**
+* @description Display All Activities Cards
+* @author Manu Shukla
+*/
 getAllActivities() {
   this.activitiesService.getAllActivities(this.sendPayload, this.page, this.size).subscribe({
     next: (res) => {
@@ -89,7 +96,6 @@ toggleId(array: any[], id: any): void {
   }
 
   getFilter(event: any) {
-    console.log(event);
     switch (event.type) {
       case 'Date':
         this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
@@ -112,6 +118,10 @@ toggleId(array: any[], id: any): void {
     this.commonService.handleEventFilter(event)
   }
 
+/**
+* @description Remove Selected Filters From the Fil 
+* @author Manu Shukla
+*/
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
