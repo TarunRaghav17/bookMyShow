@@ -31,7 +31,6 @@ export class ActivitiesPageComponent {
   /**
  * @description initialize Top Filters
  * @author Manu Shukla
- * @params  
  * @returnType void
  */
 
@@ -95,7 +94,13 @@ toggleId(array: any[], id: any): void {
     }
   }
 
+/**
+* @description Get Selected Filters cards by sending the Payload
+* @author Manu Shukla
+* @param  {event} - Object containing filter type and corresponding filter ID
+ */
   getFilter(event: any) {
+    console.log(event);
     switch (event.type) {
       case 'Date':
         this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
@@ -119,8 +124,9 @@ toggleId(array: any[], id: any): void {
   }
 
 /**
-* @description Remove Selected Filters From the Fil 
+* @description Remove Selected Filters by empty the payload array
 * @author Manu Shukla
+* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
 */
   clearFilter(item: any) {
     if (!item) return;
@@ -142,7 +148,10 @@ toggleId(array: any[], id: any): void {
     this.dummyMoviesdata = [];
     this.getAllActivities()
   }
-  
+  /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
   onScroll(event: any) {
     const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {

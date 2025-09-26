@@ -48,6 +48,10 @@ export class SportsPageComponent {
   ngOnDestroy(): void {
     this.commonService.resetSelectedFiltersSignal()
   }
+  /**
+* @description Display All Sports Cards
+* @author Manu Shukla
+*/
 
   getAllSports() {
     this.sportService.getAllSports(this.sendPayload, this.page, this.size).subscribe({
@@ -62,6 +66,10 @@ export class SportsPageComponent {
     })
   }
 
+/**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.sportService.getFilters('date_filters'),
@@ -88,6 +96,11 @@ export class SportsPageComponent {
     }
   }
 
+/**
+* @description Get Selected Filters cards by sending the Payload
+* @author Manu Shukla
+* @param  {event} - Object containing filter type and corresponding filter ID
+ */
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
@@ -112,6 +125,11 @@ export class SportsPageComponent {
     this.commonService.handleEventFilter(event)
   }
 
+/**
+* @description Remove Selected Filters by empty the payload array
+* @author Manu Shukla
+* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+*/
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -135,7 +153,11 @@ export class SportsPageComponent {
     this.dummyMoviesdata = [];
     this.getAllSports();
   }
-  
+
+   /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
   onScroll(event: any) {
     const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {

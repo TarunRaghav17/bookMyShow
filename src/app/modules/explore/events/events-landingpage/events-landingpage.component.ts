@@ -55,6 +55,10 @@ export class EventsLandingPageComponent {
     this.commonService.resetSelectedFiltersSignal()
   }
 
+/**
+* @description Display All Events Cards
+* @author Manu Shukla
+*/
   getAllEvents() {
     this.eventService.getAllEvents(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
@@ -68,6 +72,10 @@ export class EventsLandingPageComponent {
     })
   }
 
+  /**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.eventService.getFilters('date_filters'),
@@ -95,6 +103,11 @@ export class EventsLandingPageComponent {
     }
   }
 
+/**
+* @description Get Selected Filters cards by sending the Payload
+* @author Manu Shukla
+* @param  {event} - Object containing filter type and corresponding filter ID
+ */
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
@@ -123,6 +136,11 @@ export class EventsLandingPageComponent {
     this.commonService.handleEventFilter(event)
   }
 
+  /**
+* @description Remove Selected Filters by empty the payload array
+* @author Manu Shukla
+* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+*/
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -146,7 +164,11 @@ export class EventsLandingPageComponent {
     this.dummyMoviesdata = [];
     this.getAllEvents()
   }
-
+  
+  /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
   onScroll(event: any) {
     const element = event.target;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {

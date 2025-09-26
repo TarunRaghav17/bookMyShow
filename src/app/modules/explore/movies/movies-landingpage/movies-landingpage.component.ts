@@ -47,6 +47,10 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.getAllMovies()
   }
 
+  /**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.movieService.getFilters('languages'),
@@ -82,6 +86,11 @@ export class MovieLandingPageComponent implements OnDestroy {
     }
   }
 
+/**
+* @description Get Selected Filters cards by sending the Payload
+* @author Manu Shukla
+* @param  {event} - Object containing filter type and corresponding filter ID
+ */
   getFilter(event: any) {
     switch (event.type) {
       case 'Language':
@@ -102,6 +111,11 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.commonService.handleEventFilter(event)
   }
 
+  /**
+* @description Remove Selected Filters by empty the payload array
+* @author Manu Shukla
+* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+*/
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -120,6 +134,10 @@ export class MovieLandingPageComponent implements OnDestroy {
     this.getAllMovies()
   }
 
+/**
+* @description Display All Events Cards
+* @author Manu Shukla
+*/
   getAllMovies() {
     {
       this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
@@ -135,6 +153,10 @@ export class MovieLandingPageComponent implements OnDestroy {
     }
   }
 
+  /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
   onScroll(event: any) {
     const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
