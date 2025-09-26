@@ -1,7 +1,6 @@
-
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
-        <div class="main_container_box d-flex justify-content-center ">
+        <div class="main_container_box d-flex justify-content-center"(scroll)="onScroll($event)">
             <div class="col-8">
                 <div class="top_heading_movies  d-flex justify-content-between">
                     <div class="col-3 px-3">
@@ -15,14 +14,16 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion (filterEvent)="getFilter($event)">
+                                <app-filter-accordion (filterEvent)="getFilter($event)"
+                                    (clearFilterEvent)="clearFilter($event)">
                                 </app-filter-accordion>
                             </div>
                         </div>
                     </div>
                     <div class="col-9 d-block ">
                         <div class="top_bar_Comming_soon d-flex flex-column gap-3">
-                            <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                            <div class="d-flex gap-2 language_text py-2 flex-wrap border-danger">
+
                                 @for (item of commonService.selectedFiltersSignal(); track $index) {
                                 @for(i of item.data;track $index){
                                 <span [ngClass]="{selectedText: i.selected}" class="border-danger">
@@ -33,8 +34,7 @@
                                 @for (item of commonService.topFiltersArray()[1]?.data; track $index) {
                                 @if(!item.selected){
 
-                                <span [ngClass]="{selectedText: item.selected}"
-                                    (click)="commonService.handleEventFilter(item)">
+                                <span [ngClass]="{selectedText: item.selected}" (click)="commonService.handleEventFilter(item)">
                                     {{item.text}}
                                 </span>
                                 }
@@ -46,8 +46,9 @@
                                 <div class="d-flex justify-content-start align-items-start g-0">
                                     <div class="main_box_crasoule w-100 ">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div
-                                                class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start">
+                                            <div 
+                                                class="filter_text d-flex flex-wrap gap-3 py-3 justify-content-start align-items-start"     
+                                            >
                                                 @for (item of dummyMoviesdata; track $index) {
                                                 <ng-container class="overflow-hidden w-50">
                                                     <div class="col card_container">
@@ -74,7 +75,6 @@
                                                     </div>
                                                 </ng-container>
                                                 }
-                                                
                                             </div>
                                         </div>
                                     </div>
@@ -87,5 +87,3 @@
         </div>
     </div>
 </div>
-
-

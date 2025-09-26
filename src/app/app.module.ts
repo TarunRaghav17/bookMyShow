@@ -18,7 +18,9 @@ import { TheatreListComponent } from './shared/components/theatre-list/theatre-l
 import { AuthInterceptor } from './auth/interceptor/auth.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
+import { CommonModule } from '@angular/common';
 import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
+
 
 
 @NgModule({
@@ -29,11 +31,11 @@ import { BookingEventsComponent } from './shared/components/booking-events/booki
     ErrorPageComponent,
     SearchBoxComponent,
     TheatreListComponent,
-    BookingEventsComponent,
+    BookingEventsComponent
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
     AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule,
-    FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent,
+    FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent, CommonModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',

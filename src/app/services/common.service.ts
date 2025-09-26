@@ -20,7 +20,7 @@ export class CommonService {
   userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
-
+ 
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
@@ -95,11 +95,16 @@ export class CommonService {
       },
     ])
 
+  resetSelectedFiltersSignal() {
+  const reset = this.selectedFiltersSignal().map((group:any) => ({...group,data: [] }));
+  this.selectedFiltersSignal.set(reset);
+}
 
   setFiltersSignal(filters: any) {
     let modifiedFilters = this.formatFilters(filters)
     this.filtersSignal.set(modifiedFilters)
   }
+
   topFiltersArray = computed(() =>
     this.filtersSignal()
       .filter(group =>
@@ -154,6 +159,7 @@ export class CommonService {
       });
     });
   }
+ 
 
   /**
    * @description iniitalizes the topFilterArray
@@ -175,7 +181,7 @@ export class CommonService {
     this.filtersSignal().map((item: any) => {
       if (item.type == filter.type) {
         item.data.map((i: any) => {
-          if (i.text == filter.filterName.text) {
+          if (i?.text == filter.filterName?.text) {
             i.selected = !i.selected;
           }
         });
@@ -186,17 +192,19 @@ export class CommonService {
       item.type == filter.type
     )
     if (filterType.length > 0) {
-      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
+      let alreayExist = filterType[0].data.filter((i: any) => i?.text == filter.filterName?.text)
       if (alreayExist.length == 0) {
         filterType[0].data.push(filter.filterName)
         filterType[0].data.sort((a: any, b: any) => a.id - b.id)
         return filterType[0].data.sort((a: any, b: any) => a.index - b.index)
       }
       else {
-        filterType[0].data = filterType[0].data.filter((i: any) => i.text != filter.filterName.text)
+        filterType[0].data = filterType[0].data.filter((i: any) => i?.text != filter.filterName?.text)
       }
     }
   }
+
+
   /**
    * @description Convert base64 string to safe image URL for display
    * @author Gurmeet Kumar
@@ -358,7 +366,7 @@ export class CommonService {
           break;
 
         case 'Tags':
-          filteredData = data.map((i: any) => ({ ...i, text: i.tagsName, selected: false }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.tagName, selected: false }));
           break;
 
         case 'Release Month':
@@ -374,7 +382,9 @@ export class CommonService {
   }
 
   getAllVenuesBYcity(city: String): Observable<any> {
-    return this.http.get(`${this.baseUrl}/venues/city/${city}`)
+    return this.http.get(`${this.baseUrl}/venues/city/${city}`, {
+      context: new HttpContext().set(this.IS_PUBLIC_API, true)
+    })
   }
 
   /**
