@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
-import { movies, selectedFilters } from '../../../../../../db';
 import { PlaysService } from '../service/plays.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -11,12 +10,13 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './plays-landing-page.component.scss'
 })
 export class PlaysLandingPageComponent {
-  dummyMoviesdata: any[] | null = null;
+  dummyMoviesdata: any[] = []
   topFiltersArray!: any[]
-  originalMovies = movies
   filters: any[] = []
-  select: any[] = selectedFilters
   filtersArray: any[] = []
+  page: number = 0
+  size: number = 8
+  totalCount: number = 0
   sendPayload: any = {
     "type": "string",
     "dateFilters": [],
@@ -55,9 +55,11 @@ export class PlaysLandingPageComponent {
   }
 
   getAllPlays() {
-    this.playService.getAllPlays(this.sendPayload).subscribe({
+    this.playService.getAllPlays(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data || []
+        this.totalCount = res.data.count
+        let resData = res.data.content
+        this.dummyMoviesdata.push(...resData)
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -120,9 +122,12 @@ export class PlaysLandingPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllPlays()
     this.commonService.handleEventFilter(event)
   }
+
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -151,7 +156,16 @@ export class PlaysLandingPageComponent {
         break;
 
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllPlays()
   }
+  
+  onScroll(event: any) {
+    const element = event.target;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
+      this.page++;
+      this.getAllPlays();
+    }
+  }
 }
-

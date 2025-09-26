@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters, topFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { SportsService } from '../service/sports.service';
 import { forkJoin } from 'rxjs';
@@ -11,11 +10,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './sports-page.component.scss'
 })
 export class SportsPageComponent {
-  dummyMoviesdata: any[] | null = null
-  topFiltersArray: any[] = topFilters
-  originalMovies = movies
+  dummyMoviesdata: any[] = []
   filters: any[] = []
-  select: any[] = selectedFilters
+  page: number = 0
+  size: number = 8
+  totalCount: number = 0
   sendPayload: any = {
     "type": "string",
     "dateFilters": [],
@@ -38,7 +37,6 @@ export class SportsPageComponent {
     this.setFilter()
     this.sendPayload.type = 'Sports'
     this.getAllSports()
-
   }
 
   /**
@@ -52,15 +50,18 @@ export class SportsPageComponent {
   }
 
   getAllSports() {
-    this.sportService.getAllSports(this.sendPayload).subscribe({
+    this.sportService.getAllSports(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data
+        this.totalCount = res.data.count
+        let resData = res.data.content
+        this.dummyMoviesdata .push(...resData)
       },
       error: (err) => {
         this.toastr.error(err.message);
       }
     })
   }
+
   setFilter() {
     forkJoin([
       this.sportService.getFilters('date_filters'),
@@ -86,6 +87,7 @@ export class SportsPageComponent {
       array.push(id);
     }
   }
+
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
@@ -104,30 +106,41 @@ export class SportsPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllSports()
     this.commonService.handleEventFilter(event)
   }
+
   clearFilter(item: any) {
-    if(!item.type) return ;
-    switch(item){
+    if (!item.type) return;
+    switch (item) {
       case 'Date':
-      this.sendPayload.dateFilters=[]
-      break;
+        this.sendPayload.dateFilters = []
+        break;
 
       case 'Categories':
-      this.sendPayload.categories=[]
-      break;
+        this.sendPayload.categories = []
+        break;
 
       case 'More Filters':
-      this.sendPayload.morefilter=[]
-      break;
+        this.sendPayload.morefilter = []
+        break;
 
       case 'Prices':
-      this.sendPayload.Price=[]
-      break;
-
+        this.sendPayload.Price = []
+        break;
     }
-    this.getAllSports()
+    this.page = 0;
+    this.dummyMoviesdata = [];
+    this.getAllSports();
   }
-
+  
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
+      this.page++
+      this.getAllSports()
+    }
+  }
 }

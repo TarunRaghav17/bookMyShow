@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './upcomming-movies.component.scss'
 })
 export class UpcommingMoviesComponent {
-  dummyMoviesdata: any[] |null = null
+  dummyMoviesdata: any[] = []
   selectedFilters: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
@@ -20,6 +20,8 @@ export class UpcommingMoviesComponent {
   filters: any[] = []
   select: any[] = selectedFilters
   filtersArray: any[] = []
+  page: number = 0
+  size: number = 8
   sendPayload: any = {
     "type": "string",
     "languages": [],
@@ -38,12 +40,13 @@ export class UpcommingMoviesComponent {
     this.setFilter()
     this.sendPayload.type = 'Movie'
     this.getAllUpcomingMovies()
-   
+
   }
-  getAllUpcomingMovies(){
-     this.movieService.getAllMovies(this.sendPayload).subscribe({
+  getAllUpcomingMovies() {
+    this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data || []
+        let resData = res.data.content
+        this.dummyMoviesdata = [...this.dummyMoviesdata, ...resData].flat()
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -107,33 +110,43 @@ export class UpcommingMoviesComponent {
         this.toggleId(this.sendPayload.releaseMonths, event.filterName.releaseMonthId)
         break;
     }
-     this.getAllUpcomingMovies()
+    this.page = 0;
+    this.dummyMoviesdata = [];
+    this.getAllUpcomingMovies()
     this.commonService.handleEventFilter(event)
   }
 
-  clearFilter(item:any){
-    if(!item) return
-    switch(item){
-       case 'Language':
-        this.sendPayload.languages =[]
+  clearFilter(item: any) {
+    if (!item) return
+    switch (item) {
+      case 'Language':
+        this.sendPayload.languages = []
         break;
 
       case 'Genres':
-       this.sendPayload.genres =[]
+        this.sendPayload.genres = []
         break;
 
       case 'Formats':
-        this.sendPayload.formats =[]
+        this.sendPayload.formats = []
         break;
 
       case 'Tags':
-       this.sendPayload.tags =[]
+        this.sendPayload.tags = []
         break;
 
       case 'Release Month':
-        this.sendPayload.releaseMonths =[]
+        this.sendPayload.releaseMonths = []
         break;
     }
     this.getAllUpcomingMovies()
+  }
+
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
+      this.page++
+      this.getAllUpcomingMovies()
+    }
   }
 }

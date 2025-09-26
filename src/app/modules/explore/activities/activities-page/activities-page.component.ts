@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { ActivitiesService } from '../service/activities.service';
 import { forkJoin } from 'rxjs';
@@ -12,14 +11,13 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './activities-page.component.scss'
 })
 export class ActivitiesPageComponent {
-  dummyMoviesdata: any[]  =[]
-  originalMovies = movies
-  filters: any[] = []
-  select: any[] = selectedFilters
+  dummyMoviesdata: any[] = []
+  filters: any[] = [] 
   topFiltersArray!: any[]
   filtersArray: any[] = []
   page: number = 0
-  size: number = 5
+  size: number = 8
+  totalCount: number = 0
   sendPayload: any = {
     "type": "string",
     "categories": [],
@@ -68,19 +66,20 @@ export class ActivitiesPageComponent {
       }
     })
   }
-  getAllActivities(page?: number, size?: number) {
-    this.activitiesService.getAllActivities(this.sendPayload, page, size).subscribe({
-      next: (res) => {
-        let resData=res.data.content
-        this.dummyMoviesdata = [this.dummyMoviesdata,...resData].flat()
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
-  }
+getAllActivities() {
+  this.activitiesService.getAllActivities(this.sendPayload, this.page, this.size).subscribe({
+    next: (res) => {
+      this.totalCount = res.data.count;
+      let resData = res.data.content;
+      this.dummyMoviesdata.push(...resData);
+    },
+    error: (err) => {
+      this.toastr.error(err.message);
+    }
+  });
+}
 
-  toggleId(array: any[], id: any): void {
+toggleId(array: any[], id: any): void {
     const index = array.indexOf(id);
     if (index > -1) {
       array.splice(index, 1);
@@ -107,9 +106,12 @@ export class ActivitiesPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllActivities()
     this.commonService.handleEventFilter(event)
   }
+
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -126,13 +128,16 @@ export class ActivitiesPageComponent {
         this.sendPayload.price = [];
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllActivities()
   }
+  
   onScroll(event: any) {
     const element = event.target as HTMLElement;
-    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
-    this.page++
-   this.getAllActivities(this.page)
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
+      this.page++
+      this.getAllActivities()
     }
   }
 

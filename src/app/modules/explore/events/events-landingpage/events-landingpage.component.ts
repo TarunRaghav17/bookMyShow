@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../../services/common.service';
-import { movies, selectedFilters } from '../../../../../../db';
 import { EventService } from '../service/event.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -12,12 +11,13 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './events-landingpage.component.scss'
 })
 export class EventsLandingPageComponent {
-  dummyMoviesdata: any[] | null = null;
+  dummyMoviesdata: any[] = []
   topFiltersArray!: any[]
   filters!: any[]
-  select: any[] = selectedFilters
-  originalMovies = movies;
   filtersArray: any[] = [];
+  page: number = 0
+  size: number = 8
+  totalCount: number = 0
   sendPayload: any = {
     "type": "string",
     "dateFilters": [],
@@ -28,8 +28,7 @@ export class EventsLandingPageComponent {
   }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService) {
-    this.commonService._selectedCategory.set('Events');
-   
+  this.commonService._selectedCategory.set('Events');
   }
 
   /**
@@ -42,7 +41,7 @@ export class EventsLandingPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Event'
-     this.getAllEvents()
+    this.getAllEvents()
 
   }
   /**
@@ -53,13 +52,15 @@ export class EventsLandingPageComponent {
 */
 
   ngOnDestroy(): void {
-    this.commonService. resetSelectedFiltersSignal()
+    this.commonService.resetSelectedFiltersSignal()
   }
-  
+
   getAllEvents() {
-    this.eventService.getAllEvents(this.sendPayload).subscribe({
+    this.eventService.getAllEvents(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data || []
+        this.totalCount = res.data.count
+        let resData = res.data.content
+        this.dummyMoviesdata.push(...resData)
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -116,7 +117,8 @@ export class EventsLandingPageComponent {
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllEvents()
     this.commonService.handleEventFilter(event)
   }
@@ -140,7 +142,16 @@ export class EventsLandingPageComponent {
         this.sendPayload.price = [];
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllEvents()
   }
 
+  onScroll(event: any) {
+    const element = event.target;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
+      this.page++;
+      this.getAllEvents();
+    }
+  }
 }

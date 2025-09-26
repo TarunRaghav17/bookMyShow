@@ -13,14 +13,15 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './movies-landingpage.component.scss'
 })
 export class MovieLandingPageComponent implements OnDestroy {
-  dummyMoviesdata: any[] =[]
+  dummyMoviesdata: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
   filtersArray: any[] = []
   originalMovies = movies;
   select: any[] = selectedFilters
-  page:number = 0;
-  size:number = 5;
+  page: number = 0;
+  size: number = 8;
+  totalCount:number=0
   sendPayload: any = {
     "type": "string",
     "languages": [],
@@ -68,7 +69,6 @@ export class MovieLandingPageComponent implements OnDestroy {
 * @params  
 * @returnType void
 */
-
   ngOnDestroy(): void {
     this.commonService.resetSelectedFiltersSignal()
   }
@@ -96,6 +96,8 @@ export class MovieLandingPageComponent implements OnDestroy {
         this.toggleId(this.sendPayload.formats, event.filterName.formatId)
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllMovies()
     this.commonService.handleEventFilter(event)
   }
@@ -113,28 +115,31 @@ export class MovieLandingPageComponent implements OnDestroy {
         this.sendPayload.formats = [];
         break;
     }
+    this.page = 0;
+    this.dummyMoviesdata = [];
     this.getAllMovies()
   }
 
-  getAllMovies(page? :number,size? :number){ {
-    this.movieService.getAllMovies(this.sendPayload,page,size).subscribe({
-      next: (res) => {
-        let resData = res.data.content
-        this.dummyMoviesdata = [...this.dummyMoviesdata,...resData].flat() 
-            console.log(this.dummyMoviesdata)
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    });
+  getAllMovies(_isScrollEvent?: boolean) {
+    {
+      this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
+        next: (res) => {
+          this.totalCount=res.data.count
+          let resData = res.data.content
+          this.dummyMoviesdata.push(...resData)
+        },
+        error: (err) => {
+          this.toastr.error(err.message);
+        }
+      });
+    }
   }
-}
 
-   onScroll(event:any) {
-     const element = event.target as HTMLElement;
-    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
-     this.page++
-   this.getAllMovies(this.page)
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
+      this.page++
+      this.getAllMovies(true)
     }
   }
 }

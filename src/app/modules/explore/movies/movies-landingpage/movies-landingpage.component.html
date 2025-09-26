@@ -1,5 +1,4 @@
 <!-- Movies Section  -->
-
 <div class="conatiner-fluid mt-5 ">
     <div class="row g-0">
         <div class="main_container_box " (scroll)="onScroll($event)">
@@ -110,7 +109,7 @@
                                                                             aria-hidden="true"></i>
                                                                         <span
                                                                             class="text-white">{{item.imdbRating}}/10</span>
-                                                                        <span class="text-white">{{item.votes}}</span>
+                                                                        <span class="text-white">{{item.votes | numberFormat}} Votes</span>
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -136,7 +135,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
