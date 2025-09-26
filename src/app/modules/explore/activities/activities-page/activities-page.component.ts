@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component } from '@angular/core';
 import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { ActivitiesService } from '../service/activities.service';
@@ -128,7 +128,6 @@ export class ActivitiesPageComponent {
     }
     this.getAllActivities()
   }
-  @HostListener('window:scroll', ['$event'])
   onScroll(event: any) {
     const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight) {

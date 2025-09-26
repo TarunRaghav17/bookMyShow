@@ -58,8 +58,8 @@
   width: 225px;
   max-width: 225px;
 }
-.filter_text{
-  max-height: 775px;
+.main_container_box{
+  scrollbar-width: none;
+  max-height: 800px;
   overflow-y: auto;
-  // scrollbar-width: none;
 }

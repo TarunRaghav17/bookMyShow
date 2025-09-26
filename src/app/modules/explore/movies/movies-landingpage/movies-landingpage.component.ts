@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { Router } from '@angular/router';
@@ -130,7 +130,6 @@ export class MovieLandingPageComponent implements OnDestroy {
   }
 }
 
-   @HostListener('window:scroll',['$event'])
    onScroll(event:any) {
      const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
