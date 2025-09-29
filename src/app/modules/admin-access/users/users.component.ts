@@ -15,8 +15,6 @@ export class UsersComponent implements OnInit {
   openedDropdownId: string | null = null;
   usersData: any[] = [];
   searchText: string = '';
-  selectedRole: any;
-  singleUserDetail: any;
   constructor(
     private adminService: AdminService,
     private toastr: ToastrService
@@ -36,24 +34,6 @@ export class UsersComponent implements OnInit {
     this.adminService.getAllUsers().subscribe({
       next: (res) => {
         this.usersData = res.data.users;
-      },
-      error: (res) => {
-        this.toastr.error(res.message);
-      },
-    });
-  }
-
-  /**
-   * @description Get user details by userId, this.selectedRole this use purpose to auto patch in select Element Role
-   * @author Gurmeet Kumar
-   * @return void
-   * @param id
-   */
-  userGetById(id: any): void {
-    this.adminService.getUserById(id).subscribe({
-      next: (res: any) => {
-        this.singleUserDetail = res.data.user;
-        this.selectedRole = res.data.user.roleName;
       },
       error: (res) => {
         this.toastr.error(res.message);
@@ -144,7 +124,6 @@ export class UsersComponent implements OnInit {
       this.openedDropdownId = null;
     } else {
       this.openedDropdownId = userId;
-      this.userGetById(userId);
     }
   }
 
