@@ -95,10 +95,6 @@ export class CommonService {
       },
     ])
 
-  resetSelectedFiltersSignal() {
-  const reset = this.selectedFiltersSignal().map((group:any) => ({...group,data: [] }));
-  this.selectedFiltersSignal.set(reset);
-}
 
   setFiltersSignal(filters: any) {
     let modifiedFilters = this.formatFilters(filters)
@@ -160,7 +156,6 @@ export class CommonService {
     });
   }
  
-
   /**
    * @description iniitalizes the topFilterArray
    * @author Manu Shukla
@@ -204,7 +199,6 @@ export class CommonService {
     }
   }
 
-
   /**
    * @description Convert base64 string to safe image URL for display
    * @author Gurmeet Kumar
@@ -217,6 +211,11 @@ export class CommonService {
     }
   }
 
+  /**
+   * @description  Get event details by ID
+   * @author Manu Shukla
+   * @return Observable<any>
+   */
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`, {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
@@ -237,6 +236,7 @@ export class CommonService {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   }
+
   /**
    * @description Format data to patch YYYY/DD/MM
    * @author Gurmeet Kumar  
@@ -380,7 +380,12 @@ export class CommonService {
     });
     return filtersArray;
   }
-
+  
+  /**
+  * @description Get all venues by city
+  * @author  Manu 
+  * @return Observable<any>
+  */
   getAllVenuesBYcity(city: String): Observable<any> {
     return this.http.get(`${this.baseUrl}/venues/city/${city}`, {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
@@ -413,6 +418,26 @@ export class CommonService {
       { context: new HttpContext().set(this.loaderService.NO_LOADER, false) }
     )
   }
+ /**
+ * @description Clears the selected filter data for the specified filter type.
+ * @author Manu Shukla
+ */
+  clearSelectedFilterByType(type: string) {
+  const updated = this.selectedFiltersSignal().map((group: any) =>
+    group.type === type ? { ...group, data: [] } : group
+  );
+  this.selectedFiltersSignal.set(updated);
+}
 
+/**
+ * @description Resets all selected filters by clearing their data arrays.
+ * @author Manu Shukla
+ */
+resetSelectedFiltersSignal() {
+  const reset = this.selectedFiltersSignal().map(
+    (group: any) => ({ ...group, data: [] })
+  );
+  this.selectedFiltersSignal.set(reset);
+}
 }
 

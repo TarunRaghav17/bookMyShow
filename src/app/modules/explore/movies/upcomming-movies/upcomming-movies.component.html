@@ -14,7 +14,8 @@
                     <div class="col-3">
                         <div>
                             <div class="app_filter_box ">
-                                <app-filter-accordion (filterEvent)="getFilter($event)" (clearFilterEvent)="clearFilter($event)">
+                                <app-filter-accordion (filterEvent)="getFilter($event)"
+                                    (clearFilterEvent)="clearFilter($event)">
                                 </app-filter-accordion>
                             </div>
                         </div>
@@ -51,38 +52,48 @@
                                 <div class="main_box_crasoule">
                                     <div class="main_filter_card overflow-hidden">
                                         <div class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start ">
-                                            @for (item of dummyMoviesdata; track $index) {
-                                            @if (!item.releasedFlag) {
-                                            <ng-container class="overflow-hidden w-50">
-                                                <div class="col card_container">
-                                                    <div class="card shadow-sm">
-                                                        <a class="img_container rounded-4"
-                                                             [routerLink]="['/movie/',commonService._selectCity(),item.eventId]">
-                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)"
-                                                                [alt]="item.imageurl">
-                                                        </a>
-                                                        <div class="card-body rounded-bottom bg-dark">
-                                                            <div class="d-flex gap-2">
-                                                                <span class="text-white">
-                                                                    {{item.releasingOn}}
-                                                                </span>
-                                                            </div>
+                                            @if (dummyMoviesdata.length<=0 && !loaderService.loading()) { <div
+                                                class="d-flex flex-column gap-3 justify-content-center align-items-center w-100 no_data_found">
+                                                <img src="assets/images/No_result_found.png">
+                                                <p class="text-secondary">Your filter combination didn't fetch any
+                                                    results... Kindly reset to discover more.</p>
+                                                <button class="btn btn-outline-danger">Reset Filter</button>
+                                        </div>
+                                        }
+                                        @else {
+                                        @for (item of dummyMoviesdata; track $index) {
+                                        @if (!item.releasedFlag) {
+                                        <ng-container class="overflow-hidden w-50">
+                                            <div class="col card_container">
+                                                <div class="card shadow-sm">
+                                                    <a class="img_container rounded-4"
+                                                        [routerLink]="['/movie/',commonService._selectCity(),item.eventId]">
+                                                        <img [src]="commonService.getImageFromBase64(item.imageurl)"
+                                                            [alt]="item.imageurl">
+                                                    </a>
+                                                    <div class="card-body rounded-bottom bg-dark">
+                                                        <div class="d-flex gap-2">
+                                                            <span class="text-white">
+                                                                {{item.releasingOn}}
+                                                            </span>
                                                         </div>
                                                     </div>
-                                                    <div class="bottom_text_movie_card py-3">
-                                                        <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
-                                                        <span class="m-0">{{item.languages}}</span>
-                                                        <small class="d-flex align-items-center">
-                                                            <i class="fa fa-thumbs-up me-1 text-success"
-                                                                aria-hidden="true"></i>
-                                                            <span>{{item.likes | numberFormat}}</span>
-                                                        </small>
-                                                    </div>
                                                 </div>
-                                            </ng-container>
-                                            }
-                                            }
-                                        </div>
+                                                <div class="bottom_text_movie_card py-3">
+                                                    <h6 class="card-text m-0">{{item.name | truncate:25}} </h6>
+                                                    <span class="m-0">{{item.languages}}</span>
+                                                    <small class="d-flex align-items-center">
+                                                        <i class="fa fa-thumbs-up me-1 text-success"
+                                                            aria-hidden="true"></i>
+                                                        <span>{{item.likes | numberFormat}}</span>
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                        }
+                                        }
+                                        }
+
                                     </div>
                                 </div>
                             </div>
@@ -93,4 +104,4 @@
         </div>
     </div>
 </div>
-
+</div>

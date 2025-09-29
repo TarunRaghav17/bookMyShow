@@ -3,6 +3,7 @@ import { CommonService } from '../../../../services/common.service';
 import { SportsService } from '../service/sports.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../services/loader.service';
 @Component({
   selector: 'app-sports-page',
   standalone: false,
@@ -15,6 +16,7 @@ export class SportsPageComponent {
   page: number = 0
   size: number = 8
   totalCount: number = 0
+  shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
     "dateFilters": [],
@@ -23,7 +25,7 @@ export class SportsPageComponent {
     "prices": [],
   }
 
-  constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService) {
+  constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.commonService._selectedCategory.set('Sports');
   }
   /**
@@ -58,7 +60,7 @@ export class SportsPageComponent {
       next: (res) => {
         this.totalCount = res.data.count
         let resData = res.data.content
-        this.dummyMoviesdata .push(...resData)
+        this.dummyMoviesdata.push(...resData)
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -66,10 +68,10 @@ export class SportsPageComponent {
     })
   }
 
-/**
-* @description Set All Filters by using ForkJoin 
-* @author Manu Shukla
-*/
+  /**
+  * @description Set All Filters by using ForkJoin 
+  * @author Manu Shukla
+  */
   setFilter() {
     forkJoin([
       this.sportService.getFilters('date_filters'),
@@ -96,11 +98,11 @@ export class SportsPageComponent {
     }
   }
 
-/**
-* @description Get Selected Filters cards by sending the Payload
-* @author Manu Shukla
-* @param  {event} - Object containing filter type and corresponding filter ID
- */
+  /**
+  * @description Get Selected Filters cards by sending the Payload
+  * @author Manu Shukla
+  * @param  {event} - Object containing filter type and corresponding filter ID
+   */
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
@@ -115,7 +117,7 @@ export class SportsPageComponent {
         this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
-      case 'Prices':
+      case 'Price':
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
@@ -125,36 +127,68 @@ export class SportsPageComponent {
     this.commonService.handleEventFilter(event)
   }
 
-/**
-* @description Remove Selected Filters by empty the payload array
-* @author Manu Shukla
-* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
-*/
+  /**
+  * @description Remove Selected Filters by empty the payload array
+  * @author Manu Shukla
+  * @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+  */
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
       case 'Date':
-        this.sendPayload.dateFilters = []
+        if (this.sendPayload.dateFilters.length > 0) {
+          this.sendPayload.dateFilters = [];
+          this.commonService.clearSelectedFilterByType('Date');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Categories':
-        this.sendPayload.categories = []
+        if (this.sendPayload.categories.length > 0) {
+          this.sendPayload.categories = [];
+          this.commonService.clearSelectedFilterByType('Categories');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'More Filters':
-        this.sendPayload.morefilter = []
+        if (this.sendPayload.morefilter.length > 0) {
+          this.sendPayload.morefilter = [];
+          this.commonService.clearSelectedFilterByType('More Filters');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
-      case 'Prices':
-        this.sendPayload.Price = []
+      case 'Price':
+        if (this.sendPayload.price.length > 0) {
+          this.sendPayload.price = [];
+          this.commonService.clearSelectedFilterByType('Price');
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      default:
         break;
     }
-    this.page = 0;
-    this.dummyMoviesdata = [];
-    this.getAllSports();
+    if(this.shouldCallAPI){
+      this.page = 0;
+      this.dummyMoviesdata = [];
+      this.getAllSports();
+    }
   }
 
-   /**
+  /**
 * @description Pagination - Load More Activities Cards on Scroll
 * @author Manu Shukla
 */

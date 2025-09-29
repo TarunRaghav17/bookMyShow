@@ -40,20 +40,19 @@ export class FilterAccordionComponent implements OnInit {
   applyFilter(filter: any) {
     this.filterEvent.emit(filter)
   }
-
+ 
   clearAllFilters(item: any, index: number, type: string = ''): void {
-    let { selectedType, data } = item
-    data.filter((item: any) => {
-      item.selected = false
-    })
-    this.commonService.selectedFiltersSignal().filter((item: any) => {
-      if (item.selectedType == selectedType) {
-        item.data = []
-        this.toggleAccordion(index)
-      }
-    })
-    if (type) {
-      this.clearFilterEvent.emit(type)
+    let { selectedType, data } = item;
+    const hasSelected = data.some((i: any) => i.selected);
+    if (!hasSelected) {
+      return;
     }
-  };
+    data.forEach((i: any) => (i.selected = false));
+    this.commonService.clearSelectedFilterByType(selectedType);
+    this.toggleAccordion(index);
+    if (type) {
+      this.clearFilterEvent.emit(type);
+    }
+  }
+
 }
