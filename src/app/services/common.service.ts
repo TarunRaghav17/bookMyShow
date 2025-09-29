@@ -1,3 +1,4 @@
+import { LoaderService } from './loader.service';
 import { computed, Injectable, signal } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment.development';
@@ -19,9 +20,11 @@ export class CommonService {
   userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
-
-  constructor(private http: HttpClient,
-    private sanitizer: DomSanitizer
+ 
+  constructor(
+    private http: HttpClient,
+    private sanitizer: DomSanitizer,
+    private loaderService: LoaderService
   ) { }
 
   setUserLangFormat(payload: any) {
@@ -97,6 +100,7 @@ export class CommonService {
     let modifiedFilters = this.formatFilters(filters)
     this.filtersSignal.set(modifiedFilters)
   }
+
   topFiltersArray = computed(() =>
     this.filtersSignal()
       .filter(group =>
@@ -151,7 +155,7 @@ export class CommonService {
       });
     });
   }
-
+ 
   /**
    * @description iniitalizes the topFilterArray
    * @author Manu Shukla
@@ -172,7 +176,7 @@ export class CommonService {
     this.filtersSignal().map((item: any) => {
       if (item.type == filter.type) {
         item.data.map((i: any) => {
-          if (i.text == filter.filterName.text) {
+          if (i?.text == filter.filterName?.text) {
             i.selected = !i.selected;
           }
         });
@@ -183,17 +187,18 @@ export class CommonService {
       item.type == filter.type
     )
     if (filterType.length > 0) {
-      let alreayExist = filterType[0].data.filter((i: any) => i.text == filter.filterName.text)
+      let alreayExist = filterType[0].data.filter((i: any) => i?.text == filter.filterName?.text)
       if (alreayExist.length == 0) {
         filterType[0].data.push(filter.filterName)
         filterType[0].data.sort((a: any, b: any) => a.id - b.id)
         return filterType[0].data.sort((a: any, b: any) => a.index - b.index)
       }
       else {
-        filterType[0].data = filterType[0].data.filter((i: any) => i.text != filter.filterName.text)
+        filterType[0].data = filterType[0].data.filter((i: any) => i?.text != filter.filterName?.text)
       }
     }
   }
+
   /**
    * @description Convert base64 string to safe image URL for display
    * @author Gurmeet Kumar
@@ -206,6 +211,11 @@ export class CommonService {
     }
   }
 
+  /**
+   * @description  Get event details by ID
+   * @author Manu Shukla
+   * @return Observable<any>
+   */
   getEventDetailsById(id: any): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${id}`, {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
@@ -226,6 +236,7 @@ export class CommonService {
     const year = d.getFullYear();
     return `${month}/${day}/${year}`;
   }
+
   /**
    * @description Format data to patch YYYY/DD/MM
    * @author Gurmeet Kumar  
@@ -355,7 +366,7 @@ export class CommonService {
           break;
 
         case 'Tags':
-          filteredData = data.map((i: any) => ({ ...i, text: i.tagsName, selected: false }));
+          filteredData = data.map((i: any) => ({ ...i, text: i.tagName, selected: false }));
           break;
 
         case 'Release Month':
@@ -369,9 +380,64 @@ export class CommonService {
     });
     return filtersArray;
   }
-
+  
+  /**
+  * @description Get all venues by city
+  * @author  Manu 
+  * @return Observable<any>
+  */
   getAllVenuesBYcity(city: String): Observable<any> {
-    return this.http.get(`${this.baseUrl}/venues/city/${city}`)
+    return this.http.get(`${this.baseUrl}/venues/city/${city}`, {
+      context: new HttpContext().set(this.IS_PUBLIC_API, true)
+    })
   }
+
+  /**
+  * @description get all notification by userId
+  * @author Gurmeet Kumar  
+  * @return Notification json data
+  */
+  getAllnotification(userId?: number, pageNumber?: number, size?: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/notifications/get-notification/${userId}?page=${pageNumber}&size=${size}`,
+      { context: new HttpContext().set(this.loaderService.NO_LOADER, false) }
+    )
+  }
+  /**
+* @description Change  Notification Read flag
+* @author Gurmeet Kumar  
+*/
+  readNotification(userID: number, notificationId: number): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/api/notifications/${userID}/${notificationId}/read`, { userID, notificationId })
+  }
+  /**
+  * @description  Notification unreadRead get count  
+  * @author Gurmeet Kumar  
+  */
+  unReadNotification(userId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/notifications/get-notification-unread-count/${userId}`,
+      { context: new HttpContext().set(this.loaderService.NO_LOADER, false) }
+    )
+  }
+ /**
+ * @description Clears the selected filter data for the specified filter type.
+ * @author Manu Shukla
+ */
+  clearSelectedFilterByType(type: string) {
+  const updated = this.selectedFiltersSignal().map((group: any) =>
+    group.type === type ? { ...group, data: [] } : group
+  );
+  this.selectedFiltersSignal.set(updated);
+}
+
+/**
+ * @description Resets all selected filters by clearing their data arrays.
+ * @author Manu Shukla
+ */
+resetSelectedFiltersSignal() {
+  const reset = this.selectedFiltersSignal().map(
+    (group: any) => ({ ...group, data: [] })
+  );
+  this.selectedFiltersSignal.set(reset);
+}
 }
 

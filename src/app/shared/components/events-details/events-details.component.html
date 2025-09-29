@@ -22,8 +22,7 @@
                         </div>
                         <div class="col-4 text-end ">
                             <p class="likes_interested"> <i class="fa fa-thumbs-up me-1 text-success"
-                                    aria-hidden="true"></i>You &
-                                89.9k are interested
+                                    aria-hidden="true"></i>{{eventDetails?.likes| numberFormat}} are interested
                             </p>
                         </div>
                     </div>
@@ -117,7 +116,7 @@
 <div class="top_bar d-flex justify-content-center align-items-center bg-white border shadow-sm"
     [class.show]="showHeader">
     <div class="col-8 d-flex align-items-center gap-3 py-3">
-        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3" aria-hidden="true"></i>
+        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3" aria-hidden="true" (click)="openShareModal(shareModal)"></i>
         </span>
     </div>
 </div>

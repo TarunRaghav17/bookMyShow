@@ -7,7 +7,6 @@ import { CommonService } from '../../../../services/common.service';
   providedIn: 'root'
 })
 export class MovieService {
-
   constructor(private http: HttpClient,private commonService:CommonService) { }
 
   base_url = 'http://172.31.252.101:8080/bookmyshow'
@@ -19,8 +18,8 @@ export class MovieService {
     })
   }
 
-  getAllMovies(body:any):Observable<any>{
-    return this.http.post(`${this.base_url}/api/events/filter`,body,{
+  getAllMovies(body:any,page:number=0,size:number=8):Observable<any>{
+    return this.http.post(`${this.base_url}/api/events/filter?page=${page}&size=${size}`,body,{
     context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
   })
   }

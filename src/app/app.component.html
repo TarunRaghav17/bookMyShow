@@ -2,15 +2,13 @@
     <header>
         <app-header></app-header>
     </header>
-    <main>
-
+    <main class="content">
         @if(loaderService.loading()){
         <div class="loader-overlay">
             <div class="spinner">
             </div>
         </div>
         }
-
         <router-outlet></router-outlet>
     </main>
     <footer>

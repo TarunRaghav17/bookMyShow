@@ -4,6 +4,7 @@ import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../services/loader.service';
 
 @Component({
   selector: 'app-upcomming-movies',
@@ -12,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './upcomming-movies.component.scss'
 })
 export class UpcommingMoviesComponent {
-  dummyMoviesdata: any[] |null = null
+  dummyMoviesdata: any[] = []
   selectedFilters: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
@@ -20,6 +21,9 @@ export class UpcommingMoviesComponent {
   filters: any[] = []
   select: any[] = selectedFilters
   filtersArray: any[] = []
+  page: number = 0
+  size: number = 8
+  shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
     "languages": [],
@@ -30,16 +34,21 @@ export class UpcommingMoviesComponent {
     "dateFilters": []
   }
 
-  constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
+  constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Movie'
-    this.movieService.getAllMovies(this.sendPayload).subscribe({
+    this.getAllUpcomingMovies()
+
+  }
+  getAllUpcomingMovies() {
+    this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
-        this.dummyMoviesdata = res.data || []
+        let resData = res.data.content
+        this.dummyMoviesdata = [...this.dummyMoviesdata, ...resData].flat()
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -71,7 +80,7 @@ export class UpcommingMoviesComponent {
   }
 
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetSelectedFiltersSignal()
   }
   toggleId(array: any[], id: any): void {
     const index = array.indexOf(id);
@@ -103,14 +112,85 @@ export class UpcommingMoviesComponent {
         this.toggleId(this.sendPayload.releaseMonths, event.filterName.releaseMonthId)
         break;
     }
-    this.movieService.getAllMovies(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.page = 0;
+    this.dummyMoviesdata = [];
+    this.getAllUpcomingMovies()
     this.commonService.handleEventFilter(event)
+  }
+
+  clearFilter(item: any) {
+    if (!item) return;
+    switch (item) {
+      case 'Language':
+        if (this.sendPayload.languages.length > 0) {
+          this.sendPayload.languages = [];
+          this.commonService.clearSelectedFilterByType('Language');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'Genres':
+        if (this.sendPayload.genres.length > 0) {
+          this.sendPayload.genres = [];
+          this.commonService.clearSelectedFilterByType('Genres');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'Formats':
+        if (this.sendPayload.formats.length > 0) {
+          this.sendPayload.formats = [];
+          this.commonService.clearSelectedFilterByType('Formats');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'Tags':
+        if (this.sendPayload.tags.length > 0) {
+          this.sendPayload.tags = [];
+          this.commonService.clearSelectedFilterByType('Tags');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'Release Month':
+        if (this.sendPayload.releaseMonths.length > 0) {
+          this.sendPayload.releaseMonths = [];
+          this.commonService.clearSelectedFilterByType('Release Month');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      default:
+        break;
+    }
+    if(this.shouldCallAPI){
+      this.page = 0;
+      this.dummyMoviesdata = [];
+      this.getAllUpcomingMovies();
+    }
+  }
+
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
+      this.page++
+      this.getAllUpcomingMovies()
+    }
   }
 }

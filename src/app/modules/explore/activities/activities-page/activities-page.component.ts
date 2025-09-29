@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { ActivitiesService } from '../service/activities.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../services/loader.service';
 
 @Component({
   selector: 'app-activities-page',
@@ -12,12 +12,15 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './activities-page.component.scss'
 })
 export class ActivitiesPageComponent {
-  dummyMoviesdata: any[] | null = null;
-  originalMovies = movies
+  dummyMoviesdata: any[] = []
   filters: any[] = []
-  select: any[] = selectedFilters
   topFiltersArray!: any[]
   filtersArray: any[] = []
+  page: number = 0
+  size: number = 8
+  totalCount: number = 0
+  shouldCallAPI:boolean = false
+   
   sendPayload: any = {
     "type": "string",
     "categories": [],
@@ -25,38 +28,32 @@ export class ActivitiesPageComponent {
     "morefilter": [],
     "dateFilters": []
   }
-  constructor(public commonService: CommonService, private activitiesService: ActivitiesService, private toastr: ToastrService) {
+  constructor(public commonService: CommonService, private activitiesService: ActivitiesService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.commonService._selectedCategory.set('Activities');
   }
   /**
  * @description initialize Top Filters
  * @author Manu Shukla
- * @params  
  * @returnType void
  */
 
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Activities'
-    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data||[]
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.getAllActivities()
   }
   /**
 * @description Remove Already Selected Filters along with selected Category
 * @author Manu Shukla
-* @params  
-* @returnType void
 */
   ngOnDestroy(): void {
-    this.commonService.resetfilterAccordian(this.commonService.filtersSignal())
+    this.commonService.resetSelectedFiltersSignal()
   }
 
+  /**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.activitiesService.getFilters('date_filters'),
@@ -74,6 +71,23 @@ export class ActivitiesPageComponent {
     })
   }
 
+  /**
+  * @description Display All Activities Cards
+  * @author Manu Shukla
+  */
+  getAllActivities() {
+    this.activitiesService.getAllActivities(this.sendPayload, this.page, this.size).subscribe({
+      next: (res) => {
+        this.totalCount = res.data.count;
+        let resData = res.data.content;
+        this.dummyMoviesdata.push(...resData);
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
+      }
+    });
+  }
+
   toggleId(array: any[], id: any): void {
     const index = array.indexOf(id);
     if (index > -1) {
@@ -83,7 +97,13 @@ export class ActivitiesPageComponent {
     }
   }
 
+  /**
+  * @description Get Selected Filters cards by sending the Payload
+  * @author Manu Shukla
+  * @param  {event} - Object containing filter type and corresponding filter ID
+   */
   getFilter(event: any) {
+    console.log(event);
     switch (event.type) {
       case 'Date':
         this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
@@ -96,18 +116,84 @@ export class ActivitiesPageComponent {
         this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
-      case 'Prices':
+      case 'Price':
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
-    this.activitiesService.getAllActivities(this.sendPayload).subscribe({
-      next: (res) => {
-        this.dummyMoviesdata = res.data
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
-    })
+    this.page = 0;
+    this.dummyMoviesdata = [];
+    this.getAllActivities()
     this.commonService.handleEventFilter(event)
+  }
+
+  /**
+  * @description Remove Selected Filters by empty the payload array
+  * @author Manu Shukla
+  * @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+  */
+  clearFilter(item: any) {
+    if (!item) return;
+
+     switch (item) {
+      
+      case 'Date':
+        if ( this.sendPayload.dateFilters.length> 0) {
+          this.sendPayload.dateFilters = [];
+          this.commonService.clearSelectedFilterByType('Date');
+          this.shouldCallAPI = true
+        }else{
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'Categories':
+        if(this.sendPayload.categories.length>0){
+          this.sendPayload.categories = [];
+          this.commonService.clearSelectedFilterByType('Categories');
+          this.shouldCallAPI=true
+        }else{
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'More Filters':
+        if(this.sendPayload.more_filters.length>0){
+          this.sendPayload.morefilter = [];
+          this.commonService.clearSelectedFilterByType('More Filters');
+          this.shouldCallAPI=true
+        }else{
+          this.shouldCallAPI = false
+        }
+        break;
+
+      case 'Price':
+        if(this.sendPayload.price.length>0){
+          this.sendPayload.price = [];
+          this.commonService.clearSelectedFilterByType('Price');
+          this.shouldCallAPI = true
+        }else{
+          this.shouldCallAPI = false
+        }
+        break;
+
+      default:
+        break;
+    }
+    if(this.shouldCallAPI){
+      this.page = 0;
+      this.dummyMoviesdata = [];
+      this.getAllActivities();
+    }
+  }
+  /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
+  onScroll(event: any) {
+    const element = event.target as HTMLElement;
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount) {
+      this.page++
+      this.getAllActivities()
+    }
   }
 }
