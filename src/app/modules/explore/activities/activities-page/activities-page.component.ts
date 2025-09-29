@@ -150,7 +150,7 @@ export class ActivitiesPageComponent {
         if(this.sendPayload.categories.length>0){
           this.sendPayload.categories = [];
           this.commonService.clearSelectedFilterByType('Categories');
-          this,this.shouldCallAPI=true
+          this.shouldCallAPI=true
         }else{
           this.shouldCallAPI = false
         }
