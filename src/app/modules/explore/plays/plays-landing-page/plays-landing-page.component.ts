@@ -3,6 +3,7 @@ import { CommonService } from '../../../../services/common.service';
 import { PlaysService } from '../service/plays.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../services/loader.service';
 @Component({
   selector: 'app-plays-landing-page',
   standalone: false,
@@ -17,6 +18,7 @@ export class PlaysLandingPageComponent {
   page: number = 0
   size: number = 8
   totalCount: number = 0
+  shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
     "dateFilters": [],
@@ -27,7 +29,7 @@ export class PlaysLandingPageComponent {
     "price": [],
   }
 
-  constructor(public commonService: CommonService, private playService: PlaysService, private toastr: ToastrService) {
+  constructor(public commonService: CommonService, private playService: PlaysService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.commonService._selectedCategory.set('Plays');
   }
 
@@ -53,10 +55,10 @@ export class PlaysLandingPageComponent {
   ngOnDestroy(): void {
     this.commonService.resetSelectedFiltersSignal()
   }
-/**
-* @description Display All Plays Cards
-* @author Manu Shukla
-*/
+  /**
+  * @description Display All Plays Cards
+  * @author Manu Shukla
+  */
   getAllPlays() {
     this.playService.getAllPlays(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
@@ -71,10 +73,10 @@ export class PlaysLandingPageComponent {
     )
   }
 
-/**
-* @description Set All Filters by using ForkJoin 
-* @author Manu Shukla
-*/
+  /**
+  * @description Set All Filters by using ForkJoin 
+  * @author Manu Shukla
+  */
   setFilter() {
     forkJoin([
       this.playService.getFilters('date_filters'),
@@ -103,11 +105,11 @@ export class PlaysLandingPageComponent {
     }
   }
 
-/**
-* @description Get Selected Filters cards by sending the Payload
-* @author Manu Shukla
-* @param  {event} - Object containing filter type and corresponding filter ID
- */
+  /**
+  * @description Get Selected Filters cards by sending the Payload
+  * @author Manu Shukla
+  * @param  {event} - Object containing filter type and corresponding filter ID
+   */
   getFilter(event: any) {
     switch (event.type) {
       case 'Date':
@@ -130,7 +132,7 @@ export class PlaysLandingPageComponent {
         this.toggleId(this.sendPayload.morefilter, event.filterName.moreFilterId);
         break;
 
-      case 'Prices':
+      case 'Price':
         this.toggleId(this.sendPayload.price, event.filterName.priceId);
         break;
     }
@@ -149,36 +151,81 @@ export class PlaysLandingPageComponent {
     if (!item) return;
     switch (item) {
       case 'Date':
-        this.sendPayload.dateFilters = []
+        if (this.sendPayload.dateFilters.length > 0) {
+          this.sendPayload.dateFilters = [];
+          this.commonService.clearSelectedFilterByType('Date');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Language':
-        this.sendPayload.languages = []
+        if (this.sendPayload.languages.length > 0) {
+          this.sendPayload.languages = [];
+          this.commonService.clearSelectedFilterByType('Language');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Genres':
-        this.sendPayload.genres = []
+        if (this.sendPayload.genres.length > 0) {
+          this.sendPayload.genres = [];
+          this.commonService.clearSelectedFilterByType('Genres');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
-      case 'Categories':
-        this.sendPayload.categories = []
+      case 'categories':
+        if (this.sendPayload.categories.length > 0) {
+          this.sendPayload.categories = [];
+          this.commonService.clearSelectedFilterByType('Categories');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'More Filters':
-        this.sendPayload.morefilter = []
+        if (this.sendPayload.morefilter.length > 0) {
+          this.sendPayload.morefilter = [];
+          this.commonService.clearSelectedFilterByType('More Filters');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
-      case 'Prices':
-        this.sendPayload.price = []
+      case 'Price':
+        if(this.sendPayload.price.length > 0){
+          this.sendPayload.price = [];
+          this.commonService.clearSelectedFilterByType('Price');
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
+      default:
+      break;
     }
-    this.page = 0;
-    this.dummyMoviesdata = [];
-    this.getAllPlays()
+    if(this.shouldCallAPI){
+      this.page = 0;
+      this.dummyMoviesdata = [];
+      this.getAllPlays();
+    }
   }
-  
-    /**
+
+  /**
 * @description Pagination - Load More Activities Cards on Scroll
 * @author Manu Shukla
 */

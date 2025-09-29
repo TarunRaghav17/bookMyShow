@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { MovieService } from '../service/movie-service.service';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../services/loader.service';
 
 @Component({
   selector: 'app-movie',
@@ -21,7 +22,8 @@ export class MovieLandingPageComponent implements OnDestroy {
   select: any[] = selectedFilters
   page: number = 0;
   size: number = 8;
-  totalCount:number=0
+  totalCount: number = 0
+  shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
     "languages": [],
@@ -29,7 +31,7 @@ export class MovieLandingPageComponent implements OnDestroy {
     "formats": [],
   }
 
-  constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService) {
+  constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
@@ -86,11 +88,11 @@ export class MovieLandingPageComponent implements OnDestroy {
     }
   }
 
-/**
-* @description Get Selected Filters cards by sending the Payload
-* @author Manu Shukla
-* @param  {event} - Object containing filter type and corresponding filter ID
- */
+  /**
+  * @description Get Selected Filters cards by sending the Payload
+  * @author Manu Shukla
+  * @param  {event} - Object containing filter type and corresponding filter ID
+   */
   getFilter(event: any) {
     switch (event.type) {
       case 'Language':
@@ -118,31 +120,61 @@ export class MovieLandingPageComponent implements OnDestroy {
 */
   clearFilter(item: any) {
     if (!item) return;
+
     switch (item) {
       case 'Language':
-        this.sendPayload.languages = [];
+        if (this.sendPayload.languages.length> 0) {
+          this.sendPayload.languages = [];
+          this.commonService.clearSelectedFilterByType('Language');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
+
       case 'Genres':
-        this.sendPayload.genres = [];
+        if (this.sendPayload.genres.length> 0) {
+          this.sendPayload.genres = [];
+          this.commonService.clearSelectedFilterByType('Genres');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
+
       case 'Formats':
-        this.sendPayload.formats = [];
+        if(this.sendPayload.formats.length> 0){
+          this.sendPayload.formats = [];
+          this.commonService.clearSelectedFilterByType('Formats');
+          this.shouldCallAPI=true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
+
+      default:
+      break;
     }
-    this.page = 0;
-    this.dummyMoviesdata = [];
-    this.getAllMovies()
+    if(this.shouldCallAPI){
+      this.page = 0;
+      this.dummyMoviesdata = [];
+      this.getAllMovies();
+    }
   }
 
-/**
-* @description Display All Events Cards
-* @author Manu Shukla
-*/
+
+  /**
+  * @description Display All Events Cards
+  * @author Manu Shukla
+  */
   getAllMovies() {
     {
       this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
         next: (res) => {
-          this.totalCount=res.data.count
+          this.totalCount = res.data.count
           let resData = res.data.content
           this.dummyMoviesdata.push(...resData)
         },

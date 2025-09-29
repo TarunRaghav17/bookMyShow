@@ -4,6 +4,7 @@ import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { LoaderService } from '../../../../services/loader.service';
 
 @Component({
   selector: 'app-upcomming-movies',
@@ -22,6 +23,7 @@ export class UpcommingMoviesComponent {
   filtersArray: any[] = []
   page: number = 0
   size: number = 8
+  shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
     "languages": [],
@@ -32,7 +34,7 @@ export class UpcommingMoviesComponent {
     "dateFilters": []
   }
 
-  constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService) {
+  constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.selectedCity = this.commonService._selectCity()
     this.commonService._selectedCategory.set('Movies');
   }
@@ -117,29 +119,71 @@ export class UpcommingMoviesComponent {
   }
 
   clearFilter(item: any) {
-    if (!item) return
+    if (!item) return;
     switch (item) {
       case 'Language':
-        this.sendPayload.languages = []
+        if (this.sendPayload.languages.length > 0) {
+          this.sendPayload.languages = [];
+          this.commonService.clearSelectedFilterByType('Language');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Genres':
-        this.sendPayload.genres = []
+        if (this.sendPayload.genres.length > 0) {
+          this.sendPayload.genres = [];
+          this.commonService.clearSelectedFilterByType('Genres');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Formats':
-        this.sendPayload.formats = []
+        if (this.sendPayload.formats.length > 0) {
+          this.sendPayload.formats = [];
+          this.commonService.clearSelectedFilterByType('Formats');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Tags':
-        this.sendPayload.tags = []
+        if (this.sendPayload.tags.length > 0) {
+          this.sendPayload.tags = [];
+          this.commonService.clearSelectedFilterByType('Tags');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
         break;
 
       case 'Release Month':
-        this.sendPayload.releaseMonths = []
+        if (this.sendPayload.releaseMonths.length > 0) {
+          this.sendPayload.releaseMonths = [];
+          this.commonService.clearSelectedFilterByType('Release Month');
+          this.shouldCallAPI = true
+        }
+        else {
+          this.shouldCallAPI = false
+        }
+        break;
+
+      default:
         break;
     }
-    this.getAllUpcomingMovies()
+    if(this.shouldCallAPI){
+      this.page = 0;
+      this.dummyMoviesdata = [];
+      this.getAllUpcomingMovies();
+    }
   }
 
   onScroll(event: any) {
