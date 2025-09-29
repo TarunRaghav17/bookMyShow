@@ -53,7 +53,6 @@
             <div class="invalid-feedback">Must be a 6-digit PIN.</div>
         </div>
     </div>
-
     <!-- Venue Type -->
     <div class="row">
         <div class="w-50 mb-0">
@@ -67,7 +66,6 @@
             </select>
             <div class="invalid-feedback">Please select a type.</div>
         </div>
-
         <!-- Supported Categories -->
         <div ngbDropdown [autoClose]="'outside'" class="w-50 mb-0">
             <label>Supported Categories</label>
@@ -138,7 +136,7 @@
                     </div>
                     <div class="col-3">
                         <label class="form-label">Columns</label>
-                        <input type="number" class="form-control" placeholder="10" min="10" max="25"
+                        <input type="number" class="form-control" placeholder="12" min="12" max="25"
                             formControlName="cols"
                             [ngClass]="{'is-invalid': layout.get('cols')?.touched && layout.get('cols')?.invalid }">
                         @if(layout.get('cols')?.touched && layout.get('cols')?.hasError('pattern')){
@@ -169,41 +167,7 @@
         }
     </div>
     }
-    <!-- Time Slots
-    <div class="row mt-3 " formArrayName="timeSlots">
-        <div class="d-flex justify-content-start gap-5 align-items-center mt-3 px-5 ms-5">
-            <h4 class="px-2">Time Slots</h4>
-            <button type="button" class="btn btn-success  " (click)="addTimeSlot()">
-                Add Slot
-            </button>
-            <div class="d-flex justify-content-start gap-5 align-items-center  w-50">
-                <h4 class="px-2">Slot Duration</h4>
-                <select class="form-select w-50" (change)="onSlotDurationChange($event)">
-                    @for(time of [60,120,180];track $index){
-                    <option value="{{time}}">{{time}}</option>
-                    }
 
-                </select>
-            </div>
-        </div>
-        <div class="d-flex align-items-center justify-content-center mb-3 flex-wrap gap-2 ">
-            @for(slot of timeSlots.controls;track $index){
-            <div class="d-flex  card col-2 my-3 mb-1 p-3" [formGroupName]="$index">
-                <div class="mb-3 w-100">
-                    <label class="form-label">Start Time</label>
-                    <input type="time" class="form-control" placeholder="Enter Start Time" formControlName="startTime"
-                        (change)="onSlotStartTimeChange(slot,$index)" [attr.min]="this.getPrevEndTime($index)">
-                </div>
-                <div class="mb-3 w-100">
-                    <label class="form-label">End Time</label>
-                    <input type="time" class="form-control" placeholder="Enter End Time" formControlName="endTime">
-                </div>
-                <button type="button" class="btn btn-sm btn-outline-danger my-2 col--4 ms-auto "
-                    (click)="removeTimeSlot($index)">Remove</button>
-            </div>
-            }
-        </div>
-    </div> -->
     <div formArrayName="amenities" class="my-3 ">
         <h5>Amenities</h5>
         <ul class="list-group d-flex flex-row align-items-center justify-content-start gap-3">

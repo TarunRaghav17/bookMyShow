@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
 import { ShowsService } from '../create-show/shows-services/shows.service';
 import { CommonService } from '../../../services/common.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-create-content',
@@ -46,13 +47,14 @@ export class CreateContentComponent implements OnInit {
     private venuesService: VenuesService,
     private contentService: ContentService,
     private showService: ShowsService,
-    private commonService: CommonService
+    private commonService: CommonService,
+    private titleService: Title,
   ) { }
 
 
 
   ngOnInit(): void {
-
+this.titleService.setTitle('Create Content')
     this.tempFormArray = this.fb.array([])
 
     this.setToday()

@@ -11,13 +11,15 @@ import { CreateShowComponent } from './create-show/create-show.component';
 import { ClickOutsideDirective } from '../../core/directive/click-out-side.directive';
 import { CreateContentComponent } from './create-content/create-content.component';
 import { ListVenuesComponent } from './list-venues/list-venues.component';
+import { ListContentsComponent } from './list-contents/list-contents.component';
+import { NumberFormatPipe } from '../../core/pipes/number-format.pipe';
 
 @NgModule({
   declarations: [
     UsersComponent,
-    ListYourShowComponent, CreateVenueComponent, CreateShowComponent,CreateContentComponent,ListVenuesComponent
+    ListYourShowComponent, CreateVenueComponent, CreateShowComponent,CreateContentComponent,ListVenuesComponent, ListContentsComponent
   ],
-  imports: [NgbModule,
+  imports: [NgbModule,NumberFormatPipe,
     ReactiveFormsModule, CommonModule,
     ClickOutsideDirective,
     CommonModule,

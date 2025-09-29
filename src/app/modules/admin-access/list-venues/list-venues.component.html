@@ -6,29 +6,23 @@
                 <div class="w-25  me-auto ms-2">
                     <input type="text" class=" form-control w-100" placeholder="Search by Name, Type, City ">
                 </div>
-
                 <div class=" py-3 d-flex w-50  d-flex align-items-center justify-content-start ">
-
                     <div class=" d-flex gap-4 align-items-center justify-content-center w-50 px-1">
                         <span>
                             City
                         </span>
                         <select class="form-select w-50" aria-label="Default select example"
                             (change)="setUserSelectedCity($event)">
-
                             <!-- (change)="selectRoleByList($event)" -->
                             <option value="" selected>All</option>
                             @for(city of cityList;track $index){
-
                             <option value="{{city.cityName | lowercase}}">{{city.cityName | titlecase}}</option>
                             }
                         </select>
                     </div>
-
                     <div class="d-flex  gap-4 align-items-center justify-content-center w-50 px-1">
                         <span>
                             Type
-
                         </span>
                         <select class="form-select w-50" aria-label="Default select example"
                             (change)="setUserSelectedVenueType($event)">
@@ -36,10 +30,8 @@
                             @for(venueType of venueTypeList;track $index){
                             <option value="{{venueType}}">{{venueType}}</option>
                             }
-
                         </select>
                     </div>
-
                     <button class="btn btn-outline-primary w-25" [routerLink]="['/admin/create/venue']">Add New</button>
                 </div>
             </div>
@@ -66,7 +58,6 @@
                         <td>{{ venue.venueType ?? 'N/A' }}</td>
                         <td>{{ venue.venueCapacity }}</td>
                         <td>{{ transformAddress(venue.address) }}</td>
-
                         <td>
                             @for(a of venue.amenities;track $index){
                             {{a}}
