@@ -259,11 +259,9 @@ export class HeaderComponent implements OnInit {
   getAllNotificationData() {
     const user = this.authService.userDetailsSignal();
     if (!user?.userId) return;
-
     this.commonService.getAllnotification(user.userId, this.page, this.size).subscribe({
       next: (res: any) => {
         this.totalCount = res.data.count;
-
         if (this.page === 0) {
           this.showNotificationData = res.data.content;
         } else {
@@ -274,6 +272,8 @@ export class HeaderComponent implements OnInit {
         }
         if (this.showNotificationData.length >= this.totalCount) {
           this.hasMoreData = false;
+        } else {
+          this.hasMoreData = true;
         }
       },
       error: (err) => {
@@ -346,7 +346,7 @@ export class HeaderComponent implements OnInit {
   onScroll(event: any) {
     const element = event.target as HTMLElement;
     if (element.scrollTop + element.clientHeight >= element.scrollHeight - 1) {
-      if (this.hasMoreData) {
+      if (this.hasMoreData || this.totalCount) {
         this.page++;
         this.getAllNotificationData();
       }
