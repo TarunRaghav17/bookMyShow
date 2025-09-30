@@ -20,6 +20,7 @@ export class UpcommingMoviesComponent {
   filtersArray: any[] = []
   page: number = 0
   size: number = 8
+  totalCount:number = 0
   shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
@@ -44,8 +45,9 @@ export class UpcommingMoviesComponent {
   getAllUpcomingMovies() {
     this.movieService.getAllUpcomingMovies(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
+          this.totalCount = res.data.count
         let resData = res.data.content
-        this.dummyMoviesdata = [...this.dummyMoviesdata, ...resData].flat()
+       this.dummyMoviesdata.push(...resData)
       },
       error: (err) => {
         this.toastr.error(err.message);
@@ -185,7 +187,7 @@ export class UpcommingMoviesComponent {
 
   onScroll(event: any) {
     const element = event.target as HTMLElement;
-    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount ) {
       this.page++
       this.getAllUpcomingMovies()
     }
