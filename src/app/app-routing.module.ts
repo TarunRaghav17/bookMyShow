@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { MoviesDetailsComponent } from './shared/components/movies-details/movies-details.component';
 import { ErrorPageComponent } from './shared/components/error-page/error-page.component';
 import { TheatreListComponent } from './shared/components/theatre-list/theatre-list.component';
 import { BuyTicketsComponent } from './shared/components/buy-tickets/buy-tickets.component';
 import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout.component';
-// import { AuthGuard } from './auth/gaurds/auth.guard';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
 import { AuthGuard } from './auth/gaurds/auth.guard';

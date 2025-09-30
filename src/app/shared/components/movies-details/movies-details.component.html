@@ -60,8 +60,7 @@
                             <button (click)=" open(movieDetails?.ageLimit>18 ? contentWarningModal : langFormatModal)"
                                 class="book_ticket_button ">Book tickets</button>
 
-                            @if(authService.userDetailsSignal()?.role !='USER' && authService.userDetailsSignal()?.role
-                            =='ADMIN'){
+                            @if(authService.userDetailsSignal()?.role == 'ADMIN'){
                             <button class=" w-25 btn btn-outline-danger " (click)="handleDeleteEvent()">Delete</button>
                             }
                         </div>
