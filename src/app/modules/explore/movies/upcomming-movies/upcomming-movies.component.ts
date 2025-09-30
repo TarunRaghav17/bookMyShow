@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
@@ -17,9 +16,7 @@ export class UpcommingMoviesComponent {
   selectedFilters: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
-  originalMovies = movies;
   filters: any[] = []
-  select: any[] = selectedFilters
   filtersArray: any[] = []
   page: number = 0
   size: number = 8
@@ -45,7 +42,7 @@ export class UpcommingMoviesComponent {
 
   }
   getAllUpcomingMovies() {
-    this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
+    this.movieService.getAllUpcomingMovies(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
         let resData = res.data.content
         this.dummyMoviesdata = [...this.dummyMoviesdata, ...resData].flat()
@@ -179,7 +176,7 @@ export class UpcommingMoviesComponent {
       default:
         break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllUpcomingMovies();
@@ -192,5 +189,24 @@ export class UpcommingMoviesComponent {
       this.page++
       this.getAllUpcomingMovies()
     }
+  }
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Movie",
+      "languages": [],
+      "genres": [],
+      "formats": [],
+      "tags": [],
+      "releaseMonths": [],
+      "dateFilters": []
+    }
+    this.getAllUpcomingMovies()
   }
 }

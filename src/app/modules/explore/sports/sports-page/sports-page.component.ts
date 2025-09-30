@@ -181,7 +181,7 @@ export class SportsPageComponent {
       default:
         break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllSports();
@@ -198,5 +198,22 @@ export class SportsPageComponent {
       this.page++
       this.getAllSports()
     }
+  }
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Sports",
+      "dateFilters": [],
+      "categories": [],
+      "morefilter": [],
+      "prices": [],
+    }
+    this.getAllSports()
   }
 }

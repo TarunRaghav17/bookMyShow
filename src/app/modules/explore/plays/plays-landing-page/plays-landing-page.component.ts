@@ -206,7 +206,7 @@ export class PlaysLandingPageComponent {
         break;
 
       case 'Price':
-        if(this.sendPayload.price.length > 0){
+        if (this.sendPayload.price.length > 0) {
           this.sendPayload.price = [];
           this.commonService.clearSelectedFilterByType('Price');
         }
@@ -216,9 +216,9 @@ export class PlaysLandingPageComponent {
         break;
 
       default:
-      break;
+        break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllPlays();
@@ -235,5 +235,24 @@ export class PlaysLandingPageComponent {
       this.page++;
       this.getAllPlays();
     }
+  }
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Plays",
+      "dateFilters": [],
+      "languages": [],
+      "genres": [],
+      "categories": [],
+      "morefilter": [],
+      "price": [],
+    }
+    this.getAllPlays()
   }
 }
