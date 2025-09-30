@@ -183,6 +183,7 @@ export class ActivitiesPageComponent {
       this.getAllActivities();
     }
   }
+  
   /**
 * @description Pagination - Load More Activities Cards on Scroll
 * @author Manu Shukla
@@ -195,8 +196,11 @@ export class ActivitiesPageComponent {
     }
   }
 
-
-  resetFilter() {
+/**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
+ resetFilter() {
     this.commonService.selectedFiltersSignal().map((item: any) => {
       item.data.map((i: any) => {
         i.selected = false

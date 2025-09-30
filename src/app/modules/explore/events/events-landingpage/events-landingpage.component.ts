@@ -222,6 +222,11 @@ export class EventsLandingPageComponent {
       this.getAllEvents();
     }
   }
+
+  /**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
   resetFilter() {
     this.commonService.selectedFiltersSignal().map((item: any) => {
       item.data.map((i: any) => {

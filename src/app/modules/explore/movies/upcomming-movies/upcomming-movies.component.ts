@@ -42,6 +42,11 @@ export class UpcommingMoviesComponent {
     this.getAllUpcomingMovies()
 
   }
+
+  /**
+  * @description Display All Events Cards
+  * @author Manu Shukla
+  */
   getAllUpcomingMovies() {
     this.movieService.getAllUpcomingMovies(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
@@ -54,6 +59,11 @@ export class UpcommingMoviesComponent {
       }
     })
   }
+
+  /**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.movieService.getFilters('languages'),
@@ -77,7 +87,12 @@ export class UpcommingMoviesComponent {
       }
     });
   }
-
+  /**
+* @description Remove Already Selected Filters
+* @author Manu Shukla
+* @params  
+* @returnType void
+*/
   ngOnDestroy(): void {
     this.commonService.resetSelectedFiltersSignal()
   }
@@ -89,6 +104,12 @@ export class UpcommingMoviesComponent {
       array.push(id);
     }
   }
+
+   /**
+  * @description Get Selected Filters cards by sending the Payload
+  * @author Manu Shukla
+  * @param  {event} - Object containing filter type and corresponding filter ID
+   */
   getFilter(event: any) {
     switch (event.type) {
       case 'Language':
@@ -117,6 +138,11 @@ export class UpcommingMoviesComponent {
     this.commonService.handleEventFilter(event)
   }
 
+  /**
+* @description Remove Selected Filters by empty the payload array
+* @author Manu Shukla
+* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+*/
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -185,6 +211,10 @@ export class UpcommingMoviesComponent {
     }
   }
 
+  /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
   onScroll(event: any) {
     const element = event.target as HTMLElement;
     if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount ) {
@@ -192,6 +222,11 @@ export class UpcommingMoviesComponent {
       this.getAllUpcomingMovies()
     }
   }
+
+  /**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
   resetFilter() {
     this.commonService.selectedFiltersSignal().map((item: any) => {
       item.data.map((i: any) => {
