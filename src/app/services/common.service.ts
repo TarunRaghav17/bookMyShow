@@ -122,9 +122,28 @@ export class CommonService {
     });
   }
 
+
+    /**
+   * @description get content details by its id
+   * @author Inzamam
+   * @return Observable<any>
+   */
   getContentDetailsById(contentId: string | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${contentId}`);
   }
+  /**
+   * @description delete content by id
+   * @author Inzamam
+   * @return Observable<any>
+   */
+  deleteContentById(contentId: string | null): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`,{
+      id:contentId
+    });
+
+  }
+
+
   /**
    * @description Get list of popular cities from backend
    * @author Gurmeet Kumar

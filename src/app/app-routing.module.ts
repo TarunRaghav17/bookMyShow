@@ -9,6 +9,7 @@ import { SeatLayoutComponent } from './shared/components/seat-layout/seat-layout
 // import { AuthGuard } from './auth/gaurds/auth.guard';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
+import { AuthGuard } from './auth/gaurds/auth.guard';
 
 const routes: Routes = [
   {
@@ -27,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: 'admin',
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     data: { role: 'ADMIN' },
     loadChildren: () => import('./modules/admin-access/admin-access.module').then((m) => m.AdminAccessModule)
   },

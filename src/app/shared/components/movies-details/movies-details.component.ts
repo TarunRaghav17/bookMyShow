@@ -4,11 +4,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { MovieDetailsLoadingSkeltonComponent } from '../movie-details-loading-skelton/movie-details-loading-skelton.component';
+import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
+import { AuthService } from '../../../auth/auth-service.service';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
@@ -16,7 +18,9 @@ export class MoviesDetailsComponent {
   constructor(private modalService: NgbModal, public commonService: CommonService,
     private router: Router,
     private route: ActivatedRoute,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    public authService: AuthService,
+    private location: Location
   ) { }
   private modalRef?: NgbModalRef | null = null
 
@@ -67,6 +71,22 @@ export class MoviesDetailsComponent {
         this.toaster.error(err.error.message)
       }
     })
+  }
+
+  handleDeleteEvent() {
+    let confirm = window.confirm('Are you sure to delete this event?')
+    if (confirm) {
+      this.commonService.deleteContentById(this.movieDetails.eventId).subscribe({
+        next: (res) => {
+          this.toaster.success(res.message);
+          this.location.back()
+        },
+        error: (err) => {
+          this.toaster.error(err.error.message)
+        }
+      })
+
+    }
   }
 
 }

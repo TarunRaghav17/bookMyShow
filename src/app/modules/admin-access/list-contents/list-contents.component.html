@@ -1,22 +1,12 @@
-<div class="container-fluid" >
-    <div class="row main_table_container ">
-        <div class="col-10 ">
-
-
+<div class="container_fluid">
+    <div class="row main_container  ">
+        <div class="col-10 card_container px-0 py-2" (scroll)="onCardContainerScroll($event)">
             <div class="w-100 d-flex justify-content-between align-items-center py-3 ">
                 <h4> Contents List</h4>
                 <div class="w-25  me-auto ms-2">
                     <input type="text" class=" form-control w-100" placeholder="Search by Name, Type or Tags">
                 </div>
-
-                <div class=" py-3 d-flex w-50 gap-4 d-flex align-items-center justify-content-end ">
-
-                    <div class="d-flex gap-2 flex-column   justify-content-center">
-                        <button>tab</button>
-                        <button>list</button>
-                    </div>
-
-
+                <div class=" py-3 d-flex w-50 d-flex align-items-center justify-content-end ">
                     <div class=" d-flex gap-4 align-items-center justify-content-center  w-50">
                         <span>Type </span>
                         <div ngbDropdown [autoClose]="'outside'" class=" w-50">
@@ -40,112 +30,50 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class=" d-flex gap-4 align-items-center justify-content-center  w-50">
-                        <span>Page Size</span>
-                        <select class="form-select w-50 text-danger" (change)="handlePageSizeChange($event)">
-                            <option value="" selected disabled>Select</option>
-                            @for(size of [5,10,20,40];track $index){
-                            <option value="{{size}}">{{size}}</option>
-                            }
-
-                        </select>
-                    </div>
                     <button class=" btn btn-outline-primary w-25 " [routerLink]="['/admin/create/content']">Add
                         New</button>
                 </div>
-
             </div>
-
-
-            <!-- Users Table -->
-            @if(userSelectedView == 'list'){
-
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>INDEX</th>
-                        <th>Content-ID</th>
-                        <th class="col_width">Content-Name</th>
-                        <th>Content-Type</th>
-                        <th>Release-Date</th>
-                        <th>Age Limit</th>
-                        <th class="col_width">Genres</th>
-                        <th class="col_width">Languages</th>
-                        <th>Categories</th>
-                        <th>IMDB Rating</th>
-                        <th>Votes</th>
-
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="container_fluid my-0  w-100 p-0">
+                <div class="gap-3 d-flex align-items-center justify-content-center flex-wrap  my-0 ">
                     @for (content of filteredContentList.length > 0 ? filteredContentList: contentsList ;track $index) {
                     @for(item of content.data;track $index){
-                    <tr [routerLink]="[`${content.type== 'Movie'? `/movie/noida/${item.eventId}`: 
-                    `/${content.type}/${item.name}/${item.eventId}`}`]">
-                        <td>{{ $index +1}}</td>
-                        <td>{{ item.eventId }}</td>
-                        <td class="col_width">{{ item.name ?? 'N/A' }}</td>
-                        <td>{{ content.type ?? 'N/A' }}</td>
-                        <td>{{ item.releasingOn ?? 'N/A' }}</td>
-                        <td>{{ item.ageLimit }}</td>
-                        <td class="col_width">{{ item.genres.length > 0 ? item.genres.join(', '): 'N/A' }}</td>
-
-                        <td class="col_width">{{ item.languages }}</td>
-
-                        <td>{{ item.categories.length>0? item.categories.join(', ') : 'N/A' }}</td>
-                        <td>{{ item.imdbRating }} / 10</td>
-                        <td>{{ item.votes | numberFormat }}</td>
-                    </tr>
-                    }
-
-                    }
-                </tbody>
-
-
-                <div class="d-flex justify-content-center mt-3 gap-2">
-                    <button class="btn btn-sm btn-outline-primary" (click)="changePage(currentPage - 1)"
-                        [disabled]="currentPage === 1">
-                        Prev
-                    </button>
-
-                    <span>Page {{currentPage}} of {{totalPages}}</span>
-
-                    <button class="btn btn-sm btn-outline-primary" (click)="changePage(currentPage + 1)"
-                        [disabled]="currentPage === totalPages">
-                        Next
-                    </button>
-                </div>
-
-            </table>
-
-            }
-
-
-            @else{
-            <div class="container my-3 card_container" (scroll)="onTableScroll($event)">
-                <div class="row g-4 mb-3">
-                @for(item of cardDetails;track $index){
                     <!-- Card 1 -->
-                    <div class="col-sm-6 col-md-4 col-lg-4">
-                        <div class="card h-100">
-                            <img src="https://via.placeholder.com/300x180" class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <h5 class="card-title">Card 1</h5>
-                                <p class="card-text">Some quick example text.</p>
-                                <a href="#" class="btn btn-primary">Read more</a>
-                            </div>
+                    <div
+                        class="custom_card h-100 col-sm-6 col-md-4 col-lg-2 px-0 py-0 border rounded  on_hover_card position-relative">
+                        <img [src]="commonService.getImageFromBase64(item.imageurl)" class="card_img_top rounded"
+                            alt="...">
+
+                        <div class="rating_text">
+                            @if(item.releasedFlag){
+                            <ng-container *ngTemplateOutlet="ratingBlock"></ng-container>
+                            }
+                            @else{
+                            <ng-container *ngTemplateOutlet="votesBlock"></ng-container>
+                            }
+
+                            <ng-template #ratingBlock>
+                                <i class="fa fa-star rating-star text-danger" aria-hidden="true"></i>
+                                {{ item.imdbRating }} / 10
+                            </ng-template>
+
+                            <ng-template #votesBlock>
+                                <i class="fa fa-thumbs-up me-1 text-success" aria-hidden="true"></i>
+                                {{ item.votes | numberFormat }} Votes
+                            </ng-template>
+                        </div>
+                        <div class="card_body ">
+                            <h5 class="card-title text-muted">{{item.name}}</h5>
+                            <p class="card-text mx-1 my-1">{{content.type}}.</p>
+                            <p class="card-text mx-1 my-1">{{item.languages?.join(', ')}}</p>
+                            <p class="card-text mx-1 my-1">{{item.genres?.join(', ')}}</p>
+                            <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${content.type== 'Movie'? `/movie/noida/${item.eventId}`: 
+                    `/${content.type}/${item.name}/${item.eventId}`}`]">More Details</button>
                         </div>
                     </div>
-                    
-                }
+                    }}
+                </div>
             </div>
-                
-            </div>
-
-
-            }
         </div>
     </div>
 </div>
