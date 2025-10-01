@@ -16,7 +16,9 @@ export class EventsDetailsComponent implements OnInit {
   id: any;
   eventDetails: any | null = null;
   showHeader: boolean = false;
-  constructor(private route: ActivatedRoute, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal) { }
+  allShows: any
+  constructor(private route: ActivatedRoute, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal) {
+   }
 
 
   ngOnInit(): void {
@@ -79,4 +81,7 @@ export class EventsDetailsComponent implements OnInit {
       this.toastr.error('Failed to copy');
     });
   }
-}
+
+  
+  }
+ 

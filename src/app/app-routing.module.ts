@@ -44,7 +44,7 @@ const routes: Routes = [
     component: SeatLayoutComponent
   },
   {
-    path: 'book-events/:category/:eventname/:id',
+    path: 'book-events/:category/:eventname/:id/:date',
     component: BookingEventsComponent
   },
   {

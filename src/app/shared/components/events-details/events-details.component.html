@@ -103,7 +103,12 @@
                                     <h5 class="">₹{{eventDetails?.pricelist[0]}} onwards</h5>
                                     <span>Filling Fast</span>
                                 </div>
-                                <button class="book_now_btn">Book now</button>
+                                <a
+                                    [routerLink]="['/book-events/',commonService._selectedCategory(),eventDetails.name.split(' ').join('-'),eventDetails.eventId,eventDetails.startDate]"><button
+                                        class="book_now_btn"
+                                        >Book
+                                        now</button>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -116,7 +121,8 @@
 <div class="top_bar d-flex justify-content-center align-items-center bg-white border shadow-sm"
     [class.show]="showHeader">
     <div class="col-8 d-flex align-items-center gap-3 py-3">
-        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3" aria-hidden="true" (click)="openShareModal(shareModal)"></i>
+        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3" aria-hidden="true"
+                (click)="openShareModal(shareModal)"></i>
         </span>
     </div>
 </div>
@@ -150,34 +156,28 @@
     <div class="modal-header border-bottom-0">
         <div class="col-12 d-flex justify-content-between align-itmes-center">
             <h3>Share</h3>
-           <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+            <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
         </div>
     </div>
     <div class="modal-body p-0">
         <div class="border-bottom">
             <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
                 <p class="m-0">Facebook</p>
-                 <a href="https://www.facebook.com" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a href="https://www.facebook.com" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
             </div>
         </div>
         <div class="border-bottom">
             <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
                 <p class="m-0">X (Formerly Twitter)</p>
-               <i class="fa fa-twitter" aria-hidden="true"></i>
+                <i class="fa fa-twitter" aria-hidden="true"></i>
             </div>
         </div>
-         <div class="border-bottom">
+        <div class="border-bottom">
             <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
                 <p class="m-0">Copy Link</p>
-                <i class="fa fa-clipboard" aria-hidden="true"  (click)="getCurrentPath()"></i>
+                <i class="fa fa-clipboard" aria-hidden="true" (click)="getCurrentPath()"></i>
             </div>
         </div>
     </div>
 </ng-template>
 }
-
-
-
-
-
-

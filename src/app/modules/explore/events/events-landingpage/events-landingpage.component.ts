@@ -30,7 +30,7 @@ export class EventsLandingPageComponent {
   }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService, public loaderService: LoaderService) {
-    this.commonService._selectedCategory.set('Events');
+    this.commonService._selectedCategory.set('Event');
   }
 
   /**

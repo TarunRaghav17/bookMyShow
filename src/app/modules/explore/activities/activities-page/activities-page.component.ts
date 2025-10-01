@@ -218,8 +218,3 @@ export class ActivitiesPageComponent {
       this.getAllActivities()
   }
 }
-
-
-
-
-
