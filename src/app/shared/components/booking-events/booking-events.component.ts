@@ -23,7 +23,6 @@ constructor(private commonService:CommonService , private toastr: ToastrService 
   
 ngOnInit(): void {
   this.title = this.route.snapshot.paramMap.get('eventname')
-  console.log(this.title)
   this.getShows()
 }
 
@@ -54,8 +53,6 @@ ngOnInit(): void {
 getShows(){
   let eventId:string| null= this.route.snapshot.paramMap.get('id')
    let date:string| null= this.route.snapshot.paramMap.get('date')
-  console.log(date)
-
     this.commonService.getShowsById(eventId,date).subscribe({
       next:(res)=>{
         this.allShows = res.data
