@@ -19,55 +19,61 @@
                 </div>
             </div>
             <!-- Users Table -->
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>UserName</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>RoleName</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (user of usersData; track $index) {
-                    <tr>
-                        <td>{{ user.userId }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.phoneNumber }}</td>
-                        <td>
-                            <p class="rolename m-0" [ngClass]="{'admin_color': user.roleName === 'ADMIN'}">
-                                {{ user.roleName }}
-                            </p>
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary" (click)="toggleDropdown(user.userId)">
-                                ...
-                            </button>
-                            @if (openedDropdownId === user.userId) {
-                            <div class="position-relative" appClickOutside (clickedOutside)="openedDropdownId = null">
-                                <div class="dropdown">
-                                    <label>
-                                        <input type="checkbox" class="form-check-input" [disabled]="user.roleName === 'ADMIN'" [checked]="user.roleName === 'ADMIN'" (click)="makeAnAdmin(user.userId)"/>
-                                        Make Admin
-                                    </label>
+            <div class="user-table-container" (scroll)="onScroll($event)">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>UserName</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>RoleName</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (user of usersData; track $index) {
+                        <tr>
+                            <td>{{ user.userId }}</td>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.phoneNumber }}</td>
+                            <td>
+                                <p class="rolename m-0" [ngClass]="{'admin_color': user.roleName === 'ADMIN'}">
+                                    {{ user.roleName }}
+                                </p>
+                            </td>
+                            <td>
+                                <button class="btn btn-secondary" (click)="toggleDropdown(user.userId)">
+                                    ...
+                                </button>
+                                @if (openedDropdownId === user.userId) {
+                                <div class="position-relative" appClickOutside
+                                    (clickedOutside)="openedDropdownId = null">
+                                    <div class="dropdown">
+                                        <label>
+                                            <input type="checkbox" class="form-check-input"
+                                                [disabled]="user.roleName === 'ADMIN'"
+                                                [checked]="user.roleName === 'ADMIN'"
+                                                (click)="makeAnAdmin(user.userId)" />
+                                            Make Admin
+                                        </label>
 
-                                    <div class="delete-btn" (click)="deleteUser(user.userId)">
-                                        <i class="fa fa-trash" aria-hidden="true"></i>
-                                        Delete
+                                        <div class="delete-btn" (click)="deleteUser(user.userId)">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                            Delete
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            }
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

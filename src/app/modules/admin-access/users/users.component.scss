@@ -123,6 +123,24 @@ td button:hover {
   gap: 8px;
   margin-bottom: 10px;
 }
+
 tbody tr:last-child .dropdown {
   top: -125px;
+}
+
+.user-table-container {
+  height: 600px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.user-table-container::-webkit-scrollbar {
+  display: none;
+}
+
+.icon_container {
+  padding: 0px;
+  width: 150px;
+  background-color: #d9534f;
+  color: white;
 }
