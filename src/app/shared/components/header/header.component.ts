@@ -45,7 +45,6 @@ export class HeaderComponent implements OnInit {
   page: number = 0;
   size: number = 10;
   totalCount: any;
-  hasMoreData: boolean = true;
 
   constructor(
     private modalService: NgbModal,
@@ -259,45 +258,45 @@ export class HeaderComponent implements OnInit {
   getAllNotificationData() {
     const user = this.authService.userDetailsSignal();
     if (!user?.userId) return;
+
     this.commonService.getAllnotification(user.userId, this.page, this.size).subscribe({
       next: (res: any) => {
         this.totalCount = res.data.count;
+
         if (this.page === 0) {
           this.showNotificationData = res.data.content;
         } else {
-          this.showNotificationData = [
-            ...this.showNotificationData,
-            ...res.data.content,
-          ];
-        }
-        if (this.showNotificationData.length >= this.totalCount) {
-          this.hasMoreData = false;
-        } else {
-          this.hasMoreData = true;
+          const newData = res.data.content.filter(
+            (n: any) => !this.showNotificationData.some(existing => existing.notificationId === n.notificationId)
+          );
+          this.showNotificationData = [...this.showNotificationData, ...newData];
         }
       },
-      error: (err) => {
-        this.toastr.error(err.message);
-      }
+      error: (err) => this.toastr.error(err.message)
     });
     this.unreadNotifications();
   }
+
   /**
    * @description Mark as Read to notification  
    * @author Gurmeet Kumar
    * @params userId ,notificationId
    */
   markAsRead(notificationId: number) {
-    const userId = this.authService.userDetailsSignal().userId
+    const userId = this.authService.userDetailsSignal().userId;
     this.commonService.readNotification(userId, notificationId).subscribe({
       next: (res: any) => {
-        this.toastr.success(res.message)
-        this.getAllNotificationData()
-      }, error: (err) => {
-        console.log(err.message)
+        this.toastr.success(res.message);
+        this.showNotificationData = this.showNotificationData.map(item =>
+          item.notificationId === notificationId ? { ...item, read: true } : item
+        );
+      },
+      error: (err) => {
+        this.toastr.error(err.message);
       }
-    })
+    });
   }
+
   /**
  * @description unread Notification Data Count 
  * @author Gurmeet Kumar
@@ -345,13 +344,13 @@ export class HeaderComponent implements OnInit {
   */
   onScroll(event: any) {
     const element = event.target as HTMLElement;
-    if (element.scrollTop + element.clientHeight >= element.scrollHeight - 1) {
-      if (this.hasMoreData || this.totalCount) {
-        this.page++;
-        this.getAllNotificationData();
-      }
+    const reachedBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
+    if (reachedBottom && this.showNotificationData.length < this.totalCount) {
+      this.page++;
+      this.getAllNotificationData();
     }
   }
+
 
   /**
    * @description notications container Show 
