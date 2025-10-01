@@ -19,7 +19,7 @@
                 <!-- Poster -->
                 <div class="mb-3 w-50">
                     <label class="form-label">Poster</label>
-                    <input type="file" class="form-control" (change)="handleImageUpload($event,'imageurl')"
+                    <input type="file" class="form-control" (change)="handlePosterImgUpload($event,'imageurl')"
                         [ngClass]="{'is-invalid': isInvalid('imageurl')}" />
                     @if(isInvalid('imageurl')){
                     <div class="invalid-feedback">
@@ -31,7 +31,7 @@
             <!-- Description -->
             <div class="mb-3">
                 <label class="form-label">Description</label>
-                <textarea class="form-control" rows="3" formControlName="description"
+                <textarea class="form-control h-25" rows="3" formControlName="description"
                     [ngClass]="{'is-invalid': isInvalid('description')}"></textarea>
                 @if(isInvalid('description')){
                 <div class="invalid-feedback">
@@ -57,13 +57,13 @@
                 <!--duration-->
                 <div class="col-md-4">
                     <label class="form-label">Duration (min)</label>
-                    <input type="number" class="form-control" formControlName="duration" min="20" />
-                    @if(eventShowForm.get('duration')?.touched && eventShowForm.get('duration')?.hasError('required')){
+                    <input type="number" class="form-control" formControlName="runTime" min="20" />
+                    @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('required')){
                     <div class="text-danger">
                         Duration is required.
                     </div>
                     }
-                    @if(eventShowForm.get('duration')?.touched && eventShowForm.get('duration')?.hasError('min')){
+                    @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('min')){
                     <div class="text-danger">
                         Duration must be greater than 20.
                     </div>
@@ -115,7 +115,7 @@
                     @for(city of citiesArray; track $index) {
                     <div class="dropdown-item">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" [value]="city.cityName"
+                            <input type="checkbox" class="form-check-input" [value]="city.cityId"
                                 [checked]="eventShowForm.get('city')?.value.includes(city.cityName)"
                                 (change)="toggleCity($event)">
                             <label class="form-check-label">
@@ -225,7 +225,7 @@
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                                 <input type="date" class="form-control me-3 w-25" formControlName="date"
                                     [min]="validateShowStartDate($index)">
-                                <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add
+                                <button class="btn btn-outline-primary col-1" (click)="addShowTime(show)">Add
                                 </button>
                                 <button class="btn btn-outline-danger ms-3"
                                     (click)="removeShow(screen,$index)">Remove</button>
@@ -244,7 +244,7 @@
                                         </option>
                                         }
                                     </select>
-                                    <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
+                                    <button class="btn btn-close" (click)="removeShowTime(show, $index)"></button>
                                 </div>
                                 }
                             </div>
@@ -272,7 +272,7 @@
                     <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                     <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
                         formControlName="date">
-                    <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add </button>
+                    <button class="btn btn-outline-primary col-1" (click)="addShowTime(show)">Add </button>
                     <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
                 </div>
                 <!-- start-time array -->
@@ -290,7 +290,7 @@
                             </option>
                             }
                         </select>
-                        <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
+                        <button class="btn btn-close" (click)="removeShowTime(show, $index)"></button>
                     </div>
                     }
                 </div>

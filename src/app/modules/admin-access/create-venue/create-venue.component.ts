@@ -159,6 +159,8 @@ export class CreateVenueComponent implements OnInit {
     return this.venueForm.get('supportedCategories') as FormArray
   }
 
+
+  //--------------------------- remove-start------------------------
   createTimeSlots() {
     return this.fb.group({
       startTime: ['', [Validators.required]],
@@ -209,6 +211,8 @@ export class CreateVenueComponent implements OnInit {
     date.setMinutes(date.getMinutes() + minutes);
     return date.toTimeString().substring(0, 5); // "HH:mm"
   }
+
+  // --------------remove-end-------------------
 
    /**
    * @description function that handles supported category change .
@@ -375,7 +379,7 @@ export class CreateVenueComponent implements OnInit {
   // Submit
   onSubmit(): void {
     if (this.venueForm.valid) {
-      this.venuesService.createVenueService(this.venueForm.value).subscribe({
+      this.venuesService.createVenueService({...this.venueForm.value,address:{...this.venueForm.value.address,city:{cityName:this.venueForm.value.address.city}}}).subscribe({
         next: () => {
           this.toaster.success('Venue created successfully')
           this.venueForm.removeControl('screens')
