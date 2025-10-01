@@ -1,0 +1,79 @@
+<div class="container_fluid">
+    <div class="row main_container  ">
+        <div class="col-10 card_container px-0 py-2" (scroll)="onCardContainerScroll($event)">
+            <div class="w-100 d-flex justify-content-between align-items-center py-3 ">
+                <h4> Contents List</h4>
+                <div class="w-25  me-auto ms-2">
+                    <input type="text" class=" form-control w-100" placeholder="Search by Name, Type or Tags">
+                </div>
+                <div class=" py-3 d-flex w-50 d-flex align-items-center justify-content-end ">
+                    <div class=" d-flex gap-4 align-items-center justify-content-center  w-50">
+                        <span>Type </span>
+                        <div ngbDropdown [autoClose]="'outside'" class=" w-50">
+                            <button class="btn btn-outline text-danger overflow-hidden  border w-100 text-start"
+                                ngbDropdownToggle>
+                                {{userSelectedType.length > 0 ? userSelectedType.join(', ') : 'Select'}}
+                            </button>
+                            <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
+                                style="max-height: 200px; overflow-y: auto;">
+                                @for(type of ['Movie','Plays','Sports','Activities','Event']; track $index) {
+                                <div class="dropdown-item">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" [value]="type"
+                                            [checked]="userSelectedType.includes(type)" (change)="toggleType($event)">
+                                        <label class="form-check-label">
+                                            {{type}}
+                                        </label>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <button class=" btn btn-outline-primary w-25 " [routerLink]="['/admin/create/content']">Add
+                        New</button>
+                </div>
+            </div>
+            <div class="container_fluid my-0  w-100 p-0">
+                <div class="gap-3 d-flex align-items-center justify-content-center flex-wrap  my-0 ">
+                    @for (content of filteredContentList.length > 0 ? filteredContentList: contentsList ;track $index) {
+                    @for(item of content.data;track $index){
+                    <!-- Card 1 -->
+                    <div
+                        class="custom_card h-100 col-sm-6 col-md-4 col-lg-2 px-0 py-0 border rounded  on_hover_card position-relative">
+                        <img [src]="commonService.getImageFromBase64(item.imageurl)" class="card_img_top rounded"
+                            alt="...">
+
+                        <div class="rating_text">
+                            @if(item.releasedFlag){
+                            <ng-container *ngTemplateOutlet="ratingBlock"></ng-container>
+                            }
+                            @else{
+                            <ng-container *ngTemplateOutlet="votesBlock"></ng-container>
+                            }
+
+                            <ng-template #ratingBlock>
+                                <i class="fa fa-star rating-star text-danger" aria-hidden="true"></i>
+                                {{ item.imdbRating }} / 10
+                            </ng-template>
+
+                            <ng-template #votesBlock>
+                                <i class="fa fa-thumbs-up me-1 text-success" aria-hidden="true"></i>
+                                {{ item.votes | numberFormat }} Votes
+                            </ng-template>
+                        </div>
+                        <div class="card_body ">
+                            <h5 class="card-title text-muted">{{item.name}}</h5>
+                            <p class="card-text mx-1 my-1">{{content.type}}.</p>
+                            <p class="card-text mx-1 my-1">{{item.languages?.join(', ')}}</p>
+                            <p class="card-text mx-1 my-1">{{item.genres?.join(', ')}}</p>
+                            <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${content.type== 'Movie'? `/movie/noida/${item.eventId}`: 
+                    `/${content.type}/${item.name}/${item.eventId}`}`]">More Details</button>
+                        </div>
+                    </div>
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

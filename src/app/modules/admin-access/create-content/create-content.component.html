@@ -1,8 +1,8 @@
-<form [formGroup]="eventShowForm" (ngSubmit)="onShowFormSubmit()" class="container mt-4">
+<form [formGroup]="eventShowForm" class="container mt-4">
     <!-- General Info -->
     <div class="card mb-4 shadow-sm ">
-        <div class="card-body border">
-            <h4 class="card-title mb-3 text-center">General Event Info</h4>
+        <div class="card-body ">
+            <h4 class="card-title mb-3 text-center">Event Creation Info</h4>
             <!-- Name -->
             <div class="row">
                 <div class="mb-3 w-50">
@@ -45,7 +45,7 @@
                 <!-- Releasing On -->
                 <div class="mb-3 col-4">
                     <label class="form-label">Releasing On</label>
-                    <input type="date" class="form-control" formControlName="releasingOn" [min]="setMinDate()"
+                    <input type="date" class="form-control" formControlName="releasingOn" [min]="setToday()"
                         [ngClass]="{'is-invalid': isInvalid('releasingOn')}" />
                     @if(isInvalid('releasingOn')){
                     <div class="invalid-feedback">
@@ -69,7 +69,6 @@
                     </div>
                     }
                 </div>
-
                 <!-- Age Limit -->
                 <div class="mb-3 col-4">
                     <label class="form-label">Age Limit</label>
@@ -82,215 +81,238 @@
                     }
                 </div>
             </div>
-
-            <!-- Event Type -->
-            <div class="row">
-                <div class="mb-3 w-50">
-                    <label class="form-label">Event Type</label>
-                    <select class="form-select" formControlName="eventType" (change)="onEventTypeChange()">
-                        <option value="" disabled selected>Select</option>
-                        <option value="Movie">Movie</option>
-                        <option value="Sports">Sports</option>
-                        <option value="Event">Event</option>
-                        <option value="Plays">Plays</option>
-                        <option value="Activities">Activities</option>
-                    </select>
-                    @if(eventShowForm.get('eventType')?.touched && eventShowForm.get('eventType')?.invalid){
-                    <div class="text-danger">
-                        Event Type is required.
-                    </div>
+        </div>
+        <!-- Event Type -->
+        <div class="row px-3 my-3 ">
+            <div ngbDropdown class="w-50 mb-3">
+                <label class="form-label">Event Type</label>
+                <button class="btn btn-light border w-100 text-start" id="nameDropdown" ngbDropdownToggle>
+                    {{ eventShowForm.get('eventType')?.value || 'Select Name' }}
+                </button>
+                <div ngbDropdownMenu aria-labelledby="nameDropdown" class="w-100">
+                    @for(eventType of ['Movie','Sports','Event','Plays','Activities'];track $index){
+                    <button ngbDropdownItem (click)="setEventType(eventType)">
+                        {{ eventType }}
+                    </button>
                     }
                 </div>
-
-                <!--city-->
-                <div class="w-50 mb-3">
-                    <label class="form-label">City</label>
-                    <select formControlName="city" class="form-select" (change)="onCityChange()">
-                        <option value="" disabled selected>Select</option>
-                        @for(city of citiesArray;track $index){
-                        <option value="noida">{{city.cityName}}</option>
-                        }
-                    </select>
-                    @if(eventShowForm.get('city')?.touched && eventShowForm.get('city')?.invalid){
-                    <div class="text-danger">
-                        City is required
-                    </div>
-                    }
-                </div>
-            </div>
-
-            <!--venue name -->
-            <div class="row mb-3">
-                <div class="w-50 mb-3">
-                    <label class="form-label">Venue Name:</label>
-                    <select formControlName="venueName" class="form-select" (change)="onVenueNameChange()">
-                        <option value="" disabled selected>Select</option>
-                        @for(venue of venuesNameList ;track $index){
-                        <option value="{{venue.venueName}}">{{venue.venueName}}</option>
-                        }
-                    </select>
-                    @if(eventShowForm.get('venueName')?.touched && eventShowForm.get('venueName')?.invalid){
-                    <div class="text-danger">
-                        Venue name is required.
-                    </div>
-                    }
-                </div>
-            </div>
-
-            <!-- Content Details -->
-            @if(eventShowForm.get('eventType')?.value =='Movie' && eventShowForm.get('venueName')?.value !=''){
-            <div class="row my-3 ">
-                <h4>Screens</h4>
-                <!--screen name-->
-                <div class="mb-3 w-100 " formArrayName="screens">
-                    @for(screen of screens.controls ;track $index){
-
-                    <div class="w-100  card my-3 mb-1 p-3" [formGroupName]="$index">
-                        <span class="fs-5 fw-semibold  mb-2"> {{screen.get('screenName')?.value}} </span>
-                        <div formArrayName="layouts" class="mb-1 w-100">
-                            <span class="fs-5 fw-semibold">Categories</span>
-                            @for(layout of getLayouts(screen).controls ;track $index){
-
-                            <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
-                                <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                    <span class="my-0 fw-semibold"> Name: </span>
-                                    <span class="bg-white text-dark  rounded   w-75">
-                                        {{layout.get('layoutName')?.value}}
-                                    </span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                    <span class="my-0 fw-semibold"> Rows: </span>
-                                    <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
-                                        {{layout.get('rows')?.value}}
-                                    </span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                    <span class="my-0 fw-semibold"> Cols: </span>
-                                    <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
-                                        {{layout.get('cols')?.value}}
-                                    </span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                    <span class="my-0 fw-semibold"> Total Seats: </span>
-                                    <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
-                                        {{+layout.get('cols')?.value * +getRows(layout)}}
-                                    </span>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                    <span class="my-0 fw-semibold"> Price: </span>
-                                    <input type="number" formControlName="price" min="0"
-                                        class="form-control px-3 py-2 w-75 my-1">
-                                    @if(layout.get('price')?.touched && layout.get('price')?.invalid){
-                                    <div class="text-danger">
-                                        Price is required.
-                                    </div>
-                                    }
-                                </div>
-                            </div>
-                            }
-                        </div>
-                        <div class="col-3  d-flex align-items-center ">
-                            <span class="fs-5 fw-semibold  w-50">Shows</span>
-                            <button class="btn btn-outline-success w-50" (click)="addShow(screen)">Add</button>
-                        </div>
-
-                        <!-- shows array -->
-                        <div class="" formArrayName="shows">
-                            @for(show of getShows(screen).controls ;track $index){
-
-                            <!-- one particualr show =  date & [times] -->
-                            <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
-                                <!-- date control -->
-                                <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
-                                    <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
-                                    <input type="date" class="form-control me-3 w-25" formControlName="date">
-                                    <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add
-                                    </button>
-                                    <button class="btn btn-outline-danger ms-3"
-                                        (click)="removeShow(screen,$index)">Remove</button>
-                                </div>
-
-                                <!-- start-time array -->
-                                <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
-                                    formArrayName="startTime">
-                                    @for(time of getStartTime(show).controls ;track $index){
-                                    <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                                        <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
-                                        <select class="form-select" [formControlName]="$index">
-                                            <option value="" disabled selected>Select</option>
-                                            <!-- to add dynamic start time fetching from venue api -->
-                                            <option value="">1</option>
-                                            <option value="">2</option>
-                                            <option value="">3</option>
-                                        </select>
-                                        <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
-                                    </div>
-                                    }
-                                </div>
-                            </div>
-                            }
-                        </div>
-                    </div>
-                    }
-                </div>
-            </div>
-            }
-
-            <!-- event type != movie -->
-            @if(eventShowForm.get('shows')?.value && eventShowForm.get('eventType')?.value != ''){
-            <div class="d-flex align-items-center gap-4 my-3  w-auto">
-                <h4>Shows</h4>
-                <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
-            </div>
-
-            <!-- shows array -->
-            <div class="" formArrayName="shows">
-                @for(show of shows.controls ;track $index){
-
-                <!-- one particualr show =  date & [times] -->
-                <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-100 ">
-
-                    <!-- date control -->
-                    <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
-                        <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
-                        <input type="date" class="form-control me-3 w-25" formControlName="date">
-                        <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add </button>
-                        <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
-                    </div>
-
-                    <!-- start-time array -->
-                    <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
-                        formArrayName="startTime">
-                        @for(time of getStartTime(show).controls ;track $index){
-                        <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                            <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
-                            <input type="time" class="form-control" [formControlName]="$index">
-                            <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
-                        </div>
-                        }
-                    </div>
+                @if(eventShowForm.get('eventType')?.touched && eventShowForm.get('eventType')?.invalid){
+                <div class="text-danger">
+                    Event Type is required.
                 </div>
                 }
             </div>
-            }
 
-            <div class="my-2 row  d-flex align-items-center">
-                @if(eventShowForm.get('price')){
-                <div class="w-50">
-                    <label class="form-label">Price : ₹</label>
-                    <input type="number" formControlName="price" min="0" class="form-control px-3 w-75 ">
+            <!--city-->
+            <div ngbDropdown [autoClose]="'outside'" class=" w-50 mb-3 ">
+                <label class="form-label">City</label>
+                <button class="btn btn-light border w-100 text-start" ngbDropdownToggle>
+                    {{ city.controls.length > 0 ? eventShowForm.get('city')?.value.join(', ') : 'Select Cities' }}
+                </button>
+                @if(citiesArray){
+  <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
+                    style="max-height: 200px; overflow-y: auto;">
+                    @for(city of citiesArray; track $index) {
+                    <div class="dropdown-item">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" [value]="city.cityName"
+                                [checked]="eventShowForm.get('city')?.value.includes(city.cityName)"
+                                (change)="toggleCity($event)">
+                            <label class="form-check-label">
+                                {{ city.cityName }}
+                            </label>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+              
+            </div>
+        </div>
+
+        <!--venue name -->
+        <div class="row mb-3 px-3  ">
+            <div ngbDropdown [autoClose]="'outside'" class="w-50 ">
+                <label class="form-label">Venue Name:</label>
+                <button class="btn btn-light border w-100 text-start" ngbDropdownToggle>
+                    {{ venueName.controls.length > 0 ? eventShowForm.get('venueName')?.value.join(', ') :
+                    'Select Venues' }}
+                </button>
+                <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
+                    style="max-height: 200px; overflow-y: auto;">
+                    <!-- onVenueNameChange() -->
+                    @for(venue of venuesNameList ;track $index) {
+                    <div class="dropdown-item">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" [value]="venue.venueName"
+                                [checked]="eventShowForm.get('venueName')?.value.includes(venue.venueName)"
+                                (change)="toggleVenueName($event)">
+                            <label class="form-check-label">
+                                {{ venue.venueName }}
+                            </label>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            @if(eventShowForm.get('venueName')?.touched && eventShowForm.get('venueName')?.invalid){
+            <div class="text-danger">
+                Venue name is required.
+            </div>
+            }
+        </div>
+        <!-- Content Details -->
+        @if(eventShowForm.get('eventType')?.value =='Movie' && eventShowForm.get('venueName')?.value !=''){
+        <div class="row my-3 ">
+            <!--screen name-->
+            <div class="mb-3 w-100 px-5 " formArrayName="screens">
+                @for(screen of screens.controls ;track $index){
+                <div class="w-100  card my-3 mx-auto  mb-1 p-3" [formGroupName]="$index">
+                    <h4> Venue Name: {{screen.get('venueName')?.value}}</h4>
+                    <span class="fs-5 fw-semibold  mb-2">Screen Name: {{screen.get('screenName')?.value}} </span>
+                    <div formArrayName="layouts" class="mb-1 w-100">
+                        <span class="fs-5 fw-semibold">Categories</span>
+                        @for(layout of getLayouts(screen).controls ;track $index){
+                        <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
+                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                <span class="my-0 fw-semibold"> Name: </span>
+                                <span class="bg-white text-dark  rounded   w-75">
+                                    {{layout.get('layoutName')?.value}}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                <span class="my-0 fw-semibold"> Rows: </span>
+                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
+                                    {{layout.get('rows')?.value}}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                <span class="my-0 fw-semibold"> Cols: </span>
+                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                    {{layout.get('cols')?.value}}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                <span class="my-0 fw-semibold"> Total Seats: </span>
+                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                                    {{+layout.get('cols')?.value * +getRows(layout)}}
+                                </span>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                                <span class="my-0 fw-semibold"> Price: </span>
+                                <input type="number" formControlName="price" min="0"
+                                    class="form-control px-3 py-2 w-75 my-1">
+                                @if(layout.get('price')?.touched && layout.get('price')?.invalid){
+                                <div class="text-danger">
+                                    Price is required.
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                    <div class="col-3  d-flex align-items-center ">
+                        <span class="fs-5 fw-semibold  w-50">Shows</span>
+                        <button class="btn btn-outline-success w-50" (click)="addShow(screen)">Add</button>
+                    </div>
+                    <!-- shows array -->
+                    <div class="" formArrayName="shows">
+                        @for(show of getShows(screen).controls ;track $index){
+                        <!-- one particualr show =  date & [times] -->
+                        <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
+                            <!-- date control -->
+                            <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
+                                <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
+                                <input type="date" class="form-control me-3 w-25" formControlName="date"
+                                    [min]="validateShowStartDate($index)">
+                                <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add
+                                </button>
+                                <button class="btn btn-outline-danger ms-3"
+                                    (click)="removeShow(screen,$index)">Remove</button>
+                            </div>
+                            <!-- start-time array -->
+                            <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
+                                formArrayName="startTime">
+                                @for(time of getStartTime(show).controls ;track $index){
+                                <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
+                                    <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
+                                    <select class="form-select" [formControlName]="$index">
+                                        <option value="" disabled selected>Select</option>
+                                        @for(slot of ['slot-1','slot-2','slot-3','slot-4'];track $index){
+                                        <option value={{slot}}>
+                                            {{slot}}
+                                        </option>
+                                        }
+                                    </select>
+                                    <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
+                                </div>
+                                }
+                            </div>
+                        </div>
+                        }
+                    </div>
                 </div>
                 }
             </div>
         </div>
-    </div>
+        }
+        <!-- event type != movie -->
+        @if(eventShowForm.get('shows')?.value && eventShowForm.get('eventType')?.value != ''){
+        <div class="d-flex align-items-center gap-4 my-3 px-3 w-auto">
+            <h4>Shows</h4>
+            <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
+        </div>
+        <!-- shows array -->
+        <div class=" w-100" formArrayName="shows">
+            @for(show of shows.controls ;track $index){
+            <!-- one particualr show =  date & [times] -->
+            <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-75 mx-auto ">
+                <!-- date control -->
+                <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
+                    <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
+                    <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
+                        formControlName="date">
+                    <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add </button>
+                    <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
+                </div>
+                <!-- start-time array -->
+                <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
+                    formArrayName="startTime">
+                    @for(time of getStartTime(show).controls ;track $index){
+                    <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
+                        <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
 
+                        <select class="form-select" [formControlName]="$index">
+                            <option value="" disabled selected>Select</option>
+                            @for(slot of ['slot-1','slot-2','slot-3','slot-4'];track $index){
+                            <option value={{slot}}>
+                                {{slot}}
+                            </option>
+                            }
+                        </select>
+                        <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+        </div>
+        }
+        @if(eventShowForm.get('price') && eventShowForm.get('eventType')?.value != ''){
+        <div class="my-2 row  d-flex align-items-center p-3">
+            <div class="w-75 border ">
+                      <h4>Price : ₹</h4>
+                <input type="number" formControlName="price" min="0" class="form-control px-3 w-25 ">
+            </div>
+        </div>
+        }
+    </div>
     <!-- Arrays Section -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-body border">
-            <!-- Languages -->
-            @if(eventShowForm.get('languages')){
-            <div class="mb-3 ">
+    @if(eventShowForm.get('eventType')?.value != ''){
+    <div class="card border mb-4 shadow-sm p-3">
+        <!-- Languages -->
+        @if(eventShowForm.get('languages')){
+                <div class="mb-3 ">
                 <h5 class="form-label">● Languages</h5>
                 <div class="d-flex flex-wrap">
                     @for(lang of languagesArray; track $index) {
@@ -309,116 +331,110 @@
                 }
             </div>
             }
-            <!-- Genres -->
-            @if(eventShowForm.get('genres')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Genres</h5>
-                <div class="d-flex flex-wrap">
-                    @for(genre of genresArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
-                            [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}">
-                        <label class="form-check-label">{{genre.genresName}}</label>
-                    </div>
-                    }
-                </div>
-
-                @if(isInvalid('genres')){
-                <div class="invalid-feedback">
-                    At least one genre is required.
+        <!-- Genres -->
+        @if(eventShowForm.get('genres')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Genres</h5>
+            <div class="d-flex flex-wrap">
+                @for(genre of genresArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
+                        [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}">
+                    <label class="form-check-label">{{genre.genresName}}</label>
                 </div>
                 }
             </div>
-            }
-
-            <!-- Formats -->
-            @if(eventShowForm.get('format')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Formats</h5>
-                <div class="d-flex flex-wrap">
-                    @for(format of formatsArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
-                            [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}">
-                        <label class="form-check-label">{{format.formatName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('format')){
-                <div class="invalid-feedback">
-                    At least one format is required.
-                </div>
-                }
-            </div>
-            }
-
-            <!-- Tags -->
-            @if(eventShowForm.get('tag')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Tags</h5>
-                <div class="d-flex flex-wrap">
-                    @for(tag of tagsArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input" [value]="tag.tagId"
-                            (change)="handleInputBoxChange($event,'tag')" [value]="tag.tagId"
-                            [ngClass]="{'is-invalid': isInvalid('tag')}">
-                        <label class="form-check-label">{{tag.tagName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('tag')){
-                <div class="invalid-feedback">
-                    At least one tag is required.
-                </div>
-                }
-            </div>
-            }
-
-            <!-- Categories -->
-            @if(eventShowForm.get('categories')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● Categories</h5>
-                <div class="d-flex flex-wrap">
-                    @for(category of categoriesArray; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input"
-                            (change)="handleInputBoxChange($event,'categories')" [value]="category.categoryId"
-                            [ngClass]="{'is-invalid': isInvalid('categories')}">
-                        <label class="form-check-label">{{category.categoryName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('categories')){
-                <div class="invalid-feedback">
-                    At least one category is required.
-                </div>
-                }
-            </div>
-            }
-            <!-- More Filters -->
-            @if(eventShowForm.get('moreFilters')){
-            <div class="mb-3 ">
-                <h5 class="form-label">● More Filters</h5>
-                <div class="d-flex flex-wrap">
-                    @for(moreFilter of moreFilters; track $index) {
-                    <div class="form-check w-25">
-                        <input type="checkbox" class="form-check-input"
-                            (change)="handleInputBoxChange($event,'moreFilters')" [value]="moreFilter.moreFilterId"
-                            [ngClass]="{'is-invalid': isInvalid('moreFilters')}">
-                        <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
-                    </div>
-                    }
-                </div>
-                @if(isInvalid('moreFilters')){
-                <div class="invalid-feedback">
-                    At least one filter is required.
-                </div>
-                }
+            @if(isInvalid('genres')){
+            <div class="invalid-feedback">
+                At least one genre is required.
             </div>
             }
         </div>
+        }
+        <!-- Formats -->
+        @if(eventShowForm.get('format')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Formats</h5>
+            <div class="d-flex flex-wrap">
+                @for(format of formatsArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
+                        [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}">
+                    <label class="form-check-label">{{format.formatName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('format')){
+            <div class="invalid-feedback">
+                At least one format is required.
+            </div>
+            }
+        </div>
+        }
+        <!-- Tags -->
+        @if(eventShowForm.get('tag')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Tags</h5>
+            <div class="d-flex flex-wrap">
+                @for(tag of tagsArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" [value]="tag.tagId"
+                        (change)="handleInputBoxChange($event,'tag')" [value]="tag.tagId"
+                        [ngClass]="{'is-invalid': isInvalid('tag')}">
+                    <label class="form-check-label">{{tag.tagName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('tag')){
+            <div class="invalid-feedback">
+                At least one tag is required.
+            </div>
+            }
+        </div>
+        }
+        <!-- Categories -->
+        @if(eventShowForm.get('categories')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● Categories</h5>
+            <div class="d-flex flex-wrap">
+                @for(category of categoriesArray; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'categories')"
+                        [value]="category.categoryId" [ngClass]="{'is-invalid': isInvalid('categories')}">
+                    <label class="form-check-label">{{category.categoryName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('categories')){
+            <div class="invalid-feedback">
+                At least one category is required.
+            </div>
+            }
+        </div>
+        }
+        <!-- More Filters -->
+        @if(eventShowForm.get('moreFilters')){
+        <div class="mb-3 ">
+            <h5 class="form-label">● More Filters</h5>
+            <div class="d-flex flex-wrap">
+                @for(moreFilter of moreFilters; track $index) {
+                <div class="form-check w-25">
+                    <input type="checkbox" class="form-check-input"
+                        (change)="handleInputBoxChange($event,'moreFilters')" [value]="moreFilter.moreFilterId"
+                        [ngClass]="{'is-invalid': isInvalid('moreFilters')}">
+                    <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
+                </div>
+                }
+            </div>
+            @if(isInvalid('moreFilters')){
+            <div class="invalid-feedback">
+                At least one filter is required.
+            </div>
+            }
+        </div>
+        }
     </div>
-
+    }
     <!-- Cast -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="cast">
@@ -454,7 +470,6 @@
             }
         </div>
     </div>
-
     <!-- Crew -->
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="crew">
@@ -492,6 +507,6 @@
     </div>
     <!-- Submit -->
     <div class="text-end mb-3">
-        <button class="btn btn-primary px-4" type="submit">Submit</button>
+        <button class="btn btn-primary px-4" type="submit" (click)="onShowFormSubmit()">Submit</button>
     </div>
 </form>

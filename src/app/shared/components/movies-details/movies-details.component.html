@@ -20,11 +20,12 @@
                             <div class="rating-content">
                                 <i class="fa fa-star rating-star" aria-hidden="true"></i>
                                 <span class="rating-score">{{movieDetails?.imdbRating}}/10</span>
-                                <span class="rating-votes">({{movieDetails?.votes}} Votes)</span>
+                                <span class="rating-votes">({{movieDetails?.votes | numberFormat}} Votes)</span>
                                 <i class="fa fa-chevron-right rating-arrow" aria-hidden="true"></i>
                                 <button class="rate-btn">
                                     <span>Rate Now</span>
                                 </button>
+
                             </div>
                         </div>
                         <div class="movie-formats ">
@@ -54,8 +55,16 @@
                             }
                             <span>{{movieDetails?.releasingOn}}</span>
                         </div>
-                        <button (click)="open(movieDetails?.ageLimit>18 ? contentWarningModal : langFormatModal)"
-                            class="book_ticket_button mt-3">Book tickets</button>
+
+                        <div class="d-flex align-items-center  mt-3 gap-5">
+                            <button (click)=" open(movieDetails?.ageLimit>18 ? contentWarningModal : langFormatModal)"
+                                class="book_ticket_button ">Book tickets</button>
+
+                            @if(authService.userDetailsSignal()?.role == 'ADMIN'){
+                            <button class=" w-25 btn btn-outline-danger " (click)="handleDeleteEvent()">Delete</button>
+                            }
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-2 d-flex justify-content-start py-4 align-items-start">

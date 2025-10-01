@@ -1,19 +1,28 @@
-<form [formGroup]="venueForm" (ngSubmit)="onSubmit()" novalidate class="container my-4">
+<form [formGroup]="venueForm" novalidate class="container my-4 border p-3">
+    <h4 class="card-title mb-3 text-center"> Venue Creation Info</h4>
     <div class="row">
         <!-- Venue Name -->
         <div class="col-md-6 mb-3">
             <label class="form-label">Venue Name</label>
-            <input type="text" formControlName="venueName" class="form-control"
+            <input type="text" formControlName="venueName" class="form-control" placeholder="Enter venue name"
                 [ngClass]="{'is-invalid': venueForm.get('venueName')?.touched && venueForm.get('venueName')?.invalid}" />
             <div class="invalid-feedback">Venue name is required.</div>
         </div>
-
         <!-- Capacity -->
         <div class="col-md-6 mb-3">
             <label class="form-label">Capacity</label>
-            <input type="number" formControlName="venueCapacity" class="form-control" min="100"
+            <input type="number" formControlName="venueCapacity" class="form-control" min="100" max="5000"
+                placeholder="Enter venue capacity"
                 [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
+            @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.hasError('pattern')){
+            <div class="invalid-feedback">Cannot have special characters.</div>
+            }
+            @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.errors?.['min']){
             <div class="invalid-feedback">Capacity must be at least 100.</div>
+            }
+            @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.errors?.['max']){
+            <div class="invalid-feedback">Capacity must be less than 5000.</div>
+            }
         </div>
     </div>
 
@@ -22,7 +31,7 @@
         <h5 class="mb-3">Address</h5>
         <div class="col-md-4 mb-3">
             <label class="form-label">Street</label>
-            <input type="text" formControlName="street" class="form-control"
+            <input type="text" formControlName="street" class="form-control" placeholder="Enter street name"
                 [ngClass]="{'is-invalid': venueForm.get('address.street')?.touched && venueForm.get('address.street')?.invalid}" />
             <div class="invalid-feedback">Street is required.</div>
         </div>
@@ -34,61 +43,57 @@
                 @for(city of citiesArray;track $index){
                 <option [value]="city.cityName | lowercase">{{city.cityName}}</option>
                 }
-
             </select>
             <div class="invalid-feedback">City is required.</div>
         </div>
         <div class="col-md-4 mb-3">
             <label class="form-label">PIN</label>
-            <input type="text" formControlName="pin" class="form-control"
+            <input type="text" formControlName="pin" class="form-control" placeholder="Enter PIN"
                 [ngClass]="{'is-invalid': venueForm.get('address.pin')?.touched && venueForm.get('address.pin')?.invalid}" />
             <div class="invalid-feedback">Must be a 6-digit PIN.</div>
         </div>
     </div>
-
-    <!-- Venue For -->
+    <!-- Venue Type -->
     <div class="row">
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Venue For</label>
-            <select formControlName="venueFor" class="form-select" (change)="onVenueForChange()"
-                [ngClass]="{'is-invalid': venueForm.get('venueFor')?.touched && venueForm.get('venueFor')?.invalid}">
+        <div class="w-50 mb-0">
+            <label class="form-label">Venue Type</label>
+            <select formControlName="venueType" class="form-select" (change)="onVenueTypeChange()"
+                [ngClass]="{'is-invalid': venueForm.get('venueType')?.touched && venueForm.get('venueType')?.invalid}">
                 <option value="" disabled>Select</option>
-                <option value="Movie">Movies</option>
-                <option value="Sports">Sports</option>
-                <option value="Event">Events</option>
-                <option value="Activities">Activities</option>
-                <option value="Plays">Plays</option>
+                @for(type of ['Movie','Sports','Event','Activities','Plays'];track $index){
+                <option [value]="type">{{type | uppercase}}</option>
+                }
             </select>
             <div class="invalid-feedback">Please select a type.</div>
         </div>
-
-        <!-- Venue Type -->
-        <div class="col-md-6 mb-3">
-            <label class="form-label">Venue Type</label>
-            <select type="text" formControlName="venueType" class="form-select" (change)="onVenueTypeChange()"
-                [ngClass]="{'is-invalid': venueForm.get('venueType')?.touched && venueForm.get('venueType')?.invalid }">
-                <option value="" selected disabled>Select</option>
-                @for(type of venueType;track $index){
-                <option value="{{type.value}}">{{type.label | titlecase}}</option>
+        <!-- Supported Categories -->
+        <div ngbDropdown [autoClose]="'outside'" class="w-50 mb-0">
+            <label>Supported Categories</label>
+            <button class="btn btn-light border w-100 text-start mt-2" ngbDropdownToggle>
+                {{ categories.controls.length > 0 ? venueForm.get('supportedCategories')?.value.join(', ').toUpperCase()
+                : 'Select Categories' }}
+            </button>
+            <div class="invalid-feedback">Supported Category is required.</div>
+            @if(supportedCategoriesArray){
+            <div ngbDropdownMenu aria-labelledby="categoriesDropdown" class="w-100 p-2"
+                style="max-height: 200px; overflow-y: auto;">
+                @for(category of supportedCategoriesArray; track $index) {
+                <div class="dropdown-item">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input"
+                            [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}"
+                            [value]="category.value" (change)="handleCategoryChange($event)"
+                            [checked]="venueForm.get('supportedCategories')?.value.includes(category.value)">
+                        <label class="form-check-label">
+                            {{ category.label }}
+                        </label>
+                    </div>
+                </div>
                 }
-            </select>
-            <div class="invalid-feedback">Venue type is required.</div>
+            </div>
+            }
         </div>
     </div>
-
-    <!-- Supported Categories -->
-    <div class="col-md-6 mb-3">
-        <label>Supported Categories</label>
-        <select formControlName="supportedCategories" class="form-select" (change)="handleCategoryChange($event)"
-            [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}">
-            <option value="" selected disabled>Select</option>
-            @for(category of supportedCategoriesArray;track $index){
-            <option value="{{category.value}}">{{category.label}}</option>
-            }
-        </select>
-        <div class="invalid-feedback">Supported Category is required.</div>
-    </div>
-
     @if(venueForm.get('screens')){
     <div formArrayName="screens" class="card mt-3 p-3">
         <div class="d-flex justify-content-between align-items-center">
@@ -97,7 +102,6 @@
                 Add Screen
             </button>
         </div>
-
         @for (screen of screens.controls; track $index) {
         <div class="card my-3 mb-1 p-3" [formGroupName]="$index">
             <div class="mb-3">
@@ -132,9 +136,12 @@
                     </div>
                     <div class="col-3">
                         <label class="form-label">Columns</label>
-                        <input type="number" class="form-control" placeholder="10" min="10" max="25"
+                        <input type="number" class="form-control" placeholder="12" min="12" max="25"
                             formControlName="cols"
                             [ngClass]="{'is-invalid': layout.get('cols')?.touched && layout.get('cols')?.invalid }">
+                        @if(layout.get('cols')?.touched && layout.get('cols')?.hasError('pattern')){
+                        <div class="invalid-feedback">Cannot have special characters.</div>
+                        }
                         @if(layout.get('cols')?.touched && layout.get('cols')?.errors?.['min']){
                         <div class="invalid-feedback">Min.10 Cols are required.</div>
                         }
@@ -160,6 +167,7 @@
         }
     </div>
     }
+
     <div formArrayName="amenities" class="my-3 ">
         <h5>Amenities</h5>
         <ul class="list-group d-flex flex-row align-items-center justify-content-start gap-3">
@@ -176,7 +184,7 @@
         </div>
     </div>
     <div class="w-100 d-flex justify-content-end">
-        <button type="submit" class="btn btn-success border w-25 ">
+        <button type="submit" class="btn btn-success border w-25 " (click)="onSubmit()">
             Submit
         </button>
     </div>
