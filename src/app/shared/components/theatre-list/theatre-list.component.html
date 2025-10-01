@@ -4,7 +4,7 @@
             <div class="col-8   py-3">
                 <div class="col-12 d-flex">
                     <div class="col-8 d-flex justify-content-start align-items-center">
-                        @if (selectedCategory==='Movies') {
+                        @if (selectedCategory==='Movie') {
                         <h4>{{browseBy }} {{selecetedCity}} </h4>
                         }
                         @else(){
@@ -16,7 +16,7 @@
                         <form class="w-100 me-3" role="search">
                             
                             <div class="input-group ">
-                                @if(commonService._selectedCategory()!=='Movies'){
+                                @if(commonService._selectedCategory()!='Movie'){
                                 <div class="border h-25 w-25 py-2 bg-white d-flex justify-content-between align-items-center px-4"
                                     (click)="toggleBtn()">
                                     {{commonService._selectedCategory()}}
@@ -27,7 +27,7 @@
                                 @if(toggleButton){
                                 <div class="toggleBtn_value">
                                     <ul>
-                                        <li (click)="setType('Events')">Events</li>
+                                        <li (click)="setType('Event')">Events</li>
                                         <li (click)="setType('Sports')">Sports</li>
                                         <li (click)="setType('Plays')">Plays</li>
                                         <li (click)="setType('Activities')">Activities</li>
@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-11  cinema_details_text">
                                         <p>{{item.venueName}}</p>
-                                        <span class="card-text">{{item.address.street}},{{item.address.city}},{{item.address.pin}}</span>
+                                        <span class="card-text">{{item.address.street}},{{item.address.city?.cityName}},{{item.address.pin}}</span>
                                     </div>
                                 </div>
                             </div>

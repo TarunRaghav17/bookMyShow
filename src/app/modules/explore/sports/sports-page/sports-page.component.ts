@@ -22,7 +22,7 @@ export class SportsPageComponent {
     "dateFilters": [],
     "categories": [],
     "morefilter": [],
-    "prices": [],
+    "price": [],
   }
 
   constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -172,6 +172,7 @@ export class SportsPageComponent {
         if (this.sendPayload.price.length > 0) {
           this.sendPayload.price = [];
           this.commonService.clearSelectedFilterByType('Price');
+          this.shouldCallAPI = true
         }
         else {
           this.shouldCallAPI = false

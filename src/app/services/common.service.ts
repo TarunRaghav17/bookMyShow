@@ -457,5 +457,10 @@ export class CommonService {
     );
     this.selectedFiltersSignal.set(reset);
   }
+ 
+  getShowsById(eventId:string| null , date:string| null):Observable<any>{
+    console.log(eventId)
+    return this.http.get(`${this.baseUrl}/api/shows?eventId=${eventId}&date=${date}`)
+  }
 }
 

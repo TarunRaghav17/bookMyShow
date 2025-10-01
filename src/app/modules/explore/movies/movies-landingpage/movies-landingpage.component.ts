@@ -33,7 +33,7 @@ export class MovieLandingPageComponent implements OnDestroy {
 
   constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.selectedCity = this.commonService._selectCity()
-    this.commonService._selectedCategory.set('Movies');
+    this.commonService._selectedCategory.set('Movie');
   }
 
   /**

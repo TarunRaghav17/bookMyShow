@@ -7,12 +7,12 @@
                         <img src="assets/images/logo.png" class="logo" alt="">
                     </div>
                 </div>
-                <div class="col-4 center_title_moviename">
+                <div class="col-4 center_title_moviename justify-content-start">
                     <div class="sicon_container">
                         <i class="fa fa-angle-left left_aarow" aria-hidden="true"></i>
                     </div>
                     <div class="tittle_container">
-                        <h1 class="events_name_tittle">Alwa</h1>
+                        <h1 class="events_name_tittle">{{title}}</h1>
                     </div>
                 </div>
                 <div class="col-4">
@@ -23,24 +23,18 @@
             <div class="sub_header bg-white d-flex justify-content-center gap-2">
         <div class="sub_content">
             <div class="d-flex justify-content-center align-items-center gap-2">
-                <span class="conuter_forms_number">1</span>
-                <span class="sub_header_tittle">Ticket</span>
-            </div>
-            <div class="sc-juv17n-6 sExVX">
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-            <div class="d-flex justify-content-center align-items-center gap-2">
-                <div class="conuter_forms_number">2</div>
-                <div class="sub_header_tittle">Review &amp; Proceed to Pay </div>
+                <span class="sub_header_tittle fs-5">Ticket</span>
             </div>
         </div>
     </div>
-            <div class="theater_detail_info">
+    @for (item of allShows; track $index) {
+         <div class="theater_detail_info">
                 <div class="col-4 titles_theater_box">
-                    <h4 class="theater_name_text">Raja Annamalai Mandram: Chennai</h4>
-                    <p class="theater_name_text">Sun 12 Oct | 07:00 PM</p>
+                    <h4 class="theater_name_text">{{item.venueName}}</h4>
+                    <p class="theater_name_text">{{item.date}} | {{item.shows.time}} PM</p>
                 </div>
             </div>
+    }
         </div>
     </div>
 </div>
@@ -63,7 +57,7 @@
                         </div>
                         <div>
                             @if(!add){
-                            <button class="btn_add" (click)="addMamber()">Add</button>
+                            <button class="btn_add" (click)="addMember()">Add</button>
                             }@else {
                             <div class="counters_ticket">
                                 <span class="shine_text" (click)="decreaseCounter()">
@@ -76,7 +70,6 @@
                                     +
                                 </span>
                             </div>
-
                             }
                         </div>
                     </div>
@@ -91,7 +84,6 @@
   <div class="col-4 d-flex justify-content-between align-items-center">
     <div class="d-flex flex-column gap-1">
       <span class="seatting_type">ENTRY PASS</span>
-      <!-- yaha totalMoney show hoga -->
       <span class="seatting_price">{{totalMoney | currency:'INR'}}</span>
     </div>
     <div class="button_section">
