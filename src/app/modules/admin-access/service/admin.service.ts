@@ -69,8 +69,4 @@ export class AdminService {
   editRoleById(id: any) {
     return this.http.put(`${this.baseUrl}/api/users/${id}/role`, id)
   }
-
-
-
-
 }
