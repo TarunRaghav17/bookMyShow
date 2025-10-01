@@ -6,6 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { CommonService } from '../services/common.service';
+import { LoaderService } from '../services/loader.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
   encrypted!: string;
   baseUrl = environment.baseUrl;
   tokenSignal = signal<string | null>(localStorage.getItem('token'));
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService) {
+  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private loaderService: LoaderService) {
   }
 
   /**
@@ -59,11 +60,15 @@ export class AuthService {
    * @param name
    */
   validateUserName(userName: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/auth/validate/username?username=${userName}`, {
-      context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
-    })
+    return this.http.get(
+      `${this.baseUrl}/auth/validate/username?username=${userName}`,
+      {
+        context: new HttpContext()
+          .set(this.commonService.IS_PUBLIC_API, true)
+          .set(this.loaderService.NO_LOADER, false)
+      }  
+    ); 
   }
-
   /**
    * @description Clear token and logout user
    * @author Gurmeet Kumar
