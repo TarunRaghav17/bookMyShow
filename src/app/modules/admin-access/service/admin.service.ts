@@ -18,8 +18,8 @@ export class AdminService {
   getAllUsers(page: number = 0, size: number = 10): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/users`, {
       params: {
-        page: page.toString(),
-        size: size.toString()
+        page: page,
+        size: size
       }
     });
   }
