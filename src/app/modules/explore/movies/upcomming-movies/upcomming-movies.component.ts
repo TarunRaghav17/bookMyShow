@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { movies, selectedFilters } from '../../../../../../db';
 import { CommonService } from '../../../../services/common.service';
 import { forkJoin } from 'rxjs';
 import { MovieService } from '../service/movie-service.service';
@@ -17,12 +16,11 @@ export class UpcommingMoviesComponent {
   selectedFilters: any[] = []
   selectedCity: any = null
   topFiltersArray!: any[]
-  originalMovies = movies;
   filters: any[] = []
-  select: any[] = selectedFilters
   filtersArray: any[] = []
   page: number = 0
   size: number = 8
+  totalCount:number = 0
   shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
@@ -44,17 +42,28 @@ export class UpcommingMoviesComponent {
     this.getAllUpcomingMovies()
 
   }
+
+  /**
+  * @description Display All Events Cards
+  * @author Manu Shukla
+  */
   getAllUpcomingMovies() {
-    this.movieService.getAllMovies(this.sendPayload, this.page, this.size).subscribe({
+    this.movieService.getAllUpcomingMovies(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
+          this.totalCount = res.data.count
         let resData = res.data.content
-        this.dummyMoviesdata = [...this.dummyMoviesdata, ...resData].flat()
+       this.dummyMoviesdata.push(...resData)
       },
       error: (err) => {
         this.toastr.error(err.message);
       }
     })
   }
+
+  /**
+* @description Set All Filters by using ForkJoin 
+* @author Manu Shukla
+*/
   setFilter() {
     forkJoin([
       this.movieService.getFilters('languages'),
@@ -78,7 +87,12 @@ export class UpcommingMoviesComponent {
       }
     });
   }
-
+  /**
+* @description Remove Already Selected Filters
+* @author Manu Shukla
+* @params  
+* @returnType void
+*/
   ngOnDestroy(): void {
     this.commonService.resetSelectedFiltersSignal()
   }
@@ -90,6 +104,12 @@ export class UpcommingMoviesComponent {
       array.push(id);
     }
   }
+
+   /**
+  * @description Get Selected Filters cards by sending the Payload
+  * @author Manu Shukla
+  * @param  {event} - Object containing filter type and corresponding filter ID
+   */
   getFilter(event: any) {
     switch (event.type) {
       case 'Language':
@@ -118,6 +138,11 @@ export class UpcommingMoviesComponent {
     this.commonService.handleEventFilter(event)
   }
 
+  /**
+* @description Remove Selected Filters by empty the payload array
+* @author Manu Shukla
+* @param  {item} - Filter Type (Date, Categories, More Filters, Prices)
+*/
   clearFilter(item: any) {
     if (!item) return;
     switch (item) {
@@ -179,18 +204,46 @@ export class UpcommingMoviesComponent {
       default:
         break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllUpcomingMovies();
     }
   }
 
+  /**
+* @description Pagination - Load More Activities Cards on Scroll
+* @author Manu Shukla
+*/
   onScroll(event: any) {
     const element = event.target as HTMLElement;
-    if (element.scrollHeight - element.scrollTop <= element.clientHeight) {
+    if (element.scrollHeight - element.scrollTop <= element.clientHeight && this.dummyMoviesdata.length < this.totalCount ) {
       this.page++
       this.getAllUpcomingMovies()
     }
+  }
+
+  /**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Movie",
+      "languages": [],
+      "genres": [],
+      "formats": [],
+      "tags": [],
+      "releaseMonths": [],
+      "dateFilters": []
+    }
+    this.getAllUpcomingMovies()
   }
 }

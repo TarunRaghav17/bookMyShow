@@ -23,4 +23,10 @@ export class MovieService {
     context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
   })
   }
+
+    getAllUpcomingMovies(body:any,page:number=0,size:number=8):Observable<any>{
+    return this.http.post(`${this.base_url}/api/events/filter?page=${page}&size=${size}&upcomingMovie=false`,body,{
+    context: new HttpContext().set(this.commonService.IS_PUBLIC_API, true)
+  })
+}
 }

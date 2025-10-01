@@ -123,7 +123,7 @@ export class MovieLandingPageComponent implements OnDestroy {
 
     switch (item) {
       case 'Language':
-        if (this.sendPayload.languages.length> 0) {
+        if (this.sendPayload.languages.length > 0) {
           this.sendPayload.languages = [];
           this.commonService.clearSelectedFilterByType('Language');
           this.shouldCallAPI = true
@@ -134,7 +134,7 @@ export class MovieLandingPageComponent implements OnDestroy {
         break;
 
       case 'Genres':
-        if (this.sendPayload.genres.length> 0) {
+        if (this.sendPayload.genres.length > 0) {
           this.sendPayload.genres = [];
           this.commonService.clearSelectedFilterByType('Genres');
           this.shouldCallAPI = true
@@ -145,10 +145,10 @@ export class MovieLandingPageComponent implements OnDestroy {
         break;
 
       case 'Formats':
-        if(this.sendPayload.formats.length> 0){
+        if (this.sendPayload.formats.length > 0) {
           this.sendPayload.formats = [];
           this.commonService.clearSelectedFilterByType('Formats');
-          this.shouldCallAPI=true
+          this.shouldCallAPI = true
         }
         else {
           this.shouldCallAPI = false
@@ -156,9 +156,9 @@ export class MovieLandingPageComponent implements OnDestroy {
         break;
 
       default:
-      break;
+        break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllMovies();
@@ -195,5 +195,26 @@ export class MovieLandingPageComponent implements OnDestroy {
       this.page++
       this.getAllMovies()
     }
+  }
+
+  /**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Movie",
+      "languages": [],
+      "genres": [],
+      "formats": [],
+    }
+    this.getAllMovies()
   }
 }
