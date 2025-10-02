@@ -1,8 +1,10 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
+import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
+import { AuthService } from '../../../auth/auth-service.service';
 
 type SeatStatus = 'available' | 'selected' | 'booked';
 
@@ -50,7 +52,8 @@ export class SeatLayoutComponent {
 
   constructor(private commonService: CommonService,
     private modalService: NgbModal,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) { }
 
   private modalRef?: NgbModalRef | null = null;
@@ -156,9 +159,7 @@ ngOnDestroy(){
     this.draw();
   }
 
-  onSubmit() {
-    alert(`Proceeding with: ${this.selectedSeats.join(', ')} (₹${this.totalPrice})`);
-  }
+ 
 
   setNoOfSelectedSeats(noOfSelectedSeats: number) {
     this.noOfSelectedSeats = noOfSelectedSeats;
@@ -521,4 +522,19 @@ ngOnDestroy(){
     this.canvasRef.nativeElement.style.cursor = overSeat ? "pointer" : "grab";
   }
 
+
+    handleBookNow(): void {
+let user= this.authService.getUserFromToken()
+    if (!user) {
+      let res = confirm('Please log in to book this Show.');
+      if (res) {
+        const modalOptions: NgbModalOptions = { centered: true };
+        this.modalService.open(UserAuthComponent, modalOptions);
+      }
+      return;
+    }
+  
+  alert(`Proceeding with: ${this.selectedSeats.join(', ')} (₹${this.totalPrice})`);
+  
+  }
 }

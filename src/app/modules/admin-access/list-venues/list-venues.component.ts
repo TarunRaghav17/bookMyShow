@@ -103,7 +103,6 @@ export class ListVenuesComponent implements OnInit {
   getAllVenuesList() {
     this.venueService.getAllVenues().subscribe({
       next: (res: any[]) => {
-        console.log(res)
         this.venuesList = res
       },
       error: (err) => {

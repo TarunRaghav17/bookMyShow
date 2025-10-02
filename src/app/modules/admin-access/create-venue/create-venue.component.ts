@@ -182,7 +182,6 @@ export class CreateVenueComponent implements OnInit {
 
   onSlotDurationChange(event: any) {
     this.slotDuration = Number(event.target.value)
-    console.log(this.slotDuration)
   }
 
   onSlotStartTimeChange(slot: AbstractControl, slotIndex: number) {
@@ -190,7 +189,6 @@ export class CreateVenueComponent implements OnInit {
 
     // enforce startTime >= prev endTime
     let prevEnd = this.getPrevEndTime(slotIndex);
-    console.log(prevEnd)
     if (startTime < prevEnd) {
       slot.get('startTime')?.setValue(this.addMinutes(prevEnd, 30));
       startTime = prevEnd;

@@ -13,7 +13,6 @@ export class VenuesService {
   baseUrl = environment.baseUrl
 
   createVenueService(payload: any): Observable<any> {
-    console.log(payload)
     return this.http.post(`${this.baseUrl}/venues/create`, payload)
   }
   getVenues(city: string): Observable<any> {

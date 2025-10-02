@@ -132,7 +132,7 @@ export class CreateContentComponent implements OnInit {
 
     this.commonService.getAllCities().subscribe(
       (res) =>{ this.citiesArray = res.data
-      console.log(res.data)}
+    }
     )
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
 
@@ -223,7 +223,6 @@ export class CreateContentComponent implements OnInit {
       selectedVenueName.includes(v.venueName)
     );
 
-    console.log('venue', this.selectedVenueObj)
     const selectedVenues: any[] = this.selectedVenueObj;
 
     if (this.eventShowForm.get('eventType')?.value == 'Movie') {
@@ -236,7 +235,6 @@ export class CreateContentComponent implements OnInit {
       });
     }
 
-    console.log(this.screens?.value)
 
 
   }
@@ -257,7 +255,6 @@ export class CreateContentComponent implements OnInit {
   }
   // for movies
   removeShow(screen: AbstractControl, index: number) {
-    console.log('remove show called')
     this.getShows(screen).removeAt(index)
   }
 
@@ -390,8 +387,6 @@ export class CreateContentComponent implements OnInit {
   onShowFormSubmit(): void {
     let eventShowFormObj = this.eventShowForm.value;
 
-    console.log(this.eventShowForm.value)
-
     let show = eventShowFormObj?.screens?.map((screen: any) => {
       return {
         venue: screen.venueName,
@@ -409,11 +404,6 @@ export class CreateContentComponent implements OnInit {
 let selectedCityIds = this.citiesArray
   ?.filter((city: any) => this.city.value.includes(city.cityName))
   .map((city: any) => city.cityId);
-
-
-console.log(selectedCityIds)
-
-
 
     let newEventShowFormObj = {
       name: eventShowFormObj?.name,
@@ -625,8 +615,6 @@ callApiForCities() {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-
-    console.log('file-blob', file)
 
     if (!file.type.startsWith('image/')) {
       this.toaster.error('Please upload a valid image file');
