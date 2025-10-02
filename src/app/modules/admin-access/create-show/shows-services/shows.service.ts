@@ -13,6 +13,7 @@ export class ShowsService {
   constructor(private http: HttpClient) { }
 
   createShow(payload: any, imageurl: string): Observable<any> {
+    console.log("PAYLOAD: ", payload);
     const formData = new FormData();
     formData.append('event', JSON.stringify(payload));
     formData.append('poster', imageurl);

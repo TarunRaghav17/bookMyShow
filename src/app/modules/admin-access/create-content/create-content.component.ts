@@ -53,23 +53,7 @@ export class CreateContentComponent implements OnInit {
     this.tempFormArray = this.fb.array([])
 
     this.setToday()
-
-    this.venuesService.getVenuesTest().subscribe({
-      next: (res) => {
-        this.venuesNameList = res
-        //   .filter((venue: any) => {
-        //     console.log(venue)
-        //     if (venue.address.city.toLowerCase() == selectedCity.toLowerCase() &&
-        //       venue.venueFor.toLowerCase() == selectedEventType.toLowerCase()) {
-        //       return venue
-        //     }
-        //   });
-      },
-      error: (err) => {
-        this.toaster.error(err)
-      }
-    })
-
+   
     this.eventShowForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(4)]],
       description: ['', [Validators.required, Validators.minLength(30)]],
@@ -131,11 +115,14 @@ export class CreateContentComponent implements OnInit {
 
   onEventTypeChange() {
 
-    this.removeControls(this.eventShowForm, ['languages', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price']);
+    this.removeControls(this.eventShowForm, ['languages','releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price','startDate','endDate']);
 
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
 
+
+    this.eventShowForm.addControl('startDate', this.fb.control('',[Validators.required]))
+    this.eventShowForm.addControl('endDate', this.fb.control('',[Validators.required]));
 
     // this.handleReset(['city', 'status', 'venueName', 'eventName'])
     // this.venuesNameList = []
@@ -153,7 +140,7 @@ export class CreateContentComponent implements OnInit {
 
       case 'Movie':
         {
-          this.removeControls(this.eventShowForm, ['shows', 'price'])
+          this.removeControls(this.eventShowForm, ['shows', 'price','startDate','endDate'])
 
           this.eventShowForm.addControl('screens', this.fb.array([]))
 
@@ -161,6 +148,7 @@ export class CreateContentComponent implements OnInit {
           this.eventShowForm.addControl('tag', this.fb.array([], [Validators.required]));
           this.eventShowForm.addControl('genres', this.fb.array([], Validators.required));
           this.eventShowForm.addControl('format', this.fb.array([], Validators.required));
+          this.eventShowForm.addControl('releasingOn', this.fb.control('', [Validators.required]));
 
           break;
         }
@@ -384,6 +372,7 @@ export class CreateContentComponent implements OnInit {
   }
 
   validateShowStartDate(index: number): string {
+    if(this.eventShowForm.get('releasingOn')?.value){
     const today = new Date(this.eventShowForm.get('releasingOn')?.value)
 
     // Clone today
@@ -393,7 +382,9 @@ export class CreateContentComponent implements OnInit {
     minDate?.setDate(today.getDate() + index);
 
     // Return in yyyy-mm-dd format
-    return minDate?.toISOString().split('T')[0];
+    return minDate?.toISOString()?.split('T')[0]
+  }
+  return ''
   }
 
   onShowFormSubmit(): void {
@@ -401,7 +392,7 @@ export class CreateContentComponent implements OnInit {
 
     console.log(this.eventShowForm.value)
 
-    let show = eventShowFormObj?.screens.map((screen: any) => {
+    let show = eventShowFormObj?.screens?.map((screen: any) => {
       return {
         venue: screen.venueName,
         screen: screen.screenName,
@@ -415,6 +406,14 @@ export class CreateContentComponent implements OnInit {
       };
     });
 
+let selectedCityIds = this.citiesArray
+  ?.filter((city: any) => this.city.value.includes(city.cityName))
+  .map((city: any) => city.cityId);
+
+
+console.log(selectedCityIds)
+
+
 
     let newEventShowFormObj = {
       name: eventShowFormObj?.name,
@@ -423,7 +422,6 @@ export class CreateContentComponent implements OnInit {
       startDate: eventShowFormObj?.startDate,
       endDate: eventShowFormObj?.endDate,
       eventType: eventShowFormObj?.eventType,
-      imageurl: eventShowFormObj?.imageurl,
       ageLimit: eventShowFormObj?.ageLimit,
       releasingOn: eventShowFormObj?.releasingOn,
       languages: eventShowFormObj?.languages,
@@ -435,7 +433,8 @@ export class CreateContentComponent implements OnInit {
       moreFilters: eventShowFormObj?.moreFilters,
       cast: eventShowFormObj?.cast,
       crew: eventShowFormObj?.crew,
-      city: eventShowFormObj?.city,
+      city:selectedCityIds,
+      price: eventShowFormObj?.price,
       shows: show
     }
 
@@ -509,21 +508,6 @@ export class CreateContentComponent implements OnInit {
     );
   }
 
-  onContentTypeChange() {
-    this.selectedEventType = this.eventShowForm.get('eventType')?.value
-    if (this.selectedEventType == 'Movie') {
-      this.eventShowForm.addControl(
-        'genres', this.fb.array([], Validators.required));
-      this.eventShowForm.addControl('format', this.fb.array([], Validators.required))//ONLY WHEN EVENT-TYPE =Movie);
-    }
-    else {
-      this.eventShowForm.removeControl('genres')
-      this.eventShowForm.removeControl('format')
-    }
-
-
-
-  }
 
   handleInputBoxChange(event: any, path: string) {
     const formArray = this.getArrayControl(path);
@@ -555,7 +539,32 @@ export class CreateContentComponent implements OnInit {
       if (index != -1) this.city.removeAt(index);
 
     }
+
+
+     this.callApiForCities();
   }
+
+
+callApiForCities() {
+  const cities = this.city.value; // array of city names
+  cities.forEach((city: string) => {
+    this.venuesService.getVenues(city)
+      .subscribe({
+        next: (res) => {
+            this.venuesNameList = res
+            .filter((venue: any) => {
+              venue.venueType == this.eventShowForm.get('eventType')?.value 
+              return venue
+            }
+          );
+        },
+        error: (err) => {
+          console.error(`Error fetching for ${city}`, err);
+        }
+      });
+  });
+}
+
 
   get venueName(): FormArray {
     return this.eventShowForm.get('venueName') as FormArray
@@ -625,6 +634,7 @@ export class CreateContentComponent implements OnInit {
     }
 
     this.eventShowForm.get(path)?.setValue(file)
+    this.eventShowForm.get(path)?.value
     this.toaster.success('Image uploaded successfully');
   }
 
