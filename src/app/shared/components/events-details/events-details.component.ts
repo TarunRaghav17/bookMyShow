@@ -79,7 +79,6 @@ export class EventsDetailsComponent implements OnInit {
   copyLink(link: string) {
     const textarea = document.createElement('textarea');
     textarea.value = link;
-    console.log(textarea.value)
     document.body.appendChild(textarea);
     textarea.focus();
     textarea.select();
