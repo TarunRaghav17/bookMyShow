@@ -72,16 +72,26 @@ export class EventsDetailsComponent implements OnInit {
     let url = window.location.href;
     this.copyLink(url);
   }
-
-  copyLink(link: string) {
-    navigator.clipboard.writeText(link).then(() => {
-      this.toastr.success("Link copied sucessfully")
-      this.closemodal()
-    }).catch(() => {
-      this.toastr.error('Failed to copy');
-    });
+ 
+copyLink(link: string) {
+  const textarea = document.createElement('textarea');
+  textarea.value = link;
+  console.log(textarea.value)
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      this.toastr.success("Link copied successfully");
+      this.closemodal();
+    } else {
+      this.toastr.error("Copy command was unsuccessful");
+    }
+  } catch (err) {
+    this.toastr.error("Failed to copy");
   }
-
-  
+  document.body.removeChild(textarea);
+}
   }
  
