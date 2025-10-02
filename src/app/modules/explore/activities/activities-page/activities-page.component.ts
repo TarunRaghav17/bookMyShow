@@ -19,8 +19,7 @@ export class ActivitiesPageComponent {
   page: number = 0
   size: number = 8
   totalCount: number = 0
-  shouldCallAPI:boolean = false
-   
+  shouldCallAPI: boolean = false
   sendPayload: any = {
     "type": "string",
     "categories": [],
@@ -103,7 +102,6 @@ export class ActivitiesPageComponent {
   * @param  {event} - Object containing filter type and corresponding filter ID
    */
   getFilter(event: any) {
-    console.log(event);
     switch (event.type) {
       case 'Date':
         this.toggleId(this.sendPayload.dateFilters, event.filterName.dateFilterId);
@@ -134,44 +132,44 @@ export class ActivitiesPageComponent {
   clearFilter(item: any) {
     if (!item) return;
 
-     switch (item) {
-      
+    switch (item) {
+
       case 'Date':
-        if ( this.sendPayload.dateFilters.length> 0) {
+        if (this.sendPayload.dateFilters.length > 0) {
           this.sendPayload.dateFilters = [];
           this.commonService.clearSelectedFilterByType('Date');
           this.shouldCallAPI = true
-        }else{
+        } else {
           this.shouldCallAPI = false
         }
         break;
 
       case 'Categories':
-        if(this.sendPayload.categories.length>0){
+        if (this.sendPayload.categories.length > 0) {
           this.sendPayload.categories = [];
           this.commonService.clearSelectedFilterByType('Categories');
-          this.shouldCallAPI=true
-        }else{
+          this.shouldCallAPI = true
+        } else {
           this.shouldCallAPI = false
         }
         break;
 
       case 'More Filters':
-        if(this.sendPayload.more_filters.length>0){
+        if (this.sendPayload.more_filters.length > 0) {
           this.sendPayload.morefilter = [];
           this.commonService.clearSelectedFilterByType('More Filters');
-          this.shouldCallAPI=true
-        }else{
+          this.shouldCallAPI = true
+        } else {
           this.shouldCallAPI = false
         }
         break;
 
       case 'Price':
-        if(this.sendPayload.price.length>0){
+        if (this.sendPayload.price.length > 0) {
           this.sendPayload.price = [];
           this.commonService.clearSelectedFilterByType('Price');
           this.shouldCallAPI = true
-        }else{
+        } else {
           this.shouldCallAPI = false
         }
         break;
@@ -179,12 +177,13 @@ export class ActivitiesPageComponent {
       default:
         break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllActivities();
     }
   }
+  
   /**
 * @description Pagination - Load More Activities Cards on Scroll
 * @author Manu Shukla
@@ -195,5 +194,27 @@ export class ActivitiesPageComponent {
       this.page++
       this.getAllActivities()
     }
+  }
+
+/**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
+ resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+        "type": "Activities",
+        "categories": [],
+        "price": [],
+        "morefilter": [],
+        "dateFilters": []
+      }
+      this.getAllActivities()
   }
 }

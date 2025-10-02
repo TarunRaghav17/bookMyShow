@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="d-flex justify-content-start align-items-start g-0">
+                            <div class="d-flex justify-content-start align-items-start g-0"  [ngClass]="{'justify-content-center':dummyMoviesdata.length<=0 && !loaderService.loading()}">
                                 <div class="main_box_crasoule">
                                     <div class="main_filter_card overflow-hidden">
                                         <div class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start ">
@@ -57,7 +57,7 @@
                                                 <img src="assets/images/No_result_found.png">
                                                 <p class="text-secondary">Your filter combination didn't fetch any
                                                     results... Kindly reset to discover more.</p>
-                                                <button class="btn btn-outline-danger">Reset Filter</button>
+                                                <button class="btn btn-outline-danger" (click)="resetFilter()">Reset Filter</button>
                                         </div>
                                         }
                                         @else {

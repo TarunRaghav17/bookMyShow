@@ -22,7 +22,7 @@ export class SportsPageComponent {
     "dateFilters": [],
     "categories": [],
     "morefilter": [],
-    "prices": [],
+    "price": [],
   }
 
   constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -172,6 +172,7 @@ export class SportsPageComponent {
         if (this.sendPayload.price.length > 0) {
           this.sendPayload.price = [];
           this.commonService.clearSelectedFilterByType('Price');
+          this.shouldCallAPI = true
         }
         else {
           this.shouldCallAPI = false
@@ -181,7 +182,7 @@ export class SportsPageComponent {
       default:
         break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllSports();
@@ -198,5 +199,27 @@ export class SportsPageComponent {
       this.page++
       this.getAllSports()
     }
+  }
+
+  /**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Sports",
+      "dateFilters": [],
+      "categories": [],
+      "morefilter": [],
+      "prices": [],
+    }
+    this.getAllSports()
   }
 }

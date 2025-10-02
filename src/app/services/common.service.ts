@@ -1,6 +1,6 @@
 import { LoaderService } from './loader.service';
 import { computed, Injectable, signal } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -14,13 +14,14 @@ export class CommonService {
   city = sessionStorage.getItem('selectedCity');
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
   _profileHeader = signal<any>(false);
-  searchSubject = new Subject<string>();
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
   userLangFormat = signal<any>({})
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
- 
+  userSelectedDate = signal<any>({})
+  movieDetails = signal<any>({})
+
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
@@ -35,7 +36,6 @@ export class CommonService {
     return this.userLangFormat()
   }
 
-  movieDetails = signal<any>({})
 
   setMovieDetails(payload: any) {
     this.movieDetails.set(payload)
@@ -45,7 +45,6 @@ export class CommonService {
     return this.movieDetails()
   }
 
-  userSelectedDate = signal<any>({})
 
   setUserSelectedDate(index: number, payload: any) {
     if (index < 3) this.userSelectedDate.set(payload)
@@ -174,7 +173,7 @@ export class CommonService {
       });
     });
   }
- 
+
   /**
    * @description iniitalizes the topFilterArray
    * @author Manu Shukla
@@ -399,7 +398,7 @@ export class CommonService {
     });
     return filtersArray;
   }
-  
+
   /**
   * @description Get all venues by city
   * @author  Manu 
@@ -437,26 +436,30 @@ export class CommonService {
       { context: new HttpContext().set(this.loaderService.NO_LOADER, false) }
     )
   }
- /**
- * @description Clears the selected filter data for the specified filter type.
- * @author Manu Shukla
- */
+  /**
+  * @description Clears the selected filter data for the specified filter type.
+  * @author Manu Shukla
+  */
   clearSelectedFilterByType(type: string) {
-  const updated = this.selectedFiltersSignal().map((group: any) =>
-    group.type === type ? { ...group, data: [] } : group
-  );
-  this.selectedFiltersSignal.set(updated);
-}
+    const updated = this.selectedFiltersSignal().map((group: any) =>
+      group.type === type ? { ...group, data: [] } : group
+    );
+    this.selectedFiltersSignal.set(updated);
+  }
 
-/**
- * @description Resets all selected filters by clearing their data arrays.
- * @author Manu Shukla
- */
-resetSelectedFiltersSignal() {
-  const reset = this.selectedFiltersSignal().map(
-    (group: any) => ({ ...group, data: [] })
-  );
-  this.selectedFiltersSignal.set(reset);
-}
+  /**
+   * @description Resets all selected filters by clearing their data arrays.
+   * @author Manu Shukla
+   */
+  resetSelectedFiltersSignal() {
+    const reset = this.selectedFiltersSignal().map(
+      (group: any) => ({ ...group, data: [] })
+    );
+    this.selectedFiltersSignal.set(reset);
+  }
+ 
+  getShowsById(eventId:string| null , date:string| null):Observable<any>{
+    return this.http.get(`${this.baseUrl}/api/shows?eventId=${eventId}&date=${date}`)
+  }
 }
 

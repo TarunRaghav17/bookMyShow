@@ -15,12 +15,14 @@ export class AdminService {
    * @description getAll usersList
    * @author Gurmeet Kumars
    */
-
-  getAllUsers(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/users`)
+  getAllUsers(page: number = 0, size: number = 10): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/users`, {
+      params: {
+        page: page,
+        size: size
+      }
+    });
   }
-
-
   /**
  * @description get user byId 
  * @author Gurmeet Kumar
@@ -64,11 +66,7 @@ export class AdminService {
  * @author Gurmeet Kumar
  * @params id, roleName
  */
-    editRoleById(id: any) {
-      return this.http.put(`${this.baseUrl}/api/users/${id}/role`,id )
-    }
-
-
-    
-  
+  editRoleById(id: any) {
+    return this.http.put(`${this.baseUrl}/api/users/${id}/role`, id)
+  }
 }

@@ -93,7 +93,7 @@
             <small class="text-danger">Phone number must be at least 10 digits</small>
             }
             @if (signupForm.get('phoneNumber')?.hasError('maxlength')) {
-            <small class="text-danger">Phone number cannot exceed 15 digits</small>
+            <small class="text-danger">Phone number cannot exceed 10 digits</small>
             }
             @if (signupForm.get('phoneNumber')?.hasError('pattern')) {
             <small class="text-danger">Only digits are allowed</small>

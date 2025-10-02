@@ -30,7 +30,7 @@ export class EventsLandingPageComponent {
   }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService, public loaderService: LoaderService) {
-    this.commonService._selectedCategory.set('Events');
+    this.commonService._selectedCategory.set('Event');
   }
 
   /**
@@ -191,20 +191,20 @@ export class EventsLandingPageComponent {
         break;
 
       case 'Price':
-        if(this.sendPayload.price.length > 0){
+        if (this.sendPayload.price.length > 0) {
           this.sendPayload.price = [];
           this.commonService.clearSelectedFilterByType('Price');
           this.shouldCallAPI = true
         }
-         else {
+        else {
           this.shouldCallAPI = false
         }
         break;
 
       default:
-      break;
+        break;
     }
-    if(this.shouldCallAPI){
+    if (this.shouldCallAPI) {
       this.page = 0;
       this.dummyMoviesdata = [];
       this.getAllEvents();
@@ -221,5 +221,28 @@ export class EventsLandingPageComponent {
       this.page++;
       this.getAllEvents();
     }
+  }
+
+  /**
+* @description If there is no data in selected filter then reset the all filter 
+* @author Manu Shukla
+*/ 
+  resetFilter() {
+    this.commonService.selectedFiltersSignal().map((item: any) => {
+      item.data.map((i: any) => {
+        i.selected = false
+      })
+    }
+    )
+    this.commonService.resetSelectedFiltersSignal()
+    this.sendPayload = {
+      "type": "Event",
+      "dateFilters": [],
+      "languages": [],
+      "categories": [],
+      "morefilter": [],
+      "price": [],
+    }
+    this.getAllEvents()
   }
 }
