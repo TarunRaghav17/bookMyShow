@@ -43,6 +43,7 @@ export class MovieLandingPageComponent implements OnDestroy {
    * @returnType void
    */
 
+
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Movie'
