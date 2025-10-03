@@ -11,8 +11,7 @@
       <i class="fa fa-chevron-left fa-lg on_hover" (click)="goBack()"></i>
       <div class="d-flex  align-items-center justify-content-between w-100">
         <div class="d-flex flex-column">
-          <h4 class=" my-0">mvie name - (langformat signal)</h4>
-          <span class="text-muted  fw-semibold">Wave: Noida | date selected | show time</span>
+          <h4 class=" my-0">{{movieDetails?.name}} - ({{commonService.userLangFormat()?.lang}} -{{commonService.userLangFormat()?.format}})</h4>
         </div>
         <button class="btn btn-outline-danger  h-25 " (click)="open(seatModal)">{{noOfSelectedSeats}} Tickets</button>
       </div>

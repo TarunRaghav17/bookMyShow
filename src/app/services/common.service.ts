@@ -16,7 +16,10 @@ export class CommonService {
   _profileHeader = signal<any>(false);
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
-  userLangFormat = signal<any>({})
+
+  _userLangFormat: any = localStorage.getItem('userLangFormat');
+  userLangFormat = signal<any>(JSON.parse(this._userLangFormat));
+  
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
   userSelectedDate = signal<any>({})
@@ -30,6 +33,7 @@ export class CommonService {
 
   setUserLangFormat(payload: any) {
     this.userLangFormat.set(payload);
+    localStorage.setItem('userLangFormat', JSON.stringify(payload));  
   }
 
   getUserLangFormat() {

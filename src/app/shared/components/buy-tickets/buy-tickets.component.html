@@ -1,8 +1,10 @@
+
+@if(movieDetails){
 <div class="container-fluid px-5 py-3 bg-white">
   <!-- Movie Title -->
   <div class=" bg-white  border-bottom py-3">
     <h4 class="fs-1">{{movieDetails?.name}} - ({{commonService.userLangFormat().lang}})</h4>
-    <span class="text-muted small border rounded-pill px-3 py-1">Movie runtime: {{movieDetails.runTime}}</span>
+    <span class="text-muted small border rounded-pill px-3 py-1">Movie runtime: {{movieDetails?.runTime}}</span>
     <span class="text-muted small border rounded-pill px-3  ms-2 py-1">A</span>
     @for(genre of movieDetails?.genres;track $index){
     <span class="text-muted small bg-light text-dark  rounded-pill px-2 border ms-2 py-1">{{genre}}</span>
@@ -35,8 +37,8 @@
           {{commonService.userLangFormat().format}}</button>
         <ul class="dropdown-menu">
 
-          @for(lang of movieDetails.languages;track $index ){
-          @for(format of movieDetails.format;track $index){
+          @for(lang of movieDetails?.languages;track $index ){
+          @for(format of movieDetails?.format;track $index){
           <li class="dropdown-item on_hover">
             {{lang}} - {{format}}
           </li>
@@ -114,14 +116,14 @@
   <div class="mb-4  bg-white">
     <!-- Theatre 1 -->
     <div
-      [routerLink]="[`/movies/${commonService._selectCity().toLowerCase()}/seat-layout/${movieDetails.eventId}/:theatreId/:showId/${commonService.userSelectedDate().today}`]"
+      [routerLink]="[`/movies/${commonService._selectCity()?.toLowerCase()}/seat-layout/${movieDetails?.eventId}/1/23/${commonService.userSelectedDate()?.today}`]"
       class="border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height: 7rem;">
       <div class="d-flex flex-column  " style="width:25rem">
         <div class="fw-semibold   d-flex align-items-center justify-content-center gap-3">
           <img
             src="https://play-lh.googleusercontent.com/FWnYQ8Bwljw9z1SxBeAJ0ahIB7wJ8A2RrjhITKGwMsy2m28bSNYvuk5xfU_eM_YLcysl=w240-h480-rw"
             alt="cinema" class="border" style="width:10%; border-radius:20%;" />
-          The Vijay Park Multiplex: Injambakkam ECR 4K Atmos
+          CineStar Multiplex : Injambakkam ECR 4K Atmos
         </div>
         <!-- beverages icon -->
         <div class="d-flex gap-2 mt-2 align-items-center ">
@@ -139,14 +141,27 @@
 
 
         <div class=" hover_container ">
-
           <div class="hover-div ">
 
-            @for(i of [1,2,3,4];track $index){
+            @for(i of [1];track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹400</span>
+              <span>₹800</span>
+              <span class="p-0 m-0 ">
+                SILVER
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+            <div class="d-flex flex-column mx-1">
+              <span>₹1500</span>
               <span class="p-0 m-0 ">
                 GOLD
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+            <div class="d-flex flex-column mx-1">
+              <span>₹1000</span>
+              <span class="p-0 m-0 ">
+                PLATINUM
               </span>
               <span class="p-0 m-0 text-success">Available</span>
             </div>
@@ -161,15 +176,29 @@
         </div>
 
 
-       <div class=" hover_container ">
+        <div class=" hover_container ">
 
           <div class="hover-div ">
 
-            @for(i of [1,2,3,4];track $index){
+            @for(i of [1];track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹400</span>
+              <span>₹800</span>
+              <span class="p-0 m-0 ">
+                SILVER
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+            <div class="d-flex flex-column mx-1">
+              <span>₹1500</span>
               <span class="p-0 m-0 ">
                 GOLD
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+            <div class="d-flex flex-column mx-1">
+              <span>₹1000</span>
+              <span class="p-0 m-0 ">
+                PLATINUM
               </span>
               <span class="p-0 m-0 text-success">Available</span>
             </div>
@@ -184,15 +213,29 @@
         </div>
 
 
-       <div class=" hover_container ">
+        <div class=" hover_container ">
 
           <div class="hover-div ">
 
-            @for(i of [1,2,3,4];track $index){
+            @for(i of [1];track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹400</span>
+              <span>₹800</span>
+              <span class="p-0 m-0 ">
+                SILVER
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+            <div class="d-flex flex-column mx-1">
+              <span>₹1500</span>
               <span class="p-0 m-0 ">
                 GOLD
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+            <div class="d-flex flex-column mx-1">
+              <span>₹1000</span>
+              <span class="p-0 m-0 ">
+                PLATINUM
               </span>
               <span class="p-0 m-0 text-success">Available</span>
             </div>
@@ -208,13 +251,27 @@
 
         <div class=" hover_container ">
 
-          <div class="hover-div ">
+       <div class="hover-div ">
 
-            @for(i of [1,2,3,4];track $index){
+            @for(i of [1];track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹400</span>
+              <span>₹800</span>
+              <span class="p-0 m-0 ">
+                SILVER
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+             <div class="d-flex flex-column mx-1">
+              <span>₹1500</span>
               <span class="p-0 m-0 ">
                 GOLD
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+                         <div class="d-flex flex-column mx-1">
+              <span>₹1000</span>
+              <span class="p-0 m-0 ">
+                PLATINUM
               </span>
               <span class="p-0 m-0 text-success">Available</span>
             </div>
@@ -255,13 +312,27 @@
 
         <div class=" hover_container ">
 
-          <div class="hover-div ">
+         <div class="hover-div ">
 
-            @for(i of [1,2,3,4];track $index){
+            @for(i of [1];track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹400</span>
+              <span>₹800</span>
+              <span class="p-0 m-0 ">
+                SILVER
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+             <div class="d-flex flex-column mx-1">
+              <span>₹1500</span>
               <span class="p-0 m-0 ">
                 GOLD
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+                         <div class="d-flex flex-column mx-1">
+              <span>₹1000</span>
+              <span class="p-0 m-0 ">
+                PLATINUM
               </span>
               <span class="p-0 m-0 text-success">Available</span>
             </div>
@@ -274,15 +345,29 @@
           </button>
           <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
         </div>
-      <div class=" hover_container ">
+        <div class=" hover_container ">
 
           <div class="hover-div ">
 
-            @for(i of [1,2,3,4];track $index){
+            @for(i of [1];track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹400</span>
+              <span>₹800</span>
+              <span class="p-0 m-0 ">
+                SILVER
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+             <div class="d-flex flex-column mx-1">
+              <span>₹1500</span>
               <span class="p-0 m-0 ">
                 GOLD
+              </span>
+              <span class="p-0 m-0 text-success">Available</span>
+            </div>
+                         <div class="d-flex flex-column mx-1">
+              <span>₹1000</span>
+              <span class="p-0 m-0 ">
+                PLATINUM
               </span>
               <span class="p-0 m-0 text-success">Available</span>
             </div>
@@ -300,3 +385,4 @@
     <!-- Add more theatres in same structure -->
   </div>
 </div>
+}

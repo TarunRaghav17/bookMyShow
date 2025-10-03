@@ -6,6 +6,7 @@ import { ActivitiesRoutingModule } from "../../../modules/explore/activities/act
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { AuthService } from '../../../auth/auth-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute } from '@angular/router';
 
 type SeatStatus = 'available' | 'selected' | 'booked';
 
@@ -57,6 +58,7 @@ export class SeatLayoutComponent {
     private location: Location,
     private authService: AuthService,
     private toaster: ToastrService,
+    private route: ActivatedRoute
   ) { }
 
   private modalRef?: NgbModalRef | null = null;
@@ -92,6 +94,7 @@ export class SeatLayoutComponent {
     this.commonService.showHeader.set(false)
     this.initializeCanvas()
     this.open(this.seatModal);
+    this.fetchContentIdByUrl()
   }
   ngOnDestroy() {
     this.commonService.showHeader.set(true);
@@ -103,6 +106,18 @@ export class SeatLayoutComponent {
       .reduce((sum, s) => sum + s.price, 0);
   }
 
+
+   fetchContentIdByUrl() {
+    let contentId: string | null = this.route.snapshot.paramMap.get('movieId')
+    this.commonService.getContentDetailsById(contentId).subscribe({
+      next: (res) => {
+        this.movieDetails = res.data
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+  }
  
 
   open(content: TemplateRef<any>) {

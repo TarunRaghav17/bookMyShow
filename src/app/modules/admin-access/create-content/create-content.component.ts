@@ -46,14 +46,12 @@ export class CreateContentComponent implements OnInit {
     private titleService: Title,
   ) { }
 
-
-
   ngOnInit(): void {
     this.titleService.setTitle('Create Content')
     this.tempFormArray = this.fb.array([])
 
     this.setToday()
-   
+
     this.eventShowForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(4)]],
       description: ['', [Validators.required, Validators.minLength(30)]],
@@ -70,16 +68,7 @@ export class CreateContentComponent implements OnInit {
       // review later
       venueName: this.fb.array([], [Validators.required]),
 
-
-
-
-
-
     });
-
-
-
-
   }
 
 
@@ -114,25 +103,18 @@ export class CreateContentComponent implements OnInit {
   }
 
   onEventTypeChange() {
-
-    this.removeControls(this.eventShowForm, ['languages','releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price','startDate','endDate']);
+    this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
 
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
 
-
-    this.eventShowForm.addControl('startDate', this.fb.control('',[Validators.required]))
-    this.eventShowForm.addControl('endDate', this.fb.control('',[Validators.required]));
-
-    // this.handleReset(['city', 'status', 'venueName', 'eventName'])
-    // this.venuesNameList = []
-    // this.eventsNameList = []
-    // this.languagesArray = []
-    // api to get cities
+    this.eventShowForm.addControl('startDate', this.fb.control('', [Validators.required]))
+    this.eventShowForm.addControl('endDate', this.fb.control('', [Validators.required]));
 
     this.commonService.getAllCities().subscribe(
-      (res) =>{ this.citiesArray = res.data
-    }
+      (res) => {
+        this.citiesArray = res.data
+      }
     )
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
 
@@ -140,7 +122,7 @@ export class CreateContentComponent implements OnInit {
 
       case 'Movie':
         {
-          this.removeControls(this.eventShowForm, ['shows', 'price','startDate','endDate'])
+          this.removeControls(this.eventShowForm, ['shows', 'price', 'startDate', 'endDate'])
 
           this.eventShowForm.addControl('screens', this.fb.array([]))
 
@@ -149,7 +131,6 @@ export class CreateContentComponent implements OnInit {
           this.eventShowForm.addControl('genres', this.fb.array([], Validators.required));
           this.eventShowForm.addControl('format', this.fb.array([], Validators.required));
           this.eventShowForm.addControl('releasingOn', this.fb.control('', [Validators.required]));
-
           break;
         }
 
@@ -157,9 +138,6 @@ export class CreateContentComponent implements OnInit {
         this.eventShowForm.addControl('languages', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
-
-
-
         break;
       }
 
@@ -168,21 +146,17 @@ export class CreateContentComponent implements OnInit {
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('genres', this.fb.array([], Validators.required));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
-
         break;
       }
       case 'Sports': {
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
-
         break;
       }
 
       case 'Activities': {
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
-
-
         break;
       }
 
@@ -191,8 +165,6 @@ export class CreateContentComponent implements OnInit {
         break;
       }
     }
-
-
 
     forkJoin({
       languages: this.contentService.getLanguagesByContentType(this.selectedEventType),
@@ -229,14 +201,11 @@ export class CreateContentComponent implements OnInit {
       this.screens?.clear();
 
       selectedVenues.forEach((venue: any) => {
-        venue.screens.forEach((screen: any) => {
+        venue?.screens?.forEach((screen: any) => {
           this.screens.push(this.createScreen(screen, venue.venueName))
         })
       });
     }
-
-
-
   }
 
   createShow() {
@@ -269,14 +238,11 @@ export class CreateContentComponent implements OnInit {
 
   addShowTime(show: AbstractControl) {
     this.getStartTime(show).push(this.createShowTime())
-    // this.showForm.get('startTime') as FormArray).push(this.createTime())
   }
 
   removeShowTime(show: AbstractControl, index: number) {
     this.getStartTime(show).removeAt(index)
-
   }
-
 
   get categories(): FormArray {
     return this.eventShowForm.get('categories') as FormArray;
@@ -286,9 +252,6 @@ export class CreateContentComponent implements OnInit {
     return ((layout.get('rows') as FormArray).value).length
   }
 
-
-
-
   // -----------for event type != movie------start------------------
 
   get shows(): FormArray {
@@ -296,7 +259,6 @@ export class CreateContentComponent implements OnInit {
   }
   addEventShow() {
     this.shows.push(this.createShow())
-
   }
 
   removeEventShow(index: number) {
@@ -314,23 +276,6 @@ export class CreateContentComponent implements OnInit {
     });
   }
 
-
-
-
-  onCityChange() {
-    // let selectedEventType = this.showForm.get('eventType')?.value
-    // let selectedCity = this.showForm.get('city')?.value
-
-    // this.handleReset(['venueName', 'eventName'])
-    // this.venuesNameList = []
-    // this.eventsNameList = []
-    // this.languagesArray = []
-
-  }
-
-
-
-
   onEventNameChange() {
     let selectedEventName = this.eventShowForm.get('eventName')?.value
     let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
@@ -344,17 +289,15 @@ export class CreateContentComponent implements OnInit {
   }
 
 
-setMinEndDate() {
-  const startDateValue = this.eventShowForm.get('startDate')?.value;
-  if (startDateValue) {
-    const startDate = new Date(startDateValue);
+  setMinEndDate() {
+    const startDateValue = this.eventShowForm.get('startDate')?.value;
+    if (startDateValue) {
+      const startDate = new Date(startDateValue);
 
-    return startDate.toISOString().split('T')[0];
+      return startDate.toISOString().split('T')[0];
+    }
+    return null;
   }
-  return null;
-}
-
-
 
   validateStartTime(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -382,24 +325,40 @@ setMinEndDate() {
   }
 
   validateShowStartDate(index: number): string {
-    if(this.eventShowForm.get('releasingOn')?.value){
-    const today = new Date(this.eventShowForm.get('releasingOn')?.value)
+    if (this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('startDate')?.value) {
+      const today = new Date(this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('startDate')?.value)
 
-    // Clone today
-    const minDate = new Date(today);
+      // Clone today
+      const minDate = new Date(today);
 
-    // Add index days
-    minDate?.setDate(today.getDate() + index);
+      // Add index days
+      minDate?.setDate(today.getDate() + index);
 
-    // Return in yyyy-mm-dd format
-    return minDate?.toISOString()?.split('T')[0]
+      // Return in yyyy-mm-dd format
+      return minDate?.toISOString()?.split('T')[0]
+    }
+    return ''
   }
-  return ''
+
+  validateShowEndDate(): string {
+    if (this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('endDate')?.value) {
+      const today = new Date(this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('endDate')?.value)
+
+      // Clone today
+      const minDate = new Date(today);
+
+      // Add index days
+      minDate?.setDate(today.getDate());
+
+      // Return in yyyy-mm-dd format
+      return minDate?.toISOString()?.split('T')[0]
+    }
+    return ''
   }
 
   onShowFormSubmit(): void {
-    let eventShowFormObj = this.eventShowForm.value;
 
+    let eventShowFormObj = this.eventShowForm.value;
     let show = eventShowFormObj?.screens?.map((screen: any) => {
       return {
         venue: screen.venueName,
@@ -414,9 +373,9 @@ setMinEndDate() {
       };
     });
 
-let selectedCityIds = this.citiesArray
-  ?.filter((city: any) => this.city.value.includes(city.cityName))
-  .map((city: any) => city.cityId);
+    let selectedCityIds = this.citiesArray
+      ?.filter((city: any) => this.city.value.includes(city.cityName))
+      .map((city: any) => city.cityId);
 
     let newEventShowFormObj = {
       name: eventShowFormObj?.name,
@@ -436,8 +395,8 @@ let selectedCityIds = this.citiesArray
       moreFilters: eventShowFormObj?.moreFilters,
       cast: eventShowFormObj?.cast,
       crew: eventShowFormObj?.crew,
-      city:selectedCityIds,
-      price: eventShowFormObj?.price,
+      city: selectedCityIds,
+      showPrice: eventShowFormObj?.price,
       shows: show
     }
 
@@ -445,6 +404,31 @@ let selectedCityIds = this.citiesArray
       this.showService.createShow(newEventShowFormObj, eventShowFormObj.imageurl).subscribe({
         next: () => {
           this.toaster.success('Show created successfully')
+
+          this.getArrayControl('languages')?.clear()
+          this.getArrayControl('genres')?.clear();
+          this.getArrayControl('format')?.clear();
+          this.getArrayControl('tag')?.clear();
+          this.getArrayControl('categories')?.clear();
+          this.getArrayControl('moreFilters')?.clear();
+          this.getArrayControl('screens')?.clear();
+          this.getArrayControl('cast')?.clear();
+          this.getArrayControl('crew')?.clear();
+
+          this.eventShowForm.reset()
+
+          this.eventShowForm.get('eventType')?.setValue('');
+          this.eventShowForm.get('releaseMonth')?.setValue('');
+          this.eventShowForm.get('city')?.setValue('Select Cities');
+          this.eventShowForm.get('price')?.setValue('');
+          this.eventShowForm.get('releasingOn')?.setValue('');
+          this.eventShowForm.get('startDate')?.setValue('');
+          this.eventShowForm.get('endDate')?.setValue('');
+          this.eventShowForm.get('imageurl')?.setValue('');
+          this.eventShowForm.get('name')?.setValue('');
+          this.eventShowForm.get('description')?.setValue('');
+          this.eventShowForm.get('runTime')?.setValue('');
+          this.eventShowForm.get('ageLimit')?.setValue('');
         },
         error: (err) => {
           this.toaster.error(err.error.message)
@@ -543,30 +527,28 @@ let selectedCityIds = this.citiesArray
 
     }
 
-
-     this.callApiForCities();
+    this.callApiForCities();
   }
 
-
-callApiForCities() {
-  const cities = this.city.value; // array of city names
-  cities.forEach((city: string) => {
-    this.venuesService.getVenues(city)
-      .subscribe({
-        next: (res) => {
+  callApiForCities() {
+    const cities = this.city.value; // array of city names
+    cities.forEach((city: string) => {
+      this.venuesService.getVenues(city)
+        .subscribe({
+          next: (res) => {
             this.venuesNameList = res
-            .filter((venue: any) => {
-              venue.venueType == this.eventShowForm.get('eventType')?.value 
-              return venue
-            }
-          );
-        },
-        error: (err) => {
-          console.error(`Error fetching for ${city}`, err);
-        }
-      });
-  });
-}
+              .filter((venue: any) => {
+                venue.venueType == this.eventShowForm.get('eventType')?.value
+                return venue
+              }
+              );
+          },
+          error: (err) => {
+            console.error(`Error fetching for ${city}`, err);
+          }
+        });
+    });
+  }
 
 
   get venueName(): FormArray {
@@ -589,7 +571,6 @@ callApiForCities() {
   setEventType(value: any) {
     this.eventShowForm.get('eventType')?.setValue(value)
     this.onEventTypeChange()
-
   }
 
   handleImageUpload(event: Event, path: string, index?: number): void {
