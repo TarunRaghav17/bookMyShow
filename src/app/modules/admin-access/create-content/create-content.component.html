@@ -75,7 +75,7 @@
                  <!-- Starting On  -->
                 <div class="mb-3 w-100">
                     <label class="form-label">Ending On</label>
-                    <input type="date" class="form-control" formControlName="endDate" [min]="setToday()"
+                    <input type="date" class="form-control" formControlName="endDate" [min]="setMinEndDate()"
                         [ngClass]="{'is-invalid': isInvalid('endDate')}" />
                     @if(isInvalid('endDate')){
                     <div class="invalid-feedback">
@@ -271,7 +271,7 @@
                                     <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
                                     <select class="form-select" [formControlName]="$index">
                                         <option value="" disabled selected>Select</option>
-                                        @for(slot of ['slot-1','slot-2','slot-3','slot-4'];track $index){
+                                        @for(slot of ['11:00','13:00','15:00','18:00',];track $index){
                                         <option value={{slot}}>
                                             {{slot}}
                                         </option>
@@ -317,7 +317,7 @@
 
                         <select class="form-select" [formControlName]="$index">
                             <option value="" disabled selected>Select</option>
-                            @for(slot of ['slot-1','slot-2','slot-3','slot-4'];track $index){
+                            @for(slot of ['11:00','13:00','15:00','18:00'];track $index){
                             <option value={{slot}}>
                                 {{slot}}
                             </option>

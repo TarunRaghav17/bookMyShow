@@ -343,6 +343,19 @@ export class CreateContentComponent implements OnInit {
     return this.minDate
   }
 
+
+setMinEndDate() {
+  const startDateValue = this.eventShowForm.get('startDate')?.value;
+  if (startDateValue) {
+    const startDate = new Date(startDateValue);
+
+    return startDate.toISOString().split('T')[0];
+  }
+  return null;
+}
+
+
+
   validateStartTime(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const form = control.parent as FormGroup;
