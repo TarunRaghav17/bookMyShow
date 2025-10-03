@@ -64,7 +64,7 @@ getShows(){
   }
 
    onBooking(){
-    alert('Ticket Booked SuccessFully')
+    this.toastr.success("Ticket booked successfully")
     this.router.navigate(['/explore/home'])
   }
 }
