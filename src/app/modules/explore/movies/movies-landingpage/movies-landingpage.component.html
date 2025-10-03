@@ -62,21 +62,23 @@
                         </div>
                         <div class="col-9 d-block ">
                             <div class="top_bar_Comming_soon d-flex flex-column gap-3">
-                                <div class="d-flex gap-2 language_text py-2 flex-wrap">
+                                <div class="d-flex gap-2 language_text py-2 flex-wrap border-danger">
                                     @for (item of commonService.selectedFiltersSignal(); track $index) {
                                     @for(i of item.data;track $index){
-                                    <span [ngClass]="{selectedText: i.selected}" class="border-danger">
+                                    <span [ngClass]="{selectedText: i.selected}" class="border-danger"
+                                        (click)="getFilter({ filterName: i, type: item.type, index: $index })">
                                         {{i.text}}
                                     </span>
                                     }
                                     }
-                                    @for (item of commonService.topFiltersArray()[0]?.data; track $index) {
-                                    @if(!item.selected){
-
-                                    <span [ngClass]="{selectedText: item.selected}"
-                                        (click)="commonService.handleEventFilter(item)">
-                                        {{item.text}}
+                                    @for (item of commonService.topFiltersArray(); track $index) {
+                                    @for (i of item.data; track $index) {
+                                    @if (!i.selected && 'Language' == item.type) {
+                                    <span [ngClass]="{ selectedText: item.selected }"
+                                        (click)="getFilter({ filterName: i, type: item.type, index: $index })">
+                                        {{ i.text }}
                                     </span>
+                                    }
                                     }
                                     }
                                 </div>
@@ -88,16 +90,19 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="d-flex justify-content-start align-items-start g-0" [ngClass]="{'justify-content-center':dummyMoviesdata.length<=0 && !loaderService.loading()}">
+                                <div class="d-flex justify-content-start align-items-start g-0"
+                                    [ngClass]="{'justify-content-center':dummyMoviesdata.length<=0 && !loaderService.loading()}">
                                     <div class="main_box_crasoule">
                                         <div class="main_filter_card overflow-hidden">
-                                            <div class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start align-items-start" >
-                                                @if (dummyMoviesdata.length<=0 && !loaderService.loading()) { 
-                                                    <div class="d-flex flex-column gap-3 justify-content-center align-items-center w-100 no_data_found">
+                                            <div
+                                                class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start align-items-start">
+                                                @if (dummyMoviesdata.length<=0 && !loaderService.loading()) { <div
+                                                    class="d-flex flex-column gap-3 justify-content-center align-items-center w-100 no_data_found">
                                                     <img src="assets/images/No_result_found.png">
                                                     <p class="text-secondary">Your filter combination didn't fetch any
                                                         results... Kindly reset to discover more.</p>
-                                                    <button class="btn btn-outline-danger" (click)="resetFilter()">Reset Filter</button> 
+                                                    <button class="btn btn-outline-danger" (click)="resetFilter()">Reset
+                                                        Filter</button>
                                             </div>
                                             }
                                             @else {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-booking-events',
@@ -17,7 +17,7 @@ export class BookingEventsComponent implements OnInit{
   allShows:any[]=[]
   title:string|null =''
    
-constructor(private commonService:CommonService , private toastr: ToastrService ,private route:ActivatedRoute){
+constructor(private commonService:CommonService , private toastr: ToastrService ,private route:ActivatedRoute , private router:Router){
 
 }
   
@@ -61,5 +61,10 @@ getShows(){
         this.toastr.error(err.message)
       }
     })
+  }
+
+   onBooking(){
+    this.toastr.success("Ticket booked successfully")
+    this.router.navigate(['/explore/home'])
   }
 }
