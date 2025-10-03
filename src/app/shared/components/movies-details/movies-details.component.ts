@@ -52,7 +52,8 @@ export class MoviesDetailsComponent {
   }
 
   navigateToBuyTicket(payload: any) {
-    this.commonService.setUserLangFormat(payload)
+    this.commonService.setUserLangFormat(payload);
+    
     this.modalRef?.close()
     this.router.navigate(
       [`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.name.toLowerCase().split(' ').join('-')}/buytickets/${this.movieDetails.eventId}`],
