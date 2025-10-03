@@ -35,7 +35,7 @@
       <div class="summary">
         <div>{{ selectedSeats | json }}</div>
         <div>Total: ₹{{totalPrice }}</div>
-        <button class="confirm" [disabled]="!selectedSeats.length" (click)="onSubmit()">Proceed</button>
+        <button class="confirm" [disabled]="!selectedSeats.length" (click)="handleBookNow()">Book Now</button>
       </div>
       }
     </div>

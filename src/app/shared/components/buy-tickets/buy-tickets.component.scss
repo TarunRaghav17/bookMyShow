@@ -41,9 +41,53 @@ input[type="checkbox"].accent-blue {
   width: 30rem
 }
 
-.date_disabled{
-  opacity:0.5;
-  color:rgb(170, 170, 170);
-  cursor:not-allowed
+.date_disabled {
+  opacity: 0.5;
+  color: rgb(170, 170, 170);
+  cursor: not-allowed
+}
 
+.time_slot_btn {
+  width: 107px;
+  height: 40px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgb(31, 173, 62);
+  border-left: 4px solid rgb(31, 173, 62);
+}
+
+.hover_container {
+  position: relative;
+  display: inline-block; /* shrink container to button size */
+}
+
+.hover-div {
+  display: none; /* hide by default */
+  width: max-content; /* or max-content */
+  height: 5rem;
+  padding:5px;
+  position: absolute;
+  bottom: 5.2rem; /* distance above the button */
+  left: 50%; /* center horizontally relative to container */
+  transform: translateX(-50%); /* perfect center */
+  background-color: white;
+  color: #000000;
+  border: 1px solid #333;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+/* Show div when hovering the container/button */
+.hover_container:hover .hover-div {
+  display: flex;
+}
+
+.hover-btn {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #eee;
+  border: 1px solid #333;
+  border-radius: 4px;
 }

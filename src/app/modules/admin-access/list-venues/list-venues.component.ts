@@ -55,7 +55,7 @@ export class ListVenuesComponent implements OnInit {
    * @returnType void
    */
   setUserSelectedCity(event: any) {
-    this.userSelectedCity = event.target.value.toLowerCase();
+    this.userSelectedCity = event.target.value
     this.handleFilteredVenuesList()
   }
  /**
@@ -66,11 +66,11 @@ export class ListVenuesComponent implements OnInit {
   handleFilteredVenuesList() {
     this.filteredVenuesList = this.venuesList.filter((venue: any) => {
       const matchType = this.userSelectedVenueType
-        ? venue.venueFor?.toLowerCase() === this.userSelectedVenueType.toLowerCase()
+        ? venue.venueType?.toLowerCase() === this.userSelectedVenueType.toLowerCase()
         : true;
 
       const matchCity = this.userSelectedCity
-        ? venue.address?.city?.toLowerCase() === this.userSelectedCity.toLowerCase()
+        ? venue.address?.city?.cityName == this.userSelectedCity
         : true;
 
       return matchType && matchCity;
@@ -117,11 +117,22 @@ export class ListVenuesComponent implements OnInit {
   * @params address obj
   * @returnType array of obj values
   */
-  transformAddress(address: any) {
-    if (address) {
-      return Object.values(address)
+transformAddress(address: any): string {
+  if (!address) return "N/A";
+
+  let parts: any[] = [];
+
+  Object.values(address).forEach((val: any) => {
+    if (typeof val === "object" && val !== null) {
+      parts.push(...Object.values(val));
+    } else {
+      parts.push(val);
     }
-    return 'N/A'
-  }
+  });
+
+  return parts.join(", ");
+}
+
+
 
 }

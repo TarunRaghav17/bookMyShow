@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
-import { ShowsService } from './shows-services/shows.service';
 import { ToastrService } from 'ngx-toastr';
 import { ContentService } from '../create-content/content-services/content.service';
 import { CommonService } from '../../../services/common.service';
@@ -16,7 +15,6 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private venuesService: VenuesService,
     private contentService: ContentService,
-    private showService: ShowsService,
     private toaster: ToastrService,
     private commonService: CommonService
   ) { }
@@ -198,19 +196,19 @@ export class CreateShowComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-    if (this.showForm.valid) {
-      this.showService.createShow(this.showForm.value).subscribe({
-        next: () => {
-          this.toaster.success('Show created successfully')
-        },
-        error: (err) => {
-          this.toaster.error(err.error.message)
-        }
-      })
-    } else {
-      this.toaster.error('Form Invalid Please check all fields')
-      this.showForm.markAllAsTouched();
-    }
+    // if (this.showForm.valid) {
+    //   this.showService.createShow(this.showForm.value).subscribe({
+    //     next: () => {
+    //       this.toaster.success('Show created successfully')
+    //     },
+    //     error: (err) => {
+    //       this.toaster.error(err.error.message)
+    //     }
+    //   })
+    // } else {
+    //   this.toaster.error('Form Invalid Please check all fields')
+    //   this.showForm.markAllAsTouched();
+    // }
   }
   // utility funct. to reset form controls 
   // takes array of form-control names to reset 

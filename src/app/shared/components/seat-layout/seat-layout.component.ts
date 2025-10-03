@@ -1,8 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
+import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
+import { AuthService } from '../../../auth/auth-service.service';
+import { ToastrService } from 'ngx-toastr';
 
 type SeatStatus = 'available' | 'selected' | 'booked';
 
@@ -47,10 +50,13 @@ export class SeatLayoutComponent {
   // UI/config
   showTimes = ['11:05 AM', '02:40 PM', '06:15 PM', '09:50 PM'];
   activeShow = this.showTimes[0]; //user selected show
+  movieDetails: any;
 
-  constructor(private commonService: CommonService,
+  constructor(public commonService: CommonService,
     private modalService: NgbModal,
-    private location: Location
+    private location: Location,
+    private authService: AuthService,
+    private toaster: ToastrService,
   ) { }
 
   private modalRef?: NgbModalRef | null = null;
@@ -72,6 +78,7 @@ export class SeatLayoutComponent {
 
 
 
+
   noOfSelectedSeats = 2;
 
   seatCategories: SeatCategory[] = [
@@ -84,16 +91,19 @@ export class SeatLayoutComponent {
   ngAfterViewInit() {
     this.commonService.showHeader.set(false)
     this.initializeCanvas()
-    this.open(this.seatModal)
+    this.open(this.seatModal);
   }
-ngOnDestroy(){
-  this.commonService.showHeader.set(true)
-}
+  ngOnDestroy() {
+    this.commonService.showHeader.set(true);
+    this.close()
+  }
   get totalPrice() {
     return this.seats
       .filter(s => s.status === 'selected')
       .reduce((sum, s) => sum + s.price, 0);
   }
+
+ 
 
   open(content: TemplateRef<any>) {
     this.modalRef = this.modalService.open(content, {
@@ -156,9 +166,7 @@ ngOnDestroy(){
     this.draw();
   }
 
-  onSubmit() {
-    alert(`Proceeding with: ${this.selectedSeats.join(', ')} (₹${this.totalPrice})`);
-  }
+
 
   setNoOfSelectedSeats(noOfSelectedSeats: number) {
     this.noOfSelectedSeats = noOfSelectedSeats;
@@ -521,4 +529,24 @@ ngOnDestroy(){
     this.canvasRef.nativeElement.style.cursor = overSeat ? "pointer" : "grab";
   }
 
+
+  handleBookNow(): void {
+    let user = this.authService.getUserFromToken()
+    if (!user) {
+      let res = confirm('Please log in to book this Show.');
+      if (res) {
+        const modalOptions: NgbModalOptions = { centered: true };
+        this.modalService.open(UserAuthComponent, modalOptions);
+      }
+      return;
+    }
+let confirmTicket = confirm(`Proceeding with: ${this.selectedSeats.join(', ')} (₹${this.totalPrice})`);  
+
+if(confirmTicket){
+  this.toaster.success(`${this.selectedSeats.join(', ')} Booked Successfully.`);
+  this.location.back()
+
+}
+
+  }
 }

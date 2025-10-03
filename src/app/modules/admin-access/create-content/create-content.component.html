@@ -19,7 +19,7 @@
                 <!-- Poster -->
                 <div class="mb-3 w-50">
                     <label class="form-label">Poster</label>
-                    <input type="file" class="form-control" (change)="handleImageUpload($event,'imageurl')"
+                    <input type="file" class="form-control" (change)="handlePosterImgUpload($event,'imageurl')"
                         [ngClass]="{'is-invalid': isInvalid('imageurl')}" />
                     @if(isInvalid('imageurl')){
                     <div class="invalid-feedback">
@@ -31,7 +31,7 @@
             <!-- Description -->
             <div class="mb-3">
                 <label class="form-label">Description</label>
-                <textarea class="form-control" rows="3" formControlName="description"
+                <textarea class="form-control h-25" rows="3" formControlName="description"
                     [ngClass]="{'is-invalid': isInvalid('description')}"></textarea>
                 @if(isInvalid('description')){
                 <div class="invalid-feedback">
@@ -42,6 +42,9 @@
 
             <!--date-->
             <div class="row">
+
+
+                @if(eventShowForm.get('eventType')?.value=='Movie'){
                 <!-- Releasing On -->
                 <div class="mb-3 col-4">
                     <label class="form-label">Releasing On</label>
@@ -53,17 +56,47 @@
                     </div>
                     }
                 </div>
+            }
+
+            @else if(eventShowForm.get('eventType')?.value!='Movie' && eventShowForm.get('eventType')?.value!=''){
+                <div class="d-flex align-items-center justify-content-center col-4 gap-2">
+                <!-- Starting On  -->
+                <div class="mb-3 w-100">
+                    <label class="form-label">Starting On</label>
+                    <input type="date" class="form-control" formControlName="startDate" [min]="setToday()"
+                        [ngClass]="{'is-invalid': isInvalid('startDate')}" />
+                    @if(isInvalid('startDate')){
+                    <div class="invalid-feedback">
+                        Start Date is required.
+                    </div>
+                    }
+                </div>
+
+                 <!-- Starting On  -->
+                <div class="mb-3 w-100">
+                    <label class="form-label">Ending On</label>
+                    <input type="date" class="form-control" formControlName="endDate" [min]="setMinEndDate()"
+                        [ngClass]="{'is-invalid': isInvalid('endDate')}" />
+                    @if(isInvalid('endDate')){
+                    <div class="invalid-feedback">
+                        End Date is required.
+                    </div>
+                    }
+                </div>
+
+                </div>
+            }
 
                 <!--duration-->
                 <div class="col-md-4">
                     <label class="form-label">Duration (min)</label>
-                    <input type="number" class="form-control" formControlName="duration" min="20" />
-                    @if(eventShowForm.get('duration')?.touched && eventShowForm.get('duration')?.hasError('required')){
+                    <input type="number" class="form-control" formControlName="runTime" min="20" />
+                    @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('required')){
                     <div class="text-danger">
                         Duration is required.
                     </div>
                     }
-                    @if(eventShowForm.get('duration')?.touched && eventShowForm.get('duration')?.hasError('min')){
+                    @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('min')){
                     <div class="text-danger">
                         Duration must be greater than 20.
                     </div>
@@ -225,7 +258,7 @@
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                                 <input type="date" class="form-control me-3 w-25" formControlName="date"
                                     [min]="validateShowStartDate($index)">
-                                <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add
+                                <button class="btn btn-outline-primary col-1" (click)="addShowTime(show)">Add
                                 </button>
                                 <button class="btn btn-outline-danger ms-3"
                                     (click)="removeShow(screen,$index)">Remove</button>
@@ -238,13 +271,13 @@
                                     <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
                                     <select class="form-select" [formControlName]="$index">
                                         <option value="" disabled selected>Select</option>
-                                        @for(slot of ['slot-1','slot-2','slot-3','slot-4'];track $index){
+                                        @for(slot of ['11:00','13:00','15:00','18:00',];track $index){
                                         <option value={{slot}}>
                                             {{slot}}
                                         </option>
                                         }
                                     </select>
-                                    <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
+                                    <button class="btn btn-close" (click)="removeShowTime(show, $index)"></button>
                                 </div>
                                 }
                             </div>
@@ -272,7 +305,7 @@
                     <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                     <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
                         formControlName="date">
-                    <button class="btn btn-outline-primary col-1" (click)="addTime(show)">Add </button>
+                    <button class="btn btn-outline-primary col-1" (click)="addShowTime(show)">Add </button>
                     <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
                 </div>
                 <!-- start-time array -->
@@ -284,13 +317,13 @@
 
                         <select class="form-select" [formControlName]="$index">
                             <option value="" disabled selected>Select</option>
-                            @for(slot of ['slot-1','slot-2','slot-3','slot-4'];track $index){
+                            @for(slot of ['11:00','13:00','15:00','18:00'];track $index){
                             <option value={{slot}}>
                                 {{slot}}
                             </option>
                             }
                         </select>
-                        <button class="btn btn-close" (click)="removeTime(show, $index)"></button>
+                        <button class="btn btn-close" (click)="removeShowTime(show, $index)"></button>
                     </div>
                     }
                 </div>
@@ -299,10 +332,10 @@
         </div>
         }
         @if(eventShowForm.get('price') && eventShowForm.get('eventType')?.value != ''){
-        <div class="my-2 row  d-flex align-items-center p-3">
-            <div class="w-75 border ">
+        <div class="my-2 row d-flex align-items-center p-3 px-4 ">
+            <div class="w-75 d-flex align-items-center py-3 gap-5">
                       <h4>Price : ₹</h4>
-                <input type="number" formControlName="price" min="0" class="form-control px-3 w-25 ">
+                <input type="number" formControlName="price" min="0" class="form-control px-3 w-25 ms-1">
             </div>
         </div>
         }

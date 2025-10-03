@@ -34,12 +34,7 @@ export class CreateContentComponent implements OnInit {
   languagesArray: any[] = [];
   formatsArray: any[] = [];
   screensArray: any[] = [];
-  statusArray: any[] = [
-    "active",
-    "cancelled",
-    "completed",
-    "ongoing",
-  ];
+
   citiesArray: any[] | null = null;
 
   constructor(private fb: FormBuilder,
@@ -54,50 +49,32 @@ export class CreateContentComponent implements OnInit {
 
 
   ngOnInit(): void {
-this.titleService.setTitle('Create Content')
+    this.titleService.setTitle('Create Content')
     this.tempFormArray = this.fb.array([])
 
     this.setToday()
-
-    this.venuesService.getVenuesTest().subscribe({
-      next: (res) => {
-        this.venuesNameList = res
-        //   .filter((venue: any) => {
-        //     console.log(venue)
-        //     if (venue.address.city.toLowerCase() == selectedCity.toLowerCase() &&
-        //       venue.venueFor.toLowerCase() == selectedEventType.toLowerCase()) {
-        //       return venue
-        //     }
-        //   });
-      },
-      error: (err) => {
-        this.toaster.error(err)
-      }
-    })
-
+   
     this.eventShowForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(4)]],
-      imageurl: ['', [Validators.required]],
       description: ['', [Validators.required, Validators.minLength(30)]],
-      releasingOn: ['', [Validators.required]],
-      duration: [null, [Validators.required]],
-      ageLimit: [13, [Validators.required]],
-
+      runTime: [null, [Validators.required]],
       eventType: ['', [Validators.required]],  // Movie | Sports | Event | Plays | Activities
+      imageurl: ['', [Validators.required]],
+      ageLimit: [13, [Validators.required]],
+      releasingOn: ['', [Validators.required]],
       city: this.fb.array([], [Validators.required]),
+
+      cast: this.fb.array([this.createCast()], [Validators.required]),
+      crew: this.fb.array([this.createCrew()], [Validators.required]),
+
+      // review later
       venueName: this.fb.array([], [Validators.required]),
 
 
 
 
-      // Nested object arrays
-      cast: this.fb.array([this.createCast()], [Validators.required]),
-      crew: this.fb.array([this.createCrew()], [Validators.required]),
 
 
-      // for review later
-      deleted: [false],
-      status: ['', [Validators.required]],
     });
 
 
@@ -109,8 +86,6 @@ this.titleService.setTitle('Create Content')
   getLayouts(screen: AbstractControl): FormArray {
     return screen.get('layouts') as FormArray;
   }
-
-
 
   getTempArray() {
     return this.tempFormArray as FormArray
@@ -138,117 +113,16 @@ this.titleService.setTitle('Create Content')
     });
   }
 
-
-
-  onVenueNameChange() {
-    const selectedVenueName = (this.eventShowForm.get('venueName') as FormArray)?.value;
-
-    this.selectedVenueObj = this.venuesNameList.filter(v =>
-      selectedVenueName.includes(v.venueName)
-    );
-
-    console.log('venue', this.selectedVenueObj)
-    const selectedVenues: any[] = this.selectedVenueObj;
-
-    if (this.eventShowForm.get('eventType')?.value == 'Movie') {
-      this.screens?.clear();
-
-      selectedVenues.forEach((venue: any) => {
-        venue.screens.forEach((screen: any) => {
-          this.screens.push(this.createScreen(screen, venue.venueName))
-        })
-
-      });
-    }
-
-    console.log(this.screens?.value)
-
-
-  }
-
-  createShow() {
-    return this.fb.group({
-      date: ['', Validators.required],
-      startTime: this.fb.array([this.createTime()]),
-    })
-  }
-  // for movies
-  getShows(screen: AbstractControl): FormArray {
-    return screen.get('shows') as FormArray;
-  }
-  // for movies
-  addShow(screen: AbstractControl) {
-    this.getShows(screen).push(this.createShow())
-  }
-  // for movies
-  removeShow(screen: AbstractControl, index: number) {
-    console.log('remove show called')
-    this.getShows(screen).removeAt(index)
-  }
-
-
-  getStartTime(show: AbstractControl): FormArray {
-    return show.get('startTime') as FormArray
-  }
-
-  createTime() {
-    return this.fb.control('', [Validators.required])
-  }
-
-  addTime(show: AbstractControl) {
-    this.getStartTime(show).push(this.createTime())
-    // this.showForm.get('startTime') as FormArray).push(this.createTime())
-  }
-
-  removeTime(show: AbstractControl, index: number) {
-    this.getStartTime(show).removeAt(index)
-
-  }
-
-
-  get categories(): FormArray {
-    return this.eventShowForm.get('categories') as FormArray;
-  }
-
-  getRows(layout: AbstractControl): number {
-    return ((layout.get('rows') as FormArray).value).length
-  }
-
-
-
-
-  // -----------for event type != movie------start------------------
-
-  get shows(): FormArray {
-    return this.eventShowForm.get('shows') as FormArray
-  }
-  addEventShow() {
-    this.shows.push(this.createShow())
-
-  }
-
-  removeEventShow(index: number) {
-    this.shows.removeAt(index)
-
-  }
-
-  // -----------for event type != movie-----------end-------------
-
-  removeControls(form: FormGroup, controls: string[]) {
-    controls.forEach(control => {
-      if (form.contains(control)) {
-        form.removeControl(control);
-      }
-    });
-  }
-
   onEventTypeChange() {
 
-    this.removeControls(this.eventShowForm, ['languages', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens','shows','price']);
+    this.removeControls(this.eventShowForm, ['languages','releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price','startDate','endDate']);
 
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
 
+
+    this.eventShowForm.addControl('startDate', this.fb.control('',[Validators.required]))
+    this.eventShowForm.addControl('endDate', this.fb.control('',[Validators.required]));
 
     // this.handleReset(['city', 'status', 'venueName', 'eventName'])
     // this.venuesNameList = []
@@ -257,14 +131,16 @@ this.titleService.setTitle('Create Content')
     // api to get cities
 
     this.commonService.getAllCities().subscribe(
-      (res) => this.citiesArray = res.data)
+      (res) =>{ this.citiesArray = res.data
+    }
+    )
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
 
     switch (this.selectedEventType) {
 
       case 'Movie':
         {
-          this.removeControls(this.eventShowForm, ['shows', 'price'])
+          this.removeControls(this.eventShowForm, ['shows', 'price','startDate','endDate'])
 
           this.eventShowForm.addControl('screens', this.fb.array([]))
 
@@ -272,6 +148,7 @@ this.titleService.setTitle('Create Content')
           this.eventShowForm.addControl('tag', this.fb.array([], [Validators.required]));
           this.eventShowForm.addControl('genres', this.fb.array([], Validators.required));
           this.eventShowForm.addControl('format', this.fb.array([], Validators.required));
+          this.eventShowForm.addControl('releasingOn', this.fb.control('', [Validators.required]));
 
           break;
         }
@@ -339,6 +216,106 @@ this.titleService.setTitle('Create Content')
     })
   }
 
+  onVenueNameChange() {
+    const selectedVenueName = (this.eventShowForm.get('venueName') as FormArray)?.value;
+
+    this.selectedVenueObj = this.venuesNameList.filter(v =>
+      selectedVenueName.includes(v.venueName)
+    );
+
+    const selectedVenues: any[] = this.selectedVenueObj;
+
+    if (this.eventShowForm.get('eventType')?.value == 'Movie') {
+      this.screens?.clear();
+
+      selectedVenues.forEach((venue: any) => {
+        venue.screens.forEach((screen: any) => {
+          this.screens.push(this.createScreen(screen, venue.venueName))
+        })
+      });
+    }
+
+
+
+  }
+
+  createShow() {
+    return this.fb.group({
+      date: ['', Validators.required],
+      startTime: this.fb.array([this.createShowTime()]),
+    })
+  }
+  // for movies
+  getShows(screen: AbstractControl): FormArray {
+    return screen.get('shows') as FormArray;
+  }
+  // for movies
+  addShow(screen: AbstractControl) {
+    this.getShows(screen).push(this.createShow())
+  }
+  // for movies
+  removeShow(screen: AbstractControl, index: number) {
+    this.getShows(screen).removeAt(index)
+  }
+
+
+  getStartTime(show: AbstractControl): FormArray {
+    return show.get('startTime') as FormArray
+  }
+
+  createShowTime() {
+    return this.fb.control('', [Validators.required])
+  }
+
+  addShowTime(show: AbstractControl) {
+    this.getStartTime(show).push(this.createShowTime())
+    // this.showForm.get('startTime') as FormArray).push(this.createTime())
+  }
+
+  removeShowTime(show: AbstractControl, index: number) {
+    this.getStartTime(show).removeAt(index)
+
+  }
+
+
+  get categories(): FormArray {
+    return this.eventShowForm.get('categories') as FormArray;
+  }
+
+  getRows(layout: AbstractControl): number {
+    return ((layout.get('rows') as FormArray).value).length
+  }
+
+
+
+
+  // -----------for event type != movie------start------------------
+
+  get shows(): FormArray {
+    return this.eventShowForm.get('shows') as FormArray
+  }
+  addEventShow() {
+    this.shows.push(this.createShow())
+
+  }
+
+  removeEventShow(index: number) {
+    this.shows.removeAt(index)
+
+  }
+
+  // -----------for event type != movie-----------end-------------
+
+  removeControls(form: FormGroup, controls: string[]) {
+    controls.forEach(control => {
+      if (form.contains(control)) {
+        form.removeControl(control);
+      }
+    });
+  }
+
+
+
 
   onCityChange() {
     // let selectedEventType = this.showForm.get('eventType')?.value
@@ -366,6 +343,19 @@ this.titleService.setTitle('Create Content')
     return this.minDate
   }
 
+
+setMinEndDate() {
+  const startDateValue = this.eventShowForm.get('startDate')?.value;
+  if (startDateValue) {
+    const startDate = new Date(startDateValue);
+
+    return startDate.toISOString().split('T')[0];
+  }
+  return null;
+}
+
+
+
   validateStartTime(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const form = control.parent as FormGroup;
@@ -392,6 +382,7 @@ this.titleService.setTitle('Create Content')
   }
 
   validateShowStartDate(index: number): string {
+    if(this.eventShowForm.get('releasingOn')?.value){
     const today = new Date(this.eventShowForm.get('releasingOn')?.value)
 
     // Clone today
@@ -401,13 +392,57 @@ this.titleService.setTitle('Create Content')
     minDate?.setDate(today.getDate() + index);
 
     // Return in yyyy-mm-dd format
-    return minDate?.toISOString().split('T')[0];
+    return minDate?.toISOString()?.split('T')[0]
+  }
+  return ''
   }
 
   onShowFormSubmit(): void {
-    console.log('show form ', this.eventShowForm.value)
+    let eventShowFormObj = this.eventShowForm.value;
+
+    let show = eventShowFormObj?.screens?.map((screen: any) => {
+      return {
+        venue: screen.venueName,
+        screen: screen.screenName,
+        layout: screen.layouts,
+        showtimesdate: screen.shows.map((show: any) => {
+          return {
+            showDate: show.date,
+            showTime: show.startTime
+          };
+        })
+      };
+    });
+
+let selectedCityIds = this.citiesArray
+  ?.filter((city: any) => this.city.value.includes(city.cityName))
+  .map((city: any) => city.cityId);
+
+    let newEventShowFormObj = {
+      name: eventShowFormObj?.name,
+      description: eventShowFormObj?.description,
+      runTime: eventShowFormObj?.runTime,
+      startDate: eventShowFormObj?.startDate,
+      endDate: eventShowFormObj?.endDate,
+      eventType: eventShowFormObj?.eventType,
+      ageLimit: eventShowFormObj?.ageLimit,
+      releasingOn: eventShowFormObj?.releasingOn,
+      languages: eventShowFormObj?.languages,
+      genres: eventShowFormObj?.genres,
+      format: eventShowFormObj?.format,
+      tag: eventShowFormObj?.tag,
+      releaseMonth: eventShowFormObj?.releaseMonth,
+      categories: eventShowFormObj?.categories,
+      moreFilters: eventShowFormObj?.moreFilters,
+      cast: eventShowFormObj?.cast,
+      crew: eventShowFormObj?.crew,
+      city:selectedCityIds,
+      price: eventShowFormObj?.price,
+      shows: show
+    }
+
     if (this.eventShowForm.valid) {
-      this.showService.createShow(this.eventShowForm.value).subscribe({
+      this.showService.createShow(newEventShowFormObj, eventShowFormObj.imageurl).subscribe({
         next: () => {
           this.toaster.success('Show created successfully')
         },
@@ -420,6 +455,8 @@ this.titleService.setTitle('Create Content')
       this.eventShowForm.markAllAsTouched();
     }
   }
+
+
   // utility funct. to reset form controls 
   // takes array of form-control names to reset 
   handleReset(formControls: any[]) {
@@ -474,21 +511,6 @@ this.titleService.setTitle('Create Content')
     );
   }
 
-  onContentTypeChange() {
-    this.selectedEventType = this.eventShowForm.get('eventType')?.value
-    if (this.selectedEventType == 'Movie') {
-      this.eventShowForm.addControl(
-        'genres', this.fb.array([], Validators.required));
-      this.eventShowForm.addControl('format', this.fb.array([], Validators.required))//ONLY WHEN EVENT-TYPE =Movie);
-    }
-    else {
-      this.eventShowForm.removeControl('genres')
-      this.eventShowForm.removeControl('format')
-    }
-
-
-
-  }
 
   handleInputBoxChange(event: any, path: string) {
     const formArray = this.getArrayControl(path);
@@ -520,7 +542,32 @@ this.titleService.setTitle('Create Content')
       if (index != -1) this.city.removeAt(index);
 
     }
+
+
+     this.callApiForCities();
   }
+
+
+callApiForCities() {
+  const cities = this.city.value; // array of city names
+  cities.forEach((city: string) => {
+    this.venuesService.getVenues(city)
+      .subscribe({
+        next: (res) => {
+            this.venuesNameList = res
+            .filter((venue: any) => {
+              venue.venueType == this.eventShowForm.get('eventType')?.value 
+              return venue
+            }
+          );
+        },
+        error: (err) => {
+          console.error(`Error fetching for ${city}`, err);
+        }
+      });
+  });
+}
+
 
   get venueName(): FormArray {
     return this.eventShowForm.get('venueName') as FormArray
@@ -575,6 +622,22 @@ this.titleService.setTitle('Create Content')
     reader.readAsDataURL(file);
   }
 
+
+  handlePosterImgUpload(event: Event, path: string,): void {
+
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+
+    if (!file.type.startsWith('image/')) {
+      this.toaster.error('Please upload a valid image file');
+      return;
+    }
+
+    this.eventShowForm.get(path)?.setValue(file)
+    this.eventShowForm.get(path)?.value
+    this.toaster.success('Image uploaded successfully');
+  }
 
   isInvalid(controlName: string): boolean {
     const control = this.eventShowForm.get(controlName);

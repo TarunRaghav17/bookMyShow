@@ -3,9 +3,7 @@
         <div class="col-10 ">
             <div class="w-100 d-flex justify-content-between align-items-center">
                 <h4> Venues List</h4>
-                <div class="w-25  me-auto ms-2">
-                    <input type="text" class=" form-control w-100" placeholder="Search by Name, Type, City ">
-                </div>
+               
                 <div class=" py-3 d-flex w-50  d-flex align-items-center justify-content-start ">
                     <div class=" d-flex gap-4 align-items-center justify-content-center w-50 px-1">
                         <span>
@@ -16,7 +14,7 @@
                             <!-- (change)="selectRoleByList($event)" -->
                             <option value="" selected>All</option>
                             @for(city of cityList;track $index){
-                            <option value="{{city.cityName | lowercase}}">{{city.cityName | titlecase}}</option>
+                            <option value="{{city.cityName}}">{{city.cityName | titlecase}}</option>
                             }
                         </select>
                     </div>
@@ -41,8 +39,8 @@
                     <tr>
                         <th>Sr.No</th>
                         <th>Venue-Name</th>
-                        <th>Venue-For</th>
                         <th>Venue-Type</th>
+                        <th>Supported Categories</th>
                         <!-- <th>Screens</th> -->
                         <th>Venue-Capacity</th>
                         <th>Venue-Address</th>
@@ -54,14 +52,29 @@
                     <tr>
                         <td>{{ $index +1}}</td>
                         <td>{{ venue.venueName }}</td>
-                        <td>{{ venue.venueFor ?? 'N/A' }}</td>
                         <td>{{ venue.venueType ?? 'N/A' }}</td>
-                        <td>{{ venue.venueCapacity }}</td>
-                        <td>{{ transformAddress(venue.address) }}</td>
                         <td>
+                        @if(venue.supportedCategories.length>0){
+                            @for(a of venue.supportedCategories;track $index){
+                            {{a}},
+                            }
+                            }
+                            @else{
+                            N/A
+                            }
+                            </td> 
+                        <td>{{ venue.venueCapacity }}</td>
+                        <td>{{ transformAddress(venue.address)}}</td>
+                        <td>
+                            @if(venue.amenities.length>0){
                             @for(a of venue.amenities;track $index){
                             {{a}}
                             }
+                            }
+                            @else{
+                            N/A
+                            }
+
                         </td>
                     </tr>
                     }

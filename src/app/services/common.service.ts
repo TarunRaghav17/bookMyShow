@@ -29,7 +29,7 @@ export class CommonService {
   ) { }
 
   setUserLangFormat(payload: any) {
-    this.userLangFormat.set(payload)
+    this.userLangFormat.set(payload);
   }
 
   getUserLangFormat() {
