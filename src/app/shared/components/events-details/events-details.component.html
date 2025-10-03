@@ -97,18 +97,18 @@
                                 <i class="fa fa-map-marker" aria-hidden="true"></i>
                                 <span>{{eventDetails?.venueName[0]}}</span>
                             </div>
+                             @if(authService.userDetailsSignal()?.role == 'ADMIN'){
+                            <button class= "d-flex align-items-center gap-3 btn btn-secondary " (click)="handleDeleteEvent()">Delete</button>
+                            }
                             <hr>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="gap-2">
                                     <h5 class="">₹{{eventDetails?.pricelist[0]}} onwards</h5>
                                     <span>Filling Fast</span>
                                 </div>
-                                <a
-                                    [routerLink]="['/book-events/',commonService._selectedCategory(),eventDetails.name.split(' ').join('-'),eventDetails.eventId,eventDetails.startDate]"><button
-                                        class="book_now_btn"
-                                        >Book
+                                <button (click)="handleBookNow()" class="book_now_btn">Book
                                         now</button>
-                                </a>
+                                
                             </div>
                         </div>
                     </div>

@@ -21,22 +21,24 @@
                         </div>
                     </div>
                     <div class="col-9 d-block ">
-                        <div class="top_bar_Comming_soon d-flex flex-column gap-3">
+                       <div class="top_bar_Comming_soon d-flex flex-column gap-3">
                             <div class="d-flex gap-2 language_text py-2 flex-wrap border-danger">
                                 @for (item of commonService.selectedFiltersSignal(); track $index) {
                                 @for(i of item.data;track $index){
-                                <span [ngClass]="{selectedText: i.selected}" class="border-danger">
+                                <span [ngClass]="{selectedText: i.selected}" class="border-danger"
+                                    (click)="getFilter({ filterName: i, type: item.type, index: $index })">
                                     {{i.text}}
                                 </span>
                                 }
                                 }
-                                @for (item of commonService.topFiltersArray()[1]?.data; track $index) {
-                                @if(!item.selected){
-
-                                <span [ngClass]="{selectedText: item.selected}"
-                                    (click)="commonService.handleEventFilter(item)">
-                                    {{item.text}}
+                                @for (item of commonService.topFiltersArray(); track $index) {
+                                @for (i of item.data; track $index) {
+                                @if (!i.selected && 'Categories' == item.type) {
+                                <span [ngClass]="{ selectedText: item.selected }"
+                                    (click)="getFilter({ filterName: i, type: item.type, index: $index })">
+                                    {{ i.text }}
                                 </span>
+                                }
                                 }
                                 }
                             </div>
@@ -62,22 +64,22 @@
                                                     <div class="card shadow-sm">
                                                         <a class="img_container rounded-4 rounded-top"
                                                             [routerLink]="`/${commonService._selectedCategory()}/${item.name.split(' ').join('-')}/${item.eventId}`">
-                                                            <img [src]="commonService.getImageFromBase64(item.imageurl)"
+                                                            <img [src]="commonService.getImageFromBase64(item?.imageurl)"
                                                                 [alt]="item.imageurl">
                                                         </a>
                                                         <div class="card-body rounded-bottom bg-dark">
                                                             <div class="d-flex gap-2">
                                                                 <span class="text-white">
-                                                                    {{item.startDate}}
+                                                                    {{item?.startDate}}
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="bottom_text_movie_card py-3">
-                                                        <h6 class="card-text m-0">{{item.name}} </h6>
-                                                        <span class="m-0 d-flex">{{item.venueName[0]}}</span>
-                                                        <span class="m-0">{{item.categories}}</span>
-                                                        <span class="m-0 d-flex">₹ {{item.pricelist[0]}}</span>
+                                                        <h6 class="card-text m-0">{{item?.name}} </h6>
+                                                        <span class="m-0 d-flex">{{item?.venueName[0]}}</span>
+                                                        <span class="m-0">{{item?.categories}}</span>
+                                                        <span class="m-0 d-flex">₹ {{item?.pricelist[0]}}</span>
                                                     </div>
                                                 </div>
                                             </ng-container>
