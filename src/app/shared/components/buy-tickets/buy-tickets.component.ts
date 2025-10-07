@@ -198,27 +198,18 @@ export class BuyTicketsComponent implements AfterViewInit {
   ]
 
   ngOnInit() {
-
-
     this.initializeDateSelectionArray()
     this.commonService.setUserSelectedDate(0, this.dateSelectionArray[0]);
-
-
     this.theatres.map((theatre: any) => {
-      // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
-      // return theatre with its shows
       return {
         ...theatre,
         shows: theatreShows
       }
     });
   }
-
   ngAfterViewInit() {
     this.fetchContentIdByUrl();
-    
-
   }
 
   fetchContentIdByUrl() {
@@ -231,23 +222,19 @@ export class BuyTicketsComponent implements AfterViewInit {
         this.toaster.error(err.error.message)
       }
     })
-
     this.fetchVenuesShows(contentId);
   }
 
   fetchVenuesShows(contentId: string | null) {
     this.userSelectedDate = this.commonService.userSelectedDate()
-    console.log(this.userSelectedDate)
     this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
       next: (res) => {
         this.venueShowsDetails = res.data;
-        console.log(this.venueShowsDetails);
       },
       error: (err) => {
         this.toaster.error(err.error.message)
       }
     })
-
   }
 
   initializeDateSelectionArray() {
@@ -267,5 +254,4 @@ export class BuyTicketsComponent implements AfterViewInit {
     event.stopPropagation()
     this.isOpen = value
   }
-
 }
