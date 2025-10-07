@@ -78,9 +78,9 @@
                                                     </div>
                                                     <div class="bottom_text_movie_card py-3 d-flex flex-column">
                                                         <h6 class="card-text m-0">{{item?.name | truncate:25}} </h6>
-                                                        <span class="m-0 d-flex">{{item?.venueName[0]}}</span>
+                                                        <span class="m-0 d-flex">{{item?.venueName?.[0]}}</span>
                                                         <span class="m-0">{{item?.languages}}</span>
-                                                        <small class="m-0">₹ {{item?.pricelist[0]}}</small>
+                                                        <small class="m-0">₹ {{item?.pricelist?.[0]}}</small>
                                                     </div>
                                                 </div>
                                             </ng-container>

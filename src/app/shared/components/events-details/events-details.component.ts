@@ -20,7 +20,8 @@ export class EventsDetailsComponent implements OnInit {
   eventDetails: any | null = null;
   showHeader: boolean = false;
   allShows: any
-  constructor(private route: ActivatedRoute, private router:Router,public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal , public authService:AuthService , private location:Location) {
+  today!: Date
+  constructor(private route: ActivatedRoute, private router: Router, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal, public authService: AuthService, private location: Location) {
   }
 
 
@@ -80,7 +81,6 @@ export class EventsDetailsComponent implements OnInit {
     const textarea = document.createElement('textarea');
     textarea.value = link;
     document.body.appendChild(textarea);
-    textarea.focus();
     textarea.select();
     try {
       const successful = document.execCommand('copy');
@@ -96,44 +96,70 @@ export class EventsDetailsComponent implements OnInit {
     document.body.removeChild(textarea);
   }
 
+  handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
+  const modalRef = this.modalService.open(confirmDeleteModal, {
+    ariaLabelledBy: 'modal-basic-title',
+    modalDialogClass: 'no-border-modal',
+    backdrop:  'static',
+  });
 
-  handleBookNow(): void {
-    const token = localStorage.getItem('token'); 
+  modalRef.result
+    .then((result) => {
+      if (result === 'confirm') {
+        this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
+          next: (res) => {
+            this.toastr.success(res.message);
+            this.location.back();
+          },
+          error: (err) => {
+            this.toastr.error(err.error.message);
+          },
+        });
+      }
+    })
+    .catch(() => {});
+}
 
-    if (!token) {
-      let res = confirm('Please log in to book this event.');
-      if (res) {
+
+  getToday() {
+    const today = new Date();
+    const year = today.getUTCFullYear();
+    const month = String(today.getUTCMonth() + 1).padStart(2, '0');  
+    const day = String(today.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; 
+  }
+
+openConfirmModal(confirmModal: TemplateRef<any>) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    const modalRef = this.modalService.open(confirmModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'no-border-modal',
+      backdrop:'static'
+    });
+    modalRef.result.then((result) => {
+      if (result === 'login') {
         const modalOptions: NgbModalOptions = { centered: true };
         this.modalService.open(UserAuthComponent, modalOptions);
       }
-      return;
-    }
-
-    else{
-       this.router.navigate([
-  '/book-events',
-  this.commonService._selectedCategory(),
-  this.eventDetails.name.split(' ').join('-'),
-  this.eventDetails.eventId,
-  this.eventDetails.startDate
-]); 
-    }
+    }).catch(() => {});
+    return;
   }
-
-   handleDeleteEvent() {
-    let confirm = window.confirm('Are you sure to delete this event?')
-    if (confirm) {
-      this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
-        next: (res) => {
-          this.toastr.success(res.message);
-          this.location.back()
-        },
-        error: (err) => {
-          this.toastr.error(err.error.message)
-        }
-      })
- 
-    }
-  }
- 
+  this.router.navigate([
+    '/book-events',
+    this.commonService._selectedCategory(),
+    this.eventDetails.name.split(' ').join('-'),
+    this.eventDetails.eventId,
+    this.eventDetails.startDate,
+  ]);
 }
+
+eventClosed(closedModal: TemplateRef<any>) {
+  this.modalService.open(closedModal, {
+    ariaLabelledBy: 'modal-basic-title',
+    modalDialogClass: 'no-border-modal',
+    backdrop: 'static',
+  });
+}
+}
+

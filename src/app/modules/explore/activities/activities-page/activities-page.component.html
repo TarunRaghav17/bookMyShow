@@ -77,9 +77,9 @@
                                                     </div>
                                                     <div class="bottom_text_movie_card py-3">
                                                         <h6 class="card-text m-0">{{item?.name}} </h6>
-                                                        <span class="m-0 d-flex">{{item?.venueName[0]}}</span>
+                                                        <span class="m-0 d-flex">{{item?.venueName?.[0]}}</span>
                                                         <span class="m-0">{{item?.categories}}</span>
-                                                        <span class="m-0 d-flex">₹ {{item?.pricelist[0]}}</span>
+                                                        <span class="m-0 d-flex">₹ {{item?.pricelist?.[0]}}</span>
                                                     </div>
                                                 </div>
                                             </ng-container>

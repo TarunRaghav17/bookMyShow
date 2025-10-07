@@ -53,6 +53,9 @@ export class FilterAccordionComponent implements OnInit {
     if (type) {
       this.clearFilterEvent.emit(type);
     }
+     if (!this.openedIndex.includes(0)) {
+    this.openedIndex.push(0);
+  }
   }
 
 }

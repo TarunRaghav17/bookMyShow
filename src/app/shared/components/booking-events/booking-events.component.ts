@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-booking-events',
@@ -17,7 +18,7 @@ export class BookingEventsComponent implements OnInit{
   allShows:any[]=[]
   title:string|null =''
    
-constructor(private commonService:CommonService , private toastr: ToastrService ,private route:ActivatedRoute , private router:Router){
+constructor(private commonService:CommonService , private toastr: ToastrService ,private route:ActivatedRoute , private router:Router , private location:Location){
 
 }
   
@@ -66,5 +67,8 @@ getShows(){
    onBooking(){
     this.toastr.success("Ticket booked successfully")
     this.router.navigate(['/explore/home'])
+  }
+   goBack(){
+  this.location.back()
   }
 }
