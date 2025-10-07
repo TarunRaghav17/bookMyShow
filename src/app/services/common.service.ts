@@ -134,6 +134,17 @@ export class CommonService {
   getContentDetailsById(contentId: string | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${contentId}`);
   }
+
+   /**
+   * @description get venues and their shows by passing contentId and date
+   * @author Inzamam
+   * * @params  [contentId ,date]
+   * @return Observable<any>
+   */
+  getVenuesShowsByContentId(contentId: string | null,date:string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/shows?eventId=${contentId}&date=${date}`);
+  }
+
   /**
    * @description delete content by id
    * @author Inzamam

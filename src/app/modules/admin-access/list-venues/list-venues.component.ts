@@ -65,12 +65,13 @@ export class ListVenuesComponent implements OnInit {
    */
   handleFilteredVenuesList() {
     this.filteredVenuesList = this.venuesList.filter((venue: any) => {
+      console.log(venue)
       const matchType = this.userSelectedVenueType
-        ? venue.venueType?.toLowerCase() === this.userSelectedVenueType.toLowerCase()
+        ? venue.venueType == this.userSelectedVenueType
         : true;
 
       const matchCity = this.userSelectedCity
-        ? venue.address?.city?.cityName == this.userSelectedCity
+        ? venue.address?.cityName == this.userSelectedCity
         : true;
 
       return matchType && matchCity;
@@ -102,8 +103,8 @@ export class ListVenuesComponent implements OnInit {
    */
   getAllVenuesList() {
     this.venueService.getAllVenues().subscribe({
-      next: (res: any[]) => {
-        this.venuesList = res
+      next: (res: any) => {
+        this.venuesList = res.data
       },
       error: (err) => {
         this.toaster.error(err.error.message)

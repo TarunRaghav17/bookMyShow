@@ -37,8 +37,8 @@
         </div>
         <div class="col-md-4 mb-3">
             <label class="form-label">City</label>
-            <select formControlName="city" class="form-select"
-                [ngClass]="{'is-invalid': venueForm.get('address.city')?.touched && venueForm.get('address.city')?.invalid}">
+            <select formControlName="cityName" class="form-select"
+                [ngClass]="{'is-invalid': venueForm.get('address.cityName')?.touched && venueForm.get('address.cityName')?.invalid}">
                 <option value="" disabled>Select</option>
                 @for(city of citiesArray;track $index){
                 <option [value]="city.cityName ">{{city.cityName}}</option>

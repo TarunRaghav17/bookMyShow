@@ -15,8 +15,8 @@ export class VenuesService {
   createVenueService(payload: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/venues/create`, payload)
   }
-  getVenues(city: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/venues/city/${city}`)
+  getVenues(_city: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/venues/city/Meerut`)
   }
 
   getAllVenues():Observable<any>{

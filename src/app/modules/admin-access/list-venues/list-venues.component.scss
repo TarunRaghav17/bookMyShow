@@ -1,19 +1,16 @@
 .main_table_container {
-  width: calc(100%);
-  max-width: calc(100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  display: block;
   padding-inline: 10px;
+  overflow-x: auto;
 }
 
-/* Container Styling */
 .container-fluid {
   padding: 20px;
   background: #f9f9f9;
 }
 
-/* Table Wrapper */
 .main_table_container {
   display: flex;
   justify-content: center;
@@ -25,12 +22,14 @@ table {
   border-collapse: collapse;
   background: #fff;
   overflow: hidden;
+  table-layout: fixed;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 thead {
   background: #909090;
   color: #fff;
+
 }
 
 thead th {
@@ -122,6 +121,7 @@ td button:hover {
   gap: 8px;
   margin-bottom: 10px;
 }
+
 tbody tr:last-child .dropdown {
   top: -125px;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ContentService } from './content-services/content.service';
 import { ToastrService } from 'ngx-toastr';
-import { forkJoin } from 'rxjs';
+import { catchError, concatMap, forkJoin, from, map, toArray } from 'rxjs';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
 import { ShowsService } from '../create-show/shows-services/shows.service';
 import { CommonService } from '../../../services/common.service';
@@ -83,13 +83,16 @@ export class CreateContentComponent implements OnInit {
   get screens(): FormArray {
     return this.eventShowForm.get('screens') as FormArray;
   }
-  createScreen(screen: any, venueName: string): FormGroup {
+  createScreen(screen: any, venueName: string, venueId: string): FormGroup {
     return this.fb.group({
       screenName: [screen.screenName, Validators.required],
+      screenId:screen.id,
       venueName,
+      venueId,
       layouts: this.fb.array(
         screen.layouts.map((layout: any) =>
           this.fb.group({
+            id:[layout.id, []],
             layoutName: [layout.layoutName, Validators.required],
             rows: [layout.rows, Validators.required],
             cols: [layout.cols, Validators.required],
@@ -202,7 +205,7 @@ export class CreateContentComponent implements OnInit {
 
       selectedVenues.forEach((venue: any) => {
         venue?.screens?.forEach((screen: any) => {
-          this.screens.push(this.createScreen(screen, venue.venueName))
+          this.screens.push(this.createScreen(screen, venue.venueName, venue.id))
         })
       });
     }
@@ -276,12 +279,6 @@ export class CreateContentComponent implements OnInit {
     });
   }
 
-  onEventNameChange() {
-    let selectedEventName = this.eventShowForm.get('eventName')?.value
-    let selectedEventNameObj = this.eventsNameList.find((event: any) => event.name == selectedEventName)
-    this.languagesArray = selectedEventNameObj.languages
-    this.eventShowForm.get('status')?.setValue('active')
-  }
   setToday() {
     let today = new Date();
     this.minDate = today.toISOString().split('T')[0];
@@ -356,89 +353,256 @@ export class CreateContentComponent implements OnInit {
     return ''
   }
 
+  //   onShowFormSubmit(): void {
+  //     let eventShowFormObj = this.eventShowForm.value;
+
+  //     let show = eventShowFormObj?.screens?.map((screen: any) => {
+  //       return {
+  //         venue: screen.venueName,
+  //         screen: screen.screenName,
+  //         layout: screen.layouts,
+  //         showtimesdate: screen.shows.map((show: any) => {
+  //           return {
+  //             showDate: show.date,
+  //             showTime: show.startTime
+  //           };
+  //         })
+  //       };
+  //     });
+
+  // let selectedCityIds = this.citiesArray
+  //   ?.filter((city: any) => this.city.value.includes(city.cityName))
+  //   .map((city: any) => city.cityId);
+
+  //     let newEventShowFormObj = {
+  //       name: eventShowFormObj?.name,
+  //       description: eventShowFormObj?.description,
+  //       runTime: eventShowFormObj?.runTime,
+  //       startDate: eventShowFormObj?.startDate,
+  //       endDate: eventShowFormObj?.endDate,
+  //       eventType: eventShowFormObj?.eventType,
+  //       ageLimit: eventShowFormObj?.ageLimit,
+  //       releasingOn: eventShowFormObj?.releasingOn,
+  //       languages: eventShowFormObj?.languages,
+  //       genres: eventShowFormObj?.genres,
+  //       format: eventShowFormObj?.format,
+  //       tag: eventShowFormObj?.tag,
+  //       releaseMonth: eventShowFormObj?.releaseMonth,
+  //       categories: eventShowFormObj?.categories,
+  //       moreFilters: eventShowFormObj?.moreFilters,
+  //       cast: eventShowFormObj?.cast,
+  //       crew: eventShowFormObj?.crew,
+  //       city:selectedCityIds,
+  //       price: eventShowFormObj?.price,
+  //       shows: show
+  //     }
+
+  //     console.log(newEventShowFormObj)
+
+  //     if (this.eventShowForm.valid) {
+  //       this.showService.createShow(newEventShowFormObj, eventShowFormObj.imageurl).subscribe({
+  //         next: () => {
+  //           this.toaster.success('Show created successfully')
+  //         },
+  //         error: (err) => {
+  //           this.toaster.error(err.error.message)
+  //         }
+  //       })
+  //     } else {
+  //       this.toaster.error('Form Invalid Please check all fields')
+  //       this.eventShowForm.markAllAsTouched();
+  //     }
+  //   }
+
+
+
+
+  // onShowFormSubmit(): void {
+  //   const formValue = this.eventShowForm.value;
+
+  //   // 🧩 Step 1: Map shows and screens properly
+  //   const shows = formValue?.screens?.map((screen: any) => ({
+  //     venue: screen.venueName,     // Could be venueId depending on backend
+  //     screen: screen.screenName,   // Could be screenId depending on backend
+  //     layout: screen.layout,       // ✅ single layout ID
+  //     showPrice: screen.layout.price, // ✅ numeric
+  //     showtimesdate: screen.shows.map((show: any) => ({
+  //       showDate: show.date,
+  //       showTime: Array.isArray(show.startTime) ? show.startTime : [show.startTime] // ensure array
+  //     }))
+  //   }));
+
+  //   // 🏙️ Step 2: Get selected city IDs
+  //   const selectedCityIds = this.citiesArray
+  //     ?.filter((city: any) => this.city.value.includes(city.cityName))
+  //     .map((city: any) => city.cityId);
+
+  //   // 🧱 Step 3: Construct the final payload
+  //   const payload = {
+  //     name: formValue?.name,
+  //     description: formValue?.description,
+  //     runTime: formValue?.runTime,
+  //     startDate: formValue?.startDate,
+  //     endDate: formValue?.endDate,
+  //     eventType: formValue?.eventType,
+  //     imageurl: formValue?.imageurl,
+  //     imdbRating: formValue?.imdbRating,
+  //     likes: formValue?.likes,
+  //     votes: formValue?.votes,
+  //     currentlyPlaying: formValue?.currentlyPlaying,
+  //     ageLimit: formValue?.ageLimit,
+  //     releasingOn: formValue?.releasingOn,
+  //     languages: formValue?.languages,
+  //     genres: formValue?.genres,
+  //     format: formValue?.format,
+  //     tag: formValue?.tag,
+  //     releaseMonth: formValue?.releaseMonth,
+  //     dateFilter: formValue?.dateFilter,
+  //     categories: formValue?.categories,
+  //     moreFilters: formValue?.moreFilters,
+  //     cast: formValue?.cast,
+  //     crew: formValue?.crew,
+  //     city: selectedCityIds,
+  //     show: shows
+  //   };
+
+  //   console.log('✅ Final Payload:', payload);
+
+  //   // 🧾 Step 4: Validate & submit
+  //   if (this.eventShowForm.valid) {
+  //     this.showService.createShow(payload, formValue.imageurl).subscribe({
+  //       next: () => this.toaster.success('Show created successfully'),
+  //       error: (err) => this.toaster.error(err.error.message)
+  //     });
+  //   } else {
+  //     this.toaster.error('Form Invalid — Please check all fields');
+  //     this.eventShowForm.markAllAsTouched();
+  //   }
+  // }
+
+
+  // Get selected city IDs
+
+
+
+
+
   onShowFormSubmit(): void {
+    const formValue = this.eventShowForm.value;
+    console.log(formValue)
 
-    let eventShowFormObj = this.eventShowForm.value;
-    let show = eventShowFormObj?.screens?.map((screen: any) => {
-      return {
-        venue: screen.venueName,
-        screen: screen.screenName,
-        layout: screen.layouts,
-        showtimesdate: screen.shows.map((show: any) => {
-          return {
+    const selectedVenueIds = this.selectedVenueObj
+      ?.filter((venue: any) => formValue.venueName?.includes(venue.venueName))
+      .map((venue: any) => venue.id);
+
+    console.log("selectedVenueIds", selectedVenueIds)
+    // Map Shows and Screens properly
+    let shows: any[] = [];
+
+    if (formValue?.eventType === 'Movie') {
+      // 🎬 Movie → screens + layouts + shows
+      shows = formValue?.screens?.flatMap((screen: any) =>
+        screen.layouts.map((layout: any) => ({
+          venue: screen.venueId ?? screen.venueName,
+          screen: screen.screenId ?? screen.screenName,
+          layout: layout.id ?? layout.layoutName,
+          showPrice: Number(layout.price || 0),
+          showtimesdate: screen.shows?.map((show: any) => ({
             showDate: show.date,
-            showTime: show.startTime
-          };
-        })
-      };
-    });
+            showTime: Array.isArray(show.startTime)
+              ? show.startTime
+              : [show.startTime],
+          })) ?? [],
+        }))
+      ) ?? [];
+    } else {
 
-    let selectedCityIds = this.citiesArray
+
+      shows = selectedVenueIds.map((venueId: number) => ({
+        venue: venueId,  // assign each ID to its own show object
+        screen: null,
+        layout: null,
+        showPrice: Number(formValue.price || 0),
+        showtimesdate: formValue.shows?.map((show: any) => ({
+          showDate: show.date,
+          showTime: Array.isArray(show.startTime)
+            ? show.startTime
+            : [show.startTime],
+        })) ?? [],
+      }));
+    }
+
+
+
+
+
+
+
+
+    // Get selected city IDs
+    const selectedCityIds = this.citiesArray
       ?.filter((city: any) => this.city.value.includes(city.cityName))
       .map((city: any) => city.cityId);
 
-    let newEventShowFormObj = {
-      name: eventShowFormObj?.name,
-      description: eventShowFormObj?.description,
-      runTime: eventShowFormObj?.runTime,
-      startDate: eventShowFormObj?.startDate,
-      endDate: eventShowFormObj?.endDate,
-      eventType: eventShowFormObj?.eventType,
-      ageLimit: eventShowFormObj?.ageLimit,
-      releasingOn: eventShowFormObj?.releasingOn,
-      languages: eventShowFormObj?.languages,
-      genres: eventShowFormObj?.genres,
-      format: eventShowFormObj?.format,
-      tag: eventShowFormObj?.tag,
-      releaseMonth: eventShowFormObj?.releaseMonth,
-      categories: eventShowFormObj?.categories,
-      moreFilters: eventShowFormObj?.moreFilters,
-      cast: eventShowFormObj?.cast,
-      crew: eventShowFormObj?.crew,
+    // Convert dropdowns to numeric arrays
+    const toNumericArray = (arr: any[]) =>
+      arr?.map((item: any) => (typeof item === 'object' ? item.id || item.value : Number(item))) || [];
+
+    // Step 4: Construct Final Payload
+    const payload = {
+      name: formValue?.name,
+      description: formValue?.description,
+      runTime: formValue?.runTime,
+      startDate: formValue?.startDate,
+      endDate: formValue?.endDate,
+      eventType: formValue?.eventType,
+      // imageurl: formValue?.imageurl,
+      imdbRating: Number(formValue?.imdbRating),
+      likes: Number(formValue?.likes),
+      votes: Number(formValue?.votes),
+      currentlyPlaying: Boolean(formValue?.currentlyPlaying),
+      ageLimit: Number(formValue?.ageLimit),
+      releasingOn: formValue?.releasingOn,
+
+      // Convert multi-select dropdowns → numeric ID arrays
+      languages: toNumericArray(formValue?.languages),
+      genres: toNumericArray(formValue?.genres),
+      format: toNumericArray(formValue?.format),
+      tag: toNumericArray(formValue?.tag),
+      releaseMonth: toNumericArray(formValue?.releaseMonth),
+      dateFilter: toNumericArray(formValue?.dateFilter),
+      categories: toNumericArray(formValue?.categories),
+      moreFilters: toNumericArray(formValue?.moreFilters),
+
+      // Cast & Crew objects
+      cast: formValue?.cast?.map((member: any) => ({
+        actorName: member.actorName,
+        castImg: member.castImg
+      })),
+      crew: formValue?.crew?.map((member: any) => ({
+        memberName: member.memberName,
+        crewImg: member.crewImg
+      })),
+
       city: selectedCityIds,
-      showPrice: eventShowFormObj?.price,
-      shows: show
-    }
+      show: shows
+    };
 
-    if (this.eventShowForm.valid) {
-      this.showService.createShow(newEventShowFormObj, eventShowFormObj.imageurl).subscribe({
-        next: () => {
-          this.toaster.success('Show created successfully')
+    console.log('Final Payload:', payload);
 
-          this.getArrayControl('languages')?.clear()
-          this.getArrayControl('genres')?.clear();
-          this.getArrayControl('format')?.clear();
-          this.getArrayControl('tag')?.clear();
-          this.getArrayControl('categories')?.clear();
-          this.getArrayControl('moreFilters')?.clear();
-          this.getArrayControl('screens')?.clear();
-          this.getArrayControl('cast')?.clear();
-          this.getArrayControl('crew')?.clear();
-
-          this.eventShowForm.reset()
-
-          this.eventShowForm.get('eventType')?.setValue('');
-          this.eventShowForm.get('releaseMonth')?.setValue('');
-          this.eventShowForm.get('city')?.setValue('Select Cities');
-          this.eventShowForm.get('price')?.setValue('');
-          this.eventShowForm.get('releasingOn')?.setValue('');
-          this.eventShowForm.get('startDate')?.setValue('');
-          this.eventShowForm.get('endDate')?.setValue('');
-          this.eventShowForm.get('imageurl')?.setValue('');
-          this.eventShowForm.get('name')?.setValue('');
-          this.eventShowForm.get('description')?.setValue('');
-          this.eventShowForm.get('runTime')?.setValue('');
-          this.eventShowForm.get('ageLimit')?.setValue('');
-        },
-        error: (err) => {
-          this.toaster.error(err.error.message)
-        }
-      })
-    } else {
-      this.toaster.error('Form Invalid Please check all fields')
-      this.eventShowForm.markAllAsTouched();
-    }
+    //Validate & Submit
+    // if (this.eventShowForm.valid) {
+    this.showService.createShow(payload, formValue.imageurl, payload.cast, payload.crew).subscribe({
+      next: () => this.toaster.success('Show created successfully'),
+      error: (err) => this.toaster.error(err.error.message)
+    });
+    // } else {
+    //   this.toaster.error('Form Invalid — Please check all fields');
+    //   this.eventShowForm.markAllAsTouched();
+    // }
   }
+
+
 
 
   // utility funct. to reset form controls 
@@ -530,24 +694,36 @@ export class CreateContentComponent implements OnInit {
     this.callApiForCities();
   }
 
+  // import { catchError, concatMap, forkJoin, from, map, toArray } from 'rxjs';
+
   callApiForCities() {
-    const cities = this.city.value; // array of city names
-    cities.forEach((city: string) => {
-      this.venuesService.getVenues(city)
-        .subscribe({
-          next: (res) => {
-            this.venuesNameList = res
-              .filter((venue: any) => {
-                venue.venueType == this.eventShowForm.get('eventType')?.value
-                return venue
-              }
-              );
-          },
-          error: (err) => {
-            console.error(`Error fetching for ${city}`, err);
-          }
-        });
-    });
+    const cities: string[] = this.city.value; // array of city names
+    from(cities)
+      .pipe(
+        concatMap((city: string) =>
+          this.venuesService.getVenues(city).pipe(
+            map((res: any) => ({
+              city,
+              venues: res.data.filter(
+                (venue: any) =>
+                  venue.venueType === this.eventShowForm.get('eventType')?.value
+              ),
+            })),
+            catchError((err) => {
+              console.error(`Error fetching for ${city}`, err);
+              return []; // return empty array to continue with next city
+            })
+          )
+        ),
+        toArray() // gather all city results into an array
+      )
+      .subscribe({
+        next: (results) => {
+          // Merge or process all venues
+          this.venuesNameList = results.flatMap((r) => r.venues);
+        },
+        error: (err) => console.error('Unexpected error:', err),
+      });
   }
 
 
@@ -626,3 +802,4 @@ export class CreateContentComponent implements OnInit {
   }
 
 }
+

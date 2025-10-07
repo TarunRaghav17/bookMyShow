@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -11,20 +11,22 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
-export class BuyTicketsComponent {
+export class BuyTicketsComponent implements AfterViewInit {
+  venueShowsDetails: any;
 
-  constructor(public commonService: CommonService,private route:ActivatedRoute,
-    private toaster:ToastrService
+  constructor(public commonService: CommonService, private route: ActivatedRoute,
+    private toaster: ToastrService
   ) { }
 
-// -------test data------
-maxPrice=900;
-// ------------------
+  // -------test data------
+  maxPrice = 900;
+  // ------------------
   selectedMovie = 'movie999'
   movieDetails: any | null = null
-  dateSelectionArray: any = []
-  userSelectedPreference:any[]=[]
-  isOpen:boolean=false
+  dateSelectionArray: any = [];
+  userSelectedDate: any;
+  userSelectedPreference: any[] = []
+  isOpen: boolean = false
   myMovies = [
     {
       "_id": "movie001",
@@ -197,10 +199,11 @@ maxPrice=900;
 
   ngOnInit() {
 
-    this.fetchContentIdByUrl();
+
     this.initializeDateSelectionArray()
-    this.commonService.setUserSelectedDate(0,this.dateSelectionArray[0])
-    
+    this.commonService.setUserSelectedDate(0, this.dateSelectionArray[0]);
+
+
     this.theatres.map((theatre: any) => {
       // get only shows belonging to this theatre
       let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
@@ -212,16 +215,39 @@ maxPrice=900;
     });
   }
 
-  fetchContentIdByUrl(){
-    let contentId=this.route.snapshot.paramMap.get('id');
+  ngAfterViewInit() {
+    this.fetchContentIdByUrl();
+    
+
+  }
+
+  fetchContentIdByUrl() {
+    let contentId = this.route.snapshot.paramMap.get('id');
     this.commonService.getContentDetailsById(contentId).subscribe({
-      next:(res)=>{
-        this.movieDetails=res.data;
+      next: (res) => {
+        this.movieDetails = res.data;
       },
-      error:(err)=>{
+      error: (err) => {
         this.toaster.error(err.error.message)
       }
     })
+
+    this.fetchVenuesShows(contentId);
+  }
+
+  fetchVenuesShows(contentId: string | null) {
+    this.userSelectedDate = this.commonService.userSelectedDate()
+    console.log(this.userSelectedDate)
+    this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
+      next: (res) => {
+        this.venueShowsDetails = res.data;
+        console.log(this.venueShowsDetails);
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+
   }
 
   initializeDateSelectionArray() {
@@ -233,13 +259,13 @@ maxPrice=900;
         day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
         dateNum: dateObj.getDate(),
         month: dateObj.toLocaleDateString('en-US', { month: 'short' }),
-        today:dateObj.toISOString().split('T')[0]
+        today: dateObj.toISOString().split('T')[0]
       })
     }
   }
-  toggleSearchBox(event:any,value:boolean){
+  toggleSearchBox(event: any, value: boolean) {
     event.stopPropagation()
-    this.isOpen=value
+    this.isOpen = value
   }
 
 }
