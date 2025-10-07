@@ -1,6 +1,7 @@
-.bottom_text_movie_card{
-    padding-left: 0px !important;
+.bottom_text_movie_card {
+  padding-left: 0px !important;
 }
+
 .loader-overlay {
   position: fixed;
   top: 0;
@@ -13,7 +14,7 @@
   justify-content: center;
   z-index: 9999;
 }
- 
+
 .spinner {
   width: 55px;
   height: 55px;
@@ -24,6 +25,14 @@
 }
 
 @keyframes spin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.main_container_box {
+  width: fit-content;
 }

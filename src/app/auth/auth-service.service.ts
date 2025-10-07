@@ -66,8 +66,8 @@ export class AuthService {
         context: new HttpContext()
           .set(this.commonService.IS_PUBLIC_API, true)
           .set(this.loaderService.NO_LOADER, false)
-      }  
-    ); 
+      }
+    );
   }
   /**
    * @description Clear token and logout user
@@ -175,6 +175,17 @@ export class AuthService {
     });
     const decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
     return decryptedText;
+  }
+
+ /**
+   * @description Not Add Space in Input Feild
+   * @author Gurmeet Kumar
+   * @param event
+   */
+  blockSpace(event: KeyboardEvent) {
+    if (event.code === 'Space' || event.key === ' ') {
+      event.preventDefault();
+    }
   }
 
 }

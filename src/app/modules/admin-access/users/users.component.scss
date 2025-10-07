@@ -129,12 +129,9 @@ tbody tr:last-child .dropdown {
 .user-table-container {
   height: 600px;
   overflow-y: auto;
-  scrollbar-width: none;
 }
  
-.user-table-container::-webkit-scrollbar {
-  display: none;
-}
+
  
 .icon_container {
   padding: 0px;

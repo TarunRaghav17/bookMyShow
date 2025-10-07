@@ -90,7 +90,7 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="Enter your User Name"
-                                    formControlName="username">
+                                    formControlName="username" (keydown)="authService.blockSpace($event)">
 
                                 @if(editProfileForm.get('username')?.touched &&
                                 editProfileForm.get('username')?.hasError('required')){
@@ -185,17 +185,18 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" placeholder="E.g 560001"
-                                    formControlName="pincode">
-                                @if(editProfileForm.get('pincode')?.touched &&
-                                editProfileForm.get('pincode')?.hasError('pattern')){
-                                <small class="text-danger">Pincode must be 6 digits</small>
-                                }
-                                @if(editProfileForm.get('pincode')?.touched &&
-                                editProfileForm.get('pincode')?.hasError('maxlength')){
-                                <small class="text-danger">Pincode cannot exceed 6 digits</small>
-                                }
+                                    formControlName="pincode" (keydown)="authService.blockSpace($event)">
 
-
+                                @if (editProfileForm.get('pincode')?.errors?.['maxlength']) {
+                                <small class="text-danger">
+                                    Pincode is Max 6 digit
+                                </small>
+                                }
+                                @if(editProfileForm.get('pincode')?.hasError('pattern')){
+                                <small class="text-danger">
+                                    Pincode is not valid
+                                </small>
+                                }
                             </div>
                         </div>
                         <div class="input_box">
@@ -204,7 +205,8 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" formControlName="addressLine1"
-                                    placeholder="Flat no., House no., Building,">
+                                    placeholder="Flat no., House no., Building,"
+                                    (keydown)="authService.blockSpace($event)">
                                 @if(editProfileForm.get('address1')?.touched &&
                                 editProfileForm.get('address1')?.hasError('maxlength')){
                                 <small class="text-danger">Address Line 1 cannot exceed 255 characters</small>
@@ -218,7 +220,8 @@
                             </div>
                             <div class="input_field">
                                 <input type="text" class="form-control" formControlName="addressLine2"
-                                    placeholder="Area, Colony, Street, Sector, Village">
+                                    placeholder="Area, Colony, Street, Sector, Village"
+                                    (keydown)="authService.blockSpace($event)">
                                 @if(editProfileForm.get('address2')?.touched &&
                                 editProfileForm.get('address2')?.hasError('maxlength')){
                                 <small class="text-danger">Address Line 2 cannot exceed 255 characters</small>
@@ -231,8 +234,8 @@
                                 <label for="form-label">Town / City</label>
                             </div>
                             <div class="input_field">
-                                <input type="text" class="form-control" placeholder="E.g. Mumbai"
-                                    formControlName="city">
+                                <input type="text" class="form-control" placeholder="E.g. Mumbai" formControlName="city"
+                                    (keydown)="authService.blockSpace($event)">
                             </div>
                         </div>
                         <div class="input_box">

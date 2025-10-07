@@ -6,6 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Location } from '@angular/common';
 import {
   NgbModal,
   NgbModalOptions,
@@ -15,7 +16,6 @@ import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
 import { AuthService } from '../../../auth/auth-service.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -52,8 +52,7 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private router: Router,
-
+    private location: Location
   ) {
     this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
@@ -134,7 +133,8 @@ export class HeaderComponent implements OnInit {
   selectCity(city: any, modalRef: NgbModalRef): void {
     this.commonService._selectCity.set(city);
     this.selectedCity = this.commonService._selectCity();
-    this.router.navigate(['explore', 'home', city]);
+    this.changeUrl(city)
+    this.showCities = false
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
     if (modalRef) {
       modalRef.close();
@@ -151,6 +151,14 @@ export class HeaderComponent implements OnInit {
       this.authService.logout();
       this.toastr.success('logut SuccessFull')
     }
+  }
+  /**
+  * @description Only change Url here 
+  * @author Gurmeet Kumar
+  * @return void
+  */
+  changeUrl(city: string) {
+    this.location.go(`/explore/home/${city}`);
   }
 
   /**
@@ -188,7 +196,6 @@ export class HeaderComponent implements OnInit {
       next: (val: string) => {
         this.searchText = val;
         if (!val) {
-
           this.filteredCities = [...this.citiesJson];
         } else {
 
@@ -258,11 +265,9 @@ export class HeaderComponent implements OnInit {
   getAllNotificationData() {
     const user = this.authService.userDetailsSignal();
     if (!user?.userId) return;
-
     this.commonService.getAllnotification(user.userId, this.page, this.size).subscribe({
       next: (res: any) => {
         this.totalCount = res.data.count;
-
         if (this.page === 0) {
           this.showNotificationData = res.data.content;
         } else {
@@ -344,20 +349,18 @@ export class HeaderComponent implements OnInit {
   */
   onScroll(event: any) {
     const element = event.target as HTMLElement;
-    const reachedBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
+    const reachedBottom = element.scrollTop + element.clientHeight <= element.scrollHeight;
     if (reachedBottom && this.showNotificationData.length < this.totalCount) {
       this.page++;
       this.getAllNotificationData();
     }
   }
-
-
   /**
    * @description notications container Show 
    * @author Gurmeet
    */
   openCanvas() {
     this.notifications = false;
+    this.page = 0
   }
-
-} 
+}
