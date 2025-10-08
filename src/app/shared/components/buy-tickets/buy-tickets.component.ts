@@ -3,6 +3,7 @@ import { CommonService } from '../../../services/common.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
 
 interface Category {
@@ -35,7 +36,7 @@ interface Venue {
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
@@ -54,10 +55,11 @@ export class BuyTicketsComponent implements AfterViewInit {
   contentId: string | null = null
   userSelectedPreference: any[] = []
   isOpen: boolean = false
+  searchValue:string="";
 
   ngOnInit() {
     this.initializeDateSelectionArray()
-    this.commonService.setUserSelectedDate(0, this.dateSelectionArray[0]);
+    this.commonService.setUserSelectedDate(this.dateSelectionArray[0]);
   }
   ngAfterViewInit() {
     this.fetchContentIdByUrl();
@@ -149,7 +151,6 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
       next: (res) => {
         this.venueShowsDetails = this.mergeCategoriesWithShowIds(res.data);
-
       },
       error: (err) => {
         this.toaster.error(err.error.message)
@@ -163,8 +164,11 @@ export class BuyTicketsComponent implements AfterViewInit {
 * @params payload:index,date obj
 */
   onDateChange(index: number, dateObj: any) {
-    this.commonService.setUserSelectedDate(index, dateObj);
-    this.fetchVenuesShows(this.contentId);
+    if (index < 3) {
+      this.commonService.setUserSelectedDate(dateObj);
+      this.fetchVenuesShows(this.contentId);
+    }
+    return
   }
 
   /**
@@ -183,7 +187,6 @@ export class BuyTicketsComponent implements AfterViewInit {
         availableCategories: showTime.availableCategories,
       }))
     }));
-
     let screenShows = this.venueShowsDetails[0]?.screens
     this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { showData: showData, screenShows: screenShows } });
   }
@@ -214,6 +217,9 @@ export class BuyTicketsComponent implements AfterViewInit {
 */
   toggleSearchBox(event: any, value: boolean) {
     event.stopPropagation()
-    this.isOpen = value
+    this.isOpen =value
+    if(!this.isOpen){
+      this.searchValue=""
+    }
   }
 }

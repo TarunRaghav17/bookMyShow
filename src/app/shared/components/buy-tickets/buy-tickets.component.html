@@ -92,7 +92,7 @@
       align-items-center justify-content-start px-3 gap-4 searchBox 
       " [ngClass]="{onSearchBox:isOpen}" (click)="toggleSearchBox($event,true)">
         <i class="fa fa-search fa_search"></i>
-        <input type="text" placeholder="Search by cinema or area" class="form-control" />
+        <input type="text" placeholder="Search by cinema or area" class="form-control" [(ngModel)]="searchValue" />
         <div class="">
           <button class="btn btn-close" (click)="toggleSearchBox($event,false)"></button>
         </div>
@@ -103,6 +103,8 @@
   <div class="mb-4  bg-white">
     <!-- Theatres-->
     @for(venue of venueShowsDetails;track $index){
+    @if(venue.venueName?.toLowerCase().includes(searchValue.toLowerCase())){
+
     <div class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height:auto;">
       <div class="d-flex flex-column  " style="width:25rem">
         <div class="fw-semibold   d-flex align-items-center justify-content-start gap-3">
@@ -147,6 +149,7 @@
         }}
       </div>
     </div>
+    }
     }
   </div>
 </div>
