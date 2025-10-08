@@ -33,6 +33,7 @@ export class EventsDetailsComponent implements OnInit {
         this.commonService.getEventDetailsById(this.id).subscribe({
           next: (res: any) => {
             this.eventDetails = res.data
+            this.commonService.selectedCategory.set(this.eventDetails.eventType)
           },
           error: (err) => {
             this.toastr.error(err.message)

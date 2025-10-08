@@ -30,7 +30,7 @@
     @for (item of allShows; track $index) {
          <div class="theater_detail_info">
                 <div class="col-4 titles_theater_box">
-                    <h4 class="theater_name_text">{{item.venueName}}</h4>
+                    <h4 class="theater_name_text justify-content-center">{{item.venueName}}</h4>
                     <p class="theater_name_text">{{item.date}} | {{item.shows.time}} PM</p>
                 </div>
             </div>
@@ -83,7 +83,7 @@
   @if(add){
   <div class="col-4 d-flex justify-content-between align-items-center">
     <div class="d-flex flex-column gap-1">
-      <span class="seatting_type">ENTRY PASS</span>
+      <span class="seatting_type">TOTAL PRICE</span>
       <span class="seatting_price">{{totalMoney | currency:'INR'}}</span>
     </div>
     <div class="button_section">

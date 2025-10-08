@@ -155,7 +155,7 @@ export class ActivitiesPageComponent {
         break;
 
       case 'More Filters':
-        if (this.sendPayload.more_filters.length > 0) {
+        if (this.sendPayload.morefilter.length > 0) {
           this.sendPayload.morefilter = [];
           this.commonService.clearSelectedFilterByType('More Filters');
           this.shouldCallAPI = true

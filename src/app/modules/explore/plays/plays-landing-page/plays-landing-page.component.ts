@@ -183,7 +183,7 @@ export class PlaysLandingPageComponent {
         }
         break;
 
-      case 'categories':
+      case 'Categories':
         if (this.sendPayload.categories.length > 0) {
           this.sendPayload.categories = [];
           this.commonService.clearSelectedFilterByType('Categories');
