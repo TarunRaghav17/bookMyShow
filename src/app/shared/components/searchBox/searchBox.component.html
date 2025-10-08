@@ -18,8 +18,8 @@
             </div>
             <div class="input_container col-4">
                 <form class="w-100 me-3" role="search">
-                    <input type="search" class="form-control" [formControl]="searchControl" placeholder="Search for Movies, Events, Plays & more"
-                        aria-label="Search">
+                    <input type="search" class="form-control" [formControl]="searchControl"
+                        placeholder="Search for Movies, Events, Plays & more" aria-label="Search">
                 </form>
             </div>
             <div class="close_icon_container col-4">
@@ -29,12 +29,12 @@
     </header>
     <div class="filter_container  ">
         <div class="main_box_filter d-flex align-items-center ">
-
             <div class="main_filter_text">
                 <div class="filter_text d-flex gap-3 justify-content-around pb-2">
                     @for (item of eventsFilters; track $index) {
-                    <span [ngClass]="{ 'active-filter': searchObj.eventTypes.includes(item) }">
-                        <a (click)="addFilters(item)">
+                    <span [ngClass]="{ 'active-filter': searchObj.eventTypes.includes(item) }"
+                        (click)="addFilters(item)">
+                        <a>
                             {{ item }}
                             @if(searchObj.eventTypes.includes(item)){
                             <i>X</i>
@@ -54,7 +54,7 @@
             @if (movieName && movieName.length > 0) {
             @for (item of movieName; track $index) {
             <div class="movies_list">
-                <div (click)="getDetailsMovies(item.eventId)" class="movie_name_container">
+                <div (click)="getDetailsMovies(item.eventId,item.eventType)" class="movie_name_container">
                     <span class="movie_name">{{ item.name }}</span>
                 </div>
                 <span class="movie_icon">
@@ -63,7 +63,7 @@
             </div>
             }
             } @else {
-        
+
             @if (searchControl.value ) {
             <div class="movies_list">
                 <div class="no_data">
@@ -71,12 +71,7 @@
                 </div>
             </div>
             }
-
             }
         </div>
-
     </div>
-
-
-
 </ng-template>

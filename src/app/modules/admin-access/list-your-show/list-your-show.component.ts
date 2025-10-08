@@ -1,6 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonService } from '../../../services/common.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,11 @@ export class ListYourShowComponent {
 
   serviceData: any[] = []
   serviceContent: any;
-  constructor(private modalService: NgbModal, private commonService: CommonService) {
+  constructor(
+    private modalService: NgbModal,
+    private commonService: CommonService,
+    private router: Router
+  ) {
     this.serviceData = this.commonService.listYourShowService
 
   }
@@ -39,6 +44,14 @@ export class ListYourShowComponent {
 
   closemodal() {
     this.modalService.dismissAll();
+  }
+  /**
+    * @description Close current openModal  
+    * @author  Gurmeet Kumar
+    * @param eventType
+   */
+  setEventType(eventType: string) {
+    this.router.navigate(['/admin/create/content'], { state: { contentTypeName: eventType } });
   }
 
 

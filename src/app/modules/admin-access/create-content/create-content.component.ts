@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { ContentService } from './content-services/content.service';
 import { ToastrService } from 'ngx-toastr';
@@ -13,7 +13,7 @@ import { Title } from '@angular/platform-browser';
   templateUrl: './create-content.component.html',
   standalone: false
 })
-export class CreateContentComponent implements OnInit {
+export class CreateContentComponent implements OnInit, AfterViewInit {
 
   eventShowForm!: FormGroup;
   tempFormArray!: FormArray
@@ -55,11 +55,16 @@ export class CreateContentComponent implements OnInit {
       ageLimit: [13, [Validators.required]],
       releasingOn: ['', [Validators.required]],
       city: this.fb.array([], [Validators.required]),
-      cast: this.fb.array([this.createCast()], [Validators.required]),
-      crew: this.fb.array([this.createCrew()], [Validators.required]),
+
+      
+
       venueName: this.fb.array([], [Validators.required]),
 
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.getData()
   }
 
   /**
@@ -125,11 +130,13 @@ export class CreateContentComponent implements OnInit {
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
     this.eventShowForm.addControl('startDate', this.fb.control('', [Validators.required]))
     this.eventShowForm.addControl('endDate', this.fb.control('', [Validators.required]));
-    this.commonService.getAllCities().subscribe(
-      (res) => {
-        this.citiesArray = res.data
-      }
-    )
+
+    this.eventShowForm.addControl('cast', this.fb.array([this.createCast()]));
+    this.eventShowForm.addControl('crew', this.fb.array([this.createCrew()]));
+
+
+    this.fetchCities()
+
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
     switch (this.selectedEventType) {
 
@@ -161,6 +168,9 @@ export class CreateContentComponent implements OnInit {
       }
 
       case 'Sports': {
+
+        this.removeControls(this.eventShowForm, ['cast','crew'])
+
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
         break;
@@ -199,6 +209,23 @@ export class CreateContentComponent implements OnInit {
       }
     })
   }
+
+  /**
+* @description function to fetch all cities array
+* @author Inzamam
+*/
+  fetchCities() {
+    this.commonService.getAllCities().subscribe({
+      next: (res) => {
+        this.citiesArray = res.data
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    }
+    )
+  }
+
 
   /**
 * @description handler for venue name change
@@ -528,7 +555,8 @@ export class CreateContentComponent implements OnInit {
 
   createCast(): FormGroup {
     return this.fb.group({
-      actorName: ['', Validators.required],
+      actorName: [''
+        , Validators.required],
       castImg: [''],
     })
   }
@@ -645,7 +673,7 @@ export class CreateContentComponent implements OnInit {
     this.onEventTypeChange()
   }
 
-     /**
+  /**
 * @description function that handles image upload for cast and crew in base64 url
 * @author Inzamam
 * @params payload:event,path,index
@@ -678,7 +706,7 @@ export class CreateContentComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-     /**
+  /**
 * @description function that handles image upload for event poster image in BLOB form
 * @author Inzamam
 * @params payload:event,path
@@ -700,4 +728,16 @@ export class CreateContentComponent implements OnInit {
     const control = this.eventShowForm.get(controlName);
     return !!(control && control.invalid && (control.dirty || control.touched));
   }
+
+
+  eventType: any | null=null;
+  getData() {
+    this.eventType = history.state.contentTypeName;
+    if (this.eventType) {
+      this.eventShowForm.get('eventType')?.setValue(this.eventType);
+      this.onEventTypeChange()
+      this.fetchCities()
+    }
+  }
+
 }

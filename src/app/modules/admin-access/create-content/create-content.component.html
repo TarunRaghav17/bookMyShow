@@ -83,7 +83,7 @@
                 </button>
                 <div ngbDropdownMenu aria-labelledby="nameDropdown" class="w-100">
                     @for(eventType of ['Movie','Sports','Event','Plays','Activities'];track $index){
-                    <button ngbDropdownItem (click)="setEventType(eventType)">
+                    <button ngbDropdownItem (click)="setEventType(eventType)" >
                         {{ eventType }}
                     </button>
                     }
@@ -256,21 +256,21 @@
                         <!-- one particualr show =  date & [times] -->
                         <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
                             <!-- date control -->
-                            <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
+                            <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                                 <input type="date" class="form-control me-3 w-25" formControlName="date"
                                     [min]="validateShowStartDate($index)">
-                                <button class="btn btn-outline-primary col-1" (click)="addShowTime(show)">Add
+                                <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add
                                 </button>
                                 <button class="btn btn-outline-danger ms-3"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
                             <!-- start-time array -->
-                            <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
+                            <div class=" d-flex align-items-center justify-content-start gap-4 w-100 flex-wrap"
                                 formArrayName="startTime">
                                 @for(time of getStartTime(show).controls ;track $index){
                                 <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                                    <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
+                                    <span class="my-0 fw-semibold w-100 fs-6 p-0  "> Start Time:</span>
                                     <select class="form-select" [formControlName]="$index">
                                         <option value="" disabled selected>Select</option>
                                         @for(slot of ['11:00','13:00','15:00','18:00',];track $index){
@@ -303,19 +303,19 @@
             <!-- one particualr show =  date & [times] -->
             <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-75 mx-auto ">
                 <!-- date control -->
-                <div class="d-flex align-items-center fs-5 justify-content-center gap-0 w-100 ">
+                <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
                     <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                     <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
                         [max]="validateShowEndDate()" formControlName="date">
-                    <button class="btn btn-outline-primary col-1" (click)="addShowTime(show)">Add </button>
+                    <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add </button>
                     <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
                 </div>
                 <!-- start-time array -->
-                <div class=" d-flex align-items-center justify-content-center gap-4 w-100 flex-wrap"
+                <div class=" d-flex align-items-center justify-content-start gap-4 w-100 flex-wrap"
                     formArrayName="startTime">
                     @for(time of getStartTime(show).controls ;track $index){
                     <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                        <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
+                        <span class="my-0 fw-semibold w-100 fs-6 p-0 ">Start Time:</span>
 
                         <select class="form-select" [formControlName]="$index">
                             <option value="" disabled selected>Select</option>
@@ -470,6 +470,7 @@
     </div>
     }
     <!-- Cast -->
+     @if(eventShowForm.get('eventType')?.value == 'Movie' || eventShowForm.get('eventType')?.value == 'Plays' || eventShowForm.get('eventType')?.value == 'Activities'|| eventShowForm.get('eventType')?.value == 'Event'){
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="cast">
             <div class="d-flex mb-3 justify-content-start align-items-center gap-4">
@@ -539,6 +540,7 @@
             }
         </div>
     </div>
+}
     <!-- Submit -->
     <div class="text-end mb-3">
         <button class="btn btn-primary px-4" type="submit" (click)="onShowFormSubmit()">Submit</button>

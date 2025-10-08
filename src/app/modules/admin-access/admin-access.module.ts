@@ -13,6 +13,7 @@ import { CreateContentComponent } from './create-content/create-content.componen
 import { ListVenuesComponent } from './list-venues/list-venues.component';
 import { ListContentsComponent } from './list-contents/list-contents.component';
 import { NumberFormatPipe } from '../../core/pipes/number-format.pipe';
+import { SortPipe } from '../../core/pipes/sort.pipe';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { NumberFormatPipe } from '../../core/pipes/number-format.pipe';
     ListYourShowComponent, CreateVenueComponent, CreateShowComponent,CreateContentComponent,ListVenuesComponent, ListContentsComponent
   ],
   imports: [NgbModule,NumberFormatPipe,
+          SortPipe,
     ReactiveFormsModule, CommonModule,
     ClickOutsideDirective,
     CommonModule,
