@@ -50,9 +50,9 @@ export class CreateContentComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle('Create Content')
     this.tempFormArray = this.fb.array([])
-    this.getdata()
+    this.getData()
     this.setToday()
-      this.eventShowForm = this.fb.group({
+    this.eventShowForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(4)]],
       description: ['', [Validators.required, Validators.minLength(30)]],
       runTime: [null, [Validators.required]],
@@ -128,10 +128,14 @@ export class CreateContentComponent implements OnInit {
     // this.languagesArray = []
     // api to get cities
 
-    this.commonService.getAllCities().subscribe(
-      (res) => {
+    this.commonService.getAllCities().subscribe({
+      next: (res) => {
         this.citiesArray = res.data
+      }, error: (res) => {
+        res.message
       }
+    }
+
     )
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
 
@@ -541,14 +545,12 @@ export class CreateContentComponent implements OnInit {
       if (index != -1) this.city.removeAt(index);
 
     }
-
-
     this.callApiForCities();
   }
 
 
   callApiForCities() {
-    const cities = this.city.value; // array of city names
+    const cities = this.city.value;
     cities.forEach((city: string) => {
       this.venuesService.getVenues(city)
         .subscribe({
@@ -645,7 +647,7 @@ export class CreateContentComponent implements OnInit {
 
 
   eventType: any;
-  getdata() {
+  getData() {
     this.eventType = history.state.contentTypeName;
   }
 
