@@ -15,13 +15,14 @@ export class AdminService {
    * @description getAll usersList
    * @author Gurmeet Kumars
    */
-  getAllUsers(page: number = 0, size: number = 10): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/users`, {
-      params: {
-        page: page,
-        size: size
-      }
-    });
+  getAllUsers(page: number = 0, size: number = 10, roleName?: string): Observable<any> {
+    let url = ''
+    if (roleName) {
+      url = `${this.baseUrl}/api/users?roleName=${roleName}&page=${page}&size=${size}`
+    } else {
+      url = `${this.baseUrl}/api/users?page=${page}&size=${size}`;
+    }
+    return this.http.get(url);
   }
   /**
  * @description get user byId 
@@ -42,15 +43,6 @@ export class AdminService {
     return this.http.patch(`${this.baseUrl}/api/users/delete-user/${id}`, id)
   }
 
-
-  /**
-   * @description Get All dataList By roles  
-   * @author Gurmeet Kumar
-   * @param role
-   */
-  getAllDataListByRole(role: any): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/users/role/${role}`, role)
-  }
   /**
      * @description Search param by Userdata   
      * @author Gurmeet Kumar

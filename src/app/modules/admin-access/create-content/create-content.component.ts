@@ -17,7 +17,6 @@ export class CreateContentComponent implements OnInit {
 
   eventShowForm!: FormGroup;
   tempFormArray!: FormArray
-
   selectedEventType: string | null = null;
   genresArray: any;
   tagsArray: any;
@@ -51,10 +50,9 @@ export class CreateContentComponent implements OnInit {
   ngOnInit(): void {
     this.titleService.setTitle('Create Content')
     this.tempFormArray = this.fb.array([])
-
+    this.getdata()
     this.setToday()
-   
-    this.eventShowForm = this.fb.group({
+      this.eventShowForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(4)]],
       description: ['', [Validators.required, Validators.minLength(30)]],
       runTime: [null, [Validators.required]],
@@ -115,14 +113,14 @@ export class CreateContentComponent implements OnInit {
 
   onEventTypeChange() {
 
-    this.removeControls(this.eventShowForm, ['languages','releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price','startDate','endDate']);
+    this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
 
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
 
 
-    this.eventShowForm.addControl('startDate', this.fb.control('',[Validators.required]))
-    this.eventShowForm.addControl('endDate', this.fb.control('',[Validators.required]));
+    this.eventShowForm.addControl('startDate', this.fb.control('', [Validators.required]))
+    this.eventShowForm.addControl('endDate', this.fb.control('', [Validators.required]));
 
     // this.handleReset(['city', 'status', 'venueName', 'eventName'])
     // this.venuesNameList = []
@@ -131,8 +129,9 @@ export class CreateContentComponent implements OnInit {
     // api to get cities
 
     this.commonService.getAllCities().subscribe(
-      (res) =>{ this.citiesArray = res.data
-    }
+      (res) => {
+        this.citiesArray = res.data
+      }
     )
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
 
@@ -140,7 +139,7 @@ export class CreateContentComponent implements OnInit {
 
       case 'Movie':
         {
-          this.removeControls(this.eventShowForm, ['shows', 'price','startDate','endDate'])
+          this.removeControls(this.eventShowForm, ['shows', 'price', 'startDate', 'endDate'])
 
           this.eventShowForm.addControl('screens', this.fb.array([]))
 
@@ -344,15 +343,15 @@ export class CreateContentComponent implements OnInit {
   }
 
 
-setMinEndDate() {
-  const startDateValue = this.eventShowForm.get('startDate')?.value;
-  if (startDateValue) {
-    const startDate = new Date(startDateValue);
+  setMinEndDate() {
+    const startDateValue = this.eventShowForm.get('startDate')?.value;
+    if (startDateValue) {
+      const startDate = new Date(startDateValue);
 
-    return startDate.toISOString().split('T')[0];
+      return startDate.toISOString().split('T')[0];
+    }
+    return null;
   }
-  return null;
-}
 
 
 
@@ -382,19 +381,19 @@ setMinEndDate() {
   }
 
   validateShowStartDate(index: number): string {
-    if(this.eventShowForm.get('releasingOn')?.value){
-    const today = new Date(this.eventShowForm.get('releasingOn')?.value)
+    if (this.eventShowForm.get('releasingOn')?.value) {
+      const today = new Date(this.eventShowForm.get('releasingOn')?.value)
 
-    // Clone today
-    const minDate = new Date(today);
+      // Clone today
+      const minDate = new Date(today);
 
-    // Add index days
-    minDate?.setDate(today.getDate() + index);
+      // Add index days
+      minDate?.setDate(today.getDate() + index);
 
-    // Return in yyyy-mm-dd format
-    return minDate?.toISOString()?.split('T')[0]
-  }
-  return ''
+      // Return in yyyy-mm-dd format
+      return minDate?.toISOString()?.split('T')[0]
+    }
+    return ''
   }
 
   onShowFormSubmit(): void {
@@ -414,9 +413,9 @@ setMinEndDate() {
       };
     });
 
-let selectedCityIds = this.citiesArray
-  ?.filter((city: any) => this.city.value.includes(city.cityName))
-  .map((city: any) => city.cityId);
+    let selectedCityIds = this.citiesArray
+      ?.filter((city: any) => this.city.value.includes(city.cityName))
+      .map((city: any) => city.cityId);
 
     let newEventShowFormObj = {
       name: eventShowFormObj?.name,
@@ -436,7 +435,7 @@ let selectedCityIds = this.citiesArray
       moreFilters: eventShowFormObj?.moreFilters,
       cast: eventShowFormObj?.cast,
       crew: eventShowFormObj?.crew,
-      city:selectedCityIds,
+      city: selectedCityIds,
       price: eventShowFormObj?.price,
       shows: show
     }
@@ -544,29 +543,29 @@ let selectedCityIds = this.citiesArray
     }
 
 
-     this.callApiForCities();
+    this.callApiForCities();
   }
 
 
-callApiForCities() {
-  const cities = this.city.value; // array of city names
-  cities.forEach((city: string) => {
-    this.venuesService.getVenues(city)
-      .subscribe({
-        next: (res) => {
+  callApiForCities() {
+    const cities = this.city.value; // array of city names
+    cities.forEach((city: string) => {
+      this.venuesService.getVenues(city)
+        .subscribe({
+          next: (res) => {
             this.venuesNameList = res
-            .filter((venue: any) => {
-              venue.venueType == this.eventShowForm.get('eventType')?.value 
-              return venue
-            }
-          );
-        },
-        error: (err) => {
-          console.error(`Error fetching for ${city}`, err);
-        }
-      });
-  });
-}
+              .filter((venue: any) => {
+                venue.venueType == this.eventShowForm.get('eventType')?.value
+                return venue
+              }
+              );
+          },
+          error: (err) => {
+            console.error(`Error fetching for ${city}`, err);
+          }
+        });
+    });
+  }
 
 
   get venueName(): FormArray {
@@ -642,6 +641,12 @@ callApiForCities() {
   isInvalid(controlName: string): boolean {
     const control = this.eventShowForm.get(controlName);
     return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+
+  eventType: any;
+  getdata() {
+    this.eventType = history.state.contentTypeName;
   }
 
 }
