@@ -7,7 +7,7 @@
                 <div class="col-4 py-3 px-2 gap-2 d-flex">
                     <div class="col-3">
                         <select class="form-select" aria-label="Default select example"
-                            (change)="selectRoleByList($event)">
+                            (change)="getAllUserData($event)">
                             <option value="All" selected>All</option>
                             <option value="ADMIN">Admin</option>
                             <option value="USER">User</option>
@@ -18,22 +18,25 @@
                         placeholder="Search by name, username, email & phoneNumber">
                 </div>
             </div>
-            <!-- Users Table -->
-            <div class="user-table-container" (scroll)="onScroll($event)">
+            <div class="user-table-container" (scroll)="onScroll()">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Id</th>
-                            <th>UserName</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>RoleName</th>
-                            <th>Actions</th>
+                            @for (col of colDefs; track $index) {
+                            <th (click)="col.sortable ? toggleSort(col.field) : null">
+                                {{ col.headerName }}
+                                @if(col.sortable){
+                                <i class="fa"
+                                    [ngClass]="{'fa-sort': currentSortKey !== col.field,'fa-sort-up': currentSortKey === col.field && currentSortOrder === 'asc','fa-sort-down': currentSortKey === col.field && currentSortOrder === 'desc'}">
+                                </i>
+                                }
+                            </th>
+                            }
                         </tr>
                     </thead>
+
                     <tbody>
-                        @for (user of usersData; track $index) {
+                        @for (user of rowData; track $index) {
                         <tr>
                             <td>{{ user.userId }}</td>
                             <td>{{ user.username }}</td>

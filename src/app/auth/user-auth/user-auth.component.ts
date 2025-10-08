@@ -131,7 +131,6 @@ export class UserAuthComponent implements OnInit {
  * @return void
  * @param event
  */
-
   onValidateExistUser(): void {
     const usernameControl = this.signupForm.get('username');
     if (!usernameControl) {

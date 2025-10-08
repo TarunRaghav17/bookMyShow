@@ -34,8 +34,8 @@
         </div>
 
 
-        <button type="button" class="btn btn-info text-white col-12 mb-2" [disabled]="loginForm.invalid"
-            (click)="onLoginSubmit()">Login</button>
+        <button type="submit" class="btn btn-info text-white col-12 mb-2" [disabled]="loginForm.invalid"
+            (click)="onLoginSubmit()" >Login</button>
 
         <p class="text-center changeRouteFormPage">Don't have an account?
             <a (click)="toggleSignupForm()">Signup</a>
@@ -133,10 +133,9 @@
             }
         </div>
 
-        <button type="button" class="btn btn-info text-white col-12 mb-2"
+        <button type="submit" class="btn btn-info text-white col-12 mb-2"
             [disabled]="signupForm.invalid || isUsernameAvailable == 'Username already exists'"
-            (click)="onSignupSubmit()">Register</button>
-
+            (click)="onSignupSubmit()" >Register</button>
         <p class="text-center changeRouteFormPage">Already have an account?
             <a (click)="toggleSignupForm()">Login</a>
         </p>

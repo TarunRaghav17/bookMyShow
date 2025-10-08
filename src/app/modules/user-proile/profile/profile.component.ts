@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       pincode: ['', [Validators.maxLength(6), Validators.pattern(/^[0-9]{6}$/)]],
       addressLine1: ['', [Validators.maxLength(255)]],
       addressLine2: ['', [Validators.maxLength(255)]],
-      city: ['', [Validators.maxLength(100)]],
+      city: ['', [Validators.maxLength(100), Validators.pattern(/^[A-Za-z\s.-]+$/)]],
       state: [''],
     });
     this.modalForm = this.fb.group({

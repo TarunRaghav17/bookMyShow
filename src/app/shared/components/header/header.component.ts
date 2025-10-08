@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit {
   showCities = false;
   selectedCity: any;
   searchText: string = '';
-  city = false;
   searchControl: FormControl = new FormControl()
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
@@ -45,6 +44,8 @@ export class HeaderComponent implements OnInit {
   page: number = 0;
   size: number = 10;
   totalCount: any;
+  isLoading = false;
+  scrollTimeout: any;
 
   constructor(
     private modalService: NgbModal,
@@ -347,13 +348,14 @@ export class HeaderComponent implements OnInit {
   * @author Gurmeet Kumar
   * @param userId pageNumber Count
   */
-  onScroll(event: any) {
-    const element = event.target as HTMLElement;
-    const reachedBottom = element.scrollTop + element.clientHeight <= element.scrollHeight;
-    if (reachedBottom && this.showNotificationData.length < this.totalCount) {
+  onScroll() {
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      const allLoaded = this.showNotificationData.length >= this.totalCount;
+      if (allLoaded || this.isLoading) return;
       this.page++;
       this.getAllNotificationData();
-    }
+    }, 500);
   }
   /**
    * @description notications container Show 

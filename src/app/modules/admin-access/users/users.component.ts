@@ -3,6 +3,7 @@ import { AdminService } from '../service/admin.service';
 import { ToastrService } from 'ngx-toastr';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { SortPipe } from '../../../core/pipes/sort.pipe';
 
 @Component({
   selector: 'app-users',
@@ -13,16 +14,24 @@ import { FormControl } from '@angular/forms';
 export class UsersComponent implements OnInit {
   searchControl: FormControl = new FormControl(); // FormControl for search input
   openedDropdownId: string | null = null;
-  usersData: any[] = [];
+  rowData: any[] = [];
   searchText: string = '';
   page: number = 0;
   size: number = 10;
   totalCount: number = 0;
+  isLoading = false;
+  scrollTimeout: any;
   loading: boolean = false;
   hasMoreData = true;
+  selectedRole: string = 'All'
+  currentSortKey: string = '';
+  currentSortOrder: 'asc' | 'desc' = 'asc';
+  colDefVal: [] = []
+
   constructor(
     private adminService: AdminService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private sortPipe: SortPipe
   ) { }
 
   ngOnInit() {
@@ -30,19 +39,22 @@ export class UsersComponent implements OnInit {
     this.onSearchHandler();
   }
   /**
-   * @description Get all users from backend and update usersData
+   * @description Get all users from backend and update rowData
    * @author Gurmeet Kumar
    * @return void
    */
-  getAllUserData(): void {
-    if (this.loading || !this.hasMoreData) return;
+  getAllUserData(role?: any): void {
+    if (role?.target) {
+      this.selectedRole = role.target.value;
+      this.page = 0;
+      this.rowData = [];
+    }
     this.loading = true;
-
-    this.adminService.getAllUsers(this.page, this.size).subscribe({
+    this.adminService.getAllUsers(this.page, this.size, this.selectedRole).subscribe({
       next: (res: any) => {
         this.totalCount = res.data.totalEntries;
-        this.usersData = [...this.usersData, ...res.data.users];
-        this.hasMoreData = this.usersData.length < this.totalCount;
+        this.rowData = [...this.rowData, ...res.data.users];
+        this.hasMoreData = this.rowData.length < this.totalCount;
         this.loading = false;
       },
       error: (err) => {
@@ -51,6 +63,7 @@ export class UsersComponent implements OnInit {
       },
     });
   }
+
   /**
    * @description Handles user search with debounce. Fetches all users if search input is empty, or searches users based on query.
    * @author Gurmeet Kumar
@@ -73,47 +86,17 @@ export class UsersComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           if (res.success) {
-            this.usersData = res.data.users;
+            this.rowData = res.data.users;
             return;
           }
         },
         error: (err) => {
           this.toastr.error(err.message);
-          this.usersData = [];
+          this.rowData = [];
         },
       });
   }
 
-  /**
-   * @description Filter user by roles
-   * @author Gurmeet Kumar
-   * @param role
-   * @return void
-   */
-
-  selectRoleByList(role: any) {
-    this.page = 0;
-    this.usersData = [];
-    this.hasMoreData = true;
-    const roleValue = role.target.value;
-    if (roleValue === 'All') {
-      this.getAllUserData();
-      return;
-    }
-    this.loading = true;
-    this.adminService.getAllDataListByRole(roleValue).subscribe({
-      next: (res: any) => {
-        this.usersData = res?.data?.users || [];
-        this.totalCount = this.usersData.length;
-        this.hasMoreData = false; // no pagination for filtered roles
-        this.loading = false;
-      },
-      error: (err) => {
-        this.toastr.error(err.message);
-        this.loading = false;
-      },
-    });
-  }
   /**
    * @description Delete user by userId and refresh list
    * @author Gurmeet Kumar
@@ -124,9 +107,9 @@ export class UsersComponent implements OnInit {
       next: () => {
         if (confirm('Are you sure to delete this user?')) {
           this.toastr.success('Delete Users SuccessFully');
-          this.usersData = [];
+          this.rowData = [];
           this.page = 0;
-          this.getAllUserData();
+          this.getAllUserData(this.selectedRole);
         }
       },
       error: (err) => {
@@ -162,9 +145,9 @@ export class UsersComponent implements OnInit {
       next: (res: any) => {
         this.toastr.success(res.message);
         this.openedDropdownId = null;
-        this.usersData = [];
+        this.rowData = [];
         this.page = 0;
-        this.getAllUserData();
+        this.getAllUserData(this.selectedRole);
       },
       error: (res: any) => {
         this.toastr.error(res.message);
@@ -176,14 +159,50 @@ export class UsersComponent implements OnInit {
     * @author Gurmeet Kumar
     ** @param userId - The user's ID.
     */
-  onScroll(event: any) {
-    const element = event.target as HTMLElement;
-    const reachedBottom =
-      element.scrollTop + element.clientHeight >= element.scrollHeight - 5;
-    if (reachedBottom && this.hasMoreData) {
+  onScroll() {
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      const allLoaded = this.rowData.length >= this.totalCount;
+      if (allLoaded || this.isLoading) return;
       this.page++;
       this.getAllUserData();
-    }
+    }, 500);
   }
-}
 
+
+  /**
+    * @description Toggle Fun for the shorting values.
+    * @author Gurmeet Kumar
+    ** @param userId - The user's ID
+    */
+
+  toggleSort(key: string) {
+    if (this.currentSortKey === key) {
+      this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.currentSortKey = key;
+      this.currentSortOrder = 'asc';
+    }
+    this.rowData = this.sortPipe.transform(
+      this.rowData,
+      this.currentSortOrder,
+      this.currentSortKey
+    );
+  }
+
+  /**
+    * @description Heddings array of table.
+    * @author Gurmeet Kumar
+    ** @param userId - The user's ID
+    */
+  colDefs = [
+    { field: 'userId', headerName: 'Id', sortable: true },
+    { field: 'username', headerName: 'UserName', sortable: true },
+    { field: 'name', headerName: 'Name', sortable: true },
+    { field: 'email', headerName: 'Email', sortable: true },
+    { field: 'phoneNumber', headerName: 'Phone', sortable: true },
+    { field: 'roleName', headerName: 'RoleName', sortable: true },
+    { field: 'actions', headerName: 'Actions', sortable: false }
+  ];
+
+}
