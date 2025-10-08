@@ -3,7 +3,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { HomeService } from '../../../modules/explore/home/service/home.service';
 import { FormControl } from '@angular/forms';
-import { debounceTime, switchMap, tap } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -43,25 +43,16 @@ export class SearchBoxComponent implements OnInit {
     private homeService: HomeService,
     private commonService: CommonService,
     private routes: Router,
-    private toastr: ToastrService
-  ) {}
+    private toastr: ToastrService,
+  ) { }
+
 
   ngOnInit(): void {
-    this.searchControl.valueChanges
-      .pipe(
-        debounceTime(300),
-        tap((query: string) => {
-          this.searchObj.name = query;
-        }),
-        switchMap(() => this.homeService.globalSearch(this.searchObj))
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.movieName = res.data || [];
-        },
-        error: (err: any) => {
-          this.toastr.error(err.message );
-        },
+    this.searchControl.valueChanges.pipe
+      (debounceTime(300)).
+      subscribe((query: string) => {
+        this.searchObj.name = query;
+        this.fetchSearchResults();
       });
   }
 
@@ -98,7 +89,9 @@ export class SearchBoxComponent implements OnInit {
     } else {
       this.searchObj.eventTypes.splice(index, 1);
     }
+    this.fetchSearchResults();
   }
+
 
   /**
    * @description Navigate to movie details page & close modal
@@ -106,9 +99,33 @@ export class SearchBoxComponent implements OnInit {
    * @param id Selected event id
    */
 
-  getDetailsMovies(id: any) {
-    this.routes.navigate([`/movies/${this.commonService._selectCity()}/${id}`]);
+  getDetailsMovies(id: any, eventType: string) {
+    const city = this.commonService._selectCity();
+    if (eventType === 'Movie') {
+      this.routes.navigate(['/movie', city, id]);
+    } else {
+      this.routes.navigate(['/', eventType.toLowerCase(), city, id]);
+    }
     this.closeModal();
     this.searchControl.setValue('');
   }
+
+
+  /**
+    * @description Add Filter  by event type 
+    * @author Gurmeet Kumar
+    */
+  fetchSearchResults() {
+    this.homeService.globalSearch(this.searchObj).subscribe({
+      next: (res: any) => {
+        this.movieName = res.data || [];
+      },
+      error: (err: any) => {
+        this.toastr.error(err.message);
+      },
+    });
+  }
+
+
+
 }

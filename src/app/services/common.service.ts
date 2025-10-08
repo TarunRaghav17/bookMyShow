@@ -29,7 +29,7 @@ export class CommonService {
   ) { }
 
   setUserLangFormat(payload: any) {
-    this.userLangFormat.set(payload)
+    this.userLangFormat.set(payload);
   }
 
   getUserLangFormat() {
@@ -122,11 +122,11 @@ export class CommonService {
   }
 
 
-    /**
-   * @description get content details by its id
-   * @author Inzamam
-   * @return Observable<any>
-   */
+  /**
+ * @description get content details by its id
+ * @author Inzamam
+ * @return Observable<any>
+ */
   getContentDetailsById(contentId: string | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/events/${contentId}`);
   }
@@ -136,8 +136,8 @@ export class CommonService {
    * @return Observable<any>
    */
   deleteContentById(contentId: string | null): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`,{
-      id:contentId
+    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`, {
+      id: contentId
     });
 
   }
@@ -457,8 +457,8 @@ export class CommonService {
     );
     this.selectedFiltersSignal.set(reset);
   }
- 
-  getShowsById(eventId:string| null , date:string| null):Observable<any>{
+
+  getShowsById(eventId: string | null, date: string | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/shows?eventId=${eventId}&date=${date}`)
   }
 }

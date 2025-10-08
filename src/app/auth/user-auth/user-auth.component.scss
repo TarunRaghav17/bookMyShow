@@ -7,16 +7,24 @@
   transition: 0.3s;
 }
 
+.form_icon img {
+  width: 100px;
+  height: 100px;
+}
+
 #togglePassword:hover {
   color: #000;
 }
+
 .changeRouteFormPage a {
-  color: rgb(16, 98, 240);
-  text-decoration: underline;
-  text-underline-offset: 5px;
+  color: rgb(235, 78, 98);
+  text-decoration: none;
+  cursor: pointer;
+
 }
+
 .password-input {
-  padding-right: 2rem; /* space for icon */
+  padding-right: 2rem;
 }
 
 .password-toggle-icon {
@@ -25,4 +33,9 @@
   top: 50px;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }

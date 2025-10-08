@@ -61,7 +61,7 @@
                 [ngClass]="{'is-invalid': venueForm.get('address.city')?.touched && venueForm.get('address.city')?.invalid}">
                 <option value="" disabled>Select</option>
                 @for(city of citiesArray;track $index){
-                <option [value]="city.cityName | lowercase">{{city.cityName}}</option>
+                <option [value]="city.cityName ">{{city.cityName}}</option>
                 }
             </select>
             <div class="invalid-feedback">City is required.</div>

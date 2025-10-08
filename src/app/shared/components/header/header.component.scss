@@ -298,7 +298,9 @@ span {
   color: rgb(59, 59, 59);
 }
 
-
+.main-view-city-container {
+  cursor: pointer;
+}
 
 .activeClassBsImage {
   background: black;
@@ -326,6 +328,12 @@ span {
   border-radius: 5px;
   overflow-y: auto;
   background: white;
+  cursor: pointer;
+}
+
+.cursor_pointer i {
+  cursor: pointer;
+
 }
 
 .icon_clear_search {
@@ -333,6 +341,7 @@ span {
   right: 10px;
   z-index: 99;
   top: 5px;
+  cursor: pointer;
 }
 
 .selected-popular-city {
@@ -380,7 +389,7 @@ span {
 }
 
 .notification-list {
-  max-height: 600px;
+  max-height: 500px;
   overflow-y: auto;
 }
 

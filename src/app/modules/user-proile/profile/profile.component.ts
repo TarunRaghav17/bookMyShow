@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   constructor(
     public commonService: CommonService,
-    private authService: AuthService,
+    public authService: AuthService,
     private userService: UserProfileService,
     private toastr: ToastrService,
     private modalService: NgbModal,
@@ -59,10 +59,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       married: ['no'],
       anniversaryDate: [''],
       identity: ['women'],
-      pincode: ['', [Validators.pattern(/^[0-9]{6}$/), Validators.maxLength(6)]],
+      pincode: ['', [Validators.maxLength(6), Validators.pattern(/^[0-9]{6}$/)]],
       addressLine1: ['', [Validators.maxLength(255)]],
       addressLine2: ['', [Validators.maxLength(255)]],
-      city: ['', [Validators.maxLength(100)]],
+      city: ['', [Validators.maxLength(100), Validators.pattern(/^[A-Za-z\s.-]+$/)]],
       state: [''],
     });
     this.modalForm = this.fb.group({
@@ -119,9 +119,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.modalForm.get('email')?.setValidators([
         Validators.required,
         Validators.email,
-        Validators.pattern(
-          /^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/
-        ),
+        Validators.pattern(/^(?!.*\s)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
       ]);
       this.modalForm
         .get('email')
@@ -157,10 +155,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   onUploadImg(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-
     const file = input.files[0];
     const allowedTypes = ['image/jpeg', 'image/png'];
-
     if (!allowedTypes.includes(file.type)) {
       this.toastr.error('Only JPG and PNG images are allowed');
       return;
@@ -191,7 +187,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.editProfileForm.get('anniversaryDate')?.value
         ),
       };
-
       if (this.base64String) {
         formData.profileImg = this.base64String;
       }
@@ -203,7 +198,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.toastr.success(res.message);
             this.getProfileUser();
             this.router.navigate(['/']);
-
           },
           error: (err: any) => {
             this.toastr.error(err.message);
@@ -222,13 +216,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     let payload: any = {
       userId: this.getProfileDataId?.userId,
     };
-
     if (this.editNumberFlag) {
       payload.phoneNumber = this.modalForm.value.phoneNumber;
     } else {
       payload.email = this.modalForm.value.email;
     }
-
     this.userService
       .updateEmailOrPhone(this.getProfileDataId?.userId, payload)
       .subscribe({
@@ -286,11 +278,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
   /**
-    *  @description Set the maximum selectable date for the date input to yesterday's date
+    * @description Set the maximum selectable date for the date input to yesterday's date
     * @author Gurmeet Kumar
     * @return void
-    */
-
+  */
   setMaxDate() {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
