@@ -119,9 +119,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.modalForm.get('email')?.setValidators([
         Validators.required,
         Validators.email,
-        Validators.pattern(
-          /^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/
-        ),
+        Validators.pattern(/^(?!.*\s)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
       ]);
       this.modalForm
         .get('email')
