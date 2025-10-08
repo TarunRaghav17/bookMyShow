@@ -19,10 +19,17 @@ export class CommonService {
 
   _userLangFormat: any = localStorage.getItem('userLangFormat');
   userLangFormat = signal<any>(JSON.parse(this._userLangFormat));
-  
+
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
-  userSelectedDate = signal<any>({})
+
+  _userSelectedDate: any = localStorage.getItem('_userSelectedDate');
+  userSelectedDate = signal<any>(JSON.parse(this._userSelectedDate))
+
+  _userSelectedShow: any = localStorage.getItem('_userSelectedShow');
+  userSelectedShow = signal<any>(JSON.parse(this._userSelectedShow))
+
+
   movieDetails = signal<any>({})
 
   constructor(
@@ -31,30 +38,81 @@ export class CommonService {
     private loaderService: LoaderService
   ) { }
 
+  /**
+ * @description set user selected language and format
+ * @author Inzamam
+ * @params payload:{language,format}
+ */
   setUserLangFormat(payload: any) {
     this.userLangFormat.set(payload);
-    localStorage.setItem('userLangFormat', JSON.stringify(payload));  
+    localStorage.setItem('userLangFormat', JSON.stringify(payload));
   }
-
+  /**
+   * @description Get user selected language and format
+   * @author Inzamam
+   * @return payload:{date,dateNum,month,today}
+   */
   getUserLangFormat() {
     return this.userLangFormat()
   }
 
-
+  /**
+ * @description set movie details
+ * @author Inzamam
+ * @params payload:movie details object
+ */
   setMovieDetails(payload: any) {
     this.movieDetails.set(payload)
   }
 
+
+
+  /**
+ * @description get movie details
+ * @author Inzamam
+ * @return payload:movie details object
+ */
   getMovieDetails() {
     return this.movieDetails()
   }
 
+  /**
+ * @description set user selected show
+ * @author Inzamam
+ * @params payload:show details object
+ */
+  setUserSelectedShow(payload: any) {
+    this.userSelectedShow.set(payload)
+    localStorage.setItem('_userSelectedShow', JSON.stringify(payload));
+  }
 
+  /**
+ * @description get user selected show
+ * @author Inzamam
+ ** @return payload:show details object
+ */
+  getUserSelectedShow() {
+    return this.userSelectedShow()
+  }
+
+  /**
+* @description set user selected date
+* @author Inzamam
+* @params index: number , payload:{date,dateNum,month,today}
+*/
   setUserSelectedDate(index: number, payload: any) {
-    if (index < 3) this.userSelectedDate.set(payload)
+    if (index < 3) {
+      this.userSelectedDate.set(payload)
+      localStorage.setItem('_userSelectedDate', JSON.stringify(payload));
+    }
     return
   }
 
+  /**
+* @description get user selected date
+* @author Inzamam
+* @return payload:{date,dateNum,month,today}
+*/
   getUserSelectedDate() {
     return this.userSelectedDate()
   }
@@ -98,7 +156,6 @@ export class CommonService {
       },
     ])
 
-
   setFiltersSignal(filters: any) {
     let modifiedFilters = this.formatFilters(filters)
     this.filtersSignal.set(modifiedFilters)
@@ -125,24 +182,67 @@ export class CommonService {
     });
   }
 
-
-    /**
-   * @description get content details by its id
-   * @author Inzamam
-   * @return Observable<any>
-   */
-  getContentDetailsById(contentId: string | null): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/events/${contentId}`);
+  /**
+* @description get already reserved seats by showId
+* @author Inzamam
+* @params showId
+* @return Observable
+*/
+  getReservedSeats(showId: string | undefined): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/bookings/booked-seats?showId=${showId}`,
+      {
+        context: new HttpContext().set(this.IS_PUBLIC_API, true),
+      }
+    );
   }
 
-   /**
-   * @description get venues and their shows by passing contentId and date
-   * @author Inzamam
-   * * @params  [contentId ,date]
-   * @return Observable<any>
-   */
-  getVenuesShowsByContentId(contentId: string | null,date:string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/shows?eventId=${contentId}&date=${date}`);
+
+  /**
+* @description book user selected seats
+* @author Inzamam
+* @params payload
+* @return Observable
+*/
+  bookUserSeats(payload: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/bookings/book`, payload
+    );
+  }
+
+  /**
+ * @description get content details by its id
+ * @author Inzamam
+ * @return Observable<any>
+ */
+  getContentDetailsById(contentId: string | null | undefined): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/events/${contentId}`, {
+      context: new HttpContext().set(this.IS_PUBLIC_API, true),
+    });
+  }
+
+  /**
+* @description get venue details by its id
+* @author Inzamam
+* @params venueId
+* @return Observable<any>
+*/
+  getVenueDetailsById(venueId: string | null | undefined): Observable<any> {
+    return this.http.get(`${this.baseUrl}/venues/${venueId}`,
+      {
+        context: new HttpContext().set(this.IS_PUBLIC_API, true),
+      }
+    );
+  }
+
+  /**
+  * @description get venues and their shows by passing contentId and date
+  * @author Inzamam
+  * * @params  [contentId ,date]
+  * @return Observable<any>
+  */
+  getVenuesShowsByContentId(contentId: string | null, date: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/shows?eventId=${contentId}&date=${date}`, {
+      context: new HttpContext().set(this.IS_PUBLIC_API, true),
+    });
   }
 
   /**
@@ -151,12 +251,10 @@ export class CommonService {
    * @return Observable<any>
    */
   deleteContentById(contentId: string | null): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`,{
-      id:contentId
+    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`, {
+      id: contentId
     });
-
   }
-
 
   /**
    * @description Get list of popular cities from backend
@@ -472,8 +570,8 @@ export class CommonService {
     );
     this.selectedFiltersSignal.set(reset);
   }
- 
-  getShowsById(eventId:string| null , date:string| null):Observable<any>{
+
+  getShowsById(eventId: string | null, date: string | null): Observable<any> {
     return this.http.get(`${this.baseUrl}/api/shows?eventId=${eventId}&date=${date}`)
   }
 }

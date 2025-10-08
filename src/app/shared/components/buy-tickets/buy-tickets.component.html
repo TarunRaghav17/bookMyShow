@@ -1,4 +1,3 @@
-
 @if(movieDetails){
 <div class="container-fluid px-5 py-3 bg-white">
   <!-- Movie Title -->
@@ -9,17 +8,15 @@
     @for(genre of movieDetails?.genres;track $index){
     <span class="text-muted small bg-light text-dark  rounded-pill px-2 border ms-2 py-1">{{genre}}</span>
     }
-
-
   </div>
-
+  <!-- Date Selector -->
   <div class="d-flex align-items-center justify-content-between mb-3 border-bottom border-start ps-1  bg-white"
     style="height:80px">
-    <!-- Date Selector -->
     <div class="d-flex align-items-center gap-1" style="font-size: 12px;">
       @for(date of dateSelectionArray;track $index){
-      <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card "
-        (click)="this.commonService.setUserSelectedDate($index,date)" [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':'',
+      <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card " (click)="
+        onDateChange($index,date)
+        " [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':'',
         'not-allowed':'pointer',}" [ngClass]="{'date_disabled':$index>2}">
         <div>{{date.day}}</div>
         <div style="font-weight: bold; font-size:18px ;">{{date?.dateNum}}</div>
@@ -31,12 +28,10 @@
     <!-- Filters -->
     <div class="d-flex   h-100">
       <div class="dropdown  border-start ">
-
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">{{commonService.userLangFormat().lang}} -
           {{commonService.userLangFormat().format}}</button>
         <ul class="dropdown-menu">
-
           @for(lang of movieDetails?.languages;track $index ){
           @for(format of movieDetails?.format;track $index){
           <li class="dropdown-item on_hover">
@@ -46,7 +41,6 @@
           }
         </ul>
       </div>
-
       <div class="dropdown  border-start">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Price Range</button>
@@ -69,7 +63,6 @@
           </li>
         </ul>
       </div>
-
       <div class="dropdown  border-start">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Special Formats</button>
@@ -82,22 +75,18 @@
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Preferred Time</button>
         <ul class="dropdown-menu">
-
           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover ">
             <label class="">
               Morning</label>
             <input type="checkbox" class="form-check-input accent-blue" />
           </li>
-
           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover ">
             <label class="">
               Afternoon</label>
             <input type="checkbox" class="form-check-input accent-blue" />
           </li>
-
         </ul>
       </div>
-
       <!-- search  -->
       <div class="dropdown  border-start border-end d-flex on_hover
       align-items-center justify-content-start px-3 gap-4 searchBox 
@@ -106,28 +95,25 @@
         <input type="text" placeholder="Search by cinema or area" class="form-control" />
         <div class="">
           <button class="btn btn-close" (click)="toggleSearchBox($event,false)"></button>
-
         </div>
       </div>
     </div>
   </div>
-
   <!-- Theatre List -->
   <div class="mb-4  bg-white">
-    <!-- Theatre 1 -->
-    <div
-      [routerLink]="[`/movies/${commonService._selectCity()?.toLowerCase()}/seat-layout/${movieDetails?.eventId}/1/23/${commonService.userSelectedDate()?.today}`]"
-      class="border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height: 7rem;">
+    <!-- Theatres-->
+    @for(venue of venueShowsDetails;track $index){
+    <div class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height:auto;">
       <div class="d-flex flex-column  " style="width:25rem">
-        <div class="fw-semibold   d-flex align-items-center justify-content-center gap-3">
+        <div class="fw-semibold   d-flex align-items-center justify-content-start gap-3">
           <img
             src="https://play-lh.googleusercontent.com/FWnYQ8Bwljw9z1SxBeAJ0ahIB7wJ8A2RrjhITKGwMsy2m28bSNYvuk5xfU_eM_YLcysl=w240-h480-rw"
             alt="cinema" class="border" style="width:10%; border-radius:20%;" />
-          CineStar Multiplex : Injambakkam ECR 4K Atmos
+          {{venue.venueName}}
         </div>
         <!-- beverages icon -->
-        <div class="d-flex gap-2 mt-2 align-items-center ">
-          <div class="on_hover_icon ">
+        <div class="d-flex gap-2 mt-2 align-items-center  ">
+          <div class="on_hover_icon  ">
             <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/fnb-v1.png" alt=""
               style="width:4rem;" />
           </div>
@@ -138,251 +124,30 @@
         </div>
       </div>
       <div class="d-flex flex-wrap  gap-2">
-
-
-        <div class=" hover_container ">
+        @for(screen of venue.screens;track $index){
+        @for(showTime of screen.showTimes ;track $index){
+        <div class=" hover_container" (click)="navigateToSeatLayout(venue,screen,showTime)">
           <div class="hover-div ">
-
-            @for(i of [1];track $index){
+            @for(cat of showTime?.availableCategories;track $index){
             <div class="d-flex flex-column mx-1">
-              <span>₹800</span>
+              <span>₹{{cat.categoryPrice}}</span>
               <span class="p-0 m-0 ">
-                SILVER
+                {{cat.categoryName}}
               </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            <div class="d-flex flex-column mx-1">
-              <span>₹1500</span>
-              <span class="p-0 m-0 ">
-                GOLD
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            <div class="d-flex flex-column mx-1">
-              <span>₹1000</span>
-              <span class="p-0 m-0 ">
-                PLATINUM
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
+              <span class="p-0 m-0 text-success">{{cat.categoryStatus}}</span>
             </div>
             }
-
           </div>
           <button
             class=" bg-white d-flex text-muted flex-column justify-content-start align-items-center time_slot_btn">
-            10:00 AM<br><small style="font-size: 9px;">4K DOLBY</small>
+            {{showTime.time}}<br><small style="font-size: 9px;">4K DOLBY</small>
           </button>
           <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
         </div>
-
-
-        <div class=" hover_container ">
-
-          <div class="hover-div ">
-
-            @for(i of [1];track $index){
-            <div class="d-flex flex-column mx-1">
-              <span>₹800</span>
-              <span class="p-0 m-0 ">
-                SILVER
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            <div class="d-flex flex-column mx-1">
-              <span>₹1500</span>
-              <span class="p-0 m-0 ">
-                GOLD
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            <div class="d-flex flex-column mx-1">
-              <span>₹1000</span>
-              <span class="p-0 m-0 ">
-                PLATINUM
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            }
-
-          </div>
-          <button
-            class=" bg-white d-flex text-muted flex-column justify-content-start align-items-center time_slot_btn">
-            10:00 AM<br><small style="font-size: 9px;">4K DOLBY</small>
-          </button>
-          <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
-        </div>
-
-
-        <div class=" hover_container ">
-
-          <div class="hover-div ">
-
-            @for(i of [1];track $index){
-            <div class="d-flex flex-column mx-1">
-              <span>₹800</span>
-              <span class="p-0 m-0 ">
-                SILVER
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            <div class="d-flex flex-column mx-1">
-              <span>₹1500</span>
-              <span class="p-0 m-0 ">
-                GOLD
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            <div class="d-flex flex-column mx-1">
-              <span>₹1000</span>
-              <span class="p-0 m-0 ">
-                PLATINUM
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            }
-
-          </div>
-          <button
-            class=" bg-white d-flex text-muted flex-column justify-content-start align-items-center time_slot_btn">
-            10:00 AM<br><small style="font-size: 9px;">4K DOLBY</small>
-          </button>
-          <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
-        </div>
-
-        <div class=" hover_container ">
-
-       <div class="hover-div ">
-
-            @for(i of [1];track $index){
-            <div class="d-flex flex-column mx-1">
-              <span>₹800</span>
-              <span class="p-0 m-0 ">
-                SILVER
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-             <div class="d-flex flex-column mx-1">
-              <span>₹1500</span>
-              <span class="p-0 m-0 ">
-                GOLD
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-                         <div class="d-flex flex-column mx-1">
-              <span>₹1000</span>
-              <span class="p-0 m-0 ">
-                PLATINUM
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            }
-
-          </div>
-          <button
-            class=" bg-white d-flex text-muted flex-column justify-content-start align-items-center time_slot_btn">
-            10:00 AM<br><small style="font-size: 9px;">4K DOLBY</small>
-          </button>
-          <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
-        </div>
+        }}
       </div>
     </div>
-    <!-- Theatre 2 -->
-    <div class="border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height: 7rem;">
-      <div class="d-flex flex-column  " style="width:25rem">
-        <div class="fw-semibold   d-flex align-items-center justify-content-center gap-3">
-          <img
-            src="https://play-lh.googleusercontent.com/FWnYQ8Bwljw9z1SxBeAJ0ahIB7wJ8A2RrjhITKGwMsy2m28bSNYvuk5xfU_eM_YLcysl=w240-h480-rw"
-            alt="cinema" class="border" style="width:10%; border-radius:20%;" />
-          The Vijay Park Multiplex: Injambakkam ECR 4K Atmos
-        </div>
-        <!-- beverages icon -->
-        <div class="d-flex gap-2 mt-2 align-items-center ">
-          <div class="on_hover_icon ">
-            <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/fnb-v1.png" alt=""
-              style="width:4rem;" />
-          </div>
-          <div class="on_hover_icon ">
-            <img src="https://in-cdn.bmscdn.com/moviesmaster/movies-showtimes/v4/common/mticket-v1.png" alt=""
-              style="width:5rem;" />
-          </div>
-        </div>
-      </div>
-      <div class="d-flex flex-wrap  gap-2">
-
-
-        <div class=" hover_container ">
-
-         <div class="hover-div ">
-
-            @for(i of [1];track $index){
-            <div class="d-flex flex-column mx-1">
-              <span>₹800</span>
-              <span class="p-0 m-0 ">
-                SILVER
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-             <div class="d-flex flex-column mx-1">
-              <span>₹1500</span>
-              <span class="p-0 m-0 ">
-                GOLD
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-                         <div class="d-flex flex-column mx-1">
-              <span>₹1000</span>
-              <span class="p-0 m-0 ">
-                PLATINUM
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            }
-
-          </div>
-          <button
-            class=" bg-white d-flex text-muted flex-column justify-content-start align-items-center time_slot_btn">
-            10:00 AM<br><small style="font-size: 9px;">4K DOLBY</small>
-          </button>
-          <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
-        </div>
-        <div class=" hover_container ">
-
-          <div class="hover-div ">
-
-            @for(i of [1];track $index){
-            <div class="d-flex flex-column mx-1">
-              <span>₹800</span>
-              <span class="p-0 m-0 ">
-                SILVER
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-             <div class="d-flex flex-column mx-1">
-              <span>₹1500</span>
-              <span class="p-0 m-0 ">
-                GOLD
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-                         <div class="d-flex flex-column mx-1">
-              <span>₹1000</span>
-              <span class="p-0 m-0 ">
-                PLATINUM
-              </span>
-              <span class="p-0 m-0 text-success">Available</span>
-            </div>
-            }
-
-          </div>
-          <button
-            class=" bg-white d-flex text-muted flex-column justify-content-start align-items-center time_slot_btn">
-            10:00 AM<br><small style="font-size: 9px;">4K DOLBY</small>
-          </button>
-          <p class="small text-muted mt-1" style="font-size: 12px;">Non-cancellable</p>
-        </div>
-      </div>
-    </div>
-    <!-- Add more theatres in same structure -->
+    }
   </div>
 </div>
 }

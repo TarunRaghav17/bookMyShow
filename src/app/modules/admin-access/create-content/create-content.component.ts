@@ -83,7 +83,7 @@ export class CreateContentComponent implements OnInit {
       layouts: this.fb.array(
         screen.layouts.map((layout: any) =>
           this.fb.group({
-            id: [layout.id, []],
+            id: [layout.id],
             layoutName: [layout.layoutName, Validators.required],
             rows: [layout.rows, Validators.required],
             cols: [layout.cols, Validators.required],
@@ -238,8 +238,6 @@ export class CreateContentComponent implements OnInit {
     return ((layout.get('rows') as FormArray).value).length
   }
 
-  // -----------for event type != movie------start------------------
-
   get shows(): FormArray {
     return this.eventShowForm.get('shows') as FormArray
   }
@@ -251,8 +249,6 @@ export class CreateContentComponent implements OnInit {
     this.shows.removeAt(index)
 
   }
-
-  // -----------for event type != movie-----------end-------------
 
   removeControls(form: FormGroup, controls: string[]) {
     controls.forEach(control => {
@@ -507,7 +503,7 @@ export class CreateContentComponent implements OnInit {
               ),
             })),
             catchError((err) => {
-              console.error(`Error fetching for ${city}`, err);
+              this.toaster.error(`Error fetching venues for ${city}`,err.error.message);
               return [];
             })
           )
@@ -518,7 +514,7 @@ export class CreateContentComponent implements OnInit {
         next: (results) => {
           this.venuesNameList = results.flatMap((r) => r.venues);
         },
-        error: (err) => console.error('Unexpected error:', err),
+        error: (err) =>  this.toaster.error(err.error.message)
       });
   }
 
