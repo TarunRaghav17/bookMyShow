@@ -62,18 +62,37 @@ export class CreateContentComponent implements OnInit {
     });
   }
 
+  /**
+* @description getLayouts of particular screen
+* @author Inzamam
+* @params screen object
+* @return FormArray
+*/
   getLayouts(screen: AbstractControl): FormArray {
     return screen.get('layouts') as FormArray;
   }
+
 
   getTempArray() {
     return this.tempFormArray as FormArray
   }
 
+
+  /**
+* @description getter function to get screens as FormArray
+* @author Inzamam
+* @return FormArray
+*/
   get screens(): FormArray {
     return this.eventShowForm.get('screens') as FormArray;
   }
 
+  /**
+* @description create screen for veneue
+* @author Inzamam
+* @params screen object,venueName,venueId
+* @return FormGroup
+*/
   createScreen(screen: any, venueName: string, venueId: string): FormGroup {
     return this.fb.group({
       screenName: [screen.screenName, Validators.required],
@@ -96,6 +115,10 @@ export class CreateContentComponent implements OnInit {
     });
   }
 
+  /**
+* @description handler for event type change
+* @author Inzamam
+*/
   onEventTypeChange() {
     this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
@@ -177,6 +200,10 @@ export class CreateContentComponent implements OnInit {
     })
   }
 
+  /**
+* @description handler for venue name change
+* @author Inzamam
+*/
   onVenueNameChange() {
     const selectedVenueName = (this.eventShowForm.get('venueName') as FormArray)?.value;
     this.selectedVenueObj = this.venuesNameList.filter(v =>
@@ -193,39 +220,80 @@ export class CreateContentComponent implements OnInit {
     }
   }
 
+  /**
+* @description function that creates form group of show
+* @author Inzamam
+* @return FormGroup
+*/
   createShow() {
     return this.fb.group({
       date: ['', Validators.required],
       startTime: this.fb.array([this.createShowTime()]),
     })
   }
+
+  /**
+* @description function to get shows from screen
+* @author Inzamam
+* @params Screen obj
+* @return FormArray
+*/
   // for movies
   getShows(screen: AbstractControl): FormArray {
     return screen.get('shows') as FormArray;
   }
 
+  /**
+* @description function to add screen 
+* @author Inzamam
+* @params Screen obj
+*/
   // for movies
   addShow(screen: AbstractControl) {
     this.getShows(screen).push(this.createShow())
   }
 
+  /**
+* @description function to remove screen 
+* @author Inzamam
+* @params Screen obj
+*/
   // for movies
   removeShow(screen: AbstractControl, index: number) {
     this.getShows(screen).removeAt(index)
   }
-
+  /**
+* @description get start time  of show
+* @author Inzamam
+* @param screen object
+* @return FormArray
+*/
   getStartTime(show: AbstractControl): FormArray {
     return show.get('startTime') as FormArray
   }
 
+  /**
+* @description function to create showTime control
+* @author Inzamam
+*/
   createShowTime() {
     return this.fb.control('', [Validators.required])
   }
 
+  /**
+* @description function to add showTime 
+* @author Inzamam
+* @params Show obj
+*/
   addShowTime(show: AbstractControl) {
     this.getStartTime(show).push(this.createShowTime())
   }
 
+  /**
+* @description function to remove showTime 
+* @author Inzamam
+* @params Show obj
+*/
   removeShowTime(show: AbstractControl, index: number) {
     this.getStartTime(show).removeAt(index)
   }
@@ -274,6 +342,11 @@ export class CreateContentComponent implements OnInit {
     return null;
   }
 
+
+  /**
+* @description custom validator for start time of show
+* @author Inzamam
+*/
   validateStartTime(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
       const form = control.parent as FormGroup;
@@ -295,6 +368,12 @@ export class CreateContentComponent implements OnInit {
     };
   }
 
+  /**
+* @description function to set minDate for show start date
+* @params number
+* @author Inzamam
+* @return string
+*/
   validateShowStartDate(index: number): string {
     if (this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('startDate')?.value) {
       const today = new Date(this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('startDate')?.value)
@@ -305,6 +384,12 @@ export class CreateContentComponent implements OnInit {
     return ''
   }
 
+  /**
+* @description function to set minDate for show end date
+* @params number
+* @author Inzamam
+* @return string
+*/
   validateShowEndDate(): string {
     if (this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('endDate')?.value) {
       const today = new Date(this.eventShowForm.get('releasingOn')?.value || this.eventShowForm.get('endDate')?.value)
@@ -315,6 +400,10 @@ export class CreateContentComponent implements OnInit {
     return ''
   }
 
+  /**
+* @description function to submit the form 
+* @author Inzamam
+*/
   onShowFormSubmit(): void {
     const formValue = this.eventShowForm.value;
     const selectedVenueIds = this.selectedVenueObj
@@ -403,8 +492,12 @@ export class CreateContentComponent implements OnInit {
     }
   }
 
-  // utility funct. to reset form controls 
-  // takes array of form-control names to reset 
+
+  /**
+* @description utility funct. to reset form controls takes array of form-control names to reset 
+* @author Inzamam
+* @params formcontrols[]
+*/
   handleReset(formControls: any[]) {
     formControls.forEach((ctrl) => {
       this.eventShowForm.get(ctrl)?.reset();
@@ -457,6 +550,11 @@ export class CreateContentComponent implements OnInit {
     );
   }
 
+  /**
+* @description function that add or removes event item based on checked or unchecked
+* @author Inzamam
+* @params payload:event,path
+*/
   handleInputBoxChange(event: any, path: string) {
     const formArray = this.getArrayControl(path);
     if (event?.target.checked) {
@@ -478,6 +576,11 @@ export class CreateContentComponent implements OnInit {
     return this.eventShowForm.get('city') as FormArray
   }
 
+  /**
+* @description function that add or removes city based on checked or unchecked
+* @author Inzamam
+* @params payload:event
+*/
   toggleCity(event: any) {
     if (event.target.checked) {
       this.city.push(this.fb.control(event.target.value));
@@ -489,6 +592,10 @@ export class CreateContentComponent implements OnInit {
     this.callApiForCities();
   }
 
+  /**
+* @description function that fetches venues list based on selected city and sets it to venuesNameList
+* @author Inzamam
+*/
   callApiForCities() {
     const cities: string[] = this.city.value;
     from(cities)
@@ -503,7 +610,7 @@ export class CreateContentComponent implements OnInit {
               ),
             })),
             catchError((err) => {
-              this.toaster.error(`Error fetching venues for ${city}`,err.error.message);
+              this.toaster.error(`Error fetching venues for ${city}`, err.error.message);
               return [];
             })
           )
@@ -514,7 +621,7 @@ export class CreateContentComponent implements OnInit {
         next: (results) => {
           this.venuesNameList = results.flatMap((r) => r.venues);
         },
-        error: (err) =>  this.toaster.error(err.error.message)
+        error: (err) => this.toaster.error(err.error.message)
       });
   }
 
@@ -538,6 +645,11 @@ export class CreateContentComponent implements OnInit {
     this.onEventTypeChange()
   }
 
+     /**
+* @description function that handles image upload for cast and crew in base64 url
+* @author Inzamam
+* @params payload:event,path,index
+*/
   handleImageUpload(event: Event, path: string, index?: number): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
@@ -566,6 +678,11 @@ export class CreateContentComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+     /**
+* @description function that handles image upload for event poster image in BLOB form
+* @author Inzamam
+* @params payload:event,path
+*/
   handlePosterImgUpload(event: Event, path: string,): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;

@@ -46,9 +46,7 @@ export class BuyTicketsComponent implements AfterViewInit {
     private toaster: ToastrService
   ) { }
 
-  // -------test data------
   maxPrice = 900;
-  // ------------------
   selectedMovie = 'movie999'
   movieDetails: any | null = null
   dateSelectionArray: any = [];
@@ -65,6 +63,10 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.fetchContentIdByUrl();
   }
 
+  /**
+* @description function that fetches content details from content id comming from url
+* @author Inzamam
+*/
   fetchContentIdByUrl() {
     this.contentId = this.route.snapshot.paramMap.get('id');
     this.commonService.getContentDetailsById(this.contentId).subscribe({
@@ -78,6 +80,12 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.fetchVenuesShows(this.contentId);
   }
 
+  /**
+* @description helper function to format categories and shows in venues
+* @author Inzamam
+* @params data[]
+* @return venues
+*/
   mergeCategoriesWithShowIds(data: any[]): any[] {
     const venueMap = new Map<string, Venue>();
 
@@ -90,7 +98,6 @@ export class BuyTicketsComponent implements AfterViewInit {
         });
       }
       const venue = venueMap.get(item.venueId)!;
-
       let screen = venue.screens.find((s) => s.screenId === item.screenId);
       if (!screen) {
         screen = { screenId: item.screenId, showTimesMap: new Map() };
@@ -132,6 +139,11 @@ export class BuyTicketsComponent implements AfterViewInit {
     return venues;
   }
 
+  /**
+* @description function to get shows and venues by contentId and stores in venueShowsDetails
+* @author Inzamam
+* @params contentId 
+*/
   fetchVenuesShows(contentId: string | null) {
     this.userSelectedDate = this.commonService.userSelectedDate()
     this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
@@ -145,11 +157,21 @@ export class BuyTicketsComponent implements AfterViewInit {
     })
   }
 
+  /**
+* @description helper function to handle date change
+* @author Inzamam
+* @params payload:index,date obj
+*/
   onDateChange(index: number, dateObj: any) {
     this.commonService.setUserSelectedDate(index, dateObj);
     this.fetchVenuesShows(this.contentId);
   }
 
+  /**
+* @description sets user seleced venue screen and show time and then navigate to seat layout page
+* @author Inzamam
+* @params payload:venue, screen, showTim
+*/
   navigateToSeatLayout(venue: Venue, screen: Screen, showTime: TimeSlot) {
     this.commonService.setUserSelectedShow({ ...showTime, screenId: screen.screenId });
     let showData = venue.screens.map((screen: any) => ({
@@ -166,6 +188,11 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { showData: showData, screenShows: screenShows } });
   }
 
+  /**
+* @description function that initializes dateSelectionArray
+* @author Inzamam
+* @params payload:event,path
+*/
   initializeDateSelectionArray() {
     let today = new Date();
     for (let i = 0; i < 7; i++) {
@@ -179,6 +206,12 @@ export class BuyTicketsComponent implements AfterViewInit {
       })
     }
   }
+
+  /**
+* @description function that open/close search venue box
+* @author Inzamam
+* @params payload:event,value(true or false)
+*/
   toggleSearchBox(event: any, value: boolean) {
     event.stopPropagation()
     this.isOpen = value
