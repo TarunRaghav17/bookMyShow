@@ -20,6 +20,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { EventsDetailsComponent } from './shared/components/events-details/events-details.component';
 import { CommonModule } from '@angular/common';
 import { BookingEventsComponent } from './shared/components/booking-events/booking-events.component';
+import { DurationPipe } from './core/pipes/duration.pipe';
 
 
 
@@ -31,11 +32,11 @@ import { BookingEventsComponent } from './shared/components/booking-events/booki
     ErrorPageComponent,
     SearchBoxComponent,
     TheatreListComponent,
-    BookingEventsComponent
+    BookingEventsComponent,
   ],
   imports: [BrowserModule, BrowserAnimationsModule,
     AppRoutingModule, NgbModule, ReactiveFormsModule, FormsModule, MoviesDetailsComponent, CarouselModule,
-    FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent, CommonModule,
+    FilterAccordionComponent, HttpClientModule, UserAuthComponent, EventsDetailsComponent, CommonModule,DurationPipe,
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-top-right',

@@ -8,12 +8,13 @@ import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { AuthService } from '../../../auth/auth-service.service';
 import { Location } from '@angular/common';
+import { DurationPipe } from '../../../core/pipes/duration.pipe';
 @Component({
   selector: 'app-events-details',
   standalone: true,
   templateUrl: './events-details.component.html',
   styleUrl: './events-details.component.scss',
-  imports: [ActivitiesRoutingModule, NgbModule, NumberFormatPipe]
+  imports: [ActivitiesRoutingModule, NgbModule, NumberFormatPipe , DurationPipe]
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
@@ -50,7 +51,7 @@ export class EventsDetailsComponent implements OnInit {
 
   /**
   * @description open service modal 
-  * @author  Gurmeet Kumar
+  * @author  Manu shukla
   */
 
   openCityModal(serviceModal: TemplateRef<any>) {
@@ -63,7 +64,10 @@ export class EventsDetailsComponent implements OnInit {
   closemodal() {
     this.modalService.dismissAll();
   }
-
+/**
+  * @description open service modal 
+  * @author Manu Shukla
+  */
   openShareModal(serviceModal: TemplateRef<any>) {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
@@ -76,7 +80,11 @@ export class EventsDetailsComponent implements OnInit {
     let url = window.location.href;
     this.copyLink(url);
   }
-
+  
+/**
+  * @description method for copy the current URL
+  * @author Manu Shukla
+  */
   copyLink(link: string) {
     const textarea = document.createElement('textarea');
     textarea.value = link;
@@ -96,6 +104,10 @@ export class EventsDetailsComponent implements OnInit {
     document.body.removeChild(textarea);
   }
 
+/**
+  * @description Opens a confirmation modal before deleting an event.  
+  * @author Manu Shukla
+  */
   handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
   const modalRef = this.modalService.open(confirmDeleteModal, {
     ariaLabelledBy: 'modal-basic-title',
@@ -120,7 +132,10 @@ export class EventsDetailsComponent implements OnInit {
     .catch(() => {});
 }
 
-
+/**
+  * @description get Today Date in format of yeaar-month-date  
+  * @author Manu Shukla
+  */
   getToday() {
     const today = new Date();
     const year = today.getUTCFullYear();
@@ -129,6 +144,10 @@ export class EventsDetailsComponent implements OnInit {
     return `${year}-${month}-${day}`; 
   }
 
+/**
+  * @description Opens a confirmation modal before Booking an event.  
+  * @author Manu Shukla
+  */
 openConfirmModal(confirmModal: TemplateRef<any>) {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -154,6 +173,10 @@ openConfirmModal(confirmModal: TemplateRef<any>) {
   ]);
 }
 
+/**
+  * @description Opens a modal if event is Closed  
+  * @author Manu Shukla
+  */
 eventClosed(closedModal: TemplateRef<any>) {
   this.modalService.open(closedModal, {
     ariaLabelledBy: 'modal-basic-title',
