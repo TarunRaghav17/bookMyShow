@@ -177,16 +177,15 @@ export class AuthService {
     return decryptedText;
   }
 
- /**
-   * @description Not Add Space in Input Feild
-   * @author Gurmeet Kumar
-   * @param event
-   */
+  /**
+    * @description Not Add Space in Input Feild
+    * @author Gurmeet Kumar
+    * @param event
+    */
   blockSpace(event: KeyboardEvent) {
-    if (event.code === 'Space' || event.key === ' ') {
+    if (event.keyCode === 32) {
       event.preventDefault();
     }
   }
-
 }
 

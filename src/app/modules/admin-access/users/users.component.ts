@@ -201,7 +201,7 @@ export class UsersComponent implements OnInit {
     { field: 'name', headerName: 'Name', sortable: true },
     { field: 'email', headerName: 'Email', sortable: true },
     { field: 'phoneNumber', headerName: 'Phone', sortable: true },
-    { field: 'roleName', headerName: 'RoleName', sortable: true },
+    { field: 'roleName', headerName: 'RoleName', sortable: false },
     { field: 'actions', headerName: 'Actions', sortable: false }
   ];
 

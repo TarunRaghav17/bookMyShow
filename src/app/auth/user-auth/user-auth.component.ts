@@ -37,7 +37,7 @@ export class UserAuthComponent implements OnInit {
 
   /** @description Login form controls */
   loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required,Validators.pattern(/^[A-Za-z0-9_]+$/)]),
     password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:[^@$^&*%]*[@$^&*%][^@$^&*%]*$))[A-Za-z\d@$^&*%]{8,20}$/)])
   });
   /** @description Signup form controls */

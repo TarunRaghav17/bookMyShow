@@ -22,14 +22,20 @@
   cursor: pointer;
 
 }
+
 .password-input {
   padding-right: 2rem;
-  /* space for icon */
 }
+
 .password-toggle-icon {
   position: absolute;
   right: 0.75rem;
   top: 50px;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
 }

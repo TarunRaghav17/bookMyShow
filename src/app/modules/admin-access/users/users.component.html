@@ -23,7 +23,7 @@
                     <thead>
                         <tr>
                             @for (col of colDefs; track $index) {
-                            <th (click)="col.sortable ? toggleSort(col.field) : null">
+                            <th (click)="col.sortable ? toggleSort(col.field) : null" class="table_heading">
                                 {{ col.headerName }}
                                 @if(col.sortable){
                                 <i class="fa"

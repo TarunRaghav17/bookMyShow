@@ -12,8 +12,10 @@
             @if(loginForm.get('username')?.touched && loginForm.get('username')?.invalid){
             <small class="text-danger">Username is required</small>
             }
+            @if(loginForm.get('username')?.hasError('pattern')){
+            <small class="text-danger">Only letters, numbers, and underscores allowed</small>
+            }
         </div>
-
         <div class="mb-3 position-relative">
             <label class="form-label">Password</label>
             <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input position-relative"
@@ -35,7 +37,7 @@
 
 
         <button type="submit" class="btn btn-info text-white col-12 mb-2" [disabled]="loginForm.invalid"
-            (click)="onLoginSubmit()" >Login</button>
+            (click)="onLoginSubmit()">Login</button>
 
         <p class="text-center changeRouteFormPage">Don't have an account?
             <a (click)="toggleSignupForm()">Signup</a>
@@ -135,7 +137,7 @@
 
         <button type="submit" class="btn btn-info text-white col-12 mb-2"
             [disabled]="signupForm.invalid || isUsernameAvailable == 'Username already exists'"
-            (click)="onSignupSubmit()" >Register</button>
+            (click)="onSignupSubmit()">Register</button>
         <p class="text-center changeRouteFormPage">Already have an account?
             <a (click)="toggleSignupForm()">Login</a>
         </p>
