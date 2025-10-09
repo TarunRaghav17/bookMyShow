@@ -8,19 +8,21 @@ import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { AuthService } from '../../../auth/auth-service.service';
 import { Location } from '@angular/common';
+import { DurationPipe } from '../../../core/pipes/duration.pipe';
 @Component({
   selector: 'app-events-details',
   standalone: true,
   templateUrl: './events-details.component.html',
   styleUrl: './events-details.component.scss',
-  imports: [ActivitiesRoutingModule, NgbModule, NumberFormatPipe]
+  imports: [ActivitiesRoutingModule, NgbModule, NumberFormatPipe , DurationPipe]
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
   eventDetails: any | null = null;
   showHeader: boolean = false;
   allShows: any
-  constructor(private route: ActivatedRoute, private router:Router,public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal , public authService:AuthService , private location:Location) {
+  today!: Date
+  constructor(private route: ActivatedRoute, private router: Router, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal, public authService: AuthService, private location: Location) {
   }
 
 
@@ -31,6 +33,7 @@ export class EventsDetailsComponent implements OnInit {
         this.commonService.getEventDetailsById(this.id).subscribe({
           next: (res: any) => {
             this.eventDetails = res.data
+            this.commonService._selectedCategory.set(this.eventDetails.eventType)
           },
           error: (err) => {
             this.toastr.error(err.message)
@@ -49,7 +52,7 @@ export class EventsDetailsComponent implements OnInit {
 
   /**
   * @description open service modal 
-  * @author  Gurmeet Kumar
+  * @author  Manu shukla
   */
 
   openCityModal(serviceModal: TemplateRef<any>) {
@@ -62,7 +65,10 @@ export class EventsDetailsComponent implements OnInit {
   closemodal() {
     this.modalService.dismissAll();
   }
-
+/**
+  * @description open service modal 
+  * @author Manu Shukla
+  */
   openShareModal(serviceModal: TemplateRef<any>) {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
@@ -75,12 +81,15 @@ export class EventsDetailsComponent implements OnInit {
     let url = window.location.href;
     this.copyLink(url);
   }
-
+  
+/**
+  * @description method for copy the current URL
+  * @author Manu Shukla
+  */
   copyLink(link: string) {
     const textarea = document.createElement('textarea');
     textarea.value = link;
     document.body.appendChild(textarea);
-    textarea.focus();
     textarea.select();
     try {
       const successful = document.execCommand('copy');
@@ -96,44 +105,84 @@ export class EventsDetailsComponent implements OnInit {
     document.body.removeChild(textarea);
   }
 
+/**
+  * @description Opens a confirmation modal before deleting an event.  
+  * @author Manu Shukla
+  */
+  handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
+  const modalRef = this.modalService.open(confirmDeleteModal, {
+    ariaLabelledBy: 'modal-basic-title',
+    modalDialogClass: 'no-border-modal',
+    backdrop:  'static',
+  });
 
-  handleBookNow(): void {
-    const token = localStorage.getItem('token'); 
+  modalRef.result
+    .then((result) => {
+      if (result === 'confirm') {
+        this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
+          next: (res) => {
+            this.toastr.success(res.message);
+            this.location.back();
+          },
+          error: (err) => {
+            this.toastr.error(err.error.message);
+          },
+        });
+      }
+    })
+    .catch(() => {});
+}
 
-    if (!token) {
-      let res = confirm('Please log in to book this event.');
-      if (res) {
+/**
+  * @description get Today Date in format of yeaar-month-date  
+  * @author Manu Shukla
+  */
+  getToday() {
+    const today = new Date();
+    const year = today.getUTCFullYear();
+    const month = String(today.getUTCMonth() + 1).padStart(2, '0');  
+    const day = String(today.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; 
+  }
+
+/**
+  * @description Opens a confirmation modal before Booking an event.  
+  * @author Manu Shukla
+  */
+openConfirmModal(confirmModal: TemplateRef<any>) {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    const modalRef = this.modalService.open(confirmModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'no-border-modal',
+      backdrop:'static'
+    });
+    modalRef.result.then((result) => {
+      if (result === 'login') {
         const modalOptions: NgbModalOptions = { centered: true };
         this.modalService.open(UserAuthComponent, modalOptions);
       }
-      return;
-    }
-
-    else{
-       this.router.navigate([
-  '/book-events',
-  this.commonService._selectedCategory(),
-  this.eventDetails.name.split(' ').join('-'),
-  this.eventDetails.eventId,
-  this.eventDetails.startDate
-]); 
-    }
+    }).catch(() => {});
+    return;
   }
+  this.router.navigate([
+    '/book-events',
+    this.commonService._selectedCategory(),
+    this.eventDetails.name.split(' ').join('-'),
+    this.eventDetails.eventId,
+    this.eventDetails.startDate,
+  ]);
+}
 
-   handleDeleteEvent() {
-    let confirm = window.confirm('Are you sure to delete this event?')
-    if (confirm) {
-      this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
-        next: (res) => {
-          this.toastr.success(res.message);
-          this.location.back()
-        },
-        error: (err) => {
-          this.toastr.error(err.error.message)
-        }
-      })
- 
-    }
-  }
- 
+/**
+  * @description Opens a modal if event is Closed  
+  * @author Manu Shukla
+  */
+eventClosed(closedModal: TemplateRef<any>) {
+  this.modalService.open(closedModal, {
+    ariaLabelledBy: 'modal-basic-title',
+    modalDialogClass: 'no-border-modal',
+    backdrop: 'static',
+  });
+}
 }

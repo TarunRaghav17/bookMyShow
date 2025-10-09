@@ -34,14 +34,29 @@ export class FilterAccordionComponent implements OnInit {
     this.router.navigate([newUrl])
   }
 
+/**
+  * @description Toggles the visibility state of a specific accordion section based on its index.  
+  * @param {number} index - The index of the accordion section to toggle.
+  * @author Manu Shukla
+  */
   toggleAccordion(index: number): void {
     this.openedIndex.includes(index) ? this.openedIndex = this.openedIndex.filter((item: any) => item != index) : this.openedIndex.push(index);
   }
 
+/**
+  * @description Emits the selected filter object to notify parent components  
+  * @param {any} filter - The filter object containing the selected filter criteria.
+  * @author Manu Shukla
+  */
   applyFilter(filter: any) {
     this.filterEvent.emit(filter)
   }
-
+ 
+  /**
+  * @description Emits the selected filter object to notify parent components  
+  * @param {any} filter - The filter object containing the selected filter criteria.
+  * @author Manu Shukla
+  */
   clearAllFilters(item: any, index: number, type: string = ''): void {
     let { selectedType, data } = item;
     const hasSelected = data.some((i: any) => i.selected);
@@ -54,6 +69,9 @@ export class FilterAccordionComponent implements OnInit {
     if (type) {
       this.clearFilterEvent.emit(type);
     }
+     if (!this.openedIndex.includes(0)) {
+    this.openedIndex.push(0);
+  }
   }
 
 }

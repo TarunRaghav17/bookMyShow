@@ -79,6 +79,13 @@
     line-height: 24px;
     letter-spacing: 0.2px;
 }
-.modal-body i{
+i{
+  cursor: pointer;
+}
+.available{
+  color: rgb(0, 138, 30);
+  font-weight: 600;
+}
+.terms_condotion{
   cursor: pointer;
 }
