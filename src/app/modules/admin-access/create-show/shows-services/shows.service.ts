@@ -10,6 +10,13 @@ export class ShowsService {
   baseUrl = environment.baseUrl
   constructor(private http: HttpClient) { }
 
+
+  /**
+* @description service function  that hits the api and create content (movie,event,plays,etc...)
+* @author Inzamam
+* @params payload,poster ,casts,crews
+* @return Observable
+*/
   createShow(payload: any, poster: File, casts: File[], crews: File[]): Observable<any> {
     const formData = new FormData();
     formData.append('event', JSON.stringify(payload));

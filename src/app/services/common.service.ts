@@ -82,7 +82,7 @@ export class CommonService {
  * @params payload:show details object
  */
   setUserSelectedShow(payload: any) {
-      this.userSelectedShow.set(payload)
+    this.userSelectedShow.set(payload)
     localStorage.setItem('_userSelectedShow', JSON.stringify(payload));
   }
 
@@ -100,12 +100,10 @@ export class CommonService {
 * @author Inzamam
 * @params index: number , payload:{date,dateNum,month,today}
 */
-  setUserSelectedDate(index: number, payload: any) {
-    if (index < 3) {
-      this.userSelectedDate.set(payload)
-      localStorage.setItem('_userSelectedDate', JSON.stringify(payload));
-    }
-    return
+  setUserSelectedDate(payload: any) {
+    this.userSelectedDate.set(payload)
+    localStorage.setItem('_userSelectedDate', JSON.stringify(payload));
+
   }
 
   /**
