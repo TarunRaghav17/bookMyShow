@@ -368,7 +368,7 @@ export class CreateContentComponent implements OnInit {
       imdbRating: Number(formValue?.imdbRating),
       likes: Number(formValue?.likes),
       votes: Number(formValue?.votes),
-      currentlyPlaying: Boolean(formValue?.currentlyPlaying),
+      currentlyPlaying: Boolean(formValue?.eventType == 'Movie' ? (new Date(formValue?.releasingOn) <= new Date()) : (new Date(formValue?.startDate) <= new Date())),
       ageLimit: Number(formValue?.ageLimit),
       releasingOn: formValue?.releasingOn,
       languages: toNumericArray(formValue?.languages),

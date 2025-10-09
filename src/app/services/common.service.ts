@@ -82,7 +82,7 @@ export class CommonService {
  * @params payload:show details object
  */
   setUserSelectedShow(payload: any) {
-    this.userSelectedShow.set(payload)
+      this.userSelectedShow.set(payload)
     localStorage.setItem('_userSelectedShow', JSON.stringify(payload));
   }
 
