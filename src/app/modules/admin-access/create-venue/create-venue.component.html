@@ -13,7 +13,7 @@
             <div class="invalid-feedback">Venue name is required.</div>
             }
             @if(venueForm.get('venueName')?.touched && venueForm.get('venueName')?.hasError('pattern')&&venueForm.get('venueName')?.value){
-            <div class="invalid-feedback">Only characters are allowed</div>
+            <div class="invalid-feedback">Only alphabets are allowed</div>
             }
         </div>
         <!-- Capacity -->
@@ -22,7 +22,7 @@
                 <small class="text-danger reuired">*</small>
             </label>
 
-            <input type="number" formControlName="venueCapacity" class="form-control" min="10" max="5000"
+            <input type="number" formControlName="venueCapacity" class="form-control" min="5" max="5000"
                 placeholder="Enter venue capacity"
                 [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
                 @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.hasError('required')){
@@ -53,12 +53,12 @@
             <div class="invalid-feedback">Street is required.</div>
         </div>
         <div class="col-md-4 mb-3">
-            <label class="form-label">City
+            <label class="form-label">City 
                 <small class="text-danger required">*</small>
             </label>
 
-            <select formControlName="city" class="form-select"
-                [ngClass]="{'is-invalid': venueForm.get('address.city')?.touched && venueForm.get('address.city')?.invalid}">
+            <select formControlName="cityName" class="form-select"
+                [ngClass]="{'is-invalid': venueForm.get('address.cityName')?.touched && venueForm.get('address.cityName')?.invalid}">
                 <option value="" disabled>Select</option>
                 @for(city of citiesArray;track $index){
                 <option [value]="city.cityName ">{{city.cityName}}</option>

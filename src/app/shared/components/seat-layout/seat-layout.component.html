@@ -11,8 +11,10 @@
       <i class="fa fa-chevron-left fa-lg on_hover" (click)="goBack()"></i>
       <div class="d-flex  align-items-center justify-content-between w-100">
         <div class="d-flex flex-column">
-          <h4 class=" my-0">mvie name - (langformat signal)</h4>
-          <span class="text-muted  fw-semibold">Wave: Noida | date selected | show time</span>
+          <h4 class=" my-0">{{movieDetails?.name}} - ({{commonService.userLangFormat()?.lang}}
+            -{{commonService.userLangFormat()?.format}})</h4>
+          <span class="text-muted  fw-semibold">{{venueDetails?.venueName}} |
+            {{commonService.userSelectedDate()?.today}} | {{commonService.userSelectedShow().time}}</span>
         </div>
         <button class="btn btn-outline-danger  h-25 " (click)="open(seatModal)">{{noOfSelectedSeats}} Tickets</button>
       </div>
@@ -24,18 +26,19 @@
     </div>
     <div class="header px-5 py-1">
       <div class="times">
-        @for( t of showTimes;track $index){
-        <button (click)="switchShow(t)" [class.active]="t === activeShow" class="time 
+        @for(show of screenShows;track $index){
+        @for( t of show.shows;track $index){
+        <button (click)="switchShow(t,show)"
+          [class.active]="t?.time == activeShow?.time && t?.showIds[0] == activeShow?.showIds?.[0]" class="time 
    d-flex text-muted flex-column justify-content-start align-items-center"
           style="width:107px;height:40px; font-size: 12px;font-weight: 700;border: 1px solid #22c55e;border-left: 4px solid #22c55e;">
-          {{t}}<br><small style="font-size: 9px;">4K DOLBY</small></button>
+          {{t.time}}<br><small style="font-size: 9px;">4K DOLBY</small></button>
+        }
         }
       </div>
       @if(selectedSeats.length){
       <div class="summary">
-        <div>{{ selectedSeats | json }}</div>
-        <div>Total: ₹{{totalPrice }}</div>
-        <button class="confirm" [disabled]="!selectedSeats.length" (click)="handleBookNow()">Book Now</button>
+        <button class="confirm" [disabled]="!selectedSeats.length" (click)="confirmBookNow()">Book Now</button>
       </div>
       }
     </div>
@@ -66,15 +69,47 @@
       <div>
         <div class=" text-muted">{{ layout.layoutName | uppercase}}</div>
         <div class="fw-semibold">₹{{ layout.price }}</div>
-        <!-- <small [ngClass]="{
-          'text-warning': layout.status==='almostfull' || layout.status==='fillingfast',
-          'text-muted': layout.status==='soldout'
-        }"> -->
-        <!-- </small> -->
       </div>
       }
     </div>
     <!-- Select Seats Button -->
     <button class="btn select_seat_btn w-100 mt-4" (click)="close()">Select Seats</button>
+  </div>
+</ng-template>
+
+<!-- Confirm Modal Template -->
+<ng-template #confirmModal let-modal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 ">
+      <div class="modal-header justify-content-center">
+        <h4 class="modal-title" id="loginPopupLabel">Login Required</h4>
+      </div>
+      <div class="modal-body border-0 text-center">
+        <p>Please log in to book this event.</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+        <button type="button" class="btn btn-danger" (click)="openLoginModal()">Log In</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Proceed to book seat -->
+<ng-template #confirmSeatBookingModal let-modal>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 ">
+      <div class="modal-header justify-content-center">
+        <h4 class="modal-title text-success" id="loginPopupLabel">Confirm Your Booking</h4>
+      </div>
+      <div class="modal-body border-0 text-center">
+        <p class="">You are about to book Seats <span class="text-danger fw-bold">{{selectedSeats}}</span></p>
+        <p class="fw-semibold fs-5">Price {{totalPrice | currency:'INR'}}</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-outline-danger" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" (click)="handleBookNow()">Book Now</button>
+      </div>
+    </div>
   </div>
 </ng-template>

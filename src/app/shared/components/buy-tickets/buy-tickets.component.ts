@@ -1,229 +1,206 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { FormsModule } from '@angular/forms';
 
+
+interface Category {
+  categoryName: string;
+  categoryPrice: string;
+  categoryStatus: string;
+}
+
+interface TimeSlot {
+  time: string;
+  showIds: string[];
+  availableCategories: Category[];
+}
+
+interface ShowMapSlot {
+  showIds: Set<string>;
+  categoryMap: Map<string, Category>;
+}
+
+interface Screen {
+  screenId: string;
+  showTimesMap: Map<string, ShowMapSlot>;
+}
+
+interface Venue {
+  venueId: string;
+  venueName: string;
+  screens: Screen[];
+}
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
-export class BuyTicketsComponent {
+export class BuyTicketsComponent implements AfterViewInit {
+  venueShowsDetails: any;
 
-  constructor(public commonService: CommonService,private route:ActivatedRoute,
-    private toaster:ToastrService
+  constructor(public commonService: CommonService, private route: ActivatedRoute, private router: Router,
+    private toaster: ToastrService
   ) { }
 
-// -------test data------
-maxPrice=900;
-// ------------------
+  // -------test data------
+  maxPrice = 900;
+  // ------------------
   selectedMovie = 'movie999'
   movieDetails: any | null = null
-  dateSelectionArray: any = []
-  userSelectedPreference:any[]=[]
-  isOpen:boolean=false
-  myMovies = [
-    {
-      "_id": "movie001",
-      "title": "Avengers: Endgame",
-      "language": "English",
-      "genre": ["Action", "Adventure"],
-      "duration": 181,
-      "releaseDate": "2019-04-26"
-    },
-    {
-      "_id": "movie002",
-      "title": "Pathaan",
-      "language": "Hindi",
-      "genre": ["Action", "Thriller"],
-      "duration": 146,
-      "releaseDate": "2023-01-25"
-    },
-    {
-      "_id": "movie003",
-      "title": "RRR",
-      "language": "Telugu",
-      "genre": ["Drama", "Action"],
-      "duration": 187,
-      "releaseDate": "2022-03-25"
-    }
-  ];
-
-  theatres = [
-    {
-      "_id": "theatre001",
-      "name": "PVR Pacific Mall",
-      "cityId": "delhi123",
-      "screens": [
-        {
-          "screenId": "screen1",
-          "name": "Screen 1",
-          "layout": [
-            { "seatId": "A1", "row": "A", "number": 1, "category": "Platinum" },
-            { "seatId": "A2", "row": "A", "number": 2, "category": "Platinum" },
-            { "seatId": "B1", "row": "B", "number": 1, "category": "Gold" },
-            { "seatId": "B2", "row": "B", "number": 2, "category": "Gold" }
-          ]
-        },
-        {
-          "screenId": "screen2",
-          "name": "Screen 2",
-          "layout": [
-            { "seatId": "C1", "row": "C", "number": 1, "category": "Silver" },
-            { "seatId": "C2", "row": "C", "number": 2, "category": "Silver" }
-          ]
-        }
-      ]
-    },
-    {
-      "_id": "theatre002",
-      "name": "INOX City Center",
-      "cityId": "mumbai123",
-      "screens": [
-        {
-          "screenId": "screen1",
-          "name": "Screen 1",
-          "layout": [
-            { "seatId": "A1", "row": "A", "number": 1, "category": "Platinum" },
-            { "seatId": "A2", "row": "A", "number": 2, "category": "Platinum" },
-            { "seatId": "B1", "row": "B", "number": 1, "category": "Gold" },
-            { "seatId": "B2", "row": "B", "number": 2, "category": "Gold" }
-          ]
-        }
-      ]
-    },
-
-    {
-      "_id": "theatre003",
-      "name": "PVR Pacific Mall New",
-      "cityId": "delhi123",
-      "screens": [
-        {
-          "screenId": "screen1",
-          "name": "Screen 1",
-          "layout": [
-            { "seatId": "A1", "row": "A", "number": 1, "category": "Platinum" },
-            { "seatId": "A2", "row": "A", "number": 2, "category": "Platinum" },
-            { "seatId": "B1", "row": "B", "number": 1, "category": "Gold" },
-            { "seatId": "B2", "row": "B", "number": 2, "category": "Gold" }
-          ]
-        },
-        {
-          "screenId": "screen2",
-          "name": "Screen 2",
-          "layout": [
-            { "seatId": "C1", "row": "C", "number": 1, "category": "Silver" },
-            { "seatId": "C2", "row": "C", "number": 2, "category": "Silver" }
-          ]
-        }
-      ]
-    },
-
-  ];
-
-  shows = [
-    {
-      "_id": "show001",
-      "theatreId": "theatre001",
-      "screenId": "screen1",
-      "movieId": "movie456",
-      "date": "2025-09-01",
-      "time": "18:30",
-      "language": "English",
-      "format": "IMAX 3D",
-      "price": {
-        "Platinum": 500,
-        "Gold": 350,
-        "Silver": 250
-      },
-      "bookedSeats": ["A2", "B5", "C3"],
-      "status": "active"
-    },
-    {
-      "_id": "show002",
-      "theatreId": "theatre002",
-      "screenId": "screen1",
-      "movieId": "movie789",
-      "date": "2025-09-01",
-      "time": "21:30",
-      "language": "Hindi",
-      "format": "2D",
-      "price": {
-        "Platinum": 400,
-        "Gold": 300,
-        "Silver": 200
-      },
-      "bookedSeats": ["A1", "A3", "D2"],
-      "status": "active"
-    },
-    {
-      "_id": "show003",
-      "theatreId": "theatre003",
-      "screenId": "screen2",
-      "movieId": "movie999",
-      "date": "2025-09-02",
-      "time": "15:00",
-      "language": "Telugu",
-      "format": "3D",
-      "price": {
-        "Platinum": 450,
-        "Gold": 320,
-        "Silver": 220
-      },
-      "bookedSeats": ["B1", "B4", "C5"],
-      "status": "active"
-    },
-    {
-      "_id": "show004",
-      "theatreId": "theatre001",
-      "screenId": "screen2",
-      "movieId": "movie999",
-      "date": "2025-09-02",
-      "time": "15:00",
-      "language": "Telugu",
-      "format": "3D",
-      "price": {
-        "Platinum": 450,
-        "Gold": 320,
-        "Silver": 220
-      },
-      "bookedSeats": ["B1", "B4", "C5"],
-      "status": "active"
-    }
-  ]
+  dateSelectionArray: any = [];
+  userSelectedDate: any;
+  contentId: string | null = null
+  userSelectedPreference: any[] = []
+  isOpen: boolean = false;
+  searchValue: string = "";
 
   ngOnInit() {
-
-    this.fetchContentIdByUrl();
     this.initializeDateSelectionArray()
-    this.commonService.setUserSelectedDate(0,this.dateSelectionArray[0])
-    
-    this.theatres.map((theatre: any) => {
-      // get only shows belonging to this theatre
-      let theatreShows = this.shows.filter((show: any) => show.theatreId === theatre._id && show.movieId === this.selectedMovie);
-      // return theatre with its shows
-      return {
-        ...theatre,
-        shows: theatreShows
-      }
-    });
+    this.commonService.setUserSelectedDate(this.dateSelectionArray[0]);
+  }
+  ngAfterViewInit() {
+    this.fetchContentIdByUrl();
   }
 
-  fetchContentIdByUrl(){
-    let contentId=this.route.snapshot.paramMap.get('id');
-    this.commonService.getContentDetailsById(contentId).subscribe({
-      next:(res)=>{
-        this.movieDetails=res.data;
+  /**
+* @description function that fetches content details from content id comming from url
+* @author Inzamam
+*/
+  fetchContentIdByUrl() {
+    this.contentId = this.route.snapshot.paramMap.get('id');
+    this.commonService.getContentDetailsById(this.contentId).subscribe({
+      next: (res) => {
+        this.movieDetails = res.data;
       },
-      error:(err)=>{
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+    this.fetchVenuesShows(this.contentId);
+  }
+  /**
+* @description helper function to format categories and shows in venues
+* @author Inzamam
+* @params data[]
+* @return venues
+*/
+
+  mergeCategoriesWithShowIds(data: any[]): any[] {
+    const venueMap = new Map<string, Venue>();
+
+    data.forEach((item) => {
+      if (!venueMap.has(item.venueId)) {
+        venueMap.set(item.venueId, {
+          venueId: item.venueId,
+          venueName: item.venueName,
+          screens: [],
+        });
+      }
+      const venue = venueMap.get(item.venueId)!;
+
+      let screen = venue.screens.find((s) => s.screenId === item.screenId);
+      if (!screen) {
+        screen = { screenId: item.screenId, showTimesMap: new Map() };
+        venue.screens.push(screen);
+      }
+      item.shows.forEach((show: any) => {
+        const showId = item.showId;
+        show.availableCategories.forEach((timeSlot: any) => {
+          const time = show.time;
+          if (!screen!.showTimesMap.has(time)) {
+            screen!.showTimesMap.set(time, { showIds: new Set(), categoryMap: new Map() });
+          }
+
+          const slot = screen!.showTimesMap.get(time)!;
+          slot.showIds.add(showId);
+          [timeSlot].forEach((cat: Category) => {
+            if (!slot.categoryMap.has(cat.categoryName)) {
+              slot.categoryMap.set(cat.categoryName, { ...cat });
+            }
+          });
+        });
+      });
+    });
+
+    const venues: any[] = Array.from(venueMap.values()).map((venue) => ({
+      ...venue,
+      screens: venue.screens.map((screen) => ({
+        screenId: screen.screenId,
+        showTimes: Array.from(screen.showTimesMap.entries()).map(
+          ([time, slot]: [string, ShowMapSlot]): TimeSlot => ({
+            time,
+            showIds: Array.from(slot.showIds),
+            availableCategories: Array.from(slot.categoryMap.values()),
+          })
+        ),
+      })),
+    }));
+
+    return venues;
+  }
+
+  /**
+* @description function to get shows and venues by contentId and stores in venueShowsDetails
+* @author Inzamam
+* @params contentId 
+*/
+  fetchVenuesShows(contentId: string | null) {
+    this.userSelectedDate = this.commonService.userSelectedDate()
+    this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
+      next: (res) => {
+        this.venueShowsDetails = this.mergeCategoriesWithShowIds(res.data);
+
+      },
+      error: (err) => {
         this.toaster.error(err.error.message)
       }
     })
   }
 
+  /**
+* @description helper function to handle date change
+* @author Inzamam
+* @params payload:index,date obj
+*/
+  onDateChange(index: number, dateObj: any) {
+    if (index < 3) {
+      this.commonService.setUserSelectedDate(dateObj);
+      this.fetchVenuesShows(this.contentId);
+    }
+    return
+  }
+
+  /**
+* @description sets user seleced venue screen and show time and then navigate to seat layout page
+* @author Inzamam
+* @params payload:venue, screen, showTim
+*/
+  navigateToSeatLayout(venue: Venue, screen: Screen, showTime: TimeSlot) {
+    this.commonService.setUserSelectedShow({ ...showTime, screenId: screen.screenId });
+    let showData = venue.screens.map((screen: any) => ({
+      screenId: screen.screenId,
+      screenName: screen.screenName,
+      shows: screen.showTimes.map((showTime: any) => ({
+        showId: showTime.showIds[0],
+        time: showTime.time,
+        availableCategories: showTime.availableCategories,
+      }))
+    }));
+
+    let screenShows = this.venueShowsDetails[0]?.screens
+    this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { showData: showData, screenShows: screenShows } });
+  }
+
+  /**
+* @description function that initializes dateSelectionArray
+* @author Inzamam
+* @params payload:event,path
+*/
   initializeDateSelectionArray() {
     let today = new Date();
     for (let i = 0; i < 7; i++) {
@@ -233,13 +210,20 @@ maxPrice=900;
         day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
         dateNum: dateObj.getDate(),
         month: dateObj.toLocaleDateString('en-US', { month: 'short' }),
-        today:dateObj.toISOString().split('T')[0]
+        today: dateObj.toISOString().split('T')[0]
       })
     }
   }
-  toggleSearchBox(event:any,value:boolean){
+  /**
+* @description function that open/close search venue box
+* @author Inzamam
+* @params payload:event,value(true or false)
+*/
+  toggleSearchBox(event: any, value: boolean) {
     event.stopPropagation()
-    this.isOpen=value
+    this.isOpen = value;
+    if (!this.isOpen) {
+      this.searchValue = ""
+    }
   }
-
 }

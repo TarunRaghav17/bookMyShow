@@ -101,10 +101,10 @@ export class CreateVenueComponent implements OnInit {
       venueName: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z\s'-]*$/)]],
       address: this.fb.group({
         street: ['', Validators.required],
-        city: ['', Validators.required],
+        cityName: ['', Validators.required],
         pin: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
       }),
-      venueCapacity: ['', [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)]],
+      venueCapacity: ['', [Validators.required, Validators.min(5), Validators.pattern(/^[0-9]+$/)]],
       venueType: ['', Validators.required],
       supportedCategories: this.fb.array([], [Validators.required]),
       amenities: this.fb.array([]),
@@ -377,14 +377,14 @@ export class CreateVenueComponent implements OnInit {
   // Submit
   onSubmit(): void {
     if (this.venueForm.valid) {
-      this.venuesService.createVenueService({...this.venueForm.value,address:{...this.venueForm.value.address,city:{cityName:this.venueForm.value.address.city}}}).subscribe({
+      this.venuesService.createVenueService(this.venueForm.value).subscribe({
         next: () => {
           this.toaster.success('Venue created successfully')
           this.venueForm.removeControl('screens')
           this.venueForm.reset()
           this.venueForm.get('venueFor')?.setValue('');
           this.venueForm.get('venueType')?.setValue('');
-           this.venueForm.get('city')?.setValue('');
+           this.venueForm.get('cityName')?.setValue('');
           (this.venueForm.get('supportedCategories')  as FormArray).clear();
           (this.venueForm.get('amenities') as FormArray).clear();
         },

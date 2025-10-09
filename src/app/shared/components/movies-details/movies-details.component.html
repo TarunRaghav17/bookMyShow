@@ -19,8 +19,8 @@
                         <div class="rating-box">
                             <div class="rating-content">
                                 <i class="fa fa-star rating-star" aria-hidden="true"></i>
-                                <span class="rating-score">{{movieDetails?.imdbRating}}/10</span>
-                                <span class="rating-votes">({{movieDetails?.votes | numberFormat}} Votes)</span>
+                                <span class="rating-score">{{movieDetails?.imdbRating ?? 0}} /10</span>
+                                <span class="rating-votes">({{movieDetails?.votes?? 0 | numberFormat}} Votes)</span>
                                 <i class="fa fa-chevron-right rating-arrow" aria-hidden="true"></i>
                                 <button class="rate-btn">
                                     <span>Rate Now</span>

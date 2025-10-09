@@ -6,15 +6,13 @@ import { ActivitiesRoutingModule } from "../../../modules/explore/activities/act
 import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { AuthService } from '../../../auth/auth-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
 type SeatStatus = 'available' | 'selected' | 'booked';
 
-interface SeatCategory {
-  name: string;
-  price: number;
-  status: 'available' | 'soldout' | 'almostfull' | 'fillingfast';
-}
+
 interface Category {
+  id: number;
   layoutName: string;
   price: number;
   rows: string[];
@@ -45,26 +43,34 @@ interface Seat {
 export class SeatLayoutComponent {
   @ViewChild('seatCanvas', { static: true }) canvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('seatModal', { static: true }) seatModal!: TemplateRef<any>;
+  @ViewChild('confirmModal', { static: true }) confirmModal!: TemplateRef<any>;
+  @ViewChild('confirmSeatBookingModal', { static: true }) confirmSeatBookingModal!: TemplateRef<any>;
+
   private ctx!: CanvasRenderingContext2D;
 
-  // UI/config
-  showTimes = ['11:05 AM', '02:40 PM', '06:15 PM', '09:50 PM'];
-  activeShow = this.showTimes[0]; //user selected show
+  screenShows: any[] = [];
+  activeShow: any = [];
   movieDetails: any;
+  venueDetails: any;
+  userSelectedVenueScreen!: any[];
+  reservedSeats: any[] = []
 
   constructor(public commonService: CommonService,
     private modalService: NgbModal,
     private location: Location,
     private authService: AuthService,
     private toaster: ToastrService,
-  ) { }
-
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    this.screenShows = navigation?.extras?.state?.['screenShows'].map((screen: any) => ({
+      screenId: screen.screenId,
+      shows: screen.showTimes
+    }));
+  }
   private modalRef?: NgbModalRef | null = null;
-  layouts: Category[] = [
-    { layoutName: "Gold", rows: ["A", "B", "C", "D"], cols: 8, price: 1500, topGap: 16 },
-    { layoutName: "Silver", rows: ["E", "F", "G", "H"], cols: 12, price: 800, topGap: 28 },
-    { layoutName: "Platinum", rows: ["I", "J", "K", "M", "N", "O", "P", "Q", "R"], cols: 12, price: 1000, topGap: 28 }
-  ]
+  layouts: Category[] = [];
 
   private dpi = 1;
   private padding = 24;
@@ -75,24 +81,22 @@ export class SeatLayoutComponent {
   seats: Seat[] = [];
   selectedSeats: string[] = [];
   maxSelect = 10;
-
-
-
-
   noOfSelectedSeats = 2;
 
-  seatCategories: SeatCategory[] = [
-    { name: 'RECLINER', price: 1100, status: 'almostfull' },
-    { name: 'XTRA LEGROOM', price: 528, status: 'soldout' },
-    { name: 'PRIME', price: 440, status: 'soldout' },
-    { name: 'CLASSIC', price: 420, status: 'fillingfast' }
-  ];
+  ngOnInit() {
+    this.commonService.showHeader.set(false)
+    this.fetchContentIdByUrl();
+    this.fetchVenueById();
+    this.activeShow = this.commonService.getUserSelectedShow();
+    this.getReservedSeatsByShowId(this.activeShow.showIds?.[0])
+
+  }
 
   ngAfterViewInit() {
-    this.commonService.showHeader.set(false)
     this.initializeCanvas()
     this.open(this.seatModal);
   }
+
   ngOnDestroy() {
     this.commonService.showHeader.set(true);
     this.close()
@@ -103,14 +107,69 @@ export class SeatLayoutComponent {
       .reduce((sum, s) => sum + s.price, 0);
   }
 
- 
+  getReservedSeatsByShowId(showId?: string) {
+    this.commonService.getReservedSeats(showId).subscribe(
+      {
+        next: (res) => {
+          this.reservedSeats = res.data || []
+        },
+        error: (err) => {
+          this.toaster.error(err.error.message)
+        }
+      }
+    )
+  }
+
+  fetchContentIdByUrl() {
+    let contentId: string | null | undefined = this.route.snapshot.paramMap.get('movieId')?.split('-')[1]
+    this.commonService.getContentDetailsById(contentId).subscribe({
+      next: (res) => {
+        this.movieDetails = res.data;
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+  }
+
+  fetchVenueById() {
+    let venueId: string | null | undefined = this.route.snapshot.paramMap.get('theatreId')?.split('-')[1]
+    this.commonService.getVenueDetailsById(venueId).subscribe({
+      next: (res) => {
+        this.venueDetails = res.data;
+        const screenLayout = this.venueDetails.screens.find(
+          (screen: any) => screen.id == this.activeShow.screenId
+        );
+
+        const layouts = screenLayout?.layouts || [];
+        const availableCategories = this.activeShow.availableCategories || [];
+        this.layouts = layouts.map((layout: any) => {
+          const matchedCategory = availableCategories.find(
+            (cat: any) => cat.categoryName === layout.layoutName
+          );
+          return {
+            id: layout.id,
+            layoutName: layout.layoutName,
+            rows: layout.rows,
+            cols: layout.cols,
+            price: matchedCategory ? Number(matchedCategory.categoryPrice) : 0,
+            topGap: layout.topGap ?? 20,
+          };
+        });
+        this.initializeCanvas()
+      },
+
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+  }
 
   open(content: TemplateRef<any>) {
     this.modalRef = this.modalService.open(content, {
       centered: true,
       backdrop: 'static',
       keyboard: false
-
     })
   }
 
@@ -159,20 +218,22 @@ export class SeatLayoutComponent {
     this.rebuildLayout();
     this.draw();
   }
-  switchShow(t: string) {
-    this.activeShow = t;
+  switchShow(t: any, show: any) {
+    this.activeShow = { ...t, screenId: show.screenId };
+    this.commonService.setUserSelectedShow(this.activeShow);
+    this.fetchVenueById()
+    this.getReservedSeatsByShowId(this.activeShow.showIds[0])
     this.randomizeBookedForDemo();
     this.clearSelection();
     this.draw();
   }
 
-
-
   setNoOfSelectedSeats(noOfSelectedSeats: number) {
     this.noOfSelectedSeats = noOfSelectedSeats;
+    this.clearSelection();
+    this.initializeCanvas()
   }
 
-  // ----- Layout building 1-----
   private rebuildLayout() {
     const shell = this.canvasRef.nativeElement.parentElement as HTMLElement;
     const cssW = Math.min(shell.clientWidth, 1100);
@@ -234,14 +295,36 @@ export class SeatLayoutComponent {
   }
 
   private randomizeBookedForDemo() {
+    const reservedSeats = ["A-01", "D-02"];
+
+    const reservedSeatObjects = reservedSeats.map(id => {
+      const found = this.seats.find(s => s.id === id);
+      return found
+        ? {
+          id: found.id,
+          row: found.row,
+          col: found.col,
+          price: found.price,
+          category: found.categoryId,
+          x: found.x,
+          y: found.y,
+          w: found.w,
+          h: found.h,
+          status: "booked",
+        }
+
+        : null;
+    }).filter(Boolean);
+
+    if (!this.seats?.length || !reservedSeatObjects?.length) return;
+
     this.seats.forEach(s => {
-      if (s.status !== 'selected') s.status = 'available';
+      const reserved = reservedSeatObjects.some(r => r?.id === s.id);
+      if (reserved) s.status = 'booked';
     });
-    const toBook = Math.floor(this.seats.length * 0.1);
-    for (let i = 0; i < toBook; i++) {
-      const idx = Math.floor(Math.random() * this.seats.length);
-      if (this.seats[idx].status === 'available') this.seats[idx].status = 'booked';
-    }
+
+    this.draw();
+
   }
 
   private clearSelection() {
@@ -257,7 +340,6 @@ export class SeatLayoutComponent {
     return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY };
   }
 
-  // ----- Drawing 3-----
   private draw() {
     const canvas = this.canvasRef.nativeElement;
     const rect = canvas.getBoundingClientRect();
@@ -271,7 +353,7 @@ export class SeatLayoutComponent {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.save();
-    ctx.translate(this.offsetX, this.offsetY); // PAN OFFSET applied here
+    ctx.translate(this.offsetX, this.offsetY); 
 
     let yTitleAnchor = 0;
     let legendWidth = 30;
@@ -279,9 +361,8 @@ export class SeatLayoutComponent {
     let y = 25;
     let h = this.getContentBounds().height
 
-    // Draw rounded rectangle background
     ctx.fillStyle = '#f5f5f5';
-    this.roundRect(ctx, x, y, legendWidth, h, 10); // radius 30
+    this.roundRect(ctx, x, y, legendWidth, h, 10); 
     ctx.fill();
     for (const cat of this.layouts) {
       const first = this.seats.find(s => s.categoryId === cat.layoutName);
@@ -314,15 +395,13 @@ export class SeatLayoutComponent {
   private drawScreen3D() {
     const ctx = this.ctx;
     const canvas = this.canvasRef.nativeElement;
-    const screenWidthTop = canvas.width * 0.6;   // top width
-    const screenWidthBottom = canvas.width * 0.7; // bottom width
+    const screenWidthTop = canvas.width * 0.6;  
+    const screenWidthBottom = canvas.width * 0.7;
     const screenHeight = 40;
 
-    // find bottom-most seat
     const maxSeatBottom = Math.max(...this.seats.map(s => s.y + s.h));
 
-    // dynamic positioning
-    const yTop = maxSeatBottom + 50;  // start 50px below the last seat
+    const yTop = maxSeatBottom + 50;  
     const yBottom = yTop + screenHeight;
 
     const xTop = (canvas.width - screenWidthTop) / 2;
@@ -347,8 +426,6 @@ export class SeatLayoutComponent {
     ctx.textAlign = "center";
     ctx.fillText("All eyes this way please", canvas.width / 2, yBottom + 25);
   }
-
-
 
   roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) {
     ctx.beginPath();
@@ -403,7 +480,6 @@ export class SeatLayoutComponent {
     if (!hit) return;
     if (hit.status === 'booked') return;
 
-    // ---- RESET PREVIOUS SELECTION ----
     this.seats.forEach(s => {
       if (s.status === 'selected') {
         s.status = 'available';
@@ -420,12 +496,10 @@ export class SeatLayoutComponent {
 
     let block: any[] = [];
 
-    // 1. Try forward block (hit → hit+noOfSeats)
     const forwardBlock = rowSeats.slice(startIndex, startIndex + noOfSeats);
     if (forwardBlock.length === noOfSeats && forwardBlock.every(s => s.status === 'available')) {
       block = forwardBlock;
     } else {
-      // 2. Try backward block (hit-noOfSeats+1 → hit)
       const backwardBlock = rowSeats.slice(startIndex - noOfSeats + 1, startIndex + 1);
       if (backwardBlock.length === noOfSeats && backwardBlock.every(s => s.status === 'available')) {
         block = backwardBlock;
@@ -532,21 +606,42 @@ export class SeatLayoutComponent {
 
   handleBookNow(): void {
     let user = this.authService.getUserFromToken()
-    if (!user) {
-      let res = confirm('Please log in to book this Show.');
-      if (res) {
-        const modalOptions: NgbModalOptions = { centered: true };
-        this.modalService.open(UserAuthComponent, modalOptions);
+    let payload = [
+      {
+        "userId": user?.userId,
+        "eventId": this.movieDetails?.eventId,
+        "venueId": this.venueDetails?.id,
+        "screenId": this.activeShow?.screenId,
+        "showId": Number(this.activeShow?.showIds?.[0]),
+        "date": this.commonService?.getUserSelectedDate()?.today,
+        "time": this.activeShow?.time,
+        "reservedSeats": this.selectedSeats
       }
-      return;
+    ]
+    this.commonService.bookUserSeats(payload).subscribe({
+      next: (res) => {
+        this.toaster.success(`${this.selectedSeats.join(', ')} ${res.message}`);
+        this.close()
+        this.location.back()
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+      }
+    })
+  }
+  openLoginModal() {
+    this.close()
+    const modalOptions: NgbModalOptions = { centered: true };
+    this.modalService.open(UserAuthComponent, modalOptions);
+  }
+
+  confirmBookNow() {
+    let user = this.authService.getUserFromToken()
+    if (!user) {
+      this.open(this.confirmModal)
     }
-let confirmTicket = confirm(`Proceeding with: ${this.selectedSeats.join(', ')} (₹${this.totalPrice})`);  
-
-if(confirmTicket){
-  this.toaster.success(`${this.selectedSeats.join(', ')} Booked Successfully.`);
-  this.location.back()
-
-}
-
+    else {
+      this.open(this.confirmSeatBookingModal)
+    }
   }
 }
