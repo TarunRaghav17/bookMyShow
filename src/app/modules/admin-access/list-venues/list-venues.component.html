@@ -3,7 +3,10 @@
         <div class="col-10 ">
             <div class="w-100 d-flex justify-content-between align-items-center">
                 <h4> Venues List</h4>
-               
+                <div class="w-25  me-auto ms-2">
+                    <input type="text" class="d-flex align-items-center   form-control w-100"
+                        placeholder="Search by Name, Type, City " [(ngModel)]="searchValue">
+                </div>
                 <div class=" py-3 d-flex w-50  d-flex align-items-center justify-content-start ">
                     <div class=" d-flex gap-4 align-items-center justify-content-center w-50 px-1">
                         <span>
@@ -49,12 +52,13 @@
                 </thead>
                 <tbody>
                     @for (venue of filteredVenuesList || venuesList; track $index) {
+                    @if(venue.venueName.toLowerCase().includes(searchValue)){
                     <tr>
                         <td>{{ $index +1}}</td>
                         <td>{{ venue.venueName }}</td>
                         <td>{{ venue.venueType ?? 'N/A' }}</td>
                         <td>
-                        @if(venue.supportedCategories.length>0){
+                            @if(venue.supportedCategories.length>0){
                             @for(a of venue.supportedCategories;track $index){
                             {{a}},
                             }
@@ -62,7 +66,7 @@
                             @else{
                             N/A
                             }
-                            </td> 
+                        </td>
                         <td>{{ venue.venueCapacity }}</td>
                         <td>{{ transformAddress(venue.address)}}</td>
                         <td>
@@ -77,6 +81,7 @@
 
                         </td>
                     </tr>
+                    }
                     }
                 </tbody>
             </table>
