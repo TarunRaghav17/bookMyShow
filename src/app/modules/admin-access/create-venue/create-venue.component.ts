@@ -98,13 +98,13 @@ export class CreateVenueComponent implements OnInit {
     this.titleService.setTitle('Create Venue')
 
     this.venueForm = this.fb.group({
-      venueName: ['', Validators.required],
+      venueName: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z\s'-]*$/)]],
       address: this.fb.group({
         street: ['', Validators.required],
         cityName: ['', Validators.required],
         pin: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
       }),
-      venueCapacity: ['', [Validators.required, Validators.min(1), Validators.pattern(/^[0-9]+$/)]],
+      venueCapacity: ['', [Validators.required, Validators.min(5), Validators.pattern(/^[0-9]+$/)]],
       venueType: ['', Validators.required],
       supportedCategories: this.fb.array([], [Validators.required]),
       amenities: this.fb.array([]),

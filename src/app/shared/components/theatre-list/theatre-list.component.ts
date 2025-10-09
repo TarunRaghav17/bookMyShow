@@ -63,6 +63,3 @@ setType(type: string) {
   this.toggleButton = false;
 }
 }
-
-
-
