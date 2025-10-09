@@ -6,17 +6,26 @@ import { Pipe, PipeTransform, Injectable } from '@angular/core';
 })
 @Injectable({ providedIn: 'root' })
 export class SortPipe implements PipeTransform {
-    transform(list: any[], order: 'asc' | 'desc' = 'asc', key?: string): any[] {
-        if (!Array.isArray(list)) return list;
-        const dir = order === 'asc' ? 1 : -1;
-        return [...list].sort((a, b) => {
-            const valA = key ? a[key] : a;
-            const valB = key ? b[key] : b;
-            if (valA == null) return 1;
-            if (valB == null) return -1;
-            const numA = +valA, numB = +valB;
-            if (!isNaN(numA) && !isNaN(numB)) return (numA - numB) * dir;
-            return String(valA).localeCompare(String(valB), undefined, { sensitivity: 'base' }) * dir;
-        });
+ transform(list: any[], order: 'asc' | 'desc' = 'asc', key?: string): any[] {
+  if (!Array.isArray(list)) {
+    return list;
+  }
+  let copiedList = [...list];
+  let sorted = copiedList.sort((a, b) => {
+    let valA;
+    let valB;
+    if (key) {
+      valA = a[key];
+      valB = b[key];
+    } else {
+      valA = a;
+      valB = b;
     }
+    return String(valA).localeCompare(String(valB), undefined, { sensitivity: 'base' });
+  });
+  if (order === 'desc') {
+    sorted.reverse();
+  }
+  return sorted;
+}
 }

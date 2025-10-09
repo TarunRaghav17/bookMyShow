@@ -19,7 +19,7 @@ import { debounceTime } from 'rxjs';
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
-  isUsernameAvailable: any;
+  isUsernameAvailable: string='';
   openSignupForm: boolean = false;
   showPassword: boolean = false;
   showMessageFlag: any;
@@ -46,7 +46,7 @@ export class UserAuthComponent implements OnInit {
     username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^[A-Za-z0-9_]+$/)]),
     email: new FormControl('', [Validators.required, Validators.pattern(/^(?!.*\s)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]),
     phoneNumber: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]+$/)]),
-    roleName: new FormControl('USER', [Validators.required]),
+    roleName: new FormControl('USER'),
     password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:[^@$^&*%]*[@$^&*%][^@$^&*%]*$))[A-Za-z\d@$^&*%]{8,20}$/)])
   });
 

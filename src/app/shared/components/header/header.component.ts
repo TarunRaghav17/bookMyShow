@@ -324,17 +324,20 @@ export class HeaderComponent implements OnInit {
   * @param userId pageNumber Count
   */
   getShortTimeAgo(dateString: string | Date): string {
-    const date = typeof dateString === 'string'
-      ? new Date(dateString.replace(/\.(\d{3})\d+/, '.$1'))
-      : dateString;
+    const date =
+      typeof dateString === 'string'
+        ? new Date(dateString)
+        : dateString;
+    const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
     const now = new Date();
-    let diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    let diffInSeconds = Math.floor((now.getTime() - istDate.getTime()) / 1000);
     if (diffInSeconds < 0) diffInSeconds = 0;
     const minutes = Math.floor(diffInSeconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
     const months = Math.floor(days / 30);
     const years = Math.floor(months / 12);
+
     if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
@@ -342,6 +345,8 @@ export class HeaderComponent implements OnInit {
     if (months < 12) return `${months}M ago`;
     return `${years}y ago`;
   }
+
+
 
   /**
   * @description Scroll Event to load the data
