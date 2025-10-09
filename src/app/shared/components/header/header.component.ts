@@ -6,6 +6,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Location } from '@angular/common';
 import {
   NgbModal,
   NgbModalOptions,
@@ -15,7 +16,6 @@ import { UserAuthComponent } from '../../../auth/user-auth/user-auth.component';
 import { CommonService } from '../../../services/common.service';
 import { AuthService } from '../../../auth/auth-service.service';
 import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -32,7 +32,6 @@ export class HeaderComponent implements OnInit {
   showCities = false;
   selectedCity: any;
   searchText: string = '';
-  city = false;
   searchControl: FormControl = new FormControl()
   filteredCities: any[] = [];
   viewCitiesText: string = 'View All Cities';
@@ -45,6 +44,8 @@ export class HeaderComponent implements OnInit {
   page: number = 0;
   size: number = 10;
   totalCount: any;
+  isLoading = false;
+  scrollTimeout: any;
 
   constructor(
     private modalService: NgbModal,
@@ -52,8 +53,7 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private router: Router,
-
+    private location: Location
   ) {
     this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
@@ -134,7 +134,8 @@ export class HeaderComponent implements OnInit {
   selectCity(city: any, modalRef: NgbModalRef): void {
     this.commonService._selectCity.set(city);
     this.selectedCity = this.commonService._selectCity();
-    this.router.navigate(['explore', 'home', city]);
+    this.changeUrl(city)
+    this.showCities = false
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
     if (modalRef) {
       modalRef.close();
@@ -151,6 +152,14 @@ export class HeaderComponent implements OnInit {
       this.authService.logout();
       this.toastr.success('logut SuccessFull')
     }
+  }
+  /**
+  * @description Only change Url here 
+  * @author Gurmeet Kumar
+  * @return void
+  */
+  changeUrl(city: string) {
+    this.location.go(`/explore/home/${city}`);
   }
 
   /**
@@ -188,7 +197,6 @@ export class HeaderComponent implements OnInit {
       next: (val: string) => {
         this.searchText = val;
         if (!val) {
-
           this.filteredCities = [...this.citiesJson];
         } else {
 
@@ -258,11 +266,9 @@ export class HeaderComponent implements OnInit {
   getAllNotificationData() {
     const user = this.authService.userDetailsSignal();
     if (!user?.userId) return;
-
     this.commonService.getAllnotification(user.userId, this.page, this.size).subscribe({
       next: (res: any) => {
         this.totalCount = res.data.count;
-
         if (this.page === 0) {
           this.showNotificationData = res.data.content;
         } else {
@@ -318,17 +324,20 @@ export class HeaderComponent implements OnInit {
   * @param userId pageNumber Count
   */
   getShortTimeAgo(dateString: string | Date): string {
-    const date = typeof dateString === 'string'
-      ? new Date(dateString.replace(/\.(\d{3})\d+/, '.$1'))
-      : dateString;
+    const date =
+      typeof dateString === 'string'
+        ? new Date(dateString)
+        : dateString;
+    const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
     const now = new Date();
-    let diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    let diffInSeconds = Math.floor((now.getTime() - istDate.getTime()) / 1000);
     if (diffInSeconds < 0) diffInSeconds = 0;
     const minutes = Math.floor(diffInSeconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
     const months = Math.floor(days / 30);
     const years = Math.floor(months / 12);
+
     if (diffInSeconds < 60) return `${diffInSeconds}s ago`;
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
@@ -337,27 +346,28 @@ export class HeaderComponent implements OnInit {
     return `${years}y ago`;
   }
 
+
+
   /**
   * @description Scroll Event to load the data
   * @author Gurmeet Kumar
   * @param userId pageNumber Count
   */
-  onScroll(event: any) {
-    const element = event.target as HTMLElement;
-    const reachedBottom = element.scrollTop + element.clientHeight >= element.scrollHeight - 1;
-    if (reachedBottom && this.showNotificationData.length < this.totalCount) {
+  onScroll() {
+    clearTimeout(this.scrollTimeout);
+    this.scrollTimeout = setTimeout(() => {
+      const allLoaded = this.showNotificationData.length >= this.totalCount;
+      if (allLoaded || this.isLoading) return;
       this.page++;
       this.getAllNotificationData();
-    }
+    }, 500);
   }
-
-
   /**
    * @description notications container Show 
    * @author Gurmeet
    */
   openCanvas() {
     this.notifications = false;
+    this.page = 0
   }
-
-} 
+}

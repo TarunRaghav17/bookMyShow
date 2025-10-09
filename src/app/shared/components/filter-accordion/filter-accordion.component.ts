@@ -28,6 +28,7 @@ export class FilterAccordionComponent implements OnInit {
     this.filtersArray = this.commonService.filtersSignal()
   }
 
+
   handleNavigate() {
     let newUrl = `/${this.commonService._selectCity()}/cinemas`
     this.router.navigate([newUrl])
@@ -40,7 +41,7 @@ export class FilterAccordionComponent implements OnInit {
   applyFilter(filter: any) {
     this.filterEvent.emit(filter)
   }
- 
+
   clearAllFilters(item: any, index: number, type: string = ''): void {
     let { selectedType, data } = item;
     const hasSelected = data.some((i: any) => i.selected);

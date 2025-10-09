@@ -61,18 +61,16 @@ export class SeatLayoutComponent {
     private authService: AuthService,
     private toaster: ToastrService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {
-
     const navigation = this.router.getCurrentNavigation();
     this.screenShows = navigation?.extras?.state?.['screenShows'].map((screen: any) => ({
       screenId: screen.screenId,
       shows: screen.showTimes
     }));
   }
-
   private modalRef?: NgbModalRef | null = null;
-  layouts: Category[] = []
+  layouts: Category[] = [];
 
   private dpi = 1;
   private padding = 24;
@@ -85,16 +83,18 @@ export class SeatLayoutComponent {
   maxSelect = 10;
   noOfSelectedSeats = 2;
 
-  ngAfterViewInit() {
-
+  ngOnInit() {
     this.commonService.showHeader.set(false)
-    this.initializeCanvas()
-    this.open(this.seatModal);
     this.fetchContentIdByUrl();
     this.fetchVenueById();
     this.activeShow = this.commonService.getUserSelectedShow();
     this.getReservedSeatsByShowId(this.activeShow.showIds?.[0])
 
+  }
+
+  ngAfterViewInit() {
+    this.initializeCanvas()
+    this.open(this.seatModal);
   }
 
   ngOnDestroy() {
@@ -153,7 +153,7 @@ export class SeatLayoutComponent {
             rows: layout.rows,
             cols: layout.cols,
             price: matchedCategory ? Number(matchedCategory.categoryPrice) : 0,
-            topGap: layout.topGap ?? 20, 
+            topGap: layout.topGap ?? 20,
           };
         });
         this.initializeCanvas()
@@ -226,8 +226,6 @@ export class SeatLayoutComponent {
     this.randomizeBookedForDemo();
     this.clearSelection();
     this.draw();
-
-    this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueDetails.id}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { showData: this.activeShow, screenShows:show } });
   }
 
   setNoOfSelectedSeats(noOfSelectedSeats: number) {
@@ -236,7 +234,6 @@ export class SeatLayoutComponent {
     this.initializeCanvas()
   }
 
-  // ----- Layout building 1-----
   private rebuildLayout() {
     const shell = this.canvasRef.nativeElement.parentElement as HTMLElement;
     const cssW = Math.min(shell.clientWidth, 1100);
@@ -343,7 +340,6 @@ export class SeatLayoutComponent {
     return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY };
   }
 
-  // ----- Drawing 3-----
   private draw() {
     const canvas = this.canvasRef.nativeElement;
     const rect = canvas.getBoundingClientRect();
@@ -357,7 +353,7 @@ export class SeatLayoutComponent {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.save();
-    ctx.translate(this.offsetX, this.offsetY); // PAN OFFSET applied here
+    ctx.translate(this.offsetX, this.offsetY); 
 
     let yTitleAnchor = 0;
     let legendWidth = 30;
@@ -365,9 +361,8 @@ export class SeatLayoutComponent {
     let y = 25;
     let h = this.getContentBounds().height
 
-    // Draw rounded rectangle background
     ctx.fillStyle = '#f5f5f5';
-    this.roundRect(ctx, x, y, legendWidth, h, 10); // radius 30
+    this.roundRect(ctx, x, y, legendWidth, h, 10); 
     ctx.fill();
     for (const cat of this.layouts) {
       const first = this.seats.find(s => s.categoryId === cat.layoutName);
@@ -400,15 +395,13 @@ export class SeatLayoutComponent {
   private drawScreen3D() {
     const ctx = this.ctx;
     const canvas = this.canvasRef.nativeElement;
-    const screenWidthTop = canvas.width * 0.6;   // top width
-    const screenWidthBottom = canvas.width * 0.7; // bottom width
+    const screenWidthTop = canvas.width * 0.6;  
+    const screenWidthBottom = canvas.width * 0.7;
     const screenHeight = 40;
 
-    // find bottom-most seat
     const maxSeatBottom = Math.max(...this.seats.map(s => s.y + s.h));
 
-    // dynamic positioning
-    const yTop = maxSeatBottom + 50;  // start 50px below the last seat
+    const yTop = maxSeatBottom + 50;  
     const yBottom = yTop + screenHeight;
 
     const xTop = (canvas.width - screenWidthTop) / 2;
@@ -487,7 +480,6 @@ export class SeatLayoutComponent {
     if (!hit) return;
     if (hit.status === 'booked') return;
 
-    // ---- RESET PREVIOUS SELECTION ----
     this.seats.forEach(s => {
       if (s.status === 'selected') {
         s.status = 'available';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../auth-service.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,27 +19,34 @@ import { debounceTime } from 'rxjs';
   styleUrls: ['./user-auth.component.scss']
 })
 export class UserAuthComponent implements OnInit {
-  isUsernameAvailable: any;
+  isUsernameAvailable: string='';
   openSignupForm: boolean = false;
   showPassword: boolean = false;
   showMessageFlag: any;
-  constructor(public authService: AuthService, private activeModal: NgbActiveModal, private toastr: ToastrService) { }
+  @ViewChild('myInputField') myInputField!: ElementRef;
+
+  constructor(
+    public authService: AuthService,
+    private activeModal: NgbActiveModal,
+    private toastr: ToastrService
+  ) { }
 
   ngOnInit(): void {
     this.onValidateExistUser();
   }
+
   /** @description Login form controls */
   loginForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)])
+    username: new FormControl('', [Validators.required,Validators.pattern(/^[A-Za-z0-9_]+$/)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:[^@$^&*%]*[@$^&*%][^@$^&*%]*$))[A-Za-z\d@$^&*%]{8,20}$/)])
   });
   /** @description Signup form controls */
   signupForm = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    username: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(15), Validators.pattern(/^[A-Za-z0-9_]+$/)]),
-    email: new FormControl('', [Validators.required, Validators.pattern(/^(?![._-])[A-Za-z0-9._-]+(?<![._-])@(?:(?!-)[A-Za-z-]+(?<!-)\.)+[A-Za-z]{2,}$/)]),
+    name: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z ]+$/)]),
+    username: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^[A-Za-z0-9_]+$/)]),
+    email: new FormControl('', [Validators.required, Validators.pattern(/^(?!.*\s)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]),
     phoneNumber: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern(/^[0-9]+$/)]),
-    roleName: new FormControl('USER', [Validators.required]),
+    roleName: new FormControl('USER'),
     password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(20), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=(?:[^@$^&*%]*[@$^&*%][^@$^&*%]*$))[A-Za-z\d@$^&*%]{8,20}$/)])
   });
 
@@ -109,6 +116,13 @@ export class UserAuthComponent implements OnInit {
    */
   toggleSignupForm(): void {
     this.openSignupForm = !this.openSignupForm;
+    this.loginForm.reset()
+    this.signupForm.reset()
+    setTimeout(() => {
+      if (this.openSignupForm) {
+        this.myInputField.nativeElement.focus();
+      }
+    }, 100);
   }
 
   /**
@@ -117,7 +131,6 @@ export class UserAuthComponent implements OnInit {
  * @return void
  * @param event
  */
-
   onValidateExistUser(): void {
     const usernameControl = this.signupForm.get('username');
     if (!usernameControl) {
