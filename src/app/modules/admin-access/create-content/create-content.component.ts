@@ -131,8 +131,8 @@ export class CreateContentComponent implements OnInit {
     this.commonService.getAllCities().subscribe({
       next: (res) => {
         this.citiesArray = res.data
-      }, error: (res) => {
-        res.message
+      }, error: (err) => {
+        this.toaster.error(err.message)
       }
     }
 
@@ -563,7 +563,7 @@ export class CreateContentComponent implements OnInit {
               );
           },
           error: (err) => {
-            console.error(`Error fetching for ${city}`, err);
+            this.toaster.error(err.message)
           }
         });
     });
