@@ -136,8 +136,9 @@
                     @for(venue of venuesNameList ;track $index) {
                     <div class="dropdown-item">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input bg-white" [value]="venue?.venueName"
-                                [checked]="eventShowForm.get('venueName')?.value.includes(venue.venueName)"
+                            <input type="checkbox" class="form-check-input "
+                                [value]="venue?.venueName"
+                                [checked]="eventShowForm.get('venueName')?.value.includes(venue?.venueName)"
                                 (change)="toggleVenueName($event)">
                             <label class="form-check-label">
                                 {{ venue?.venueName }}
@@ -272,7 +273,7 @@
                                     [min]="validateShowStartDate($index)">
                                 <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add
                                 </button>
-                                <button class="btn btn-outline-danger ms-3"
+                                <button class="btn btn-outline-danger ms-3" [disabled]="$index==0"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
                             <!-- start-time array -->
@@ -318,7 +319,8 @@
                     <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
                         [max]="validateShowEndDate()" formControlName="date">
                     <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add </button>
-                    <button class="btn btn-outline-danger ms-3" (click)="removeEventShow($index)">Remove</button>
+                    <button class="btn btn-outline-danger ms-3" [disabled]="$index==0"
+                        (click)="removeEventShow($index)">Remove</button>
                 </div>
                 <!-- start-time array -->
                 <div class=" d-flex align-items-center justify-content-start gap-4 w-100 flex-wrap"
@@ -335,7 +337,8 @@
                             </option>
                             }
                         </select>
-                        <button class="btn btn-close" (click)="removeShowTime(show, $index)"></button>
+                        <button class="btn btn-close" [disabled]="$index==0"
+                            (click)="removeShowTime(show, $index)"></button>
                     </div>
                     }
                 </div>
@@ -509,9 +512,10 @@
                     }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button"
+                    <button class="btn btn-outline-danger" type="button" [disabled]="$index==0"
                         (click)="castControls.removeAt($index)">✕</button>
                 </div>
+
             </div>
             }
         </div>
@@ -544,7 +548,7 @@
                     }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button"
+                    <button class="btn btn-outline-danger" type="button" [disabled]="$index==0"
                         (click)="crewControls.removeAt($index)">✕</button>
                 </div>
             </div>

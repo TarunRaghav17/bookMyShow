@@ -34,7 +34,7 @@
             </div>
             <div class="container_fluid my-0  w-100 p-0">
                 <div class="gap-3 d-flex align-items-center justify-content-center flex-wrap  my-0 ">
-                    @for (content of filteredContentList.length > 0 ? filteredContentList: contentsList ;track $index) {
+                    @for (content of userSelectedType.length > 0 ? filteredContentList: contentsList ;track $index) {
                     @for(item of content.data;track $index){
                     <!-- Card 1 -->
                     <div

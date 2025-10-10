@@ -19,6 +19,7 @@ export class ListVenuesComponent implements OnInit {
   userSelectedCity: string = "";
   userSelectedVenueType: string = "";
   cityList: any[] = [];
+  searchValue:string='';
 
   constructor(public venueService: VenuesService,
     private toaster: ToastrService,
