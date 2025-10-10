@@ -128,7 +128,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.fetchCities()
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
     switch (this.selectedEventType) {
-
       case 'Movie':
         {
           this.removeControls(this.eventShowForm, ['shows', 'price', 'startDate', 'endDate'])
