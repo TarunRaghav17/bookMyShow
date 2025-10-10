@@ -59,11 +59,16 @@
                                     </div>
                                     <div class="col-11  cinema_details_text">
                                         <p>{{item.venueName}}</p>
-                                        <span class="card-text">{{item.address.street}},{{item.address.city?.cityName}},{{item.address.pin}}</span>
+                                        <span class="card-text">{{item.address.street}},{{item.address?.cityName}},{{item.address.pin}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        }
+                        @empty {
+                            <div class=" ms-auto me-auto text-danger mt-5">
+                                <h3 class="text-center ">No Venue's Found for {{commonService._selectedCategory()}} in {{selecetedCity}}</h3>
+                            </div>
                         }
                     </div>
                 </div>
