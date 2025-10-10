@@ -9,10 +9,17 @@
                     <label class="form-label">Name</label>
                     <input type="text" class="form-control" formControlName="name" placeholder="Enter name"
                         [ngClass]="{'is-invalid': isInvalid('name')}" />
-                    @if(isInvalid('name')){
-                    <div class="invalid-feedback">
-                        Name is required (min 4 characters).
-                    </div>
+                    @if(eventShowForm.get('name')?.touched &&
+                    eventShowForm.get('name')?.hasError('required')){
+                    <div class="invalid-feedback">Name is required.</div>
+                    }
+                    @if(eventShowForm.get('name')?.touched &&
+                    eventShowForm.get('name')?.hasError('pattern')&&eventShowForm.get('name')?.invalid){
+                    <div class="invalid-feedback">Cannot Start or End with Space.</div>
+                    }
+                    @if(eventShowForm.get('name')?.touched &&
+                    eventShowForm.get('name')?.hasError('pattern')&&eventShowForm.get('name')?.value){
+                    <div class="invalid-feedback">Only alphabets are allowed</div>
                     }
                 </div>
 
@@ -33,10 +40,19 @@
                 <label class="form-label">Description</label>
                 <textarea class="form-control h-25" rows="3" formControlName="description"
                     placeholder="Enter description" [ngClass]="{'is-invalid': isInvalid('description')}"></textarea>
-                @if(isInvalid('description')){
-                <div class="invalid-feedback">
-                    Description is required (min 30 characters).
-                </div>
+
+
+                @if(eventShowForm.get('description')?.touched &&
+                eventShowForm.get('description')?.hasError('minlength')){
+                <div class="invalid-feedback">Min.Description length is 30.</div>
+                }
+                @if(eventShowForm.get('description')?.touched &&
+                eventShowForm.get('description')?.hasError('required')){
+                <div class="invalid-feedback">Description is required.</div>
+                }
+                @if(eventShowForm.get('description')?.touched &&
+                eventShowForm.get('description')?.hasError('pattern')&&eventShowForm.get('description')?.invalid){
+                <div class="invalid-feedback">Cannot Start or End with Space.</div>
                 }
             </div>
 
@@ -64,7 +80,7 @@
                 <!-- Age Limit -->
                 <div class="mb-3 w-50">
                     <label class="form-label">Age Limit</label>
-                    <input type="number" class="form-control" formControlName="ageLimit" min=" 3" max="90"
+                    <input type="number" class="form-control" formControlName="ageLimit" min="3" max="90"
                         [ngClass]="{'is-invalid': isInvalid('ageLimit')}" />
                     @if(isInvalid('ageLimit')){
                     <div class="invalid-feedback">
@@ -136,8 +152,7 @@
                     @for(venue of venuesNameList ;track $index) {
                     <div class="dropdown-item">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input "
-                                [value]="venue?.venueName"
+                            <input type="checkbox" class="form-check-input " [value]="venue?.venueName"
                                 [checked]="eventShowForm.get('venueName')?.value.includes(venue?.venueName)"
                                 (change)="toggleVenueName($event)">
                             <label class="form-check-label">
@@ -245,14 +260,15 @@
                                 }
                                 @if(layout.get('price')?.touched && layout.get('price')?.hasError('min')){
                                 <div class="text-danger">
-                                     minimum ticket price should be 100 rs
+                                    minimum ticket price should be 100 rs
                                 </div>
-                            }
-                              @if(layout.get('price')?.touched &&  layout.get('price')?.value && layout.get('price')?.hasError('max')){
+                                }
+                                @if(layout.get('price')?.touched && layout.get('price')?.value &&
+                                layout.get('price')?.hasError('max')){
                                 <div class="text-danger">
-                                     minimum ticket price should be 4999 rs
+                                    minimum ticket price should be 4999 rs
                                 </div>
-                            }
+                                }
                             </div>
                         </div>
                         }

@@ -49,12 +49,13 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.tempFormArray = this.fb.array([])
     this.setToday()
     this.eventShowForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(4)]],
-      description: ['', [Validators.required, Validators.minLength(30)]],
+      name: ['', [Validators.required, Validators.minLength(4), Validators.pattern(/^[A-Za-z]+(?:\s[A-Za-z]+)*$/)
+      ]],
+      description: ['', [Validators.required, Validators.minLength(30), Validators.pattern(/^(?!\s)(.*\S)?$/)]],
       runTime: [null, [Validators.required]],
       eventType: ['', [Validators.required]],  // Movie | Sports | Event | Plays | Activities
       imageurl: ['', [Validators.required]],
-      ageLimit: [13, [Validators.required]],
+      ageLimit: [3, [Validators.required]],
       releasingOn: ['', [Validators.required]],
       city: this.fb.array([], [Validators.required]),
       venueName: this.fb.array([], [Validators.required]),

@@ -88,19 +88,20 @@ export class CreateVenueComponent implements OnInit {
 
   ) { }
 
-   /**
-   * @description lifecycle hook that initializes the form (venueForm) & calls fetchCities .
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+  * @description lifecycle hook that initializes the form (venueForm) & calls fetchCities .
+  * @author Inzamam
+  * @returnType void
+  */
   ngOnInit(): void {
 
     this.titleService.setTitle('Create Venue')
 
     this.venueForm = this.fb.group({
-      venueName: ['', [Validators.required, Validators.pattern(/^[A-Za-z][A-Za-z\s'-]*$/)]],
+      venueName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)
+      ]],
       address: this.fb.group({
-        street: ['', Validators.required],
+        street: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$/)]],
         cityName: ['', Validators.required],
         pin: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
       }),
@@ -108,18 +109,18 @@ export class CreateVenueComponent implements OnInit {
       venueType: ['', Validators.required],
       supportedCategories: this.fb.array([], [Validators.required]),
       amenities: this.fb.array([]),
-     
+
     });
 
     this.fetchCities()
   }
 
 
-   /**
-   * @description function that fetches cities
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+  * @description function that fetches cities
+  * @author Inzamam
+  * @returnType void
+  */
   fetchCities() {
     this.commonService.getAllCities().subscribe({
       next: (res) => {
@@ -131,11 +132,11 @@ export class CreateVenueComponent implements OnInit {
     })
   }
 
-   /**
-   * @description function that handles venue type change and adds/remove form control (screens)
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+  * @description function that handles venue type change and adds/remove form control (screens)
+  * @author Inzamam
+  * @returnType void
+  */
   onVenueTypeChange() {
     let venueType = this.venueForm.get('venueType')?.value as keyof typeof this.supportedCategoriesMapping
     this.categories.clear()
@@ -150,11 +151,11 @@ export class CreateVenueComponent implements OnInit {
   }
 
 
-   /**
-   * @description getter function to get categories as FormArray.
-   * @author Inzamam
-   * @returnType FormArray
-   */
+  /**
+  * @description getter function to get categories as FormArray.
+  * @author Inzamam
+  * @returnType FormArray
+  */
   get categories() {
     return this.venueForm.get('supportedCategories') as FormArray
   }
@@ -212,12 +213,12 @@ export class CreateVenueComponent implements OnInit {
 
   // --------------remove-end-------------------
 
-   /**
-   * @description function that handles supported category change .
-   * @author Inzamam
-   * * @params event where change occurs
-   * @returnType void
-   */
+  /**
+  * @description function that handles supported category change .
+  * @author Inzamam
+  * * @params event where change occurs
+  * @returnType void
+  */
   handleCategoryChange(event: any) {
     if (event.target.checked) {
       this.categories.push(this.fb.control(event.target.value));
@@ -226,57 +227,57 @@ export class CreateVenueComponent implements OnInit {
       if (index != -1) this.categories.removeAt(index);
     }
   }
- /**
-   * @description getter function to get screens as FormArray.
-   * @author Inzamam
-   * @returnType FormArray
-   */
+  /**
+    * @description getter function to get screens as FormArray.
+    * @author Inzamam
+    * @returnType FormArray
+    */
   get screens() {
     return this.venueForm.get('screens') as FormArray
   }
- /**
-   * @description function that creates form group of screen.
-   * @author Inzamam
-   * @returnType FormGroup
-   */
-  createScreen():FormGroup {
+  /**
+    * @description function that creates form group of screen.
+    * @author Inzamam
+    * @returnType FormGroup
+    */
+  createScreen(): FormGroup {
     return this.fb.group({
       screenName: ['', Validators.required],
       layouts: this.fb.array([this.createLayout()])
     })
   }
- /**
-   * @description function to add screen.
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+    * @description function to add screen.
+    * @author Inzamam
+    * @returnType void
+    */
   addScreen() {
     this.screens.push(this.createScreen())
   }
- /**
-   * @description function to remove screen 
-   * @author Inzamam
-   * @params index at which screen to remove
-   * @returnType void
-   */
+  /**
+    * @description function to remove screen 
+    * @author Inzamam
+    * @params index at which screen to remove
+    * @returnType void
+    */
   removeScreen(index: number) {
     this.screens.removeAt(index)
   }
- /**
-   * @description getter function to get layouts as FormArray
-   * @author Inzamam
-   * @params screen of  which to get layouts 
-   * @returnType FormArray
-   */
+  /**
+    * @description getter function to get layouts as FormArray
+    * @author Inzamam
+    * @params screen of  which to get layouts 
+    * @returnType FormArray
+    */
   getLayouts(screen: AbstractControl): FormArray {
     return screen.get('layouts') as FormArray
   }
- /**
-   * @description function to get used rows in screen .
-   * @author Inzamam
-   * @params screen  in which to get available rows 
-   * @returnType array of strings [a,b,c]
-   */
+  /**
+    * @description function to get used rows in screen .
+    * @author Inzamam
+    * @params screen  in which to get available rows 
+    * @returnType array of strings [a,b,c]
+    */
   getUsedRowsInScreen(screen: AbstractControl): string[] {
     let used: string[] = [];
     let layouts = this.getLayouts(screen).controls;
@@ -290,23 +291,23 @@ export class CreateVenueComponent implements OnInit {
     });
     return used;
   }
-   /**
-   * @description function to get availabel rows in screen and current category(layout like GOLD | SILVER)  .
-   * @author Inzamam
-   * @params screen and layout in which to get available rows 
-   * @returnType array of strings [a,b,c]
-   */
+  /**
+  * @description function to get availabel rows in screen and current category(layout like GOLD | SILVER)  .
+  * @author Inzamam
+  * @params screen and layout in which to get available rows 
+  * @returnType array of strings [a,b,c]
+  */
   getAvailableRows(screen: AbstractControl, currentLayout: AbstractControl): string[] {
     let used = this.getUsedRowsInScreen(screen);
     let currentRows = (currentLayout.get('rows') as FormArray).value;
     return this.alphabets.filter(letter => !used.includes(letter) || currentRows.includes(letter));
   }
- /**
-   * @description function that creates form group of Layout(category like GOLD | SILVER)  .
-   * @author Inzamam
-   * @returnType FormGroup
-   */
-  createLayout():FormGroup {
+  /**
+    * @description function that creates form group of Layout(category like GOLD | SILVER)  .
+    * @author Inzamam
+    * @returnType FormGroup
+    */
+  createLayout(): FormGroup {
     return this.fb.group({
       layoutName: ['', Validators.required],
       rows: this.fb.array([], Validators.required),
@@ -315,42 +316,42 @@ export class CreateVenueComponent implements OnInit {
   }
 
 
- /**
-   * @description function to add  category(layout like GOLD | SILVER)  .
-   * @author Inzamam
-   * @params screen in which  to add 
-   * @returnType void
-   */
+  /**
+    * @description function to add  category(layout like GOLD | SILVER)  .
+    * @author Inzamam
+    * @params screen in which  to add 
+    * @returnType void
+    */
   addLayout(screen: AbstractControl) {
     this.getLayouts(screen).push(this.createLayout())
   }
 
-  
-   /**
-   * @description function to remove category(layout like GOLD | SILVER)  .
-   * @author Inzamam
-   * @params screen from where to remove and index which one to remove
-   * @returnType void
-   */
+
+  /**
+  * @description function to remove category(layout like GOLD | SILVER)  .
+  * @author Inzamam
+  * @params screen from where to remove and index which one to remove
+  * @returnType void
+  */
   removeLayout(screen: AbstractControl, $index: number) {
     this.getLayouts(screen).removeAt($index)
   }
 
 
-   /**
-   * @description Getter for amenities
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+  * @description Getter for amenities
+  * @author Inzamam
+  * @returnType void
+  */
   get amenities(): FormArray {
     return this.venueForm.get('amenities') as FormArray;
   }
 
-   /**
-   * @description function to add  amenity on add btn click .
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+  * @description function to add  amenity on add btn click .
+  * @author Inzamam
+  * @returnType void
+  */
   addAmenity(): void {
     if (this.tempAmmenity.valid) {
       this.amenities.push(this.fb.control(this.tempAmmenity.value));
@@ -358,22 +359,22 @@ export class CreateVenueComponent implements OnInit {
     }
   }
 
-   /**
-   * @description function to remove amenity .
-   * @author Inzamam
-   * @params index number
-   * @returnType void
-   */
+  /**
+  * @description function to remove amenity .
+  * @author Inzamam
+  * @params index number
+  * @returnType void
+  */
   removeAmenity(index: number): void {
     this.amenities.removeAt(index);
   }
 
 
-    /**
-   * @description function that validates and then  submit the form .
-   * @author Inzamam
-   * @returnType void
-   */
+  /**
+ * @description function that validates and then  submit the form .
+ * @author Inzamam
+ * @returnType void
+ */
   // Submit
   onSubmit(): void {
     if (this.venueForm.valid) {
@@ -384,8 +385,8 @@ export class CreateVenueComponent implements OnInit {
           this.venueForm.reset()
           this.venueForm.get('venueFor')?.setValue('');
           this.venueForm.get('venueType')?.setValue('');
-           this.venueForm.get('cityName')?.setValue('');
-          (this.venueForm.get('supportedCategories')  as FormArray).clear();
+          this.venueForm.get('cityName')?.setValue('');
+          (this.venueForm.get('supportedCategories') as FormArray).clear();
           (this.venueForm.get('amenities') as FormArray).clear();
         },
         error: (err) => {
@@ -398,13 +399,13 @@ export class CreateVenueComponent implements OnInit {
     }
   }
 
-    /**
-   * @description function used to handle row change
-   * @author Inzamam
-   * @params event and layout
-   * @returnType void
-   */
-  onCheckboxChange(event: any, layout: AbstractControl):void {
+  /**
+ * @description function used to handle row change
+ * @author Inzamam
+ * @params event and layout
+ * @returnType void
+ */
+  onCheckboxChange(event: any, layout: AbstractControl): void {
     let rows = layout.get('rows') as FormArray
     if (event.target.checked) {
       rows.push(new FormControl(event.target.value))
