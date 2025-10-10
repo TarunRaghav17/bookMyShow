@@ -6,7 +6,6 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { Location } from '@angular/common';
 import {
   NgbModal,
   NgbModalOptions,
@@ -19,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DomSanitizer } from '@angular/platform-browser';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-header',
   standalone: false,
@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private location: Location
+    private route :Router
   ) {
     this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
@@ -134,8 +134,8 @@ export class HeaderComponent implements OnInit {
   selectCity(city: any, modalRef: NgbModalRef): void {
     this.commonService._selectCity.set(city);
     this.selectedCity = this.commonService._selectCity();
-    this.changeUrl(city)
     this.showCities = false
+    this.route.navigate(['/explore/home/',city])
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
     if (modalRef) {
       modalRef.close();
@@ -158,10 +158,7 @@ export class HeaderComponent implements OnInit {
   * @author Gurmeet Kumar
   * @return void
   */
-  changeUrl(city: string) {
-    this.location.go(`/explore/home/${city}`);
-  }
-
+ 
   /**
    * @description Get list of all cities from backend
    * @author Gurmeet Kumar

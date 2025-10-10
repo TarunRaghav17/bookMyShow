@@ -79,7 +79,7 @@
             <small class="text-danger">Only letters, numbers, and underscores allowed</small>
             }
             @if (!showMessageFlag) {
-            <small class="text-danger">{{ isUsernameAvailable }}</small>
+            <small class="text-danger">{{ isUserNameAvailable }}</small>
             }
         </div>
 
@@ -136,7 +136,7 @@
         </div>
 
         <button type="submit" class="btn btn-info text-white col-12 mb-2"
-            [disabled]="signupForm.invalid || isUsernameAvailable == 'Username already exists'"
+            [disabled]="signupForm.invalid || isUserNameAvailable == 'Username already exists'"
             (click)="onSignupSubmit()">Register</button>
         <p class="text-center changeRouteFormPage">Already have an account?
             <a (click)="toggleSignupForm()">Login</a>

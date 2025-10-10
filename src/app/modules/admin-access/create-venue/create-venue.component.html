@@ -32,7 +32,7 @@
             <div class="invalid-feedback">Cannot have special characters.</div>
             }
             @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.errors?.['min']){
-            <div class="invalid-feedback">Capacity must be at least 10.</div>
+            <div class="invalid-feedback">Capacity must be at least 5.</div>
             }
             @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.errors?.['max']){
             <div class="invalid-feedback">Capacity must be less than 5000.</div>
