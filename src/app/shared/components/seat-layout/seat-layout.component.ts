@@ -295,7 +295,7 @@ export class SeatLayoutComponent {
   }
 
   private randomizeBookedForDemo() {
-    const reservedSeats = ["A-01", "D-02"];
+    const reservedSeats = ["A-01", "D-02", "E-03", "A-05"];
 
     const reservedSeatObjects = reservedSeats.map(id => {
       const found = this.seats.find(s => s.id === id);
@@ -353,7 +353,7 @@ export class SeatLayoutComponent {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.save();
-    ctx.translate(this.offsetX, this.offsetY); 
+    ctx.translate(this.offsetX, this.offsetY);
 
     let yTitleAnchor = 0;
     let legendWidth = 30;
@@ -362,7 +362,7 @@ export class SeatLayoutComponent {
     let h = this.getContentBounds().height
 
     ctx.fillStyle = '#f5f5f5';
-    this.roundRect(ctx, x, y, legendWidth, h, 10); 
+    this.roundRect(ctx, x, y, legendWidth, h, 10);
     ctx.fill();
     for (const cat of this.layouts) {
       const first = this.seats.find(s => s.categoryId === cat.layoutName);
@@ -395,13 +395,13 @@ export class SeatLayoutComponent {
   private drawScreen3D() {
     const ctx = this.ctx;
     const canvas = this.canvasRef.nativeElement;
-    const screenWidthTop = canvas.width * 0.6;  
+    const screenWidthTop = canvas.width * 0.6;
     const screenWidthBottom = canvas.width * 0.7;
     const screenHeight = 40;
 
     const maxSeatBottom = Math.max(...this.seats.map(s => s.y + s.h));
 
-    const yTop = maxSeatBottom + 50;  
+    const yTop = maxSeatBottom + 50;
     const yBottom = yTop + screenHeight;
 
     const xTop = (canvas.width - screenWidthTop) / 2;
@@ -468,55 +468,73 @@ export class SeatLayoutComponent {
     ctx.fillText(label, x + w / 2, y + h / 2 + 3);
   }
 
+
   onCanvasClick(evt: MouseEvent) {
-    let noOfSeats: number = this.noOfSelectedSeats
     const rect = this.canvasRef.nativeElement.getBoundingClientRect();
     const x = evt.clientX - rect.left - this.offsetX;
     const y = evt.clientY - rect.top - this.offsetY;
+
     const hit = this.seats.find(
       s => x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h
     );
+    if (!hit || hit.status === 'booked') return;
 
-    if (!hit) return;
-    if (hit.status === 'booked') return;
+    const maxSeats = this.noOfSelectedSeats;
+    let selectedCount = this.selectedSeats.length;
 
-    this.seats.forEach(s => {
-      if (s.status === 'selected') {
-        s.status = 'available';
-      }
-    });
-    this.selectedSeats = [];
-
-    // ---- CONTIGUOUS SEAT SELECTION ----
-    const rowSeats = this.seats
-      .filter(s => s.row === hit.row)
-      .sort((a, b) => a.col - b.col);
-
-    const startIndex = rowSeats.findIndex(s => s.id === hit.id);
-
-    let block: any[] = [];
-
-    const forwardBlock = rowSeats.slice(startIndex, startIndex + noOfSeats);
-    if (forwardBlock.length === noOfSeats && forwardBlock.every(s => s.status === 'available')) {
-      block = forwardBlock;
-    } else {
-      const backwardBlock = rowSeats.slice(startIndex - noOfSeats + 1, startIndex + 1);
-      if (backwardBlock.length === noOfSeats && backwardBlock.every(s => s.status === 'available')) {
-        block = backwardBlock;
-      }
-    }
-    if (block.length === noOfSeats) {
-      block.forEach(s => {
-        s.status = 'selected';
-        this.selectedSeats.push(s.id);
-      });
-    } else {
-      console.warn("No contiguous block available.");
+    // Deselect if clicked again
+    if (hit.status === 'selected') {
+      hit.status = 'available';
+      this.selectedSeats = this.selectedSeats.filter(id => id !== hit.id);
+      this.draw();
       return;
     }
 
+    // Reset if full
+    if (selectedCount >= maxSeats) {
+      this.seats.forEach(s => { if (s.status === 'selected') s.status = 'available'; });
+      this.selectedSeats = [];
+      selectedCount = 0;
+    }
+
+    let remaining = maxSeats - selectedCount;
+
+    const rowSeats = this.seats
+      .filter(s => s.row === hit.row)
+      .sort((a, b) => a.col - b.col);
+    const startIndex = rowSeats.findIndex(s => s.id === hit.id);
+    if (startIndex === -1) return;
+
+    // Check forward
+    const forwardBlock: any[] = [];
+    for (let i = startIndex; i < rowSeats.length && forwardBlock.length < remaining; i++) {
+      if (rowSeats[i].status === 'available') forwardBlock.push(rowSeats[i]);
+      else break;
+    }
+
+    // Check backward
+    const backwardBlock: any[] = [];
+    for (let i = startIndex; i >= 0 && backwardBlock.length < remaining; i--) {
+      if (rowSeats[i].status === 'available') backwardBlock.unshift(rowSeats[i]);
+      else break;
+    }
+
+    // Choose the longer contiguous run
+    let block =
+      forwardBlock.length >= backwardBlock.length
+        ? forwardBlock
+        : backwardBlock;
+
+    // Select seats
+    block.forEach(s => {
+      s.status = 'selected';
+      this.selectedSeats.push(s.id);
+    });
+
     this.draw();
   }
+
+
 
   // ----- Dragging -----
   private startDrag(e: MouseEvent | TouchEvent) {

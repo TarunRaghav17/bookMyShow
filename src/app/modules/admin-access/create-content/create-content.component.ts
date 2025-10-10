@@ -47,7 +47,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.titleService.setTitle('Create Content')
     this.tempFormArray = this.fb.array([])
-    this.getData()
     this.setToday()
     this.eventShowForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(4)]],
@@ -117,7 +116,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 * @author Inzamam
 */
   onEventTypeChange() {
-    this.handleReset(['city','venueName'])
     this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
@@ -277,7 +275,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   // for movies
   removeShow(screen: AbstractControl, index: number) {
-    if(index==0) return 
+    if (index == 0) return
     this.getShows(screen).removeAt(index)
   }
 
@@ -315,7 +313,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 * @params Show obj
 */
   removeShowTime(show: AbstractControl, index: number) {
-     if(index==0) return 
+    if (index == 0) return
     this.getStartTime(show).removeAt(index)
   }
 
@@ -335,7 +333,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   removeEventShow(index: number) {
-     if(index==0) return 
+    if (index == 0) return
     this.shows.removeAt(index)
 
   }
@@ -662,6 +660,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.target.value)
       if (index != -1) this.venueName.removeAt(index);
     }
+
+    console.log(this.eventShowForm.get('venueName')?.value)
     this.onVenueNameChange()
   }
 
