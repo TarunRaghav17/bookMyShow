@@ -153,7 +153,7 @@ export class ListContentsComponent implements OnInit {
     );
     this.isEnd = this.userSelectedType.length > 0 ? this.loadedFilteredCounts >= this.totalFilteredCounts : this.dataLoadedCount >= this.totalContentCount
 
-    if (!this.isLoading && element.scrollTop + element.clientHeight + 100 >= element.scrollHeight && !this.isEnd) {
+    if (!this.isLoading && element.scrollTop + element.clientHeight + 300 >= element.scrollHeight && !this.isEnd) {
       this.isLoading = true;
       if (this.userSelectedType.length > 0) {
         this.filtersCurrentPage++
