@@ -47,7 +47,7 @@ export class TheatreListComponent implements OnInit{
   getVenues(){
     this.commonService.getAllVenuesBYcity(this.commonService._selectCity()).subscribe({
       next:(res)=>{
-        this.originalVenueListArray = res.filter((venue:any)=>venue.venueType == this.commonService._selectedCategory())
+        this.originalVenueListArray = res.data.filter((venue:any)=>venue.venueType == this.commonService._selectedCategory())
          this.venueListArray = [...this.originalVenueListArray]; 
       },
       error:(err)=>{
