@@ -53,7 +53,7 @@ export class MoviesDetailsComponent {
 
   navigateToBuyTicket(payload: any) {
     this.commonService.setUserLangFormat(payload);
-    
+
     this.modalRef?.close()
     this.router.navigate(
       [`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.name.toLowerCase().split(' ').join('-')}/buytickets/${this.movieDetails.eventId}`],
@@ -74,20 +74,27 @@ export class MoviesDetailsComponent {
     })
   }
 
-  handleDeleteEvent() {
-    let confirm = window.confirm('Are you sure to delete this event?')
-    if (confirm) {
-      this.commonService.deleteContentById(this.movieDetails.eventId).subscribe({
-        next: (res) => {
-          this.toaster.success(res.message);
-          this.location.back()
-        },
-        error: (err) => {
-          this.toaster.error(err.error.message)
+  handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
+    const modalRef = this.modalService.open(confirmDeleteModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'no-border-modal',
+      backdrop: 'static',
+    });
+
+    modalRef.result
+      .then((result) => {
+        if (result === 'confirm') {
+          this.commonService.deleteContentById(this.movieDetails.eventId).subscribe({
+            next: (res) => {
+              this.toaster.success(res.message);
+              this.location.back()
+            },
+            error: (err) => {
+              this.toaster.error(err.error.message)
+            }
+          })
         }
       })
-
-    }
+      .catch(() => { });
   }
-
 }

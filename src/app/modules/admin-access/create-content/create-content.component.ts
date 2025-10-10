@@ -612,6 +612,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       if (index != -1) this.city.removeAt(index);
 
     }
+    this.venueName.clear()
+    this.venuesNameList = []
     this.callApiForCities();
   }
 
@@ -661,12 +663,15 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       if (index != -1) this.venueName.removeAt(index);
     }
 
-    console.log(this.eventShowForm.get('venueName')?.value)
     this.onVenueNameChange()
   }
 
   setEventType(value: any) {
     this.eventShowForm.get('eventType')?.setValue(value)
+    this.city.clear()
+    this.venueName.clear()
+    this.venuesNameList = []
+    this.selectedVenueObj = []
     this.onEventTypeChange()
   }
 
