@@ -64,11 +64,11 @@
                 <!-- Age Limit -->
                 <div class="mb-3 w-50">
                     <label class="form-label">Age Limit</label>
-                    <input type="number" class="form-control" formControlName="ageLimit" min="8" max="100"
+                    <input type="number" class="form-control" formControlName="ageLimit" min=" 3" max="90"
                         [ngClass]="{'is-invalid': isInvalid('ageLimit')}" />
                     @if(isInvalid('ageLimit')){
                     <div class="invalid-feedback">
-                        Age Limit is required (Min.8-Max.100).
+                        Age Limit is required (Min.3-Max.90).
                     </div>
                     }
                 </div>
@@ -235,13 +235,23 @@
                             </div>
                             <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                 <span class="my-0 fw-semibold"> Price: </span>
-                                <input type="number" formControlName="price" min="0"
+                                <input type="number" formControlName="price" min="100" max="4999"
                                     class="form-control px-3 py-2 w-75 my-1">
                                 @if(layout.get('price')?.touched && layout.get('price')?.invalid){
                                 <div class="text-danger">
                                     Price is required.
                                 </div>
                                 }
+                                @if(layout.get('price')?.touched && layout.get('price')?.hasError('min')){
+                                <div class="text-danger">
+                                     minimum ticket price should be 100 rs
+                                </div>
+                            }
+                              @if(layout.get('price')?.touched &&  layout.get('price')?.value && layout.get('price')?.hasError('max')){
+                                <div class="text-danger">
+                                     minimum ticket price should be 4999 rs
+                                </div>
+                            }
                             </div>
                         </div>
                         }
