@@ -58,18 +58,24 @@ input[type="checkbox"].accent-blue {
 
 .hover_container {
   position: relative;
-  display: inline-block; /* shrink container to button size */
+  display: inline-block;
+  /* shrink container to button size */
 }
 
 .hover-div {
-  display: none; /* hide by default */
-  width: max-content; /* or max-content */
+  display: none;
+  /* hide by default */
+  width: max-content;
+  /* or max-content */
   height: 5rem;
-  padding:5px;
+  padding: 5px;
   position: absolute;
-  bottom: 5.2rem; /* distance above the button */
-  left: 50%; /* center horizontally relative to container */
-  transform: translateX(-50%); /* perfect center */
+  bottom: 5.2rem;
+  /* distance above the button */
+  left: 50%;
+  /* center horizontally relative to container */
+  transform: translateX(-50%);
+  /* perfect center */
   background-color: white;
   color: #000000;
   border: 1px solid #333;
@@ -90,4 +96,82 @@ input[type="checkbox"].accent-blue {
   background-color: #eee;
   border: 1px solid #333;
   border-radius: 4px;
+}
+
+container {
+  max-width: 900px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton {
+  background-color: #ddd;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.skeleton-title {
+  height: 40px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.skeleton-genre {
+  height: 25px;
+  width: 70%;
+  margin-bottom: 15px;
+}
+
+.skeleton-date {
+  height: 30px;
+  width: 120px;
+  margin-bottom: 15px;
+}
+
+.skeleton-time {
+  height: 30px;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.skeleton-button {
+  height: 45px;
+  width: 30%;
+  margin: 10px 0;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #ddd;
+  }
+
+  50% {
+    background-color: #ccc;
+  }
+
+  100% {
+    background-color: #ddd;
+  }
+}
+
+.movie-title {
+  margin-bottom: 25px;
+}
+
+.movie-info {
+  margin-bottom: 30px;
+}
+
+.showtimes {
+  margin-bottom: 30px;
+}
+
+.booking {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }

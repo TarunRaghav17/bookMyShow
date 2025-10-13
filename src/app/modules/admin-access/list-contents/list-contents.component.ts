@@ -22,7 +22,8 @@ export class ListContentsComponent implements OnInit {
   itemPerType = this.totalItemsPerPage / 5
   totalContentCount = 0;
   isEnd: boolean = false;
-  private isLoading = false;
+  isLoading = false;
+  loadedFilteredCounts: any;
 
   constructor(private titleService: Title,
     private contentsService: ListContentsService,
@@ -68,7 +69,6 @@ export class ListContentsComponent implements OnInit {
         this.toaster.error(err.error.message)
       }
     })
-
   }
   /**
    * @description function that allows to select / deselect content type .
@@ -77,7 +77,8 @@ export class ListContentsComponent implements OnInit {
    * @returnType void
    */
   toggleType(event: any) {
-    this.currentPage = 1
+    this.currentPage = 1;
+    this.filtersCurrentPage = 1;
     this.filteredContentList = [];
     if (event.target.checked) {
       this.userSelectedType.push(event.target.value);
@@ -92,6 +93,8 @@ export class ListContentsComponent implements OnInit {
  * @author Inzamam
  * @returnType void
  */
+
+  totalFilteredCounts = 0;
   handleFilteredContentList() {
     if (this.userSelectedType.length === 0) {
       this.filteredContentList = [];
@@ -123,9 +126,13 @@ export class ListContentsComponent implements OnInit {
           }
         });
 
-        // Optional: sum all counts from API responses
-        this.totalContentCount = responses.reduce(
+        this.totalFilteredCounts = responses.reduce(
           (sum, res) => sum + res.data.count,
+          0
+        );
+
+        this.loadedFilteredCounts = this.filteredContentList.reduce(
+          (sum, res) => sum + res.data.length,
           0
         );
       },
@@ -136,38 +143,17 @@ export class ListContentsComponent implements OnInit {
     });
   }
 
-  /**
-   * @description getter function to get total no of pages .
-   * @author Inzamam
-   * @returnType Number
-   */
-  get totalPages() {
-    return Math.ceil(this.totalContentCount / this.totalItemsPerPage);
-  }
-
-  /**
- * @description function that allows to change page .
- * @author Inzamam
- * @param page no set to current page & calls handleFilteredContentList or fetchContentsList
- * @returnType void
- */
-  changePage(page: number) {
-    if (page >= 1 && page <= this.totalPages) {
-      this.currentPage = page;
-    }
-    this.userSelectedType.length > 0 ? this.handleFilteredContentList() : this.fetchContentsList()
-  }
-
-
   dataLoadedCount: number = 0
   onCardContainerScroll(event: any) {
+
     const element = event.target as HTMLElement;
     this.dataLoadedCount = this.contentsList.reduce(
       (total: number, content: any) => total + content.data.length,
       0
     );
-    this.isEnd = this.dataLoadedCount == this.totalContentCount
-    if (!this.isLoading && element.scrollTop + element.clientHeight + 100 >= element.scrollHeight && !this.isEnd) {
+    this.isEnd = this.userSelectedType.length > 0 ? this.loadedFilteredCounts >= this.totalFilteredCounts : this.dataLoadedCount >= this.totalContentCount
+
+    if (!this.isLoading && element.scrollTop + element.clientHeight + 300 >= element.scrollHeight && !this.isEnd) {
       this.isLoading = true;
       if (this.userSelectedType.length > 0) {
         this.filtersCurrentPage++
