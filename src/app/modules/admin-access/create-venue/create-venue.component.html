@@ -7,17 +7,21 @@
                 <small class="text-danger reuired">*</small>
             </label>
             <input type="text" formControlName="venueName" class="form-control" placeholder="Enter venue name"
-                [ngClass]="{'is-invalid': (venueForm.get('venueName')?.touched && venueForm.get('venueName')?.hasError('required') || venueForm.get('venueName')?.hasError('pattern'))}" />
+                [ngClass]="{'is-invalid':venueForm.get('venueName')?.touched && venueForm.get('venueName')?.invalid }" />
             @if(venueForm.get('venueName')?.touched &&
             venueForm.get('venueName')?.hasError('required')){
             <div class="invalid-feedback">Venue name is required.</div>
             }
-            @if(venueForm.get('venueName')?.touched &&
-            venueForm.get('venueName')?.hasError('pattern')&&venueForm.get('venueName')?.value){
-            <div class="invalid-feedback">Only alphabets are allowed</div>
-            } @if(venueForm.get('venueName')?.touched &&
-            venueForm.get('venueName')?.hasError('pattern')&&venueForm.get('venueName')?.value){
-            <div class="invalid-feedback">Cannot Start Or End With Space</div>
+            @if(venueForm.get('venueName')?.value &&
+            venueForm.get('venueName')?.hasError('invalidSpace')){
+            <div class="invalid-feedback">Venue name should not start or end with spaces</div>
+            } @if(venueForm.get('venueName')?.value &&
+            venueForm.get('venueName')?.hasError('invalidCharacter')){
+            <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+            }
+            @if(venueForm.get('venueName')?.value &&
+            venueForm.get('venueName')?.hasError('invalidHyphen')){
+            <div class="invalid-feedback">Venue name should not start or end with a hyphen</div>
             }
         </div>
         <!-- Capacity -->
@@ -57,12 +61,14 @@
             @if(venueForm.get('address.street')?.touched && venueForm.get('address.street')?.hasError('required')){
             <div class="invalid-feedback">Street is required</div>
             }
-            @if(venueForm.get('address.street')?.touched &&
-            venueForm.get('address.street')?.hasError('pattern')&&venueForm.get('address.street')?.value){
-            <div class="invalid-feedback">Only Alphabets and Numbers are allowed</div>
-            } @if(venueForm.get('address.street')?.touched &&
-            venueForm.get('address.street')?.hasError('pattern')&&venueForm.get('address.street')?.value){
-            <div class="invalid-feedback">Cannot Start Or End With Space</div>
+            @if(venueForm.get('address.street')?.value &&
+            venueForm.get('address.street')?.hasError('invalidCharacter')){
+            <div class="invalid-feedback">Only Alphabets & Numbers are allowed</div>
+            } @if(venueForm.get('address.street')?.hasError('invalidSpace')&&venueForm.get('address.street')?.value){
+            <div class="invalid-feedback">Cannot start or end with space</div>
+            }
+            @if(venueForm.get('address.street')?.hasError('invalidSymbol')&&venueForm.get('address.street')?.value){
+            <div class="invalid-feedback">Cannot start or end with hyphens & comma </div>
             }
         </div>
         <div class="col-md-4 mb-3">
@@ -92,7 +98,7 @@
     <!-- Venue Type -->
     <div class="row">
         <div class="w-50 mb-0">
-            <label class="form-label">Venue Type
+            <label class="form-label">Venue For
                 <small class="text-danger required">*</small>
             </label>
 
@@ -106,12 +112,13 @@
             <div class="invalid-feedback">Please select a type.</div>
         </div>
         <!-- Supported Categories -->
-        <div ngbDropdown [autoClose]="'outside'" class="w-50 mb-0">
+        <div ngbDropdown [autoClose]="'outside'" class="w-50 mb-0 ">
             <label>Supported Categories
                 <small class="text-danger required">*</small>
             </label>
 
-            <button class="btn btn-light border w-100 text-start mt-2" ngbDropdownToggle>
+            <button class="btn btn-light  border w-100 text-start mt-2  d-flex justify-content-between align-items-center" ngbDropdownToggle [disabled]="!!!venueForm.get('venueType')?.value "
+                [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}">
                 {{ categories.controls.length > 0 ? venueForm.get('supportedCategories')?.value.join(', ').toUpperCase()
                 : 'Select Categories' }}
             </button>
@@ -122,9 +129,8 @@
                 @for(category of supportedCategoriesArray; track $index) {
                 <div class="dropdown-item">
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input"
-                            [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}"
-                            [value]="category.value" (change)="handleCategoryChange($event)"
+                        <input type="checkbox" class="form-check-input" [value]="category.value"
+                            (change)="handleCategoryChange($event)"
                             [checked]="venueForm.get('supportedCategories')?.value.includes(category.value)">
                         <label class="form-check-label">
                             {{ category.label }}
@@ -153,7 +159,24 @@
 
                 <input type="text" class="form-control" placeholder="Enter screen name" formControlName="screenName"
                     [ngClass]="{'is-invalid': screen.get('screenName')?.touched && screen.get('screenName')?.invalid }">
+                @if(screen.get('screenName')?.hasError('required')){
                 <div class="invalid-feedback">Screen name is required.</div>
+                }
+
+
+                @if(screen.get('screenName')?.value &&
+                screen.get('screenName')?.hasError('invalidSpace')){
+                <div class="invalid-feedback">Screen name should not start or end with spaces</div>
+                }
+                @if(screen.get('screenName')?.value &&
+                screen.get('screenName')?.hasError('invalidCharacter')){
+                <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+                }
+                @if(screen.get('screenName')?.value &&
+                screen.get('screenName')?.hasError('invalidHyphen')){
+                <div class="invalid-feedback">Venue name should not start or end with a hyphen</div>
+                }
+
             </div>
             <div formArrayName="layouts" class=" border-danger">
                 <h5 class="mb-2">Categories</h5>
@@ -164,7 +187,21 @@
                         <small class="text-danger required">*</small>
                         <input type="text" class="form-control" placeholder="VIP / Regular" formControlName="layoutName"
                             [ngClass]="{'is-invalid': layout.get('layoutName')?.touched && layout.get('layoutName')?.invalid }">
-                        <div class="invalid-feedback">Layout name is required.</div>
+                        @if(layout.get('layoutName')?.hasError('required')){
+                        <div class="invalid-feedback">Category name is required.</div>
+                        }
+                        @if(layout.get('layoutName')?.value &&
+                        layout.get('layoutName')?.hasError('invalidSpace')){
+                        <div class="invalid-feedback">Category ame should not start or end with spaces</div>
+                        }
+                        @if(layout.get('layoutName')?.value &&
+                        layout.get('layoutName')?.hasError('invalidCharacter')){
+                        <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+                        }
+                        @if(layout.get('layoutName')?.value &&
+                        layout.get('layoutName')?.hasError('invalidHyphen')){
+                        <div class="invalid-feedback">Category name should not start or end with a hyphen</div>
+                        }
                     </div>
                     <div class="col-4 ">
                         <label class="form-label">Row Name
@@ -173,14 +210,14 @@
 
                         <div class="d-flex flex-wrap gap-3">
                             @for(alpha of getAvailableRows(screen,layout);track $index){
-                            <div class="form-check">
+                            <div class="form-check"
+                                [ngClass]="{'is-invalid': layout.get('rows')?.touched && layout.get('rows')?.invalid }">
                                 <input type="checkbox" class="form-check-input" value="{{alpha}}"
-                                    (change)="onCheckboxChange($event,layout)"
-                                    [ngClass]="{'is-invalid': layout.get('rows')?.touched && layout.get('rows')?.invalid }">
+                                    (change)="onCheckboxChange($event,layout)">
                                 <label class="form-check-label">{{alpha}}</label>
-                                <div class="invalid-feedback">Row is required.</div>
                             </div>
                             }
+                            <div class="invalid-feedback">Atleast One Row is required.</div>
                         </div>
                     </div>
                     <div class="col-3">
@@ -191,8 +228,8 @@
                         <input type="number" class="form-control" placeholder="12" min="12" max="25"
                             formControlName="cols"
                             [ngClass]="{'is-invalid': layout.get('cols')?.touched && layout.get('cols')?.invalid }">
-                        @if(layout.get('cols')?.touched && layout.get('cols')?.hasError('pattern')){
-                        <div class="invalid-feedback">Cannot have special characters.</div>
+                        @if(layout.get('cols')?.touched && layout.get('cols')?.hasError('required')){
+                        <div class="invalid-feedback">Cols are required.</div>
                         }
                         @if(layout.get('cols')?.touched && layout.get('cols')?.errors?.['min']){
                         <div class="invalid-feedback">Min.10 Cols are required.</div>
@@ -202,7 +239,7 @@
                         }
                     </div>
                     <button type="button" class="btn btn-sm btn-danger col-2  ms-auto mt-auto  mb-2"
-                        (click)="removeLayout(screen, $index)">
+                        (click)="removeLayout(screen, $index)" [disabled]="getLayouts(screen).controls.length<=1">
                         Remove Category
                     </button>
                 </div>
@@ -213,7 +250,8 @@
                 </button>
             </div>
         </div>
-        <button type="button" class="btn btn-sm btn-danger my-2 col-2 ms-auto " (click)="removeScreen($index)">
+        <button type="button" class="btn btn-sm btn-danger my-2 col-2 ms-auto " [disabled]="screens.controls.length<=1"
+            (click)="removeScreen($index)">
             Remove Screen
         </button>
         }
