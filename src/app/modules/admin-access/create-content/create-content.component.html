@@ -6,26 +6,41 @@
             <!-- Name -->
             <div class="row">
                 <div class="mb-3 w-50">
-                    <label class="form-label">Name</label>
+                    <label class="form-label">Name
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="text" class="form-control" formControlName="name" placeholder="Enter name"
-                        [ngClass]="{'is-invalid': isInvalid('name')}" />
+                        [ngClass]="{'is-invalid':eventShowForm.get('name')?.touched && eventShowForm.get('name')?.invalid }" />
                     @if(eventShowForm.get('name')?.touched &&
                     eventShowForm.get('name')?.hasError('required')){
-                    <div class="invalid-feedback">Name is required.</div>
+                    <div class="invalid-feedback">Content name is required.</div>
                     }
-                    @if(eventShowForm.get('name')?.touched &&
-                    eventShowForm.get('name')?.hasError('pattern')&&eventShowForm.get('name')?.invalid){
-                    <div class="invalid-feedback">Cannot Start or End with Space.</div>
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('minlength')){
+                    <div class="invalid-feedback">Min.Length is 4 Char</div>
                     }
-                    @if(eventShowForm.get('name')?.touched &&
-                    eventShowForm.get('name')?.hasError('pattern')&&eventShowForm.get('name')?.value){
-                    <div class="invalid-feedback">Only alphabets are allowed</div>
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('maxlength')){
+                    <div class="invalid-feedback">Max.Length is 50 Char</div>
+                    }
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('invalidSpace')){
+                    <div class="invalid-feedback">Name cannot start or end with spaces</div>
+                    } @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('invalidCharacter')){
+                    <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+                    }
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('invalidHyphen')){
+                    <div class="invalid-feedback">Cannot start or end with a hyphen</div>
                     }
                 </div>
 
                 <!-- Poster -->
                 <div class="mb-3 w-50">
-                    <label class="form-label">Poster</label>
+                    <label class="form-label">Poster
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="file" class="form-control" (change)="handlePosterImgUpload($event,'imageurl')"
                         [ngClass]="{'is-invalid': isInvalid('imageurl')}" />
                     @if(isInvalid('imageurl')){
@@ -39,20 +54,30 @@
             <div class="mb-3">
                 <label class="form-label">Description</label>
                 <textarea class="form-control h-25" rows="3" formControlName="description"
-                    placeholder="Enter description" [ngClass]="{'is-invalid': isInvalid('description')}"></textarea>
-
-
-                @if(eventShowForm.get('description')?.touched &&
-                eventShowForm.get('description')?.hasError('minlength')){
-                <div class="invalid-feedback">Min.Description length is 30.</div>
-                }
+                    placeholder="Enter description"
+                    [ngClass]="{'is-invalid':eventShowForm.get('description')?.touched && eventShowForm.get('description')?.invalid }"></textarea>
                 @if(eventShowForm.get('description')?.touched &&
                 eventShowForm.get('description')?.hasError('required')){
                 <div class="invalid-feedback">Description is required.</div>
                 }
-                @if(eventShowForm.get('description')?.touched &&
-                eventShowForm.get('description')?.hasError('pattern')&&eventShowForm.get('description')?.invalid){
-                <div class="invalid-feedback">Cannot Start or End with Space.</div>
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('invalidSpace')){
+                <div class="invalid-feedback">Description cannot start or end with spaces</div>
+                } @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('invalidCharacter')){
+                <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+                }
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('invalidHyphen')){
+                <div class="invalid-feedback">Cannot start or end with a hyphen or &#64;</div>
+                }
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('minlength')){
+                <div class="invalid-feedback">Min.Length is 30 Char</div>
+                }
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('maxlength')){
+                <div class="invalid-feedback">Max.Length is 250 Char</div>
                 }
             </div>
 
@@ -64,7 +89,7 @@
                 <!--duration-->
                 <div class="w-50">
                     <label class="form-label">Duration (min)</label>
-                    <input type="number" class="form-control" formControlName="runTime" min="20"
+                    <input type="number" class="form-control" formControlName="runTime" min="20" max="360"
                         placeholder="Enter duration" />
                     @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('required')){
                     <div class="text-danger">
@@ -73,7 +98,12 @@
                     }
                     @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('min')){
                     <div class="text-danger">
-                        Duration must be greater than 20.
+                        Duration must be greater than 20 mins.
+                    </div>
+                    }
+                    @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('max')){
+                    <div class="text-danger">
+                        Duration must be less than 360 mins.
                     </div>
                     }
                 </div>
@@ -224,7 +254,7 @@
                     <div formArrayName="layouts" class="mb-1 w-100">
                         <span class="fs-5 fw-semibold">Categories</span>
                         @for(layout of getLayouts(screen).controls ;track $index){
-                        <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
+                        <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto ">
                             <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                 <span class="my-0 fw-semibold"> Name: </span>
                                 <span class="bg-white text-dark  rounded   w-75">
@@ -249,26 +279,31 @@
                                     {{+layout.get('cols')?.value * +getRows(layout)}}
                                 </span>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
+                            <div class="d-flex align-items-center justify-content-center gap-2 col-4">
                                 <span class="my-0 fw-semibold"> Price: </span>
-                                <input type="number" formControlName="price" min="100" max="4999"
-                                    class="form-control px-3 py-2 w-75 my-1">
-                                @if(layout.get('price')?.touched && layout.get('price')?.invalid){
-                                <div class="text-danger">
-                                    Price is required.
+
+                                <div class="d-flex w-100 flex-column ">
+                                    <input type="number" formControlName="price" min="99" max="4999"
+                                        class="form-control px-3 py-2 w-50 my-1"
+                                        [ngClass]="{'is-invalid':layout.get('price')?.touched && layout.get('price')?.invalid }" />
+                                    @if(!layout.get('price')?.value){
+                                    <div class="text-danger">
+                                        Price is required.
+                                    </div>
+                                    }
+                                    @if(layout.get('price')?.value && layout.get('price')?.hasError('min')){
+                                    <div class="text-danger">
+                                        Min. Price 99.
+                                    </div>
+                                    }
+                                    @if(layout.get('price')?.touched && layout.get('price')?.value &&
+                                    layout.get('price')?.hasError('max')){
+                                    <div class="text-danger">
+                                        Max. Price 4999
+                                    </div>
+                                    }
+
                                 </div>
-                                }
-                                @if(layout.get('price')?.touched && layout.get('price')?.hasError('min')){
-                                <div class="text-danger">
-                                    minimum ticket price should be 100 rs
-                                </div>
-                                }
-                                @if(layout.get('price')?.touched && layout.get('price')?.value &&
-                                layout.get('price')?.hasError('max')){
-                                <div class="text-danger">
-                                    minimum ticket price should be 4999 rs
-                                </div>
-                                }
                             </div>
                         </div>
                         }
@@ -289,7 +324,8 @@
                                     [min]="validateShowStartDate($index)">
                                 <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add
                                 </button>
-                                <button class="btn btn-outline-danger ms-3" [disabled]="$index==0"
+                                <button class="btn btn-outline-danger ms-3"
+                                    [disabled]="this.getShows(screen).length <= 1"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
                             <!-- start-time array -->
@@ -325,17 +361,17 @@
             <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
         </div>
         <!-- shows array -->
-        <div class=" w-100" formArrayName="shows">
+        <div class="border border-danger w-100 d-flex flex-column align-items-start justify-content-start px-2" formArrayName="shows">
             @for(show of shows.controls ;track $index){
             <!-- one particualr show =  date & [times] -->
-            <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-75 mx-auto ">
+            <div [formGroupName]="$index" class="border border-danger row my-3 d-flex card gap-2 py-3  w-100  mx-auto ">
                 <!-- date control -->
                 <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
                     <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
                     <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
                         [max]="validateShowEndDate()" formControlName="date">
                     <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add </button>
-                    <button class="btn btn-outline-danger ms-3" [disabled]="$index==0"
+                    <button class="btn btn-outline-danger ms-3" [disabled]=" this.shows.length<=1"
                         (click)="removeEventShow($index)">Remove</button>
                 </div>
                 <!-- start-time array -->
@@ -343,7 +379,7 @@
                     formArrayName="startTime">
                     @for(time of getStartTime(show).controls ;track $index){
                     <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                        <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
+                        <span class="my-0 fw-semibold col-4 border fs-6 p-0 "> Start Time: </span>
 
                         <select class="form-select" [formControlName]="$index">
                             <option value="" disabled selected>Select</option>
@@ -353,7 +389,7 @@
                             </option>
                             }
                         </select>
-                        <button class="btn btn-close" [disabled]="$index==0"
+                        <button class="btn btn-close" [disabled]="this.getStartTime(show).length<=1"
                             (click)="removeShowTime(show, $index)"></button>
                     </div>
                     }
@@ -366,7 +402,27 @@
         <div class="my-2 row d-flex align-items-center p-3 px-4 ">
             <div class="w-75 d-flex align-items-center py-3 gap-5">
                 <h4>Price : ₹</h4>
-                <input type="number" formControlName="price" min="0" class="form-control px-3 w-25 ms-1">
+                <input type="number" formControlName="price" min="99" max="499" class="form-control px-3 w-25 ms-1"
+                    [ngClass]="{'is-invalid':eventShowForm.get('price') ?.touched && eventShowForm.get('price')?.invalid }" />
+                @if(!eventShowForm.get('price')?.value && eventShowForm.get('price')?.touched){
+                <div class="text-danger">
+                    Price is required.
+                </div>
+                }
+                @if(eventShowForm.get('price')?.value && eventShowForm.get('price')?.hasError('min')){
+                <div class="text-danger">
+                    Min. Price 99.
+                </div>
+                }
+                @if(eventShowForm.get('price')?.value &&
+                eventShowForm.get('price')?.hasError('max')){
+                <div class="text-danger">
+                    Max. Price 4999
+                </div>
+
+
+
+                }
             </div>
         </div>
         }

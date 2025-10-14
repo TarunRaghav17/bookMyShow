@@ -117,8 +117,8 @@
                 <small class="text-danger required">*</small>
             </label>
 
-            <button class="btn btn-light  border w-100 text-start mt-2  d-flex justify-content-between align-items-center" ngbDropdownToggle [disabled]="!!!venueForm.get('venueType')?.value "
-                [ngClass]="{'is-invalid': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}">
+            <button class="btn btn-light  border bg-white w-100 text-start mt-2  d-flex justify-content-between align-items-center" ngbDropdownToggle [disabled]="!venueForm.get('venueType')?.value "
+                [ngClass]="{'is-invalid border border-danger': venueForm.get('supportedCategories')?.touched && venueForm.get('supportedCategories')?.invalid}">
                 {{ categories.controls.length > 0 ? venueForm.get('supportedCategories')?.value.join(', ').toUpperCase()
                 : 'Select Categories' }}
             </button>

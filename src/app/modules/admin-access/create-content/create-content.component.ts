@@ -49,9 +49,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.tempFormArray = this.fb.array([])
     this.setToday()
     this.eventShowForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.pattern(/^[A-Za-z]+(?:\s[A-Za-z]+)*$/)
+      name: ['', [Validators.required, Validators.minLength(4), this.nameValidator(), Validators.maxLength(50),
       ]],
-      description: ['', [Validators.required, Validators.minLength(30), Validators.pattern(/^(?!\s)(.*\S)?$/)]],
+      description: ['', [Validators.required, Validators.minLength(30), this.descriptionValidator(), Validators.maxLength(250),]],
       runTime: [null, [Validators.required]],
       eventType: ['', [Validators.required]],  // Movie | Sports | Event | Plays | Activities
       imageurl: ['', [Validators.required]],
@@ -67,12 +67,62 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getData()
   }
 
+
   /**
-* @description getLayouts of particular screen
-* @author Inzamam
-* @params screen object
-* @return FormArray
-*/
+  * @description custom validator that validates venueName
+  * @author Inzamam
+  * @returnType boolean
+  */
+  nameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      if (/^\s|\s$/.test(control.value)) {
+        return { invalidSpace: true };
+      }
+
+      if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
+        return { invalidCharacter: true };
+      }
+
+      if (/^-|-$/.test(control.value)) {
+        return { invalidHyphen: true };
+      }
+
+      return null;
+    };
+  }
+
+
+  /**
+    * @description custom validator that validates venueName
+    * @author Inzamam
+    * @returnType boolean
+    */
+  descriptionValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      if (/^\s|\s$/.test(control.value)) {
+        return { invalidSpace: true };
+      }
+
+      if (!/^[A-Za-z0-9-@\s]+$/.test(control.value)) {
+        return { invalidCharacter: true };
+      }
+
+      if (/^[-@]|[-@]$/.test(control.value)) {
+        return { invalidHyphen: true };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+  * @description getLayouts of particular screen
+  * @author Inzamam
+  * @params screen object
+  * @return FormArray
+  */
   getLayouts(screen: AbstractControl): FormArray {
     return screen.get('layouts') as FormArray;
   }
@@ -86,10 +136,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description getter function to get screens as FormArray
-* @author Inzamam
-* @return FormArray
-*/
+  * @description getter function to get screens as FormArray
+  * @author Inzamam
+  * @return FormArray
+  */
   createScreen(screen: any, venueName: string, venueId: string): FormGroup {
     return this.fb.group({
       screenName: [screen.screenName, Validators.required],
@@ -113,9 +163,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description handler for event type change
-* @author Inzamam
-*/
+  * @description handler for event type change
+  * @author Inzamam
+  */
   onEventTypeChange() {
     this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
@@ -200,9 +250,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
 
   /**
-* @description function to fetch all cities array
-* @author Inzamam
-*/
+  * @description function to fetch all cities array
+  * @author Inzamam
+  */
   fetchCities() {
     this.commonService.getAllCities().subscribe({
       next: (res) => {
@@ -216,9 +266,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description handler for venue name change
-* @author Inzamam
-*/
+  * @description handler for venue name change
+  * @author Inzamam
+  */
   onVenueNameChange() {
     const selectedVenueName = (this.eventShowForm.get('venueName') as FormArray)?.value;
     this.selectedVenueObj = this.venuesNameList.filter(v =>
@@ -236,10 +286,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description function that creates form group of show
-* @author Inzamam
-* @return FormGroup
-*/
+  * @description function that creates form group of show
+  * @author Inzamam
+  * @return FormGroup
+  */
   createShow() {
     return this.fb.group({
       date: ['', Validators.required],
@@ -248,72 +298,72 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description function to get shows from screen
-* @author Inzamam
-* @params Screen obj
-* @return FormArray
-*/
+  * @description function to get shows from screen
+  * @author Inzamam
+  * @params Screen obj
+  * @return FormArray
+  */
   // for movies
   getShows(screen: AbstractControl): FormArray {
     return screen.get('shows') as FormArray;
   }
 
   /**
-* @description function to add show to screen 
-* @author Inzamam
-* @params Screen obj
-*/
+  * @description function to add show to screen 
+  * @author Inzamam
+  * @params Screen obj
+  */
   // for movies
   addShow(screen: AbstractControl) {
     this.getShows(screen).push(this.createShow())
   }
 
   /**
-* @description function to remove show from screen 
-* @author Inzamam
-* @params Screen obj
-*/
+  * @description function to remove show from screen 
+  * @author Inzamam
+  * @params Screen obj
+  */
   // for movies
   removeShow(screen: AbstractControl, index: number) {
-    if (index == 0) return
+    if (this.getShows(screen).length <= 1) return;
     this.getShows(screen).removeAt(index)
   }
 
   /**
-* @description get start time  of show
-* @author Inzamam
-* @param screen object
-* @return FormArray
-*/
+  * @description get start time  of show
+  * @author Inzamam
+  * @param screen object
+  * @return FormArray
+  */
   getStartTime(show: AbstractControl): FormArray {
     return show.get('startTime') as FormArray
   }
 
 
   /**
-* @description function to create showTime control
-* @author Inzamam
-*/
+  * @description function to create showTime control
+  * @author Inzamam
+  */
   createShowTime() {
     return this.fb.control('', [Validators.required])
   }
 
   /**
-* @description function to add showTime 
-* @author Inzamam
-* @params Show obj
-*/
+  * @description function to add showTime 
+  * @author Inzamam
+  * @params Show obj
+  */
   addShowTime(show: AbstractControl) {
     this.getStartTime(show).push(this.createShowTime())
   }
 
   /**
-* @description function to remove showTime 
-* @author Inzamam
-* @params Show obj
-*/
+  * @description function to remove showTime 
+  * @author Inzamam
+  * @params Show obj
+  */
   removeShowTime(show: AbstractControl, index: number) {
-    if (index == 0) return
+    if (this.getStartTime(show).length<=1) return;
     this.getStartTime(show).removeAt(index)
   }
 
@@ -333,7 +383,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   removeEventShow(index: number) {
-    if (index == 0) return
+    if (this.shows.length<=1) return
     this.shows.removeAt(index)
 
   }
