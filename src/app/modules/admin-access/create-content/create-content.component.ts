@@ -290,7 +290,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   * @return FormGroup
   */
-  createShow() {
+  createShow() { //for movies
     return this.fb.group({
       date: ['', Validators.required],
       startTime: this.fb.array([this.createShowTime()]),
@@ -335,7 +335,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @param screen object
   * @return FormArray
   */
-  getStartTime(show: AbstractControl): FormArray {
+  getStartTime(show: AbstractControl): FormArray { //shows
     return show.get('startTime') as FormArray
   }
 
@@ -344,7 +344,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @description function to create showTime control
   * @author Inzamam
   */
-  createShowTime() {
+  createShowTime() { //shows
     return this.fb.control('', [Validators.required])
   }
 
@@ -353,7 +353,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   * @params Show obj
   */
-  addShowTime(show: AbstractControl) {
+  addShowTime(show: AbstractControl) { //shows
     this.getStartTime(show).push(this.createShowTime())
   }
 
@@ -362,8 +362,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   * @params Show obj
   */
-  removeShowTime(show: AbstractControl, index: number) {
-    if (this.getStartTime(show).length<=1) return;
+  removeShowTime(show: AbstractControl, index: number) { //shows
+    if (this.getStartTime(show).length <= 1) return;
     this.getStartTime(show).removeAt(index)
   }
 
@@ -375,7 +375,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return ((layout.get('rows') as FormArray).value).length
   }
 
-  get shows(): FormArray {
+  get shows(): FormArray {//
     return this.eventShowForm.get('shows') as FormArray
   }
   addEventShow() {
@@ -383,7 +383,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   removeEventShow(index: number) {
-    if (this.shows.length<=1) return
+    if (this.shows.length <= 1) return
     this.shows.removeAt(index)
 
   }
@@ -400,6 +400,22 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     let today = new Date();
     this.minDate = today.toISOString().split('T')[0];
     return this.minDate
+  }
+
+  onStartOnChange() {
+    this.eventShowForm.get('endDate')?.setValue('');
+    console.log(this.eventShowForm.get('endDate')?.value)
+    this.shows.controls.forEach(show => {
+      show.get('date')?.setValue('')
+      console.log(show.get('date')?.value)
+    })
+  }
+
+  onEndOnChange() {
+    this.shows.controls.forEach(show => {
+      show.get('date')?.setValue('')
+      console.log(show.get('date')?.value)
+    })
   }
 
   setMinEndDate() {
@@ -662,6 +678,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       if (index != -1) this.city.removeAt(index);
 
     }
+    this.eventShowForm.get('city')?.markAsTouched()
+    this.eventShowForm.get('city')?.updateValueAndValidity();
     this.venueName.clear()
     this.venuesNameList = []
     this.callApiForCities();
@@ -712,6 +730,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.target.value)
       if (index != -1) this.venueName.removeAt(index);
     }
+    this.eventShowForm.get('venueName')?.markAsTouched()
+    this.eventShowForm.get('venueName')?.updateValueAndValidity();
 
     this.onVenueNameChange()
   }

@@ -42,6 +42,7 @@ interface Venue {
 })
 export class BuyTicketsComponent implements AfterViewInit {
   venueShowsDetails: any;
+  filteredVenueShowsDetails: any[] | null = null;
 
   constructor(public commonService: CommonService, private route: ActivatedRoute, private router: Router,
     private toaster: ToastrService
@@ -59,12 +60,76 @@ export class BuyTicketsComponent implements AfterViewInit {
   isOpen: boolean = false;
   searchValue: string = "";
 
+  selectedFilters: any[] = [];
+  priceFilters: any =
+    {
+      type: 'price',
+      data: [' ₹0 - 200', ' ₹201 - ₹400', ' ₹401 - ₹600']
+    }
+
+  preferedTimeFilters: any = {
+    type: 'preferedTime',
+    data: ['Morning,00:00-11:59', 'Afternoon,12:00-15:59', 'Evening,16:00-19:59', 'Night,20:00-23:59']
+  };
+
   ngOnInit() {
     this.initializeDateSelectionArray()
     this.commonService.setUserSelectedDate(this.dateSelectionArray[0]);
   }
   ngAfterViewInit() {
     this.fetchContentIdByUrl();
+  }
+
+  handleFilterChange(event: any, payload: any) {
+    let { type, value } = payload;
+    switch (type) {
+      case 'price': {
+        if (event.target.checked) {
+          this.selectedFilters.push({ type: type, value: value });
+        } else {
+          this.selectedFilters = this.selectedFilters.filter(item => item.value !== value);
+        }
+        break;
+      }
+      case 'preferedTime': {
+        if (event.target.checked) {
+          this.selectedFilters.push({ type: type, value: value });
+        } else {
+          this.selectedFilters = this.selectedFilters.filter(item => item.value !== value);
+        }
+        break;
+      }
+    }
+    this.getFilteredVenuesShowsList()
+  }
+  getFilteredVenuesShowsList() {
+    this.selectedFilters.forEach((filter: any) => {
+      switch (filter.type) {
+        case 'price': {
+          this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) => {
+            return venue.screens.some((screen: any) => {
+              return screen.showTimes.some((showTime: any) => {
+                return showTime.availableCategories.some((category: any) => {
+                  return Number(category.categoryPrice) <= Number(filter.value.split('-')[1]);
+                });
+              });
+            });
+          });
+          break;
+        }
+        case 'preferedTime': {
+          this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) => {
+            return venue.screens.some((screen: any) => {
+              return screen.showTimes.some((showTime: any) => {
+                // console.log((showTime.time >= (filter.value.split(',')[1]).split('-')[0]) && (showTime.time <= (filter.value.split(',')[1]).split('-')[1]))
+                return (showTime.time >= (filter.value.split(',')[1]).split('-')[0]) && (showTime.time <= (filter.value.split(',')[1]).split('-')[1])
+              });
+            });
+          });
+          break;
+        }
+      }
+    })
   }
 
   /**
@@ -89,7 +154,6 @@ export class BuyTicketsComponent implements AfterViewInit {
 * @params data[]
 * @return venues
 */
-
   mergeCategoriesWithShowIds(data: any[]): any[] {
     const venueMap = new Map<string, Venue>();
 
@@ -102,7 +166,6 @@ export class BuyTicketsComponent implements AfterViewInit {
         });
       }
       const venue = venueMap.get(item.venueId)!;
-
       let screen = venue.screens.find((s) => s.screenId === item.screenId);
       if (!screen) {
         screen = { screenId: item.screenId, showTimesMap: new Map() };
@@ -115,7 +178,6 @@ export class BuyTicketsComponent implements AfterViewInit {
           if (!screen!.showTimesMap.has(time)) {
             screen!.showTimesMap.set(time, { showIds: new Set(), categoryMap: new Map() });
           }
-
           const slot = screen!.showTimesMap.get(time)!;
           slot.showIds.add(showId);
           [timeSlot].forEach((cat: Category) => {
@@ -126,7 +188,6 @@ export class BuyTicketsComponent implements AfterViewInit {
         });
       });
     });
-
     const venues: any[] = Array.from(venueMap.values()).map((venue) => ({
       ...venue,
       screens: venue.screens.map((screen) => ({
