@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-booking-events',
@@ -12,22 +13,27 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './booking-events.component.scss'
 })
 export class BookingEventsComponent implements OnInit {
-  money!: number 
+
+  constructor(private authService: AuthService, private commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private router: Router, private location: Location, private modalService: NgbModal) {
+    this.user = this.authService.getUserFromToken()
+  }
+
+  user!: any;
+  money!: number
   totalMoney: number = 0;
   value: number = 1;
   add: boolean = false;
   allShows: any[] = []
-  title!: string | null 
+  title!: string | null
   date!: string | null
-   bookeSeats: any[] = []
-
-  constructor(private commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private router: Router, private location: Location, private modalService: NgbModal) {
-
-  }
+  bookeSeats: any[] = []
+  selectedSeats: any[] = []
+  eventId: any
 
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('eventname')
     this.date = this.route.snapshot.paramMap.get('date')
+    this.eventId = this.route.snapshot.paramMap.get('id')
     this.getShows()
   }
 
@@ -55,9 +61,9 @@ export class BookingEventsComponent implements OnInit {
   }
 
   getShows() {
-    let eventId: string | null = this.route.snapshot.paramMap.get('id')
-    let date: string | null = this.route.snapshot.paramMap.get('date')
-    this.commonService.getShowsById(eventId, date).subscribe({
+    this.eventId = this.route.snapshot.paramMap.get('id')
+    this.date = this.route.snapshot.paramMap.get('date')
+    this.commonService.getShowsById(this.eventId, this.date).subscribe({
       next: (res) => {
         this.allShows = res.data
         this.money = this.allShows[0]?.shows[0]?.availableCategories[0]?.categoryPrice
@@ -83,12 +89,31 @@ export class BookingEventsComponent implements OnInit {
     });
     modalRef.result.then((result) => {
       if (result === 'Book') {
-        this.toastr.success(`your ticekt for ${this.title} booked successfully `)
+        let sendPayLoad = [
+          {
+            "userId": this?.user?.userId,
+            "eventId": this.eventId,
+            "venueId": this.allShows[0]?.venueId,
+            "showId": this.allShows[0]?.showId,
+            "date": this.date,
+            "time": this.allShows[0]?.time,
+            "reservedSeats": this.selectedSeats
+          }
+        ]
+
+        this.commonService.bookUserSeats(sendPayLoad).subscribe({
+          next: (res) => {
+            console.log(res)
+          },
+          error: (err) => {
+            this.toastr.error(err.message)
+
+          }
+        })
       }
       setTimeout(() => {
         this.router.navigate(['/explore/home'])
       }, 300)
-
     })
   }
 
@@ -97,9 +122,14 @@ export class BookingEventsComponent implements OnInit {
     "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
   ]
   generateRandomCode() {
-    const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)]
-    const randomNumber = String(Math.floor(Math.random() * 100)).padStart(2, '0');
-    this.bookeSeats.push(`${randomLetter}-${randomNumber}`);
+    const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)];
+    const randomNumber = String(Math.floor(Math.random() * 100));
+    const newSeat = `${randomLetter}${randomNumber}`;
+    this.selectedSeats.push(newSeat);
+    localStorage.setItem('selectedSeats', JSON.stringify(this.selectedSeats));
+    if (!this.selectedSeats.includes(newSeat)) {
+      this.selectedSeats.push(newSeat);
+    }
+
   }
-  
 }

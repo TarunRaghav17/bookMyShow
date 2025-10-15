@@ -7,13 +7,20 @@
                     <h3>{{eventDetails?.name}}</h3>
                 </div>
                 <div class="col-4 me-3">
-                    <i class="fa fa-share me-2" aria-hidden="true" (click)="openShareModal(shareModal)"></i>
-                    <span class="me-3">Share</span>
-                    @if(authService.userDetailsSignal()?.role == 'ADMIN'){
-                    <i class="fa fa-trash-o me-2 text-danger" aria-hidden="true"
-                        (click)="handleDeleteEvent(confirmDeleteModal)"></i>
-                    <span class="text-danger">Delete</span>
-                    }
+                    <div class="d-flex">
+                        <div>
+                            <i class="fa fa-share me-2" aria-hidden="true"></i>
+                            <span class="me-3 share_text" (click)="openShareModal(shareModal)">Share</span>
+                        </div>
+                        @if(authService.userDetailsSignal()?.role == 'ADMIN'){
+                        <div>
+                            <i class="fa fa-trash-o me-2 text-danger" aria-hidden="true"></i>
+                            <span class="text-danger delete_text"
+                                (click)="handleDeleteEvent(confirmDeleteModal)">Delete</span>
+                        </div>
+
+                        }
+                    </div>
                 </div>
             </div>
             <div class="col-8 d-flex justify-content-start gap-5 align-items-start">
@@ -48,7 +55,7 @@
                             <div class="d-flex flex-column gap-2">
                                 <img [src]="commonService.getImageFromBase64(item.castImg)" [alt]="item.castImg"
                                     class="rounded-4 w-75 h-75">
-                                <h6 class="m-0">{{item.actorName}}</h6>
+                                <h6 class="m-0">{{item?.actorName}}</h6>
                             </div>
                             }
                         </div>
@@ -59,7 +66,9 @@
                         <i class="fa fa-ticket fs-1 text-danger" aria-hidden="true"></i>
                         <p class="px-3 my-0"> Contactless Ticketing & Fast-track Entry with M-ticket.</p>
                     </div>
-                    <h3 class="py-3 terms_condotion" (click)="openCityModal(serviceModal)">Terms & Conditions <span>></span></h3>
+                    <h3 class="py-3 terms_condotion" (click)="openCityModal(serviceModal)">Terms & Conditions
+                        <span>></span>
+                    </h3>
                 </div>
                 <div class="col-3 side_card_details">
                     <div class="border h-100 rounded-4 bg-white ">
@@ -90,12 +99,14 @@
                                 <span>Age Limit {{eventDetails?.ageLimit}}yrs +</span>
                             </div>
 
+                            @if(eventDetails?.languages.length){
                             <div class="d-flex align-items-center gap-2 overflow-hidden  ">
                                 <i class="fa fa-language" aria-hidden="true"></i>
                                 @for (lang of eventDetails?.languages; track $index) {
                                 <span>{{lang}}</span>
                                 }
                             </div>
+                            }
 
                             <div class="d-flex align-items-center gap-3">
                                 <img src="https://assets-in.bmscdn.com/nmcms/synopsis/genre.png" alt="genre"
@@ -136,7 +147,7 @@
 <div class="top_bar d-flex justify-content-center align-items-center bg-white border shadow-sm"
     [class.show]="showHeader">
     <div class="col-8 d-flex align-items-center gap-3 py-3">
-        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3" aria-hidden="true"
+        <h3>{{eventDetails?.name}}</h3> <span><i class="fa fa-share-alt fs-3 share_text" aria-hidden="true"
                 (click)="openShareModal(shareModal)"></i>
         </span>
     </div>
