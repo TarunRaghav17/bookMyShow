@@ -348,11 +348,11 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   */
   createShowTime() { //shows
-    return this.fb.group({
-      sTime: ['', [Validators.required, this.validateStartTime()]],
-      eTime: [{ value: '', disabled: true }, Validators.required]
-    })
-    // control('', [Validators.required])
+    // return this.fb.group({
+    //   sTime: ['', [Validators.required, this.validateStartTime()]],
+    //   eTime: [{ value: '', disabled: true }, Validators.required]
+    // })
+    return this.fb.control('', [Validators.required])
   }
 
   /**
@@ -363,6 +363,28 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   addShowTime(show: AbstractControl) { //shows
     this.getStartTime(show).push(this.createShowTime())
   }
+
+
+  /**
+* @description function that add or removes show time based on checked or unchecked
+* @author Inzamam
+* @params payload:event
+*/
+  toggleShowTime(event: any, show: AbstractControl) {
+    // ...
+    if (event.target.checked) {
+      this.getStartTime(show).push(this.fb.control(event.target.value));
+    } else {
+      let index = this.getStartTime(show).controls.findIndex((ctrl) => ctrl.value === event.target.value)
+      if (index != -1) this.city.removeAt(index);
+
+    }
+    this.eventShowForm.get('city')?.markAsTouched()
+    this.eventShowForm.get('city')?.updateValueAndValidity();
+  }
+
+
+
 
   /**
   * @description function to remove showTime 
@@ -400,52 +422,50 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
 
 
-  getAllStartTimesExcept(currentGroup: FormGroup): string[] {
-
-    const startTimeArray = this.getStartTime(currentGroup); // your formArray getter
+  getAllStartTimesExcept(currentGroup: FormGroup, show: any): string[] {
+    console.log(this.getStartTime(show))
+    const startTimeArray = this.getStartTime(show);
+    console.log(startTimeArray) // your formArray getter
     return startTimeArray.controls
       .filter(g => g !== currentGroup)
       .map(g => g.get('sTime')?.value)
       .filter(Boolean);
+
   }
 
-  handleOnShowTimeChange(group: any) {
-    console.log(group)
+  handleOnShowTimeChange(group: any, show: any) {
     const startTime = group.get('sTime')?.value;
     const duration = this.eventShowForm.get('runTime')?.value;
-
+    console.log(startTime)
     if (!startTime || !duration) return;
 
     // 1️⃣ Check if startTime is in available slots
     const isAvailable = this.availableSlots.some(
       slot => slot.start === startTime
     );
-
+    console.log(isAvailable)
     if (!isAvailable) {
       group.get('sTime')?.setErrors({ invalidSlot: true });
       return;
     }
 
-    // 2️⃣ Check if the startTime is already taken by another slot in the FormArray
-    const startTimesInForm = this.getAllStartTimesExcept(group);
+    //  if the startTime is already taken by another slot in the FormArray
+    const startTimesInForm = this.getAllStartTimesExcept(group, show);
+    console.log(startTimesInForm)
     if (startTimesInForm.includes(startTime)) {
       group.get('sTime')?.setErrors({ duplicateSlot: true });
       return;
     }
 
-    // 3️⃣ If valid, calculate and set end time
+    // If valid, calculate and set end time
     const [hours, minutes] = startTime.split(':').map(Number);
     const startDate = new Date();
     startDate.setHours(hours, minutes, 0, 0);
-
 
     const endDate = new Date(startDate.getTime() + duration * 60000);
     const endHours = String(endDate.getHours()).padStart(2, '0');
     const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
     const endTime = `${endHours}:${endMinutes}`;
-
-
-    // const endTime = `${String(endDate.getHours()).padStart(2, '0')}:${String(endDate.getMinutes()).padStart(2, '0')}`;
 
     group.get('eTime')?.setValue(endTime);
     group.get('sTime')?.setErrors(null); // clear any previous error
@@ -556,10 +576,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       minDate?.setDate(today.getDate() + index);
       return minDate?.toISOString()?.split('T')[0]
     }
-
-
-
-
     return ''
   }
 
@@ -611,6 +627,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   availableSlots: any[] = []
   // generateSlots inside a free window
   generateSlots(freeStart: string, freeEnd: string, slotDurationMin: number, gapMin = 0): Slot[] {
+    console.log(freeStart, freeEnd, slotDurationMin, gapMin)
     const startM = this.timeToMinutes(freeStart);
     const endM = this.timeToMinutes(freeEnd);
     const out: Slot[] = [];
@@ -622,12 +639,13 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       out.push({ start: this.minutesToTime(s), end: this.minutesToTime(e) });
       cur = e + gapMin;
     }
-    console.log(out)
+
     this.availableSlots = out
+    console.log(this.availableSlots)
     return out;
   }
 
-  // validate new slot doesn't overlap any selected slot (touching edges allowed)
+  // validate new slot doesn't overlap any selected slot
   isSlotValid(newSlot: Slot, selected: Slot[]): boolean {
     const ns = this.timeToMinutes(newSlot.start);
     const ne = this.timeToMinutes(newSlot.end);
@@ -651,38 +669,36 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   onShowFormSubmit(): void {
 
     const formValue = this.eventShowForm.getRawValue();
+   
     const selectedVenueIds = this.selectedVenueObj
       ?.filter((venue: any) => formValue.venueName?.includes(venue.venueName))
       .map((venue: any) => venue.id);
     let shows: any[] = [];
     if (formValue?.eventType === 'Movie') {
-      shows = formValue?.screens?.flatMap((screen: any) =>
-        screen.layouts.map((layout: any) => ({
-          venue: screen.venueId ?? screen.venueName,
-          screen: screen.screenId ?? screen.screenName,
-          layout: layout.id ?? layout.layoutName,
-          showPrice: Number(layout.price || 0),
-          showtimesdate: screen.shows?.map((show: any) => ({
-            showDate: show.date,
-            showTime: Array.isArray(show.startTime)
-              ? show.startTime.map((t: any) => `${t.sTime}-${t.eTime}`)
-              : [`${show.startTime.sTime}-${show.startTime.eTime}`],
-          })) ?? [],
-        }))
-      ) ?? [];
+      shows = formValue?.screens?.flatMap((screen: any) => ({
+        venue: screen.venueId ?? screen.venueName,
+        screen: screen.screenId ?? screen.screenName,
+        category: screen.layouts.map((layout: any) => ({ layout: layout.id ?? layout.layoutName, showPrice: Number(layout.price || 0), })),
+        showtimesdate: screen.shows?.map((show: any) => ({
+          showDate: show.date,
+          showTime: Array.isArray(show.startTime)
+            ? show.startTime.map((t: any) => t.sTime)
+            : [`${show.startTime.sTime}`],
+        })) ?? [],
+      }))
     }
 
     else {
       shows = selectedVenueIds.map((venueId: number) => ({
-        venue: venueId,  // assign each ID to its own show object
+        venue: venueId,
         screen: null,
-        layout: null,
+        category: null,
         showPrice: Number(formValue.price || 0),
         showtimesdate: formValue.shows?.map((show: any) => ({
           showDate: show.date,
           showTime: Array.isArray(show.startTime)
-            ? show.startTime.map((t: any) => `${t.sTime}-${t.eTime}`)
-            : [`${show.startTime.sTime}-${show.startTime.eTime}`],
+            ? show.startTime.map((t: any) => t.sTime)
+            : [`${show.startTime.sTime}`],
         })) ?? [],
       }));
     }
@@ -727,7 +743,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
 
     console.log(payload)
-    console.log(this.eventShowForm)
     //Validate & Submit
     if (this.eventShowForm.valid) {
       this.showService.createShow(payload, formValue.imageurl, payload.cast, payload.crew).subscribe({
