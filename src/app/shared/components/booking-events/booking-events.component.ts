@@ -31,11 +31,14 @@ export class BookingEventsComponent implements OnInit {
   eventId: any
 
   ngOnInit(): void {
-    this.title = this.route.snapshot.paramMap.get('eventname')
-    this.date = this.route.snapshot.paramMap.get('date')
-    this.eventId = this.route.snapshot.paramMap.get('id')
-    this.getShows()
+    this.title = this.route.snapshot.paramMap.get('eventname');
+    this.date = this.route.snapshot.paramMap.get('date');
+    this.eventId = this.route.snapshot.paramMap.get('id');
+    this.getShows();
+    this.selectedSeats = this.getSelectedSeats(this.eventId);
+    this.value = this.selectedSeats.length || 1;
   }
+
 
   addMember() {
     this.add = true;
@@ -52,9 +55,12 @@ export class BookingEventsComponent implements OnInit {
   decreaseCounter() {
     if (this.value > 1) {
       this.value--;
+      this.selectedSeats.pop();
+      this.setSelectedSeats(this.eventId, this.selectedSeats);
       this.updateTotalMoney();
     }
   }
+
 
   updateTotalMoney() {
     this.totalMoney = this.value * this.money;
@@ -79,14 +85,17 @@ export class BookingEventsComponent implements OnInit {
   }
 
   bookingConfirmation(confirmModal: TemplateRef<any>) {
-    for (let i = 0; i < this.value; i++) {
-      this.generateRandomCode()
+    const seatsToGenerate = this.value - this.selectedSeats.length;
+    for (let i = 0; i < seatsToGenerate; i++) {
+      this.generateRandomCode();
     }
+
     const modalRef = this.modalService.open(confirmModal, {
       ariaLabelledBy: 'modal-basic-title',
       modalDialogClass: 'no-border-modal',
       backdrop: 'static'
     });
+
     modalRef.result.then((result) => {
       if (result === 'Book') {
         let sendPayLoad = [
@@ -102,18 +111,12 @@ export class BookingEventsComponent implements OnInit {
         ]
 
         this.commonService.bookUserSeats(sendPayLoad).subscribe({
-          next: (res) => {
-            console.log(res)
-          },
-          error: (err) => {
-            this.toastr.error(err.message)
-
-          }
+          next: (res) => console.log(res),
+          error: (err) => this.toastr.error(err.message)
         })
       }
-      setTimeout(() => {
+      this.toastr.success(`ticket booked successfully for ${this.title}`)
         this.router.navigate(['/explore/home'])
-      }, 300)
     })
   }
 
@@ -122,14 +125,33 @@ export class BookingEventsComponent implements OnInit {
     "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
   ]
   generateRandomCode() {
-    const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)];
-    const randomNumber = String(Math.floor(Math.random() * 100));
-    const newSeat = `${randomLetter}${randomNumber}`;
+    let newSeat;
+    do {
+      const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)];
+      const randomNumber = String(Math.floor(Math.random() * 100)).padStart(2, '0');
+      newSeat = `${randomLetter}${randomNumber}`;
+    } while (this.selectedSeats.includes(newSeat));
     this.selectedSeats.push(newSeat);
-    localStorage.setItem('selectedSeats', JSON.stringify(this.selectedSeats));
-    if (!this.selectedSeats.includes(newSeat)) {
-      this.selectedSeats.push(newSeat);
-    }
-
+    this.setSelectedSeats(this.eventId, this.selectedSeats);
   }
+
+  getSelectedSeats(eventId: string | number): string[] {
+    const allEvents: { eventId: string | number, selectedSeats: string[] }[] =
+      JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
+    const event = allEvents.find(e => e.eventId == eventId);
+    return event ? event.selectedSeats : [];
+  }
+
+  setSelectedSeats(eventId: string | number, seats: string[]) {
+    let allEvents: { eventId: string | number, selectedSeats: string[] }[] =
+    JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
+    const index = allEvents.findIndex(e => e.eventId == eventId);
+    if (index > -1) {
+      allEvents[index].selectedSeats = seats;
+    } else {
+      allEvents.push({ eventId, selectedSeats: seats });
+    }
+    localStorage.setItem('selectedSeatsByEvent', JSON.stringify(allEvents));
+  }
+
 }
