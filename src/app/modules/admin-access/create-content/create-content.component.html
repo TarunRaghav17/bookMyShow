@@ -339,7 +339,8 @@
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
                                         class="text-danger reuired">*</small></span>
                                 <input type="date" class="form-control me-3 w-25 " formControlName="date"
-                                    [min]="validateShowStartDate($index)">
+                                    [min]="validateShowStartDate($index)"
+                                    (change)="generateSlots('12:00','18:00',60,30)">
                                 <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add
                                 </button>
                                 <button class="btn btn-outline-danger ms-3"
@@ -355,28 +356,22 @@
                                         <button class="btn btn-close  ms-auto"
                                             (click)="removeShowTime(show, $index)"></button>
 
-                                        <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                            <span class="fw-semibold col-4 fs-6 p-0"> Start Time: <small
-                                                    class="text-danger reuired">*</small></span>
-                                            <select class="form-select form-select-sm" [formControlName]="$index">
-                                                <option value="" disabled selected>Select</option>
-                                                @for(slot of ['11:00','13:00','15:00','18:00',];track $index){
-                                                <option value={{slot}}>
-                                                    {{slot}}
-                                                </option>
-                                                }
-                                                @empty {
-                                                <option disabled>No slots</option>
-                                                }
-                                            </select>
+                                        <!-- start -->
+                                        <div class="d-flex align-items-center justify-content-center flex-column gap-2 w-100"
+                                            [formGroupName]="$index">
+                                            <div class="d-flex align-items-center justify-content-center gap-2 w-100">
+                                                <span class="fw-semibold col-4 fs-6 p-0">Start Time: <small
+                                                        class="text-danger reuired">*</small></span>
+                                                <input type="time" class="form-control form-control-sm w-100 "
+                                                    formControlName="sTime" (change)="handleOnShowTimeChange(time)" />
+                                            </div>
+                                            <div class="d-flex align-items-center justify-content-center gap-2 w-100">
+                                                <span class="fw-semibold col-4 fs-6 p-0">End Time: <small
+                                                        class="text-danger reuired">*</small></span>
+                                                <input type="time" class="form-control form-control-sm w-100 "
+                                                    formControlName="eTime" />
+                                            </div>
                                         </div>
-                                        <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                            <span class="fw-semibold col-4 fs-6 p-0">End: <small
-                                                    class="text-danger reuired">*</small></span>
-                                            <input type="time" class="form-control form-control-sm w-100 "
-                                                [disabled]="true" [formControlName]="$index" />
-                                        </div>
-
                                     </div>
                                 </div>
                                 }
@@ -405,7 +400,13 @@
                     <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
                             class="text-danger reuired">*</small></span>
                     <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
-                        [max]="validateShowEndDate()" formControlName="date">
+                        [max]="validateShowEndDate()" formControlName="date"
+                        (change)="generateSlots('12:00','18:00',60,30)">
+                    <div class="d-flex align-items-center gap-1   flex-wrap w-75 px-3">
+                        @for(slot of availableSlots;track $index){
+                        <span class="border border-success px-1 rounded-pill">{{`${slot.start}-${slot.end}`}}</span>
+                        }
+                    </div>
                     <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add </button>
                     <button class="btn btn-outline-danger ms-3" [disabled]=" this.shows.length<=1"
                         (click)="removeEventShow($index)">Remove</button>
@@ -419,10 +420,32 @@
                             <button class="btn btn-close  ms-auto" [disabled]="getStartTime(show).length <= 1"
                                 (click)="removeShowTime(show, $index)">
                             </button>
-                            <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                <span class="fw-semibold col-4 fs-6 p-0">Start: <small
-                                        class="text-danger reuired">*</small></span>
-                                <select class="form-select form-select-sm" [formControlName]="$index">
+                            <div class="d-flex align-items-center justify-content-center flex-column gap-2 w-100"
+                                [formGroupName]="$index">
+
+
+                                <div class="d-flex align-items-center justify-content-center gap-2 w-100">
+                                    <span class="fw-semibold col-4 fs-6 p-0">Start: <small
+                                            class="text-danger reuired">*</small></span>
+                                    <input type="time" class="form-control form-control-sm w-100 "
+                                        formControlName="sTime" (change)="handleOnShowTimeChange(time)"
+                                        [ngClass]="{'is-invalid':time.get('sTime')?.touched && time.get('sTime')?.hasError('invalidSlot')}" />
+                                </div>
+                                <div class="d-flex align-items-center justify-content-center gap-2 w-100">
+                                    <span class="fw-semibold col-4 fs-6 p-0">End: <small
+                                            class="text-danger reuired">*</small></span>
+                                    <input type="time" class="form-control form-control-sm w-100 "
+                                        formControlName="eTime" />
+                                </div>@if(time.get('sTime')?.touched &&
+                                time.get('sTime')?.hasError('invalidSlot')) {
+                                <div class="text-danger small">
+                                    Invalid start time
+                                </div>
+                                }
+
+
+
+                                <!-- <select class="form-select form-select-sm" [formControlName]="$index">
                                     <option value="" disabled selected>Select</option>
                                     @for(slot of ['11:00', '13:00', '15:00', '18:00']; track $index) {
                                     <option [value]="slot">{{ slot }}</option>
@@ -430,13 +453,9 @@
                                     @empty {
                                     <option disabled>No slots</option>
                                     }
-                                </select>
+                                </select>  -->
                             </div>
-                            <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                <span class="fw-semibold col-4 fs-6 p-0">End: <small
-                                        class="text-danger reuired">*</small></span>
-                                <input type="time" class="form-control form-control-sm w-100 " [disabled]="true" />
-                            </div>
+
                         </div>
                     </div>
                     }
