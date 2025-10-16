@@ -95,7 +95,11 @@
 <div class="sub_profile_header">
     <div class="col-6">
         <div class="sub_header_profile_cotainer">
+
             <div class="sub_header_left">
+                @if(authService.userDetailsSignal().role == 'USER'){
+                <a [routerLink]="['my-profile/your-order']" routerLinkActive="active">Your Orders</a>
+                }
                 <a [routerLink]="['my-profile/edit']" routerLinkActive="active">Profile</a>
             </div>
         </div>
@@ -179,7 +183,7 @@
                     <div class="d-flex gap-2 align-items-center">
                         <i class="fa fa-shopping-bag" aria-hidden="true"></i>
                         <div class="info_text">
-                            <p class="m-0" [routerLink]="['/my-profile/your-events-list']">Your Events</p>
+                            <p class="m-0" [routerLink]="['/admin/list/content']">Your Events</p>
                             <span>View all your Events </span>
                         </div>
                     </div>
