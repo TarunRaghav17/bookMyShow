@@ -53,7 +53,7 @@ export class HeaderComponent implements OnInit {
     public authService: AuthService,
     private sanitizer: DomSanitizer,
     private toastr: ToastrService,
-    private route :Router
+    private route: Router
   ) {
     this.selectedCategory = this.commonService._selectedCategory()
     this.selectedCity = this.commonService._selectCity()
@@ -135,7 +135,7 @@ export class HeaderComponent implements OnInit {
     this.commonService._selectCity.set(city);
     this.selectedCity = this.commonService._selectCity();
     this.showCities = false
-    this.route.navigate(['/explore/home/',city])
+    this.route.navigate(['/explore/home/', city])
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
     if (modalRef) {
       modalRef.close();
@@ -148,17 +148,30 @@ export class HeaderComponent implements OnInit {
    * @return void
    */
   logout(): void {
-    if (this.authService.getUserRole()) {
-      this.authService.logout();
-      this.toastr.success('logut SuccessFull')
+    const user = this.authService.userDetailsSignal();
+    if (user?.userId) {
+      this.authService.logout(user.userId).subscribe({
+        next: (res: any) => {
+          this.authService.clearUserDetails();
+          this.route.navigate(['/']);
+          this.toastr.success(res.message);
+        },
+        error: (err: any) => {
+          this.toastr.error(err.message);
+        }
+      });
+    } else {
+      this.authService.clearUserDetails();
+      this.route.navigate(['/']);
     }
   }
+
   /**
   * @description Only change Url here 
   * @author Gurmeet Kumar
   * @return void
   */
- 
+
   /**
    * @description Get list of all cities from backend
    * @author Gurmeet Kumar

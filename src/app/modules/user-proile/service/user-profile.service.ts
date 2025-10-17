@@ -54,4 +54,13 @@ export class UserProfileService {
   getUserById(id: any) {
     return this.http.get(`${this.baseUrl}/api/users/${id}/profile`)
   }
+
+  /**
+   * @description getshow by UserId
+   * @author Gurmeet Kumar
+   * @param id
+   */
+  getAllShowByUserId(id: any) {
+    return this.http.get(`${this.baseUrl}/api/bookings/user/${id}/shows`)
+  }
 }

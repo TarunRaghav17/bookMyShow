@@ -3,7 +3,6 @@ import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { jwtDecode } from "jwt-decode";
-import { Router } from '@angular/router';
 import * as CryptoJS from 'crypto-js';
 import { CommonService } from '../services/common.service';
 import { LoaderService } from '../services/loader.service';
@@ -16,7 +15,7 @@ export class AuthService {
   encrypted!: string;
   baseUrl = environment.baseUrl;
   tokenSignal = signal<string | null>(localStorage.getItem('token'));
-  constructor(private http: HttpClient, private router: Router, private commonService: CommonService, private loaderService: LoaderService) {
+  constructor(private http: HttpClient, private commonService: CommonService, private loaderService: LoaderService) {
   }
 
   /**
@@ -29,7 +28,8 @@ export class AuthService {
    * Clear decoded user details from token
    * @author Gurmeet Kumar
    */
-  clearUserDetails() {
+  clearUserDetails(): void {
+    localStorage.removeItem('token');
     this.userDetailsSignal.set(null);
   }
   /**
@@ -74,10 +74,8 @@ export class AuthService {
    * @author Gurmeet Kumar
    * @return void
    */
-  logout(): void {
-    localStorage.removeItem('token');
-    this.router.navigate(['/']);
-    this.userDetailsSignal.set(null);
+  logout(userId: number): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/auth/logout?userId=${userId}`, userId)
   }
 
   /**
