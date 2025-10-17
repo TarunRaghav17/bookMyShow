@@ -305,6 +305,8 @@
     display: none;
 }
 
+
+
 .time-btn {
     background: white;
     color: black;
@@ -318,19 +320,23 @@
     background: rgb(0, 200, 83);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+
 .date_disabled {
-  opacity: 0.5;
-  color: rgb(170, 170, 170);
-   cursor: not-allowed !important
+    opacity: 0.5;
+    color: rgb(170, 170, 170);
+    z-index: -1;
+    cursor: not-allowed !important
 }
-.date_card{
+
+.date_card {
     cursor: pointer;
 }
- 
-i{
+
+i {
     cursor: pointer;
 }
-.no_shows{
+
+.no_shows {
     margin-left: 170px;
     margin-top: 60px;
 }
