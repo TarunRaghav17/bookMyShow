@@ -52,7 +52,7 @@
                 </thead>
                 <tbody>
                     @for (venue of filteredVenuesList || venuesList; track $index) {
-                    @if(venue.venueName.toLowerCase().includes(searchValue)){
+                    @if(venue.venueName.toLowerCase().includes(searchValue.toLowerCase())){
                     <tr>
                         <td>{{ $index +1}}</td>
                         <td>{{ venue.venueName }}</td>

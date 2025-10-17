@@ -296,7 +296,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   createShow() { //for movies
     return this.fb.group({
       date: ['', Validators.required],
-      startTime: this.fb.array([this.createShowTime()]),
+      startTime: this.fb.array([], Validators.required),
     })
   }
 
@@ -371,16 +371,19 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 * @params payload:event
 */
   toggleShowTime(event: any, show: AbstractControl) {
+
     // ...
+    let slot = JSON.parse(event.target.value);
+    console.log(event.target.value)
     if (event.target.checked) {
-      this.getStartTime(show).push(this.fb.control(event.target.value));
+      console.log(slot.start)
+      this.getStartTime(show).push(this.fb.control(slot.start));
+      console.log(this.getStartTime(show));
     } else {
-      let index = this.getStartTime(show).controls.findIndex((ctrl) => ctrl.value === event.target.value)
-      if (index != -1) this.city.removeAt(index);
+      let index = this.getStartTime(show).controls.findIndex((ctrl) => ctrl.value === slot.start)
+      if (index != -1) this.getStartTime(show).removeAt(index);
 
     }
-    this.eventShowForm.get('city')?.markAsTouched()
-    this.eventShowForm.get('city')?.updateValueAndValidity();
   }
 
 
@@ -596,23 +599,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
 
-
-  //   generateSlots(freeWindowStart:any, freeWindowEnd:any, slotDuration:any, gap = 30) {
-  //   let slots = [];
-  //   let currentStart = freeWindowStart;
-
-  //   while (currentStart + slotDuration <= freeWindowEnd) {
-  //     let currentEnd = currentStart + slotDuration;
-  //     slots.push({ startTime: currentStart, endTime: currentEnd });
-
-  //     // move start pointer forward (slotDuration + gap)
-  //     currentStart = currentEnd + gap;
-  //   }
-  // console.log(slots)
-  //   // return slots;
-  // }
-
-  // helpers.ts
   timeToMinutes(hhmm: string): number {
     const [h, m] = hhmm.split(':').map(Number);
     return h * 60 + m;
@@ -645,20 +631,27 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return out;
   }
 
-  // validate new slot doesn't overlap any selected slot
-  isSlotValid(newSlot: Slot, selected: Slot[]): boolean {
-    const ns = this.timeToMinutes(newSlot.start);
-    const ne = this.timeToMinutes(newSlot.end);
-    if (ne <= ns) return false; // invalid time
-    for (const s of selected) {
-      const ss = this.timeToMinutes(s.start);
-      const se = this.timeToMinutes(s.end);
-      // overlap exists if NOT (new before existing OR new after existing)
-      if (!(ne <= ss || ns >= se)) {
-        return false;
+  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0) {
+    this.availableSlots = freeWindows.flatMap(window =>
+      this.generateSlots(window.startTime, window.endTime, slotDurationMin, gapMin)
+    );
+
+  }
+
+  fetchFreeTimeSlots(venueId: string, event: Event, screenId?: string) {
+    let selectedDate = event.target as HTMLInputElement;
+    this.contentService.getAvailableTimeSlots(venueId, selectedDate.value, screenId).subscribe({
+      next: (res) => {
+        if (res.data && res.statusCode != 500) {
+          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value)
+        }
+      },
+      error: (err) => {
+        this.availableSlots = this.generateSlots('12:00', '20:00', this.eventShowForm.get('runTime')?.value, 30)
+        this.toaster.error(err.error.message.split(':')[1])
+
       }
-    }
-    return true;
+    })
   }
 
 
@@ -669,7 +662,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   onShowFormSubmit(): void {
 
     const formValue = this.eventShowForm.getRawValue();
-   
+
     const selectedVenueIds = this.selectedVenueObj
       ?.filter((venue: any) => formValue.venueName?.includes(venue.venueName))
       .map((venue: any) => venue.id);
@@ -678,12 +671,12 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       shows = formValue?.screens?.flatMap((screen: any) => ({
         venue: screen.venueId ?? screen.venueName,
         screen: screen.screenId ?? screen.screenName,
-        category: screen.layouts.map((layout: any) => ({ layout: layout.id ?? layout.layoutName, showPrice: Number(layout.price || 0), })),
+        category: screen.layouts.map((layout: any) => ({ layout: layout.id ?? layout.layoutName, moviePrice: Number(layout.price || 0), })),
         showtimesdate: screen.shows?.map((show: any) => ({
           showDate: show.date,
           showTime: Array.isArray(show.startTime)
-            ? show.startTime.map((t: any) => t.sTime)
-            : [`${show.startTime.sTime}`],
+            ? show.startTime
+            : [show.startTime],
         })) ?? [],
       }))
     }
@@ -697,8 +690,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
         showtimesdate: formValue.shows?.map((show: any) => ({
           showDate: show.date,
           showTime: Array.isArray(show.startTime)
-            ? show.startTime.map((t: any) => t.sTime)
-            : [`${show.startTime.sTime}`],
+            ? show.startTime
+            : [show.startTime],
         })) ?? [],
       }));
     }
@@ -934,6 +927,17 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       this.toaster.error('Please upload a valid image file');
       return;
     }
+
+    const maxSizeMB = 2;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      return;
+    }
+
+
+
+
     const reader = new FileReader();
     reader.onload = () => {
       let base64String = (reader.result as string).split(',')[1];
