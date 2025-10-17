@@ -45,22 +45,14 @@
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Price Range</button>
         <ul class="dropdown-menu ">
-
+          @for(item of priceFilters.data;track $index ){
           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover">
             <label class="">
-              ₹0 - 200</label>
-            <input type="checkbox" class="form-check-input accent-blue" />
+              {{item}}</label>
+            <input type="checkbox" class="form-check-input accent-blue"
+              (change)="handleFilterChange($event,{type:'price',value:item})" />
           </li>
-          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover">
-            <label class="">
-              ₹201 - ₹400</label>
-            <input type="checkbox" class="form-check-input accent-blue" />
-          </li>
-          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover">
-            <label class="">
-              ₹401 - ₹600</label>
-            <input type="checkbox" class="form-check-input accent-blue" />
-          </li>
+          }
         </ul>
       </div>
       <div class="dropdown  border-start">
@@ -75,16 +67,14 @@
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
           data-bs-toggle="dropdown">Preferred Time</button>
         <ul class="dropdown-menu">
+          @for(item of preferedTimeFilters.data;track $index ){
           <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover ">
             <label class="">
-              Morning</label>
-            <input type="checkbox" class="form-check-input accent-blue" />
+              {{item.split(',')[0]}}</label>
+            <input type="checkbox" class="form-check-input accent-blue"
+              (change)="handleFilterChange($event,{type:'preferedTime',value:item})" />
           </li>
-          <li class="d-flex align-items-center gap-3 w-100  justify-content-between px-2 on_hover ">
-            <label class="">
-              Afternoon</label>
-            <input type="checkbox" class="form-check-input accent-blue" />
-          </li>
+          }
         </ul>
       </div>
       <!-- search  -->
@@ -99,10 +89,18 @@
       </div>
     </div>
   </div>
+  <!-- selectd filters array -->
+  <div class="d-flex flex-wrap gap-2 align-items-center justify-content-start ">
+    @for(filter of selectedFilters;track $index){
+    <div class="d-flex align-items-center gap-2 bg-danger text-light border rounded-pill px-2 py-1">
+      <span class="fw-thin">{{filter.value.split(',')[0]}} </span>
+    </div>
+    }
+  </div>
   <!-- Theatre List -->
   <div class="mb-4  bg-white">
     <!-- Theatres-->
-    @for(venue of venueShowsDetails;track $index){
+    @for(venue of selectedFilters.length>0 ? filteredVenueShowsDetails : venueShowsDetails;track $index){
     @if(venue.venueName?.toLowerCase().includes(searchValue.toLowerCase())){
     <div class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height:auto;">
       <div class="d-flex flex-column  " style="width:25rem">
@@ -133,7 +131,7 @@
             <div class="d-flex flex-column mx-1">
               <span>₹{{cat.categoryPrice}}</span>
               <span class="p-0 m-0 ">
-                {{cat.categoryName}}
+                {{cat.categoryName | uppercase}}
               </span>
               <span class="p-0 m-0 text-success">{{cat.categoryStatus}}</span>
             </div>

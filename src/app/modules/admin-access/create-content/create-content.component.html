@@ -6,26 +6,41 @@
             <!-- Name -->
             <div class="row">
                 <div class="mb-3 w-50">
-                    <label class="form-label">Name</label>
+                    <label class="form-label">Name
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="text" class="form-control" formControlName="name" placeholder="Enter name"
-                        [ngClass]="{'is-invalid': isInvalid('name')}" />
+                        [ngClass]="{'is-invalid':eventShowForm.get('name')?.touched && eventShowForm.get('name')?.invalid }" />
                     @if(eventShowForm.get('name')?.touched &&
                     eventShowForm.get('name')?.hasError('required')){
-                    <div class="invalid-feedback">Name is required.</div>
+                    <div class="invalid-feedback">Content name is required.</div>
                     }
-                    @if(eventShowForm.get('name')?.touched &&
-                    eventShowForm.get('name')?.hasError('pattern')&&eventShowForm.get('name')?.invalid){
-                    <div class="invalid-feedback">Cannot Start or End with Space.</div>
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('minlength')){
+                    <div class="invalid-feedback">Min.Length is 4 Char</div>
                     }
-                    @if(eventShowForm.get('name')?.touched &&
-                    eventShowForm.get('name')?.hasError('pattern')&&eventShowForm.get('name')?.value){
-                    <div class="invalid-feedback">Only alphabets are allowed</div>
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('maxlength')){
+                    <div class="invalid-feedback">Max.Length is 50 Char</div>
+                    }
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('invalidSpace')){
+                    <div class="invalid-feedback">Name cannot start or end with spaces</div>
+                    } @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('invalidCharacter')){
+                    <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+                    }
+                    @if(eventShowForm.get('name')?.value &&
+                    eventShowForm.get('name')?.hasError('invalidHyphen')){
+                    <div class="invalid-feedback">Cannot start or end with a hyphen</div>
                     }
                 </div>
 
                 <!-- Poster -->
                 <div class="mb-3 w-50">
-                    <label class="form-label">Poster</label>
+                    <label class="form-label">Poster
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="file" class="form-control" (change)="handlePosterImgUpload($event,'imageurl')"
                         [ngClass]="{'is-invalid': isInvalid('imageurl')}" />
                     @if(isInvalid('imageurl')){
@@ -37,34 +52,44 @@
             </div>
             <!-- Description -->
             <div class="mb-3">
-                <label class="form-label">Description</label>
+                <label class="form-label">Description
+                    <small class="text-danger reuired">*</small>
+                </label>
                 <textarea class="form-control h-25" rows="3" formControlName="description"
-                    placeholder="Enter description" [ngClass]="{'is-invalid': isInvalid('description')}"></textarea>
-
-
-                @if(eventShowForm.get('description')?.touched &&
-                eventShowForm.get('description')?.hasError('minlength')){
-                <div class="invalid-feedback">Min.Description length is 30.</div>
-                }
+                    placeholder="Enter description"
+                    [ngClass]="{'is-invalid':eventShowForm.get('description')?.touched && eventShowForm.get('description')?.invalid }"></textarea>
                 @if(eventShowForm.get('description')?.touched &&
                 eventShowForm.get('description')?.hasError('required')){
                 <div class="invalid-feedback">Description is required.</div>
                 }
-                @if(eventShowForm.get('description')?.touched &&
-                eventShowForm.get('description')?.hasError('pattern')&&eventShowForm.get('description')?.invalid){
-                <div class="invalid-feedback">Cannot Start or End with Space.</div>
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('invalidSpace')){
+                <div class="invalid-feedback">Description cannot start or end with spaces</div>
+                } @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('invalidCharacter')){
+                <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>
+                }
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('invalidHyphen')){
+                <div class="invalid-feedback">Cannot start or end with a hyphen or &#64;</div>
+                }
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('minlength')){
+                <div class="invalid-feedback">Min.Length is 30 Char</div>
+                }
+                @if(eventShowForm.get('description')?.value &&
+                eventShowForm.get('description')?.hasError('maxlength')){
+                <div class="invalid-feedback">Max.Length is 250 Char</div>
                 }
             </div>
 
-            <!--date-->
             <div class="row">
-
-
-
                 <!--duration-->
                 <div class="w-50">
-                    <label class="form-label">Duration (min)</label>
-                    <input type="number" class="form-control" formControlName="runTime" min="20"
+                    <label class="form-label">Duration (min)
+                        <small class="text-danger reuired">*</small>
+                    </label>
+                    <input type="number" class="form-control" formControlName="runTime" min="20" max="360"
                         placeholder="Enter duration" />
                     @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('required')){
                     <div class="text-danger">
@@ -73,13 +98,20 @@
                     }
                     @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('min')){
                     <div class="text-danger">
-                        Duration must be greater than 20.
+                        Duration must be greater than 20 mins.
+                    </div>
+                    }
+                    @if(eventShowForm.get('runTime')?.touched && eventShowForm.get('runTime')?.hasError('max')){
+                    <div class="text-danger">
+                        Duration must be less than 360 mins.
                     </div>
                     }
                 </div>
                 <!-- Age Limit -->
                 <div class="mb-3 w-50">
-                    <label class="form-label">Age Limit</label>
+                    <label class="form-label">Age Limit
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="number" class="form-control" formControlName="ageLimit" min="3" max="90"
                         [ngClass]="{'is-invalid': isInvalid('ageLimit')}" />
                     @if(isInvalid('ageLimit')){
@@ -93,11 +125,14 @@
         <!-- Event Type -->
         <div class="row px-3 my-3 ">
             <div ngbDropdown class="w-50 mb-3">
-                <label class="form-label">Event Type</label>
-                <button class="btn btn-white border w-100 text-start" id="nameDropdown" ngbDropdownToggle>
+                <label class="form-label">Event Type
+                    <small class="text-danger reuired">*</small>
+                </label>
+                <button class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
+                    id="nameDropdown" ngbDropdownToggle>
                     {{ eventShowForm.get('eventType')?.value || 'Select Name' }}
                 </button>
-                <div ngbDropdownMenu aria-labelledby="nameDropdown" class="w-100">
+                <div ngbDropdownMenu aria-labelledby="nameDropdown" class="w-100 ">
                     @for(eventType of ['Movie','Sports','Event','Plays','Activities'];track $index){
                     <button ngbDropdownItem (click)="setEventType(eventType)">
                         {{ eventType }}
@@ -113,10 +148,15 @@
 
             <!--city-->
             <div ngbDropdown [autoClose]="'outside'" class=" w-50 mb-3 ">
-                <label class="form-label">City</label>
-                <button class="btn btn-white border w-100 text-start" ngbDropdownToggle>
+                <label class="form-label">City
+                    <small class="text-danger reuired">*</small>
+                </label>
+                <button class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
+                    [ngClass]="{'is-invalid':eventShowForm.get('city')?.touched && eventShowForm.get('city')?.invalid }"
+                    ngbDropdownToggle>
                     {{ city.controls.length > 0 ? eventShowForm.get('city')?.value.join(', ') : 'Select Cities' }}
                 </button>
+                <div class="invalid-feedback">City is required.</div>
                 @if(citiesArray){
                 <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
                     style="max-height: 200px; overflow-y: auto;">
@@ -139,13 +179,18 @@
         </div>
 
         <!--venue name -->
-        <div class="row mb-3 px-3  ">
-            <div ngbDropdown [autoClose]="'outside'" class="w-50 ">
-                <label class="form-label">Venue Name:</label>
-                <button class="btn btn-white border w-100 text-start" ngbDropdownToggle>
+        <div class="row px-3 my-3 ">
+            <div ngbDropdown [autoClose]="'outside'" class="w-50  ">
+                <label class="form-label">Venue Name:
+                    <small class="text-danger reuired">*</small>
+                </label>
+                <button class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
+                    [ngClass]="{'is-invalid':eventShowForm.get('venueName')?.touched && eventShowForm.get('venueName')?.invalid }"
+                    ngbDropdownToggle>
                     {{ venueName.controls.length > 0 ? eventShowForm.get('venueName')?.value.join(', ') :
                     'Select Venues' }}
                 </button>
+                <div class="invalid-feedback">Venue Name is required.</div>
                 <div ngbDropdownMenu aria-labelledby="cityDropdown" class="w-100 p-2"
                     style="max-height: 200px; overflow-y: auto;">
                     <!-- onVenueNameChange() -->
@@ -163,16 +208,13 @@
                     }
                 </div>
             </div>
-            @if(eventShowForm.get('venueName')?.touched && eventShowForm.get('venueName')?.invalid){
-            <div class="text-danger">
-                Venue name is required.
-            </div>
-            }
 
             @if(eventShowForm.get('eventType')?.value=='Movie'){
             <!-- Releasing On -->
-            <div class="mb-3 col-4">
-                <label class="form-label">Releasing On</label>
+            <div class="mb-3 w-50">
+                <label class="form-label">Releasing On
+                    <small class="text-danger reuired">*</small>
+                </label>
                 <input type="date" class="form-control" formControlName="releasingOn" [min]="setToday()"
                     [ngClass]="{'is-invalid': isInvalid('releasingOn')}" />
                 @if(isInvalid('releasingOn')){
@@ -184,12 +226,14 @@
             }
 
             @else if(eventShowForm.get('eventType')?.value!='Movie' && eventShowForm.get('eventType')?.value!=''){
-            <div class="d-flex align-items-center justify-content-center col-4 gap-2">
+            <div class="d-flex align-items-center justify-content-center  gap-2  w-50">
                 <!-- Starting On  -->
                 <div class="mb-3 w-100">
-                    <label class="form-label">Starting On</label>
+                    <label class="form-label">Starting On
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="date" class="form-control" formControlName="startDate" [min]="setToday()"
-                        [ngClass]="{'is-invalid': isInvalid('startDate')}" />
+                        [ngClass]="{'is-invalid': isInvalid('startDate')}" (change)="onStartOnChange()" />
                     @if(isInvalid('startDate')){
                     <div class="invalid-feedback">
                         Start Date is required.
@@ -197,18 +241,19 @@
                     }
                 </div>
 
-                <!-- Starting On  -->
+                <!-- ending On  -->
                 <div class="mb-3 w-100">
-                    <label class="form-label">Ending On</label>
+                    <label class="form-label">Ending On
+                        <small class="text-danger reuired">*</small>
+                    </label>
                     <input type="date" class="form-control" formControlName="endDate" [min]="setMinEndDate()"
-                        [ngClass]="{'is-invalid': isInvalid('endDate')}" />
+                        [ngClass]="{'is-invalid': isInvalid('endDate')}" (change)="onEndOnChange()" />
                     @if(isInvalid('endDate')){
                     <div class="invalid-feedback">
                         End Date is required.
                     </div>
                     }
                 </div>
-
             </div>
             }
         </div>
@@ -224,7 +269,7 @@
                     <div formArrayName="layouts" class="mb-1 w-100">
                         <span class="fs-5 fw-semibold">Categories</span>
                         @for(layout of getLayouts(screen).controls ;track $index){
-                        <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto px-3">
+                        <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto ">
                             <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                 <span class="my-0 fw-semibold"> Name: </span>
                                 <span class="bg-white text-dark  rounded   w-75">
@@ -243,32 +288,39 @@
                                     {{layout.get('cols')?.value}}
                                 </span>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                <span class="my-0 fw-semibold"> Total Seats: </span>
-                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                            <div class="d-flex align-items-center justify-content-center   gap-2 col-2">
+                                <span class="my-0 fw-semibold   w-100 "> Total Seats: </span>
+                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
                                     {{+layout.get('cols')?.value * +getRows(layout)}}
                                 </span>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                <span class="my-0 fw-semibold"> Price: </span>
-                                <input type="number" formControlName="price" min="100" max="4999"
-                                    class="form-control px-3 py-2 w-75 my-1">
-                                @if(layout.get('price')?.touched && layout.get('price')?.invalid){
-                                <div class="text-danger">
-                                    Price is required.
+                            <div class="d-flex align-items-center justify-content-center gap-2 col-4">
+                                <span class="my-0 fw-semibold d-flex" > Price:
+                                    <small class="text-danger reuired">*</small>
+                                </span>
+
+                                <div class="d-flex w-100 flex-column ">
+                                    <input type="number" formControlName="price" min="99" max="4999"
+                                        class="form-control px-3 py-2 w-50 my-1"
+                                        [ngClass]="{'is-invalid':layout.get('price')?.touched && layout.get('price')?.invalid }" />
+                                    @if(!layout.get('price')?.value && layout.get('price')?.touched ){
+                                    <div class="text-danger">
+                                        Price is required.
+                                    </div>
+                                    }
+                                    @if(layout.get('price')?.value && layout.get('price')?.hasError('min')){
+                                    <div class="text-danger">
+                                        Min. Price 99.
+                                    </div>
+                                    }
+                                    @if(layout.get('price')?.touched && layout.get('price')?.value &&
+                                    layout.get('price')?.hasError('max')){
+                                    <div class="text-danger">
+                                        Max. Price 4999
+                                    </div>
+                                    }
+
                                 </div>
-                                }
-                                @if(layout.get('price')?.touched && layout.get('price')?.hasError('min')){
-                                <div class="text-danger">
-                                    minimum ticket price should be 100 rs
-                                </div>
-                                }
-                                @if(layout.get('price')?.touched && layout.get('price')?.value &&
-                                layout.get('price')?.hasError('max')){
-                                <div class="text-danger">
-                                    minimum ticket price should be 4999 rs
-                                </div>
-                                }
                             </div>
                         </div>
                         }
@@ -284,31 +336,47 @@
                         <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
                             <!-- date control -->
                             <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
-                                <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
-                                <input type="date" class="form-control me-3 w-25" formControlName="date"
-                                    [min]="validateShowStartDate($index)">
-                                <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add
-                                </button>
-                                <button class="btn btn-outline-danger ms-3" [disabled]="$index==0"
-                                    (click)="removeShow(screen,$index)">Remove</button>
-                            </div>
-                            <!-- start-time array -->
-                            <div class=" d-flex align-items-center justify-content-start gap-4 w-100 flex-wrap"
-                                formArrayName="startTime">
-                                @for(time of getStartTime(show).controls ;track $index){
-                                <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                                    <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
-                                    <select class="form-select" [formControlName]="$index">
-                                        <option value="" disabled selected>Select</option>
-                                        @for(slot of ['11:00','13:00','15:00','18:00',];track $index){
-                                        <option value={{slot}}>
-                                            {{slot}}
-                                        </option>
+                                <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
+                                        class="text-danger reuired">*</small></span>
+                                <input type="date" class="form-control me-3 w-25 " formControlName="date"
+                                    [min]="validateShowStartDate($index)"
+                                    (change)="fetchFreeTimeSlots(screen?.get('venueId')?.value,$event,getLayouts(screen).at($index).get('id')?.value)">
+
+                                <div ngbDropdown [autoClose]="'outside'"
+                                    class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
+                                    <label
+                                        class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold"> Times: 
+                                        <small class="text-danger reuired"> *</small>
+                                    </label>
+                                    <button [disabled]="show.get('date')?.invalid"
+                                        class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
+                                        ngbDropdownToggle>
+                                        {{ this.getStartTime(show).controls.length > 0 ?
+                                        this.getStartTime(show).value.join(',') : 'Select Show Time' }}
+                                    </button>
+
+                                    <div class="invalid-feedback">Atleast one show time is required.</div>
+                                    @if(availableSlots.length>0){
+                                    <div ngbDropdownMenu aria-labelledby="showTimeDropdown" class="w-100 p-2"
+                                        style="max-height: 200px; overflow-y: auto;">
+                                        @for(slot of availableSlots; track $index) {
+                                        <div class="dropdown-item">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" [value]="slot | json"
+                                                    [checked]="getStartTime(show).value.includes(slot.start)"
+                                                    (change)="toggleShowTime($event,show)">
+                                                <label class="form-check-label">
+                                                    {{ `${slot.start}-${slot.end}` }}
+                                                </label>
+                                            </div>
+                                        </div>
                                         }
-                                    </select>
-                                    <button class="btn btn-close" (click)="removeShowTime(show, $index)"></button>
+                                    </div>
+                                    }
                                 </div>
-                                }
+                                <button class="btn btn-outline-danger ms-auto"
+                                    [disabled]="this.getShows(screen).length <= 1"
+                                    (click)="removeShow(screen,$index)">Remove</button>
                             </div>
                         </div>
                         }
@@ -318,55 +386,91 @@
             </div>
         </div>
         }
+
         <!-- event type != movie -->
         @if(eventShowForm.get('shows')?.value && eventShowForm.get('eventType')?.value != ''){
-        <div class="d-flex align-items-center gap-4 my-3 px-3 w-auto">
-            <h4>Shows</h4>
-            <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
-        </div>
-        <!-- shows array -->
-        <div class=" w-100" formArrayName="shows">
-            @for(show of shows.controls ;track $index){
-            <!-- one particualr show =  date & [times] -->
-            <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-75 mx-auto ">
-                <!-- date control -->
-                <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
-                    <span class="my-0 fw-semibold me-2 p-0   "> Date: </span>
-                    <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
-                        [max]="validateShowEndDate()" formControlName="date">
-                    <button class="btn btn-outline-primary col-1 ms-auto" (click)="addShowTime(show)">Add </button>
-                    <button class="btn btn-outline-danger ms-3" [disabled]="$index==0"
-                        (click)="removeEventShow($index)">Remove</button>
-                </div>
-                <!-- start-time array -->
-                <div class=" d-flex align-items-center justify-content-start gap-4 w-100 flex-wrap"
-                    formArrayName="startTime">
-                    @for(time of getStartTime(show).controls ;track $index){
-                    <div class="d-flex align-items-center justify-content-center  gap-2 w-25 ">
-                        <span class="my-0 fw-semibold w-100 fs-6 p-0 "> Start Time: </span>
-
-                        <select class="form-select" [formControlName]="$index">
-                            <option value="" disabled selected>Select</option>
-                            @for(slot of ['11:00','13:00','15:00','18:00'];track $index){
-                            <option value={{slot}}>
-                                {{slot}}
-                            </option>
-                            }
-                        </select>
-                        <button class="btn btn-close" [disabled]="$index==0"
-                            (click)="removeShowTime(show, $index)"></button>
-                    </div>
-                    }
-                </div>
+        @for(venue of selectedVenueObj ;track $index){
+        <div class="w-100  card my-3 mx-auto  mb-1 p-3 ">
+            <h4 class=" p-2"> Venue Name: {{venue.venueName}}</h4>
+            <div class="d-flex align-items-center gap-4 my-3 px-3 w-auto">
+                <h4>Shows</h4>
+                <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
             </div>
-            }
-        </div>
+            <!-- shows array -->
+            <div class=" w-100 d-flex flex-column align-items-start justify-content-start px-2" formArrayName="shows">
+                @for(show of shows.controls ;track $index){
+                <!-- one particualr show =  date & [times] -->
+                <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3  w-100  mx-auto ">
+                    <!-- date control -->
+                    <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
+                        <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
+                                class="text-danger reuired">*</small></span>
+                        <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
+                            [max]="validateShowEndDate()" formControlName="date"
+                            (change)="fetchFreeTimeSlots(venue.id,$event)">
+
+                        <div ngbDropdown [autoClose]="'outside'"
+                            class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
+                            <label class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold"> Times: 
+                                <small class="text-danger reuired">*</small>
+                            </label>
+                            <button [disabled]="show.get('date')?.invalid"
+                                class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
+                                ngbDropdownToggle>
+                                {{ this.getStartTime(show).controls.length > 0 ? this.getStartTime(show).value.join(',')
+                                :
+                                'Select Show Time' }}
+                            </button>
+                            <div class="invalid-feedback">Atleast one show time is required.</div>
+                            @if(availableSlots.length>0){
+                            <div ngbDropdownMenu aria-labelledby="showTimeDropdown" class="w-100 p-2"
+                                style="max-height: 200px; overflow-y: auto;">
+                                @for(slot of availableSlots; track $index) {
+                                <div class="dropdown-item">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" [value]="slot | json"
+                                            [checked]="getStartTime(show).value.includes(slot.start)"
+                                            (change)="toggleShowTime($event,show)">
+                                        <label class="form-check-label">
+                                            {{ `${slot.start}-${slot.end}` }}
+                                        </label>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                            }
+                        </div>
+                        <button class="btn btn-outline-danger ms-auto" [disabled]=" this.shows.length<=1"
+                            (click)="removeEventShow($index)">Remove</button>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>}
         }
+
         @if(eventShowForm.get('price') && eventShowForm.get('eventType')?.value != ''){
         <div class="my-2 row d-flex align-items-center p-3 px-4 ">
-            <div class="w-75 d-flex align-items-center py-3 gap-5">
-                <h4>Price : ₹</h4>
-                <input type="number" formControlName="price" min="0" class="form-control px-3 w-25 ms-1">
+            <div class="w-75 d-flex align-items-center py-3 gap-5 ">
+                <h4>Price : ₹ <small class="text-danger reuired">*</small></h4>
+                <input type="number" formControlName="price" min="99" max="4999" class="form-control px-3 w-25 ms-1 "
+                    [ngClass]="{'is-invalid':eventShowForm.get('price')?.touched && eventShowForm.get('price')?.invalid }" />
+                @if(eventShowForm.get('price')?.touched && eventShowForm.get('price')?.hasError('required')){
+                <div class="text-danger">
+                    Price is required.
+                </div>
+                }
+                @if(eventShowForm.get('price')?.value && eventShowForm.get('price')?.hasError('min')){
+                <div class="text-danger">
+                    Min. Price 99.
+                </div>
+                }
+                @if(eventShowForm.get('price')?.value &&
+                eventShowForm.get('price')?.hasError('max')){
+                <div class="text-danger">
+                    Max. Price 4999
+                </div>
+                }
             </div>
         </div>
         }
@@ -377,7 +481,7 @@
         <!-- Languages -->
         @if(eventShowForm.get('languages')){
         <div class="mb-3 ">
-            <h5 class="form-label">● Languages</h5>
+            <h5 class="form-label">● Languages <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(lang of languagesArray; track $index) {
                 <div class="form-check w-25">
@@ -397,7 +501,7 @@
         <!-- Genres -->
         @if(eventShowForm.get('genres')){
         <div class="mb-3 ">
-            <h5 class="form-label">● Genres</h5>
+            <h5 class="form-label">● Genres <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(genre of genresArray; track $index) {
                 <div class="form-check w-25">
@@ -417,7 +521,7 @@
         <!-- Formats -->
         @if(eventShowForm.get('format')){
         <div class="mb-3 ">
-            <h5 class="form-label">● Formats</h5>
+            <h5 class="form-label">● Formats <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(format of formatsArray; track $index) {
                 <div class="form-check w-25">
@@ -437,7 +541,7 @@
         <!-- Tags -->
         @if(eventShowForm.get('tag')){
         <div class="mb-3 ">
-            <h5 class="form-label">● Tags</h5>
+            <h5 class="form-label">● Tags <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(tag of tagsArray; track $index) {
                 <div class="form-check w-25">
@@ -458,7 +562,7 @@
         <!-- Categories -->
         @if(eventShowForm.get('categories')){
         <div class="mb-3 ">
-            <h5 class="form-label">● Categories</h5>
+            <h5 class="form-label">● Categories <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(category of categoriesArray; track $index) {
                 <div class="form-check w-25">
@@ -478,7 +582,7 @@
         <!-- More Filters -->
         @if(eventShowForm.get('moreFilters')){
         <div class="mb-3 ">
-            <h5 class="form-label">● More Filters</h5>
+            <h5 class="form-label">● More Filters <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(moreFilter of moreFilters; track $index) {
                 <div class="form-check w-25">
@@ -504,7 +608,7 @@
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="cast">
             <div class="d-flex mb-3 justify-content-start align-items-center gap-4">
-                <h5 class="card-title mb-0">🎭 Cast</h5>
+                <h5 class="card-title mb-0">🎭 Cast <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">Add Cast</button>
             </div>
             @for(c of castControls.controls;track $index ){
@@ -531,7 +635,6 @@
                     <button class="btn btn-outline-danger" type="button" [disabled]="$index==0"
                         (click)="castControls.removeAt($index)">✕</button>
                 </div>
-
             </div>
             }
         </div>
@@ -540,7 +643,7 @@
     <div class="card mb-4 shadow-sm">
         <div class="card-body" formArrayName="crew">
             <div class="d-flex mb-3 justify-content-start align-items-center gap-4">
-                <h5 class="card-title">🎬 Crew</h5>
+                <h5 class="card-title">🎬 Crew <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">Add Crew</button>
             </div>
             @for(m of crewControls.controls;track $index){
@@ -548,7 +651,8 @@
                 <div class="col">
                     <input class="form-control" placeholder="Member Name" formControlName="memberName"
                         [ngClass]="{'is-invalid': m.get('memberName')?.invalid && (m.get('memberName')?.touched || m.get('memberName')?.dirty)}" />
-                    @if(m.get('memberName')?.invalid && (m.get('memberName')?.touched || m.get('memberName')?.dirty)){
+                    @if(m.get('memberName')?.invalid && (m.get('memberName')?.touched ||
+                    m.get('memberName')?.dirty)){
                     <div class="invalid-feedback">
                         Member name is required.
                     </div>

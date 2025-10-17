@@ -9,6 +9,8 @@ import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 
+
+type Slot = { start: string; end: string };
 @Component({
   selector: 'app-create-content',
   templateUrl: './create-content.component.html',
@@ -33,6 +35,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   formatsArray: any[] = [];
   screensArray: any[] = [];
   citiesArray: any[] | null = null;
+  availableSlots: any[] = []
+
 
   constructor(private fb: FormBuilder,
     private toaster: ToastrService,
@@ -49,10 +53,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.tempFormArray = this.fb.array([])
     this.setToday()
     this.eventShowForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(4), Validators.pattern(/^[A-Za-z]+(?:\s[A-Za-z]+)*$/)
+      name: ['', [Validators.required, Validators.minLength(4), this.nameValidator(), Validators.maxLength(50),
       ]],
-      description: ['', [Validators.required, Validators.minLength(30), Validators.pattern(/^(?!\s)(.*\S)?$/)]],
-      runTime: [null, [Validators.required]],
+      description: ['', [Validators.required, Validators.minLength(30), this.descriptionValidator(), Validators.maxLength(250),]],
+      runTime: [20, [Validators.required]],
       eventType: ['', [Validators.required]],  // Movie | Sports | Event | Plays | Activities
       imageurl: ['', [Validators.required]],
       ageLimit: [3, [Validators.required]],
@@ -67,12 +71,62 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getData()
   }
 
+
   /**
-* @description getLayouts of particular screen
-* @author Inzamam
-* @params screen object
-* @return FormArray
-*/
+  * @description custom validator that validates venueName
+  * @author Inzamam
+  * @returnType boolean
+  */
+  nameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      if (/^\s|\s$/.test(control.value)) {
+        return { invalidSpace: true };
+      }
+
+      if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
+        return { invalidCharacter: true };
+      }
+
+      if (/^-|-$/.test(control.value)) {
+        return { invalidHyphen: true };
+      }
+
+      return null;
+    };
+  }
+
+
+  /**
+    * @description custom validator that validates venueName
+    * @author Inzamam
+    * @returnType boolean
+    */
+  descriptionValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      if (/^\s|\s$/.test(control.value)) {
+        return { invalidSpace: true };
+      }
+
+      if (!/^[A-Za-z0-9-@\s]+$/.test(control.value)) {
+        return { invalidCharacter: true };
+      }
+
+      if (/^[-@]|[-@]$/.test(control.value)) {
+        return { invalidHyphen: true };
+      }
+
+      return null;
+    };
+  }
+
+  /**
+  * @description getLayouts of particular screen
+  * @author Inzamam
+  * @params screen object
+  * @return FormArray
+  */
   getLayouts(screen: AbstractControl): FormArray {
     return screen.get('layouts') as FormArray;
   }
@@ -86,10 +140,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description getter function to get screens as FormArray
-* @author Inzamam
-* @return FormArray
-*/
+  * @description getter function to get screens as FormArray
+  * @author Inzamam
+  * @return FormArray
+  */
   createScreen(screen: any, venueName: string, venueId: string): FormGroup {
     return this.fb.group({
       screenName: [screen.screenName, Validators.required],
@@ -113,9 +167,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description handler for event type change
-* @author Inzamam
-*/
+  * @description handler for event type change
+  * @author Inzamam
+  */
   onEventTypeChange() {
     this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
@@ -200,9 +254,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
 
   /**
-* @description function to fetch all cities array
-* @author Inzamam
-*/
+  * @description function to fetch all cities array
+  * @author Inzamam
+  */
   fetchCities() {
     this.commonService.getAllCities().subscribe({
       next: (res) => {
@@ -216,9 +270,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description handler for venue name change
-* @author Inzamam
-*/
+  * @description handler for venue name change
+  * @author Inzamam
+  */
   onVenueNameChange() {
     const selectedVenueName = (this.eventShowForm.get('venueName') as FormArray)?.value;
     this.selectedVenueObj = this.venuesNameList.filter(v =>
@@ -236,84 +290,101 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   /**
-* @description function that creates form group of show
-* @author Inzamam
-* @return FormGroup
-*/
-  createShow() {
+  * @description function that creates form group of show
+  * @author Inzamam
+  * @return FormGroup
+  */
+  createShow() { //for movies
     return this.fb.group({
       date: ['', Validators.required],
-      startTime: this.fb.array([this.createShowTime()]),
+      startTime: this.fb.array([], Validators.required),
     })
   }
 
   /**
-* @description function to get shows from screen
-* @author Inzamam
-* @params Screen obj
-* @return FormArray
-*/
+  * @description function to get shows from screen
+  * @author Inzamam
+  * @params Screen obj
+  * @return FormArray
+  */
   // for movies
   getShows(screen: AbstractControl): FormArray {
     return screen.get('shows') as FormArray;
   }
 
   /**
-* @description function to add show to screen 
-* @author Inzamam
-* @params Screen obj
-*/
+  * @description function to add show to screen 
+  * @author Inzamam
+  * @params Screen obj
+  */
   // for movies
   addShow(screen: AbstractControl) {
     this.getShows(screen).push(this.createShow())
   }
 
   /**
-* @description function to remove show from screen 
-* @author Inzamam
-* @params Screen obj
-*/
+  * @description function to remove show from screen 
+  * @author Inzamam
+  * @params Screen obj
+  */
   // for movies
   removeShow(screen: AbstractControl, index: number) {
-    if (index == 0) return
+    if (this.getShows(screen).length <= 1) return;
     this.getShows(screen).removeAt(index)
   }
 
   /**
-* @description get start time  of show
-* @author Inzamam
-* @param screen object
-* @return FormArray
-*/
-  getStartTime(show: AbstractControl): FormArray {
+  * @description get start time  of show
+  * @author Inzamam
+  * @param screen object
+  * @return FormArray
+  */
+  getStartTime(show: AbstractControl): FormArray { //shows
     return show.get('startTime') as FormArray
   }
 
 
   /**
-* @description function to create showTime control
-* @author Inzamam
-*/
-  createShowTime() {
+  * @description function to create showTime control
+  * @author Inzamam
+  */
+  createShowTime() { //shows
+
     return this.fb.control('', [Validators.required])
   }
 
   /**
-* @description function to add showTime 
-* @author Inzamam
-* @params Show obj
-*/
-  addShowTime(show: AbstractControl) {
+  * @description function to add showTime 
+  * @author Inzamam
+  * @params Show obj
+  */
+  addShowTime(show: AbstractControl) { //shows
     this.getStartTime(show).push(this.createShowTime())
   }
 
   /**
-* @description function to remove showTime 
+* @description function that add or removes show time based on checked or unchecked
 * @author Inzamam
-* @params Show obj
+* @params payload:event
 */
-  removeShowTime(show: AbstractControl, index: number) {
-    if (index == 0) return
+  toggleShowTime(event: any, show: AbstractControl) {
+
+    let slot = JSON.parse(event.target.value);
+    if (event.target.checked) {
+      this.getStartTime(show).push(this.fb.control(slot.start));
+    } else {
+      let index = this.getStartTime(show).controls.findIndex((ctrl) => ctrl.value === slot.start)
+      if (index != -1) this.getStartTime(show).removeAt(index);
+    }
+  }
+
+  /**
+  * @description function to remove showTime 
+  * @author Inzamam
+  * @params Show obj
+  */
+  removeShowTime(show: AbstractControl, index: number) { //shows
+    if (this.getStartTime(show).length <= 1) return;
     this.getStartTime(show).removeAt(index)
   }
 
@@ -325,7 +396,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return ((layout.get('rows') as FormArray).value).length
   }
 
-  get shows(): FormArray {
+  get shows(): FormArray {//
     return this.eventShowForm.get('shows') as FormArray
   }
   addEventShow() {
@@ -333,7 +404,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   removeEventShow(index: number) {
-    if (index == 0) return
+    if (this.shows.length <= 1) return
     this.shows.removeAt(index)
 
   }
@@ -352,6 +423,19 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return this.minDate
   }
 
+  onStartOnChange() {
+    this.eventShowForm.get('endDate')?.setValue('');
+    this.shows.controls.forEach(show => {
+      show.get('date')?.setValue('')
+    })
+  }
+
+  onEndOnChange() {
+    this.shows.controls.forEach(show => {
+      show.get('date')?.setValue('')
+    })
+  }
+
   setMinEndDate() {
     const startDateValue = this.eventShowForm.get('startDate')?.value;
     if (startDateValue) {
@@ -362,30 +446,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return null;
   }
 
-  /**
-  * @description custom validator for start time of show
-  * @author Inzamam
-  */
-  validateStartTime(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const form = control.parent as FormGroup;
-      if (!form) return null; // in case it's not ready yet
-      const selectedDate = form.get('date')?.value;
-      const selectedTime = control?.value;
-      if (!selectedDate || !selectedTime) return null;
-      const today = new Date();
-      const selectedDateObj = new Date(selectedDate);
-      if (selectedDateObj.toDateString() === today.toDateString()) {
-        const [hours, minutes] = selectedTime.split(':').map(Number);
-        const selectedDateTime = new Date(selectedDateObj);
-        selectedDateTime.setHours(hours, minutes, 0, 0);
-        if (selectedDateTime < today) {
-          return { inValidStartTime: true };
-        }
-      }
-      return null;
-    };
-  }
 
   /**
   * @description function to set minDate for show start date
@@ -420,39 +480,92 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return ''
   }
 
+
+  timeToMinutes(hhmm: string): number {
+    const [h, m] = hhmm.split(':').map(Number);
+    return h * 60 + m;
+  }
+  minutesToTime(min: number): string {
+    const h = Math.floor(min / 60).toString().padStart(2, '0');
+    const m = (min % 60).toString().padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+
+
+  // generateSlots inside a free window
+  generateSlots(freeStart: string, freeEnd: string, slotDurationMin: number, gapMin = 0): Slot[] {
+    const startM = this.timeToMinutes(freeStart);
+    const endM = this.timeToMinutes(freeEnd);
+    const out: Slot[] = [];
+    let cur = startM;
+
+    while (cur + slotDurationMin <= endM) {
+      const s = cur;
+      const e = cur + slotDurationMin;
+      out.push({ start: this.minutesToTime(s), end: this.minutesToTime(e) });
+      cur = e + gapMin;
+    }
+
+    return out;
+  }
+
+  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0) {
+    this.availableSlots = freeWindows.flatMap(window =>
+      this.generateSlots(window.startTime, window.endTime, slotDurationMin, gapMin)
+    );
+
+  }
+
+  fetchFreeTimeSlots(venueId: string, event: Event, screenId?: string) {
+    this.availableSlots = []
+    let selectedDate = event.target as HTMLInputElement;
+    this.contentService.getAvailableTimeSlots(venueId, selectedDate.value, screenId).subscribe({
+      next: (res) => {
+        if (res.statusCode == 200) {
+          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value,30);
+        }
+      },
+      error: (err) => {
+        this.generateAllAvailableSlots([{startTime:'12:00', endTime:'15:00'},{startTime:'15:00', endTime:'20:00'}],this.eventShowForm.get('runTime')?.value, 30)
+        this.toaster.error(err.error.message.split(':')[1])
+
+      }
+    })
+  }
+
+
   /**
   * @description function to submit the form 
   * @author Inzamam
   */
   onShowFormSubmit(): void {
 
-    const formValue = this.eventShowForm.value;
+    const formValue = this.eventShowForm.getRawValue();
+
     const selectedVenueIds = this.selectedVenueObj
       ?.filter((venue: any) => formValue.venueName?.includes(venue.venueName))
       .map((venue: any) => venue.id);
     let shows: any[] = [];
     if (formValue?.eventType === 'Movie') {
-      shows = formValue?.screens?.flatMap((screen: any) =>
-        screen.layouts.map((layout: any) => ({
-          venue: screen.venueId ?? screen.venueName,
-          screen: screen.screenId ?? screen.screenName,
-          layout: layout.id ?? layout.layoutName,
-          showPrice: Number(layout.price || 0),
-          showtimesdate: screen.shows?.map((show: any) => ({
-            showDate: show.date,
-            showTime: Array.isArray(show.startTime)
-              ? show.startTime
-              : [show.startTime],
-          })) ?? [],
-        }))
-      ) ?? [];
+      shows = formValue?.screens?.flatMap((screen: any) => ({
+        venue: screen.venueId ?? screen.venueName,
+        screen: screen.screenId ?? screen.screenName,
+        category: screen.layouts.map((layout: any) => ({ layout: layout.id ?? layout.layoutName, moviePrice: Number(layout.price || 0), })),
+        showtimesdate: screen.shows?.map((show: any) => ({
+          showDate: show.date,
+          showTime: Array.isArray(show.startTime)
+            ? show.startTime
+            : [show.startTime],
+        })) ?? [],
+      }))
     }
 
     else {
       shows = selectedVenueIds.map((venueId: number) => ({
-        venue: venueId,  // assign each ID to its own show object
+        venue: venueId,
         screen: null,
-        layout: null,
+        category: null,
         showPrice: Number(formValue.price || 0),
         showtimesdate: formValue.shows?.map((show: any) => ({
           showDate: show.date,
@@ -612,6 +725,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       if (index != -1) this.city.removeAt(index);
 
     }
+    this.eventShowForm.get('city')?.markAsTouched()
+    this.eventShowForm.get('city')?.updateValueAndValidity();
     this.venueName.clear()
     this.venuesNameList = []
     this.callApiForCities();
@@ -662,6 +777,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.target.value)
       if (index != -1) this.venueName.removeAt(index);
     }
+    this.eventShowForm.get('venueName')?.markAsTouched()
+    this.eventShowForm.get('venueName')?.updateValueAndValidity();
 
     this.onVenueNameChange()
   }
@@ -688,6 +805,15 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       this.toaster.error('Please upload a valid image file');
       return;
     }
+
+    const maxSizeMB = 2;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      return;
+    }
+
+
     const reader = new FileReader();
     reader.onload = () => {
       let base64String = (reader.result as string).split(',')[1];
