@@ -1,9 +1,10 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AuthService } from '../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-booking-events',
@@ -12,25 +13,38 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   styleUrl: './booking-events.component.scss'
 })
 export class BookingEventsComponent implements OnInit {
-  money!: number 
+  
+  constructor(private authService: AuthService, public commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private location: Location, private modalService: NgbModal , private router:Router ) {
+    this.user = this.authService.getUserFromToken()
+  }
+
+  user!: any;
+  money!: number
   totalMoney: number = 0;
   value: number = 1;
   add: boolean = false;
   allShows: any[] = []
-  title!: string | null 
+  title!: string | null
   date!: string | null
-   bookeSeats: any[] = []
-
-  constructor(private commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private router: Router, private location: Location, private modalService: NgbModal) {
-
-  }
+  bookeSeats: any[] = []
+  selectedSeats: any[] = []
+  eventId: any
+  selectedDate: any;
+  dateSelectionArray: any[] = [];
+  selectedTime: string = '';
+  venueTitle:string=''
+  activeTab: 'step1' | 'step2' = 'step1';
 
   ngOnInit(): void {
-    this.title = this.route.snapshot.paramMap.get('eventname')
-    this.date = this.route.snapshot.paramMap.get('date')
-    this.getShows()
-  }
+    this.title = this.route.snapshot.paramMap.get('eventname');
+    this.date = this.route.snapshot.paramMap.get('date');
+    this.eventId = this.route.snapshot.paramMap.get('id');
+    this.getShows();
+    this.selectedSeats = this.getSelectedSeats(this.eventId);
+    this.value = this.selectedSeats.length || 1;
+    this.initializeDateSelectionArray()
 
+  }
   addMember() {
     this.add = true;
     this.updateTotalMoney();
@@ -46,6 +60,8 @@ export class BookingEventsComponent implements OnInit {
   decreaseCounter() {
     if (this.value > 1) {
       this.value--;
+      this.selectedSeats.pop();
+      this.setSelectedSeats(this.eventId, this.selectedSeats);
       this.updateTotalMoney();
     }
   }
@@ -54,12 +70,13 @@ export class BookingEventsComponent implements OnInit {
     this.totalMoney = this.value * this.money;
   }
 
-  getShows() {
-    let eventId: string | null = this.route.snapshot.paramMap.get('id')
-    let date: string | null = this.route.snapshot.paramMap.get('date')
-    this.commonService.getShowsById(eventId, date).subscribe({
+  getShows(_selectedDate?: any) {
+    this.eventId = this.route.snapshot.paramMap.get('id')
+    this.date = this.commonService.getUserSelectedDate()?.today ?? this.route.snapshot.paramMap.get('date')
+    this.commonService.getShowsById(this.eventId, this.date).subscribe({
       next: (res) => {
         this.allShows = res.data
+          this.venueTitle = this.allShows[0]?.venueName; 
         this.money = this.allShows[0]?.shows[0]?.availableCategories[0]?.categoryPrice
       },
       error: (err) => {
@@ -71,24 +88,44 @@ export class BookingEventsComponent implements OnInit {
   goBack() {
     this.location.back()
   }
-
+  vaneNameTitle: string = ''
   bookingConfirmation(confirmModal: TemplateRef<any>) {
-    for (let i = 0; i < this.value; i++) {
-      this.generateRandomCode()
+    const seatsToGenerate = this.value - this.selectedSeats.length;
+    for (let i = 0; i < seatsToGenerate; i++) {
+      this.generateRandomCode();
     }
+
     const modalRef = this.modalService.open(confirmModal, {
       ariaLabelledBy: 'modal-basic-title',
       modalDialogClass: 'no-border-modal',
       backdrop: 'static'
     });
+
     modalRef.result.then((result) => {
       if (result === 'Book') {
-        this.toastr.success(`your ticekt for ${this.title} booked successfully `)
-      }
-      setTimeout(() => {
-        this.router.navigate(['/explore/home'])
-      }, 300)
+        let sendPayLoad = [
+          {
+            "userId": this?.user?.userId,
+            "eventId": this.eventId,
+            "venueId": this.allShows[0]?.venueId,
+            "showId": this.allShows[0]?.showId,
+            "date": this.selectedDate.today,
+            "time": this.selectedTime,
+            "eventSeats":this.selectedSeats
+          }
+        ]
 
+        this.commonService.bookUserSeats(sendPayLoad).subscribe({
+          next: () => {
+             this.toastr.success(`ticket booked successfully for ${this.title}`)
+             this.router.navigate(['/'])
+          },
+          error: (err) => {
+            this.toastr.error(err.message);
+          }
+        });
+
+      }
     })
   }
 
@@ -97,9 +134,60 @@ export class BookingEventsComponent implements OnInit {
     "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
   ]
   generateRandomCode() {
-    const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)]
-    const randomNumber = String(Math.floor(Math.random() * 100)).padStart(2, '0');
-    this.bookeSeats.push(`${randomLetter}-${randomNumber}`);
+    let newSeat;
+    do {
+      const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)];
+      const randomNumber = String(Math.floor(Math.random() * 100)).padStart(2, '0');
+      newSeat = `${randomLetter}${randomNumber}`;
+    } while (this.selectedSeats.includes(newSeat));
+    this.selectedSeats.push(newSeat);
+    this.setSelectedSeats(this.eventId, this.selectedSeats);
+  }
+
+  getSelectedSeats(eventId: string | number): string[] {
+    const allEvents: { eventId: string | number, selectedSeats: string[] }[] =
+      JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
+    const event = allEvents.find(e => e.eventId == eventId);
+    return event ? event.selectedSeats : [];
+  }
+
+  setSelectedSeats(eventId: string | number, seats: string[]) {
+    let allEvents: { eventId: string | number, selectedSeats: string[] }[] =
+      JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
+    const index = allEvents.findIndex(e => e.eventId == eventId);
+    if (index > -1) {
+      allEvents[index].selectedSeats = seats;
+    } else {
+      allEvents.push({ eventId, selectedSeats: seats });
+    }
+    localStorage.setItem('selectedSeatsByEvent', JSON.stringify(allEvents));
+  }
+
+  setActiveTab(tab: 'step1' | 'step2') {
+    this.activeTab = tab;
+  }
+
+
+  onDateChange(index: number, dateObj: any) {
+    if (index < 6) { 
+      this.selectedTime=""
+      this.selectedDate = dateObj;
+      this.commonService.setUserSelectedDate(dateObj);
+      this.getShows();
+    }
+  }
+  initializeDateSelectionArray() {
+    let today = new Date();
+    for (let i = 0; i < 9; i++) {
+      let dateObj = new Date();
+      dateObj.setDate(today.getDate() + i)
+      this.dateSelectionArray.push({
+        day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
+        dateNum: dateObj.getDate(),
+        month: dateObj.toLocaleDateString('en-US', { month: 'short' }),
+        today: dateObj.toISOString().split('T')[0]
+      })
+    }
   }
   
 }

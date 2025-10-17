@@ -10,6 +10,7 @@
     width: 100%;
     left: 0px;
     top: 0px;
+    background: white;
 }
 
 .main_conatiner {
@@ -44,7 +45,7 @@
     align-items: center;
     justify-content: space-between;
     justify-self: center;
-    padding: 0px 65px;
+    padding: 0px 35px;
 }
 
 .sub_content {
@@ -57,7 +58,7 @@
 }
 
 .titles_theater_box {
-    padding: 0px 65px;
+    padding: 0px 35px;
 }
 
 .sub_header_tittle {
@@ -103,7 +104,7 @@
 }
 
 .main_container_box_content {
-    padding: 40px 10px;
+    padding: 80px 100px;
 }
 
 .theater_sub_name {
@@ -188,5 +189,157 @@
 
 .shine_text {
     font-size: large;
+    cursor: pointer;
+}
+
+.step_number {
+    background: none;
+    border: none;
+}
+
+.step-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    color: rgb(255, 255, 255);
+    background-color: rgb(51, 51, 51);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.2px;
+}
+
+.step_tittle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    color: rgb(51, 51, 51);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.2px;
+}
+
+.step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.available {
+    background-color: #00c853;
+}
+
+.fast-filling {
+    background-color: #ff7043;
+}
+
+.sold-out {
+    background-color: #bdbdbd;
+}
+
+.option-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.date-btn,
+.time-btn {
+    border: none;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.date-btn:not(.active) {
+    border: 1px solid #ff7043;
+    color: #ff7043;
+    background-color: white;
+}
+
+.proceed-btn {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    width: 100%;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.proceed-btn:hover {
+    background-color: #b71c1c;
+}
+
+.ticket_limit {
+    color: rgb(82, 82, 82);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0.2px;
+}
+
+.entry_pass {
+    padding: 10px;
+}
+
+.hidden-radio {
+    display: none;
+}
+
+
+
+.time-btn {
+    background: white;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.hidden-radio:checked+.time-btn {
+    background: rgb(0, 200, 83);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.date_disabled {
+    opacity: 0.5;
+    color: rgb(170, 170, 170);
+    z-index: -1;
+    cursor: not-allowed !important
+}
+
+.date_card {
+    cursor: pointer;
+}
+
+i {
+    cursor: pointer;
+}
+
+.no_shows {
+    margin-left: 170px;
+    margin-top: 60px;
+}
+.logo_container{
     cursor: pointer;
 }
