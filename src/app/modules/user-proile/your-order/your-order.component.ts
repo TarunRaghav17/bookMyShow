@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
+import { AuthService } from '../../../auth/auth-service.service';
+import { UserProfileService } from '../service/user-profile.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-your-order',
@@ -8,14 +11,40 @@ import { CommonService } from '../../../services/common.service';
   styleUrl: './your-order.component.scss'
 })
 export class YourOrderComponent {
-  constructor(private service: CommonService) {
+  getShowsData: any[] = []
+  constructor(
+    private commonService: CommonService,
+    private authService: AuthService,
+    private userProfileService: UserProfileService,
+    private toastr: ToastrService
+  ) {
 
   }
   ngOnInit(): void {
-    this.service._profileHeader.set(true)
-
+    this.commonService._profileHeader.set(true)
+    this.getBookingsByuserId()
   }
+
+
+  /**
+   * @deprecation bookings data by userId
+   * @author Gurmeet Kumar
+   */
+  getBookingsByuserId() {
+    const userId = this.authService.userDetailsSignal().userId;
+    this.userProfileService.getAllShowByUserId(userId).subscribe({
+      next: (res: any) => {
+        this.getShowsData = res.data;
+      }, error: (err: any) => {
+        this.toastr.error(err.message)
+      }
+    })
+  }
+  /**
+   * @description on profile header false
+   * @author Gurmeet Kumar 
+   */
   ngOnDestroy() {
-    this.service._profileHeader.set(false)
+    this.commonService._profileHeader.set(false)
   }
 }

@@ -98,10 +98,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
    * @author Gurmeet Kumar
    * @return void
    */
-  openEditProfileModal(
-    editProfileModal: TemplateRef<any>,
-    type: 'email' | 'number'
-  ): void {
+  openEditProfileModal(editProfileModal: TemplateRef<any>, type: 'email' | 'number'): void {
     this.editNumberFlag = type === 'number';
     this.modalForm.reset();
     if (type === 'number') {
