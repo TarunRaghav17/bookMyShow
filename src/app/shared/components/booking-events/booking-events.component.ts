@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute} from '@angular/router';
+import { ActivatedRoute, Router} from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../../auth/auth-service.service';
@@ -13,10 +13,8 @@ import { AuthService } from '../../../auth/auth-service.service';
   styleUrl: './booking-events.component.scss'
 })
 export class BookingEventsComponent implements OnInit {
-  dateSelectionArray: any[] = [];
-  selectedTime: string = '';
-
-  constructor(private authService: AuthService, public commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute,  private location: Location, private modalService: NgbModal) {
+  
+  constructor(private authService: AuthService, public commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private location: Location, private modalService: NgbModal , private router:Router ) {
     this.user = this.authService.getUserFromToken()
   }
 
@@ -31,7 +29,10 @@ export class BookingEventsComponent implements OnInit {
   bookeSeats: any[] = []
   selectedSeats: any[] = []
   eventId: any
-  selectedDate: any; 
+  selectedDate: any;
+  dateSelectionArray: any[] = [];
+  selectedTime: string = '';
+  venueTitle:string=''
   activeTab: 'step1' | 'step2' = 'step1';
 
   ngOnInit(): void {
@@ -75,6 +76,7 @@ export class BookingEventsComponent implements OnInit {
     this.commonService.getShowsById(this.eventId, this.date).subscribe({
       next: (res) => {
         this.allShows = res.data
+          this.venueTitle = this.allShows[0]?.venueName; 
         this.money = this.allShows[0]?.shows[0]?.availableCategories[0]?.categoryPrice
       },
       error: (err) => {
@@ -86,7 +88,7 @@ export class BookingEventsComponent implements OnInit {
   goBack() {
     this.location.back()
   }
-
+  vaneNameTitle: string = ''
   bookingConfirmation(confirmModal: TemplateRef<any>) {
     const seatsToGenerate = this.value - this.selectedSeats.length;
     for (let i = 0; i < seatsToGenerate; i++) {
@@ -107,15 +109,22 @@ export class BookingEventsComponent implements OnInit {
             "eventId": this.eventId,
             "venueId": this.allShows[0]?.venueId,
             "showId": this.allShows[0]?.showId,
-            "date": this.date,
-            "time": this.allShows[0]?.time,
+            "date": this.selectedDate.today,
+            "time": this.selectedTime,
+            "eventList":this.selectedSeats
           }
         ]
 
         this.commonService.bookUserSeats(sendPayLoad).subscribe({
-          next: (res) =>this.allShows=res,
-          error: (err) => this.toastr.error(err.message)
-        })
+          next: () => {
+             this.toastr.success(`ticket booked successfully for ${this.title}`)
+             this.router.navigate(['/'])
+          },
+          error: (err) => {
+            this.toastr.error(err.message);
+          }
+        });
+
       }
     })
   }
@@ -157,15 +166,15 @@ export class BookingEventsComponent implements OnInit {
   setActiveTab(tab: 'step1' | 'step2') {
     this.activeTab = tab;
   }
- 
 
-onDateChange(index: number, dateObj: any) {
-  if (index < 3) {
-    this.selectedDate = dateObj; 
-    this.commonService.setUserSelectedDate(dateObj); 
-    this.getShows();
+
+  onDateChange(index: number, dateObj: any) {
+    if (index < 3) {
+      this.selectedDate = dateObj;
+      this.commonService.setUserSelectedDate(dateObj);
+      this.getShows();
+    }
   }
-}
   initializeDateSelectionArray() {
     let today = new Date();
     for (let i = 0; i < 7; i++) {

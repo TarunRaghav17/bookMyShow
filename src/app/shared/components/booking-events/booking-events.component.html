@@ -56,7 +56,7 @@
             @for (item of allShows; track $index) {
             <div class="theater_detail_info mt-3">
                 <div class="col-4 titles_theater_box">
-                    <h4 class="theater_name_text">{{ item.venueName }}</h4>
+                    <h4 class="theater_name_text">{{ venueTitle }}</h4>
                     @if(activeTab==="step2"){
                     <p class="theater_name_text">
                         {{selectedDate.today}} | {{selectedTime}} PM
