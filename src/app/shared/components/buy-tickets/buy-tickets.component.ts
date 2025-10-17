@@ -42,22 +42,34 @@ interface Venue {
 })
 export class BuyTicketsComponent implements AfterViewInit {
   venueShowsDetails: any;
+  filteredVenueShowsDetails: any[] = [];
 
   constructor(public commonService: CommonService, private route: ActivatedRoute, private router: Router,
     private toaster: ToastrService
   ) { }
 
   // -------test data------
-  maxPrice = 900;
+  maxPrice = 499;
   // ------------------
   selectedMovie = 'movie999'
   movieDetails: any | null = null
   dateSelectionArray: any = [];
   userSelectedDate: any;
   contentId: string | null = null
-  userSelectedPreference: any[] = []
   isOpen: boolean = false;
   searchValue: string = "";
+
+  selectedFilters: any[] = [];
+  priceFilters: any =
+    {
+      type: 'price',
+      data: [' ₹ 0 - 200', ' ₹ 201 - 400', ' ₹ 401 - 600', ' ₹ 601 - 800', ' ₹ 801 - 1000']
+    }
+
+  preferedTimeFilters: any = {
+    type: 'preferedTime',
+    data: ['Morning,00:00-11:59', 'Afternoon,12:00-15:59', 'Evening,16:00-19:59', 'Night,20:00-23:59']
+  };
 
   ngOnInit() {
     this.initializeDateSelectionArray()
@@ -65,6 +77,59 @@ export class BuyTicketsComponent implements AfterViewInit {
   }
   ngAfterViewInit() {
     this.fetchContentIdByUrl();
+  }
+
+  handleFilterChange(event: any, payload: any) {
+    let { type, value } = payload;
+    switch (type) {
+      case 'price': {
+        if (event.target.checked) {
+          this.selectedFilters.push({ type: type, value: value });
+        } else {
+          this.selectedFilters = this.selectedFilters.filter(item => item.value !== value);
+        }
+        break;
+      }
+      case 'preferedTime': {
+        if (event.target.checked) {
+          this.selectedFilters.push({ type: type, value: value });
+        } else {
+          this.selectedFilters = this.selectedFilters.filter(item => item.value !== value);
+        }
+        break;
+      }
+    }
+    this.getFilteredVenuesShowsList()
+  }
+  getFilteredVenuesShowsList() {
+    this.selectedFilters.forEach((filter: any) => {
+      switch (filter.type) {
+        case 'price': {
+          const maxPrice = Number(filter.value.split('-')[1]);
+          this.venueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
+            venue.screens.some((screen: any) =>
+              screen.showTimes.some((showTime: any) =>
+                showTime.availableCategories.some((category: any) =>
+                  Number(category.categoryPrice) <= maxPrice
+                )
+              )
+            )
+          );
+          break;
+        }
+        case 'preferedTime': {
+          const [start, end] = filter.value.split(',')[1].split('-');
+          this.venueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
+            venue.screens.some((screen: any) =>
+              screen.showTimes.some((showTime: any) =>
+                showTime.time >= start && showTime.time <= end
+              )
+            )
+          );
+          break;
+        }
+      }
+    });
   }
 
   /**
@@ -89,7 +154,6 @@ export class BuyTicketsComponent implements AfterViewInit {
 * @params data[]
 * @return venues
 */
-
   mergeCategoriesWithShowIds(data: any[]): any[] {
     const venueMap = new Map<string, Venue>();
 
@@ -102,7 +166,6 @@ export class BuyTicketsComponent implements AfterViewInit {
         });
       }
       const venue = venueMap.get(item.venueId)!;
-
       let screen = venue.screens.find((s) => s.screenId === item.screenId);
       if (!screen) {
         screen = { screenId: item.screenId, showTimesMap: new Map() };
@@ -115,7 +178,6 @@ export class BuyTicketsComponent implements AfterViewInit {
           if (!screen!.showTimesMap.has(time)) {
             screen!.showTimesMap.set(time, { showIds: new Set(), categoryMap: new Map() });
           }
-
           const slot = screen!.showTimesMap.get(time)!;
           slot.showIds.add(showId);
           [timeSlot].forEach((cat: Category) => {
@@ -126,7 +188,6 @@ export class BuyTicketsComponent implements AfterViewInit {
         });
       });
     });
-
     const venues: any[] = Array.from(venueMap.values()).map((venue) => ({
       ...venue,
       screens: venue.screens.map((screen) => ({

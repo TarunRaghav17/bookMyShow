@@ -88,12 +88,11 @@ export class SeatLayoutComponent {
     this.fetchContentIdByUrl();
     this.fetchVenueById();
     this.activeShow = this.commonService.getUserSelectedShow();
-    this.getReservedSeatsByShowId(this.activeShow.showIds?.[0])
-
+    this.getReservedSeatsByShowId(this.activeShow.showIds?.[0]);
   }
 
   ngAfterViewInit() {
-    this.initializeCanvas()
+    this.initializeCanvas();
     this.open(this.seatModal);
   }
 
@@ -111,7 +110,8 @@ export class SeatLayoutComponent {
     this.commonService.getReservedSeats(showId).subscribe(
       {
         next: (res) => {
-          this.reservedSeats = res.data || []
+          this.reservedSeats = res.data || [];
+          this.randomizeBookedForDemo();
         },
         error: (err) => {
           this.toaster.error(err.error.message)
@@ -223,7 +223,6 @@ export class SeatLayoutComponent {
     this.commonService.setUserSelectedShow(this.activeShow);
     this.fetchVenueById()
     this.getReservedSeatsByShowId(this.activeShow.showIds[0])
-    this.randomizeBookedForDemo();
     this.clearSelection();
     this.draw();
   }
@@ -272,7 +271,7 @@ export class SeatLayoutComponent {
           const x = startX + (c - 1) * (this.seat.w + this.seat.gapX);
 
           const seat: Seat = {
-            id: `${rowLabel}-${c.toString().padStart(2, '0')}`,
+            id: `${rowLabel}${c.toString()}`,
             row: rowLabel,
             col: c,
             x, y,
@@ -295,9 +294,8 @@ export class SeatLayoutComponent {
   }
 
   private randomizeBookedForDemo() {
-    const reservedSeats = ["A-01", "D-02", "E-03", "A-05"];
 
-    const reservedSeatObjects = reservedSeats.map(id => {
+    const reservedSeatObjects = this.reservedSeats.map(id => {
       const found = this.seats.find(s => s.id === id);
       return found
         ? {
@@ -370,7 +368,7 @@ export class SeatLayoutComponent {
         yTitleAnchor = first.y - this.blockTitleGap + 4;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#555';
-        ctx.fillText(`${cat.price} ${cat.layoutName}`, canvas.width / this.dpi / 2 - this.offsetX, yTitleAnchor);
+        ctx.fillText(`₹${cat.price} ${cat.layoutName.toUpperCase()}`, canvas.width / this.dpi / 2 - this.offsetX, yTitleAnchor);
       }
 
       const catRows = [...new Set(this.seats.filter(s => s.categoryId === cat.layoutName).map(s => s.row))];
@@ -383,7 +381,7 @@ export class SeatLayoutComponent {
         ctx.fillText(row, 20, firstInRow.y + firstInRow.h - 6);
       });
 
-      this.drawScreen3D()
+      this.drawScreen3D();
 
       for (const s of this.seats.filter(S => S.categoryId === cat.layoutName)) {
         this.drawSeatRect(s);
@@ -468,7 +466,6 @@ export class SeatLayoutComponent {
     ctx.fillText(label, x + w / 2, y + h / 2 + 3);
   }
 
-
   onCanvasClick(evt: MouseEvent) {
     const rect = this.canvasRef.nativeElement.getBoundingClientRect();
     const x = evt.clientX - rect.left - this.offsetX;
@@ -533,8 +530,6 @@ export class SeatLayoutComponent {
 
     this.draw();
   }
-
-
 
   // ----- Dragging -----
   private startDrag(e: MouseEvent | TouchEvent) {
@@ -621,7 +616,6 @@ export class SeatLayoutComponent {
     this.canvasRef.nativeElement.style.cursor = overSeat ? "pointer" : "grab";
   }
 
-
   handleBookNow(): void {
     let user = this.authService.getUserFromToken()
     let payload = [
@@ -644,6 +638,7 @@ export class SeatLayoutComponent {
       },
       error: (err) => {
         this.toaster.error(err.error.message)
+        this.close()
       }
     })
   }

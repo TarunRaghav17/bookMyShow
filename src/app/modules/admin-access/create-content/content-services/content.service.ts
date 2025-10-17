@@ -11,10 +11,10 @@ export class ContentService {
   constructor(private http: HttpClient) { }
 
   baseUrl = environment.baseUrl
-  
+
 
   getContentByType(eventType: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/api/events/filter`, { type:eventType })
+    return this.http.post<any>(`${this.baseUrl}/api/events/filter`, { type: eventType })
   }
 
   getLanguagesByContentType(contentType: string | null) {
@@ -39,5 +39,8 @@ export class ContentService {
 
   getMoreFiltersByContentType(contentType: string | null) {
     return this.http.get<any>(`${this.baseUrl}/api/events/more-filters?eventType=${contentType}`)
+  }
+  getAvailableTimeSlots(venueId: string, date: string, screenId?: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/venues/${venueId}/available-timeslots?${screenId? `screenId=${screenId}`:``}&date=${date}`)
   }
 }

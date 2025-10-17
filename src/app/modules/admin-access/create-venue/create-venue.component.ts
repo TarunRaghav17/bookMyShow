@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { VenuesService } from './venues-services/venues.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../services/common.service';
@@ -98,22 +98,73 @@ export class CreateVenueComponent implements OnInit {
     this.titleService.setTitle('Create Venue')
 
     this.venueForm = this.fb.group({
-      venueName: ['', [Validators.required, Validators.pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)
+      venueName: ['', [Validators.required, this.nameValidator()
       ]],
       address: this.fb.group({
-        street: ['', [Validators.required, Validators.pattern(/^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$/)]],
+        street: ['', [Validators.required, this.streetNameValidator()]],
         cityName: ['', Validators.required],
         pin: ['', [Validators.required, Validators.pattern(/^[0-9]{6}$/)]]
       }),
       venueCapacity: ['', [Validators.required, Validators.min(5), Validators.pattern(/^[0-9]+$/)]],
       venueType: ['', Validators.required],
-      supportedCategories: this.fb.array([], [Validators.required]),
-      amenities: this.fb.array([]),
+      supportedCategories: this.fb.array([], Validators.required),
+      amenities: this.fb.array([], [this.nameValidator()]),
 
     });
 
     this.fetchCities()
   }
+
+
+
+
+  /**
+  * @description custom validator that validates venueName
+  * @author Inzamam
+  * @returnType boolean
+  */
+  nameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      if (/^\s|\s$/.test(control.value)) {
+        return { invalidSpace: true };
+      }
+
+      if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
+        return { invalidCharacter: true };
+      }
+
+      if (/^-|-$/.test(control.value)) {
+        return { invalidHyphen: true };
+      }
+
+      return null;
+    };
+  }
+  /**
+   * @description custom validator that validates street name
+   * @author Inzamam
+   * @returnType boolean
+   */
+  streetNameValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+
+      if (/^\s|\s$/.test(control.value)) {
+        return { invalidSpace: true };
+      }
+
+      if (!/^[A-Za-z0-9-,\s]+$/.test(control.value)) {
+        return { invalidCharacter: true };
+      }
+
+      if (/^[-,]|[-,]$/.test(control.value)) {
+        return { invalidSymbol: true };
+      }
+
+      return null;
+    };
+  }
+
 
 
   /**
@@ -161,58 +212,6 @@ export class CreateVenueComponent implements OnInit {
   }
 
 
-  //--------------------------- remove-start------------------------
-  createTimeSlots() {
-    return this.fb.group({
-      startTime: ['', [Validators.required]],
-      endTime: [{ value: '', disabled: true }, [Validators.required]]
-    })
-  }
-  get timeSlots() {
-    return this.venueForm.get('timeSlots') as FormArray
-  }
-  addTimeSlot() {
-    if (this.timeSlots.length < 10) {
-      this.timeSlots.push(this.createTimeSlots())
-    }
-    return
-  }
-  removeTimeSlot(index: number) {
-    this.timeSlots.removeAt(index);
-  }
-
-  onSlotDurationChange(event: any) {
-    this.slotDuration = Number(event.target.value)
-  }
-
-  onSlotStartTimeChange(slot: AbstractControl, slotIndex: number) {
-    let startTime = slot.get('startTime')?.value;
-
-    // enforce startTime >= prev endTime
-    let prevEnd = this.getPrevEndTime(slotIndex);
-    if (startTime < prevEnd) {
-      slot.get('startTime')?.setValue(this.addMinutes(prevEnd, 30));
-      startTime = prevEnd;
-    }
-    let endTime = this.addMinutes(startTime, this.slotDuration);
-    slot.get('endTime')?.setValue(endTime);
-  }
-
-  getPrevEndTime(slotIndex: number): string {
-    if (slotIndex === 0) return "00:00";
-    const prevSlot = this.timeSlots.at(slotIndex - 1)?.getRawValue();
-    return prevSlot?.endTime || "00:00";
-  }
-
-  addMinutes(start: string, minutes: number): string {
-    const [h, m] = start.split(':').map(Number);
-    const date = new Date(0, 0, 0, h, m);
-    date.setMinutes(date.getMinutes() + minutes);
-    return date.toTimeString().substring(0, 5); // "HH:mm"
-  }
-
-  // --------------remove-end-------------------
-
   /**
   * @description function that handles supported category change .
   * @author Inzamam
@@ -226,6 +225,8 @@ export class CreateVenueComponent implements OnInit {
       let index = this.categories.controls.findIndex((ctrl) => ctrl.value === event.target.value)
       if (index != -1) this.categories.removeAt(index);
     }
+    this.venueForm.get('supportedCategories')?.markAsTouched()
+    this.venueForm.get('supportedCategories')?.updateValueAndValidity();
   }
   /**
     * @description getter function to get screens as FormArray.
@@ -242,7 +243,7 @@ export class CreateVenueComponent implements OnInit {
     */
   createScreen(): FormGroup {
     return this.fb.group({
-      screenName: ['', Validators.required],
+      screenName: ['', [Validators.required, this.nameValidator()]],
       layouts: this.fb.array([this.createLayout()])
     })
   }
@@ -261,6 +262,7 @@ export class CreateVenueComponent implements OnInit {
     * @returnType void
     */
   removeScreen(index: number) {
+    if (this.screens.controls.length <= 1) return;
     this.screens.removeAt(index)
   }
   /**
@@ -309,9 +311,9 @@ export class CreateVenueComponent implements OnInit {
     */
   createLayout(): FormGroup {
     return this.fb.group({
-      layoutName: ['', Validators.required],
+      layoutName: ['', [Validators.required, this.nameValidator()]],
       rows: this.fb.array([], Validators.required),
-      cols: [12, [Validators.required, Validators.pattern(/^[0-9]{2}$/)]]
+      cols: [12, [Validators.required]]
     })
   }
 
@@ -333,8 +335,9 @@ export class CreateVenueComponent implements OnInit {
   * @params screen from where to remove and index which one to remove
   * @returnType void
   */
-  removeLayout(screen: AbstractControl, $index: number) {
-    this.getLayouts(screen).removeAt($index)
+  removeLayout(screen: AbstractControl, index: number) {
+    if (this.getLayouts(screen).length <= 1) return;
+    this.getLayouts(screen).removeAt(index)
   }
 
 
@@ -414,8 +417,9 @@ export class CreateVenueComponent implements OnInit {
       const index = rows.controls.findIndex(x => x.value === event.target.value);
       rows.removeAt(index)
     }
+    layout.get('rows')?.markAsTouched()
+    layout.get('rows')?.updateValueAndValidity();
   }
-
 
 }
 
