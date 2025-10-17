@@ -86,7 +86,7 @@
                     <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card " (click)="
         onDateChange($index,date)
         " [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(0, 200, 83)':'',
-        'not-allowed':'pointer',}" [ngClass]="{'date_disabled':$index>2}">
+        'not-allowed':'pointer',}" [ngClass]="{'date_disabled':$index>5}">
                         <div>{{date.day}}</div>
                         <div style="font-weight: bold; font-size:18px ;">{{date?.dateNum}}</div>
                         <div>{{date.month}}</div>
@@ -101,7 +101,7 @@
                 <div class="d-flex gap-2 ">
                     @for (show of item.shows; track $index) {
                     <label class="time-btn-wrapper">
-                        <input type="radio" name="selectedShow" [value]="show.time" class="hidden-radio"
+                        <input type="radio" name="selectedShow" [value]="show.time" class="hidden-radio" 
                             [(ngModel)]="selectedTime">
                         <div class="time-btn">
                             {{ show.time }}
@@ -113,7 +113,7 @@
             }
             @empty {
                 <div class="text-danger mt-4 ">
-                    <h5 class="d-flex no_shows">No shows found</h5>
+                    <h5 class="d-flex no_shows">No shows found for this Events</h5>
                 </div>
             }
             }

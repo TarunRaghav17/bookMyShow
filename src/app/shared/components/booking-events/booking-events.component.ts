@@ -169,7 +169,8 @@ export class BookingEventsComponent implements OnInit {
 
 
   onDateChange(index: number, dateObj: any) {
-    if (index < 3) {
+    if (index < 6) { 
+      this.selectedTime=""
       this.selectedDate = dateObj;
       this.commonService.setUserSelectedDate(dateObj);
       this.getShows();
@@ -177,7 +178,7 @@ export class BookingEventsComponent implements OnInit {
   }
   initializeDateSelectionArray() {
     let today = new Date();
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 9; i++) {
       let dateObj = new Date();
       dateObj.setDate(today.getDate() + i)
       this.dateSelectionArray.push({
