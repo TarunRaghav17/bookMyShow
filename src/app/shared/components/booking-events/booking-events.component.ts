@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute} from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../../auth/auth-service.service';
@@ -13,8 +13,10 @@ import { AuthService } from '../../../auth/auth-service.service';
   styleUrl: './booking-events.component.scss'
 })
 export class BookingEventsComponent implements OnInit {
+  dateSelectionArray: any[] = [];
+  selectedTime: string = '';
 
-  constructor(private authService: AuthService, private commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private router: Router, private location: Location, private modalService: NgbModal) {
+  constructor(private authService: AuthService, public commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute,  private location: Location, private modalService: NgbModal) {
     this.user = this.authService.getUserFromToken()
   }
 
@@ -29,6 +31,8 @@ export class BookingEventsComponent implements OnInit {
   bookeSeats: any[] = []
   selectedSeats: any[] = []
   eventId: any
+  selectedDate: any; 
+  activeTab: 'step1' | 'step2' = 'step1';
 
   ngOnInit(): void {
     this.title = this.route.snapshot.paramMap.get('eventname');
@@ -37,9 +41,9 @@ export class BookingEventsComponent implements OnInit {
     this.getShows();
     this.selectedSeats = this.getSelectedSeats(this.eventId);
     this.value = this.selectedSeats.length || 1;
+    this.initializeDateSelectionArray()
+
   }
-
-
   addMember() {
     this.add = true;
     this.updateTotalMoney();
@@ -61,14 +65,13 @@ export class BookingEventsComponent implements OnInit {
     }
   }
 
-
   updateTotalMoney() {
     this.totalMoney = this.value * this.money;
   }
 
-  getShows() {
+  getShows(_selectedDate?: any) {
     this.eventId = this.route.snapshot.paramMap.get('id')
-    this.date = this.route.snapshot.paramMap.get('date')
+    this.date = this.commonService.getUserSelectedDate()?.today ?? this.route.snapshot.paramMap.get('date')
     this.commonService.getShowsById(this.eventId, this.date).subscribe({
       next: (res) => {
         this.allShows = res.data
@@ -106,17 +109,14 @@ export class BookingEventsComponent implements OnInit {
             "showId": this.allShows[0]?.showId,
             "date": this.date,
             "time": this.allShows[0]?.time,
-            "reservedSeats": this.selectedSeats
           }
         ]
 
         this.commonService.bookUserSeats(sendPayLoad).subscribe({
-          next: (res) => console.log(res),
+          next: (res) =>this.allShows=res,
           error: (err) => this.toastr.error(err.message)
         })
       }
-      this.toastr.success(`ticket booked successfully for ${this.title}`)
-        this.router.navigate(['/explore/home'])
     })
   }
 
@@ -144,7 +144,7 @@ export class BookingEventsComponent implements OnInit {
 
   setSelectedSeats(eventId: string | number, seats: string[]) {
     let allEvents: { eventId: string | number, selectedSeats: string[] }[] =
-    JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
+      JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
     const index = allEvents.findIndex(e => e.eventId == eventId);
     if (index > -1) {
       allEvents[index].selectedSeats = seats;
@@ -154,4 +154,29 @@ export class BookingEventsComponent implements OnInit {
     localStorage.setItem('selectedSeatsByEvent', JSON.stringify(allEvents));
   }
 
+  setActiveTab(tab: 'step1' | 'step2') {
+    this.activeTab = tab;
+  }
+ 
+
+onDateChange(index: number, dateObj: any) {
+  if (index < 3) {
+    this.selectedDate = dateObj; 
+    this.commonService.setUserSelectedDate(dateObj); 
+    this.getShows();
+  }
+}
+  initializeDateSelectionArray() {
+    let today = new Date();
+    for (let i = 0; i < 7; i++) {
+      let dateObj = new Date();
+      dateObj.setDate(today.getDate() + i)
+      this.dateSelectionArray.push({
+        day: dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
+        dateNum: dateObj.getDate(),
+        month: dateObj.toLocaleDateString('en-US', { month: 'short' }),
+        today: dateObj.toISOString().split('T')[0]
+      })
+    }
+  }
 }

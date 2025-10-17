@@ -26,6 +26,7 @@ export class CommonService {
   _userSelectedDate: any = localStorage.getItem('_userSelectedDate');
   userSelectedDate = signal<any>(JSON.parse(this._userSelectedDate))
 
+
   _userSelectedShow: any = localStorage.getItem('_userSelectedShow');
   userSelectedShow = signal<any>(JSON.parse(this._userSelectedShow))
 
@@ -36,7 +37,8 @@ export class CommonService {
     private http: HttpClient,
     private sanitizer: DomSanitizer,
     private loaderService: LoaderService
-  ) { }
+  ) {
+  }
 
   /**
  * @description set user selected language and format
@@ -94,7 +96,7 @@ export class CommonService {
   getUserSelectedShow() {
     return this.userSelectedShow()
   }
-
+  checkedDate: any;
   /**
 * @description set user selected date
 * @author Inzamam
@@ -102,6 +104,7 @@ export class CommonService {
 */
   setUserSelectedDate(payload: any) {
     this.userSelectedDate.set(payload)
+    this.checkedDate = payload
     localStorage.setItem('_userSelectedDate', JSON.stringify(payload));
 
   }

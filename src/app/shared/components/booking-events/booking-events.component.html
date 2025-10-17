@@ -1,127 +1,217 @@
 <div class="container-fluid">
     <div class="row g-0">
         <div class="header-section">
-            <div class="col-12 main_conatiner">
+            <div class="col-12 main_container d-flex justify-content-between align-items-center">
                 <div class="col-4">
                     <div class="logo_container">
-                        <img src="assets/images/logo.png" class="logo" alt="">
+                        <img src="assets/images/logo.png" class="logo" alt="Logo" />
                     </div>
                 </div>
-                <div class="col-4 center_title_moviename justify-content-start">
-                    <div class="sicon_container">
+                <div class="col-4 center_title_moviename d-flex align-items-center justify-content-start">
+                    <div class="sicon_container me-2">
                         <i class="fa fa-angle-left left_arrow" aria-hidden="true" (click)="goBack()"></i>
                     </div>
-                    <div class="tittle_container text-center">
-                        <h1 class="events_name_tittle text-center">{{title}}</h1>
+                    <div class="title_container text-center">
+                        <h1 class="events_name_title">{{ title }}</h1>
                     </div>
                 </div>
+
+                <div class="col-4"></div>
+            </div>
+            <!-- Sub Header Tabs -->
+            <div class="col-12 d-flex justify-content-center">
                 <div class="col-4">
-
-                </div>
-            </div>
-
-            <div class="sub_header bg-white d-flex justify-content-center gap-2">
-                <div class="sub_content">
-                    <div class="d-flex justify-content-center align-items-center gap-2">
-                        <span class="sub_header_tittle fs-5">Ticket</span>
+                    <div class="sub_header bg-white d-flex justify-content-start gap-2 mt-2 px-4">
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link step_number" [ngClass]="{ active: activeTab === 'step1' }"
+                                    type="button" (click)="setActiveTab('step1')">
+                                    <div class="step-indicator">
+                                        <div class="step">
+                                            <span class="step-number">1</span>
+                                            <span class="step_title">Date & Time</span>
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <i class="fa fa-angle-right mx-2" aria-hidden="true"></i>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link step_number" [ngClass]="{ active: activeTab === 'step2' }"
+                                    type="button" (click)="setActiveTab('step2')">
+                                    <div class="step-indicator">
+                                        <div class="step">
+                                            <span class="step-number">2</span>
+                                            <span class="step_title">Ticket</span>
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            @for (item of allShows; track $index)
-            {
-            <div class="theater_detail_info">
+            <!-- Theater Info -->
+            @for (item of allShows; track $index) {
+            <div class="theater_detail_info mt-3">
                 <div class="col-4 titles_theater_box">
-                    <h4 class="theater_name_text">{{item.venueName}}</h4>
-                    <p class="theater_name_text">{{date}} | {{item.shows?.[0]?.time}} PM</p>
+                    <h4 class="theater_name_text">{{ item.venueName }}</h4>
+                    @if(activeTab==="step2"){
+                    <p class="theater_name_text">
+                        {{selectedDate.today}} | {{selectedTime}} PM
+                    </p>
+                    }
+
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- Tab Content -->
+<div class="tab-content mt-3" id="myTabContent">
+    @if(activeTab ==='step1'){
+    <div class="tab-pane fade show d-flex justify-content-center" [ngClass]="{ 'active show': activeTab === 'step1' }">
+        <div class="col-4 py-5 mt-5">
+            <div class="mb-3">
+                <span class="status-dot available"></span>Available &nbsp;&nbsp;
+                <span class="status-dot fast-filling"></span>Fast Filling &nbsp;&nbsp;
+                <span class="status-dot sold-out"></span>Sold Out
+            </div>
+
+            <div class="mt-3">
+                <h6 class="fw-semibold mb-3">Select Date</h6>
+                <div class="d-flex align-items-center gap-1" style="font-size: 12px;">
+                    @for(date of dateSelectionArray;track $index){
+                    <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card " (click)="
+        onDateChange($index,date)
+        " [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(0, 200, 83)':'',
+        'not-allowed':'pointer',}" [ngClass]="{'date_disabled':$index>2}">
+                        <div>{{date.day}}</div>
+                        <div style="font-weight: bold; font-size:18px ;">{{date?.dateNum}}</div>
+                        <div>{{date.month}}</div>
+                    </div>
+                    }
+                </div>
+            </div>
+            @if(commonService.checkedDate){
+            @for (item of allShows; track $index) {
+            <div class="mt-5">
+                <h6>Select time</h6>
+                <div class="d-flex gap-2 ">
+                    @for (show of item.shows; track $index) {
+                    <label class="time-btn-wrapper">
+                        <input type="radio" name="selectedShow" [value]="show.time" class="hidden-radio"
+                            [(ngModel)]="selectedTime">
+                        <div class="time-btn">
+                            {{ show.time }}
+                        </div>
+                   </label>
+                    }
                 </div>
             </div>
             }
             @empty {
-            <div class="text-center text-danger shadow-sm mt-3 fs-4 bg-white">
-                Sorry , No Shows Found for this Events
-            </div>
+                <div class="text-danger mt-4 ">
+                    <h5 class="d-flex no_shows">No shows found</h5>
+                </div>
+            }
             }
         </div>
-
     </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row d-flex flex-column justify-content-between g-0">
-        <div class="main_container_box_content">
-            <div class="events_priceList d-flex justify-content-center align-items-center">
-                <div class="col-4 titles_theater_box">
-                    <div class="theater_name_text">Select Tickets</div>
-                    <span class="theater_sub_name">You can add up to 10 tickets only</span>
-                </div>
-            </div>
-            <div class="d-flex justify-content-center">
-                <div class="col-4 titles_theater_box">
-                    <div class="select_ticket_sloats mt-3">
-                        <div class="rate_seatting_text">
-                            <span class="seatting_type">ENTRY PASS</span>
-                            <span class="seatting_price">{{money | currency:'INR'}}</span>
+    <div class="col-12 d-flex justify-content-center">
+        <div class="mt-4 text-center col-4 mb-2">
+            <button class="btn btn-danger w-100" (click)="setActiveTab('step2')" [disabled]="!selectedTime">
+                Proceed to Tickets
+            </button>
+        </div>
+    </div>
+    }
+    @if (activeTab ==='step2') {
+    <div class="tab-pane fade" [ngClass]="{ 'active show': activeTab === 'step2' }">
+        <div class="container-fluid">
+            <div class="row d-flex flex-column justify-content-between g-0">
+                <div class="main_container_box_content">
+                    <div class="events_priceList d-flex justify-content-center align-items-center">
+                        <div class="col-4  text-start">
+                            <span class="ticket_limit">You can add up to 10 tickets only</span>
                         </div>
-                        <div>
-                            @if(!add){
-                            <button class="btn_add" (click)="addMember()">Add</button>
-                            }@else {
-                            <div class="counters_ticket">
-                                <span class="shine_text" (click)="decreaseCounter()">
-                                    -
-                                </span>
-                                <span>
-                                    {{value}}
-                                </span>
-                                <span class="shine_text" (click)="increaseCounter()">
-                                    +
-                                </span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <div class="col-4 titles_theater_box">
+                            <div class="select_ticket_sloats mt-3">
+                                <div class="rate_seatting_text">
+                                    <span class="seatting_type">ENTRY PASS</span>
+                                    <span class="seatting_price">{{money | currency:'INR'}}</span>
+                                </div>
+                                <div>
+                                    @if(!add){
+                                    <button class="btn_add" (click)="addMember()">Add</button>
+                                    }@else {
+                                    <div class="counters_ticket">
+                                        <span class="shine_text" (click)="decreaseCounter()">
+                                            -
+                                        </span>
+                                        <span>
+                                            {{value}}
+                                        </span>
+                                        <span class="shine_text" (click)="increaseCounter()">
+                                            +
+                                        </span>
+                                    </div>
+                                    }
+                                </div>
                             </div>
-                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="procceed_button_section">
-    @if(add){
-    <div class="col-4 d-flex justify-content-between align-items-center">
-        <div class="d-flex flex-column gap-1">
-            <span class="seatting_type">TOTAL PRICE</span>
-            <span class="seatting_price">{{totalMoney | currency:'INR'}}</span>
-        </div>
-        @if(allShows.length!=0){
-<div class="button_section">
-            <button class="btn btn-danger" (click)="bookingConfirmation(confirmModal)">BOOK</button>
-        </div>
-        }
-        
-    </div>
-    }
-    @else {
-    <div class="col-4">
-        <button class="btn btn-secondary w-100">Proceed</button>
-    </div>
-    }
-    <ng-template #confirmModal let-modal>
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 ">
-                <div class="modal-header justify-content-center">
-                    <h4 class="modal-title" id="ticketBookingConfirmation">Ticekt Booking Confirmation</h4>
-                </div>
-
-                <div class="modal-body border-0 text-center">
-                    <p>you are about to book seats <span class="text-danger">{{selectedSeats}}</span></p>
-                    <h5>Total Price : {{totalMoney | currency:'INR'}}</h5>
-                </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
-                    <button type="button" class="btn btn-danger" (click)="modal.close('Book')">Book</button>
-                </div>
+    <div class="proceed_button_section mt-4 text-center shadow py-2">
+        @if (add) {
+        <div class="col-4 mx-auto d-flex justify-content-between align-items-center">
+            <div class="d-flex flex-column gap-1 text-start">
+                <span class="seating_type">TOTAL PRICE</span>
+                <span class="seating_price">{{ totalMoney | currency: 'INR' }}</span>
+            </div>
+            <div class="button_section">
+                <button class="btn btn-danger" (click)="bookingConfirmation(confirmModal)">BOOK</button>
             </div>
         </div>
-    </ng-template>
+        } @else {
+        <div class="col-4 mx-auto">
+            <button class="btn btn-secondary w-100" (click)="setActiveTab('step1')">Back</button>
+        </div>
+        }
+    </div>
+    }
 </div>
+<!-- Confirmation Modal -->
+<ng-template #confirmModal let-modal>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title" id="ticketBookingConfirmation">
+                    Ticket Booking Confirmation
+                </h4>
+            </div>
+            <div class="modal-body border-0 text-center">
+                <p>
+                    You are about to book
+                    <span class="text-danger">{{selectedSeats}}</span>
+                </p>
+                <h5>Total Price: {{ totalMoney | currency: 'INR' }}</h5>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-danger" (click)="modal.close('Book')">
+                    Book
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>
