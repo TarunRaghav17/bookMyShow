@@ -111,7 +111,7 @@ export class BookingEventsComponent implements OnInit {
             "showId": this.allShows[0]?.showId,
             "date": this.selectedDate.today,
             "time": this.selectedTime,
-            "eventList":this.selectedSeats
+            "eventSeats":this.selectedSeats
           }
         ]
 
@@ -188,4 +188,5 @@ export class BookingEventsComponent implements OnInit {
       })
     }
   }
+  
 }

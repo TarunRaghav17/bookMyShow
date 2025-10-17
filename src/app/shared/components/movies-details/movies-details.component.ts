@@ -97,4 +97,42 @@ export class MoviesDetailsComponent {
       })
       .catch(() => { });
   }
+    openShareModal(serviceModal: TemplateRef<any>) {
+    this.modalService.open(serviceModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'share-modal',
+      backdrop: 'static'
+    });
+  }
+   closemodal() {
+    this.modalService.dismissAll();
+  }
+
+  getCurrentPath() {
+    let url = window.location.href;
+    this.copyLink(url);
+  }
+  
+/**
+  * @description method for copy the current URL
+  * @author Manu Shukla
+  */
+  copyLink(link: string) {
+    const textarea = document.createElement('textarea');
+    textarea.value = link;
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        this.toaster.success("Link copied successfully");
+        this.closemodal();
+      } else {
+        this.toaster.error("Copy command was unsuccessful");
+      }
+    } catch (err) {
+      this.toaster.error("Failed to copy");
+    }
+    document.body.removeChild(textarea);
+  }
 }
