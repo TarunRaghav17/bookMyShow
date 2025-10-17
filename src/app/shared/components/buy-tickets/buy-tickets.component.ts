@@ -121,7 +121,6 @@ export class BuyTicketsComponent implements AfterViewInit {
           this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) => {
             return venue.screens.some((screen: any) => {
               return screen.showTimes.some((showTime: any) => {
-                // console.log((showTime.time >= (filter.value.split(',')[1]).split('-')[0]) && (showTime.time <= (filter.value.split(',')[1]).split('-')[1]))
                 return (showTime.time >= (filter.value.split(',')[1]).split('-')[0]) && (showTime.time <= (filter.value.split(',')[1]).split('-')[1])
               });
             });

@@ -638,6 +638,7 @@ export class SeatLayoutComponent {
       },
       error: (err) => {
         this.toaster.error(err.error.message)
+        this.close()
       }
     })
   }

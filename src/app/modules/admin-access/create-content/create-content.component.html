@@ -265,15 +265,10 @@
                 @for(screen of screens.controls ;track $index){
                 <div class="w-100  card my-3 mx-auto  mb-1 p-3" [formGroupName]="$index">
                     <h4> Venue Name: {{screen.get('venueName')?.value}}</h4>
-
-                    <h6>{{screen.get('venueId')?.value}}</h6>
-                    <h6>{{screen}}</h6>
-
                     <span class="fs-5 fw-semibold  mb-2">Screen Name: {{screen.get('screenName')?.value}} </span>
                     <div formArrayName="layouts" class="mb-1 w-100">
                         <span class="fs-5 fw-semibold">Categories</span>
                         @for(layout of getLayouts(screen).controls ;track $index){
-                        <h6>{{layout.get('id')?.value}}</h6>
                         <div [formGroupName]="$index" class="row my-3 d-flex  w-100 mx-auto ">
                             <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
                                 <span class="my-0 fw-semibold"> Name: </span>
@@ -293,14 +288,14 @@
                                     {{layout.get('cols')?.value}}
                                 </span>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center  gap-2 col-2">
-                                <span class="my-0 fw-semibold"> Total Seats: </span>
-                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1">
+                            <div class="d-flex align-items-center justify-content-center   border border-danger gap-2 col-2">
+                                <span class="my-0 fw-semibold  border border-danger w-100 "> Total Seats: </span>
+                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1  border border-success">
                                     {{+layout.get('cols')?.value * +getRows(layout)}}
                                 </span>
                             </div>
                             <div class="d-flex align-items-center justify-content-center gap-2 col-4">
-                                <span class="my-0 fw-semibold"> Price:
+                                <span class="my-0 fw-semibold d-flex" > Price:
                                     <small class="text-danger reuired">*</small>
                                 </span>
 
@@ -346,15 +341,14 @@
                                 <input type="date" class="form-control me-3 w-25 " formControlName="date"
                                     [min]="validateShowStartDate($index)"
                                     (change)="fetchFreeTimeSlots(screen.get('venueId')?.value,$event,getLayouts(screen).at($index).get('id')?.value)">
-                                <!-- generateSlots('12:00','18:00',eventShowForm.get('runTime')?.value,30)"> -->
 
                                 <div ngbDropdown [autoClose]="'outside'"
                                     class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
                                     <label
-                                        class="form-label  d-flex align-items-center my-0 justify-content-center">Times
-                                        <small class="text-danger reuired">*</small>
+                                        class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold"> Times: 
+                                        <small class="text-danger reuired"> *</small>
                                     </label>
-                                    <button
+                                    <button [disabled]="show.get('date')?.invalid"
                                         class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
                                         ngbDropdownToggle>
                                         {{ this.getStartTime(show).controls.length > 0 ?
@@ -368,7 +362,6 @@
                                         @for(slot of availableSlots; track $index) {
                                         <div class="dropdown-item">
                                             <div class="form-check">
-
                                                 <input type="checkbox" class="form-check-input" [value]="slot | json"
                                                     [checked]="getStartTime(show).value.includes(slot.start)"
                                                     (change)="toggleShowTime($event,show)">
@@ -385,46 +378,6 @@
                                     [disabled]="this.getShows(screen).length <= 1"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
-                            <!-- start-time array -->
-                            <!--    <div class="row g-2  mx-auto w-100" formArrayName="startTime">
-                                @for(time of getStartTime(show).controls ;track $index){
-                                <div class="col-6 col-md-3">
-                                    <div
-                                        class="d-flex flex-column align-items-center justify-content-center gap-2 border  p-2 rounded">
-                                        <button class="btn btn-close  ms-auto"
-                                            (click)="removeShowTime(show, $index)"></button>
-
-                                        <!-- start -->
-                            <!-- <div class="d-flex align-items-center justify-content-center flex-column gap-2 w-100"
-                                            [formGroupName]="$index">
-                                            <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                                <span class="fw-semibold col-4 fs-6 p-0">Start Time: <small
-                                                        class="text-danger reuired">*</small></span>
-                                                <input type="time" class="form-control form-control-sm w-100 "
-                                                    formControlName="sTime" (change)="handleOnShowTimeChange(time,show)"
-                                                    [ngClass]="{'is-invalid':time.get('sTime')?.touched &&
-                                                time.get('sTime')?.hasError('invalidSlot')}" />
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                                <span class="fw-semibold col-4 fs-6 p-0">End Time: <small
-                                                        class="text-danger reuired">*</small></span>
-                                                <input type="time" class="form-control form-control-sm w-100 "
-                                                    formControlName="eTime" />
-                                            </div>
-                                        </div>
-                                        @if(time.get('sTime')?.touched &&
-                                        time.get('sTime')?.hasError('invalidSlot')) {
-                                        <div class="text-danger small">
-                                            Invalid start time
-                                        </div>
-                                        }
-                                    </div>
-                                </div>
-                                } -->
-                            <!-- </div> -->
-
-
-
                         </div>
                         }
                     </div>
@@ -433,12 +386,12 @@
             </div>
         </div>
         }
-        <!-- event type != movie -->
-        @for(venue of selectedVenueObj ;track $index){
-        <div class="w-100  card my-3 mx-auto  mb-1 p-3">
-            <h4> Venue Name: {{venue.id}}</h4>
 
-            @if(eventShowForm.get('shows')?.value && eventShowForm.get('eventType')?.value != ''){
+        <!-- event type != movie -->
+        @if(eventShowForm.get('shows')?.value && eventShowForm.get('eventType')?.value != ''){
+        @for(venue of selectedVenueObj ;track $index){
+        <div class="w-100  card my-3 mx-auto  mb-1 p-3 ">
+            <h4 class=" p-2"> Venue Name: {{venue.venueName}}</h4>
             <div class="d-flex align-items-center gap-4 my-3 px-3 w-auto">
                 <h4>Shows</h4>
                 <button class="btn btn-outline-success " (click)="addEventShow()">Add Show</button>
@@ -455,15 +408,13 @@
                         <input type="date" class="form-control me-3 w-25" [min]="validateShowStartDate($index)"
                             [max]="validateShowEndDate()" formControlName="date"
                             (change)="fetchFreeTimeSlots(venue.id,$event)">
-                        <!-- (change)="generateSlots('12:00','18:00',eventShowForm.get('runTime')?.value,30)"> -->
-
 
                         <div ngbDropdown [autoClose]="'outside'"
                             class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
-                            <label class="form-label  d-flex align-items-center my-0 justify-content-center">Times
+                            <label class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold"> Times: 
                                 <small class="text-danger reuired">*</small>
                             </label>
-                            <button
+                            <button [disabled]="show.get('date')?.invalid"
                                 class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
                                 ngbDropdownToggle>
                                 {{ this.getStartTime(show).controls.length > 0 ? this.getStartTime(show).value.join(',')
@@ -489,78 +440,15 @@
                             </div>
                             }
                         </div>
-
-
                         <button class="btn btn-outline-danger ms-auto" [disabled]=" this.shows.length<=1"
                             (click)="removeEventShow($index)">Remove</button>
                     </div>
-                    <!-- start-time array -->
-
-
-
-
-
-
-                    <!--
-               <div class="row g-2  mx-auto w-100" formArrayName="startTime">
-                    @for(time of getStartTime(show).controls; track $index) {
-                    <div class="col-6 col-md-3">
-                        <div
-                            class="d-flex flex-column align-items-center justify-content-center gap-2 border  p-2 rounded">
-                            <button class="btn btn-close  ms-auto" [disabled]="getStartTime(show).length <= 1"
-                                (click)="removeShowTime(show, $index)">
-                            </button>
-                            <div class="d-flex align-items-center justify-content-center flex-column gap-2 w-100"
-                                [formGroupName]="$index">
-
-
-                                <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                    <span class="fw-semibold col-4 fs-6 p-0">Start: <small
-                                            class="text-danger reuired">*</small></span>
-                                    <input type="time" class="form-control form-control-sm w-100 "
-                                        formControlName="sTime" (change)="handleOnShowTimeChange(time,show)"
-                                        [ngClass]="{'is-invalid':time.get('sTime')?.touched && time.get('sTime')?.hasError('invalidSlot')}" />
-                                </div>
-                                <div class="d-flex align-items-center justify-content-center gap-2 w-100">
-                                    <span class="fw-semibold col-4 fs-6 p-0">End: <small
-                                            class="text-danger reuired">*</small></span>
-                                    <input type="time" class="form-control form-control-sm w-100 "
-                                        formControlName="eTime" />
-                                </div>
-                                @if(time.get('sTime')?.touched &&
-                                time.get('sTime')?.hasError('invalidSlot')) {
-                                <div class="text-danger small">
-                                    Invalid start time
-                                </div>
-                                }
-
-
-
-                                 <select class="form-select form-select-sm" [formControlName]="$index">
-                                    <option value="" disabled selected>Select</option>
-                                    @for(slot of ['11:00', '13:00', '15:00', '18:00']; track $index) {
-                                    <option [value]="slot">{{ slot }}</option>
-                                    }
-                                    @empty {
-                                    <option disabled>No slots</option>
-                                    }
-                                </select> 
-                            </div>
-
-                        </div>
-                    </div>
-                    }
-                </div>
-            -->
-
-
-
-
                 </div>
                 }
             </div>
-            }
         </div>}
+        }
+
         @if(eventShowForm.get('price') && eventShowForm.get('eventType')?.value != ''){
         <div class="my-2 row d-flex align-items-center p-3 px-4 ">
             <div class="w-75 d-flex align-items-center py-3 gap-5 ">
