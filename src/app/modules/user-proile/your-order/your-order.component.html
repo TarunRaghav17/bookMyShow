@@ -7,22 +7,19 @@
                     <div class="col-container mb-4">
                         <div class="card">
                             <a class="img-card">
-                                <img [src]="booking.poster || 'https://1.bp.blogspot.com/-Bii3S69BdjQ/VtdOpIi4aoI/AAAAAAAABlk/F0z23Yr59f0/s640/cover.jpg'"
-                                    [alt]=" booking.movieName " />
+                                <img [src]="booking.eventPoster " [alt]=" booking.eventName " />
                             </a>
                             <div class="card-content p-3">
-                                <h4 class="card-title">{{ booking.movieName | truncate: 15 }}</h4>
-                                <p class="mb-1">Cinema: {{ booking.cinema }}</p>
+                                <h4 class="card-title">{{ booking.eventName | truncate: 15 }}</h4>
+                                <p class="mb-1">Cinema: {{ booking.venue }}</p>
                                 <p class="mb-1">Screen: {{ booking.screen }}</p>
                                 <p class="mb-1">Date: {{ booking.date }}</p>
                                 <p class="mb-1">Time: {{ booking.time }}</p>
                                 <p class="mb-1">Seats: {{ booking.seats.join(', ') }}</p>
                                 <p class="mb-1">Total Amount: ₹{{ booking.totalAmount }}</p>
                                 <p>
-                                    <span [ngClass]="{
-              'text-success': booking.bookingStatus === 'confirmed',
-              'text-danger': booking.bookingStatus === 'cancelled'
-            }">
+                                    <span
+                                        [ngClass]="{'text-success': booking.bookingStatus === 'confirmed','text-danger': booking.bookingStatus === 'cancelled'}">
                                         Status: {{ booking.bookingStatus | titlecase }}
                                     </span>
                                 </p>
