@@ -42,21 +42,20 @@ interface Venue {
 })
 export class BuyTicketsComponent implements AfterViewInit {
   venueShowsDetails: any;
-  filteredVenueShowsDetails: any[] | null = null;
+  filteredVenueShowsDetails: any[] = [];
 
   constructor(public commonService: CommonService, private route: ActivatedRoute, private router: Router,
     private toaster: ToastrService
   ) { }
 
   // -------test data------
-  maxPrice = 900;
+  maxPrice = 499;
   // ------------------
   selectedMovie = 'movie999'
   movieDetails: any | null = null
   dateSelectionArray: any = [];
   userSelectedDate: any;
   contentId: string | null = null
-  userSelectedPreference: any[] = []
   isOpen: boolean = false;
   searchValue: string = "";
 
@@ -64,7 +63,7 @@ export class BuyTicketsComponent implements AfterViewInit {
   priceFilters: any =
     {
       type: 'price',
-      data: [' ₹0 - 200', ' ₹201 - ₹400', ' ₹401 - ₹600']
+      data: [' ₹ 0 - 200', ' ₹ 201 - 400', ' ₹ 401 - 600', ' ₹ 601 - 800', ' ₹ 801 - 1000']
     }
 
   preferedTimeFilters: any = {
@@ -106,29 +105,31 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.selectedFilters.forEach((filter: any) => {
       switch (filter.type) {
         case 'price': {
-          this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) => {
-            return venue.screens.some((screen: any) => {
-              return screen.showTimes.some((showTime: any) => {
-                return showTime.availableCategories.some((category: any) => {
-                  return Number(category.categoryPrice) <= Number(filter.value.split('-')[1]);
-                });
-              });
-            });
-          });
+          const maxPrice = Number(filter.value.split('-')[1]);
+          this.venueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
+            venue.screens.some((screen: any) =>
+              screen.showTimes.some((showTime: any) =>
+                showTime.availableCategories.some((category: any) =>
+                  Number(category.categoryPrice) <= maxPrice
+                )
+              )
+            )
+          );
           break;
         }
         case 'preferedTime': {
-          this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) => {
-            return venue.screens.some((screen: any) => {
-              return screen.showTimes.some((showTime: any) => {
-                return (showTime.time >= (filter.value.split(',')[1]).split('-')[0]) && (showTime.time <= (filter.value.split(',')[1]).split('-')[1])
-              });
-            });
-          });
+          const [start, end] = filter.value.split(',')[1].split('-');
+          this.venueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
+            venue.screens.some((screen: any) =>
+              screen.showTimes.some((showTime: any) =>
+                showTime.time >= start && showTime.time <= end
+              )
+            )
+          );
           break;
         }
       }
-    })
+    });
   }
 
   /**

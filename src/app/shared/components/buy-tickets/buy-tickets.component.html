@@ -100,7 +100,7 @@
   <!-- Theatre List -->
   <div class="mb-4  bg-white">
     <!-- Theatres-->
-    @for(venue of filteredVenueShowsDetails || venueShowsDetails;track $index){
+    @for(venue of selectedFilters.length>0 ? filteredVenueShowsDetails : venueShowsDetails;track $index){
     @if(venue.venueName?.toLowerCase().includes(searchValue.toLowerCase())){
     <div class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height:auto;">
       <div class="d-flex flex-column  " style="width:25rem">
@@ -131,7 +131,7 @@
             <div class="d-flex flex-column mx-1">
               <span>₹{{cat.categoryPrice}}</span>
               <span class="p-0 m-0 ">
-                {{cat.categoryName}}
+                {{cat.categoryName | uppercase}}
               </span>
               <span class="p-0 m-0 text-success">{{cat.categoryStatus}}</span>
             </div>

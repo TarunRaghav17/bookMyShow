@@ -388,54 +388,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getStartTime(show).removeAt(index)
   }
 
-  // getAllStartTimesExcept(currentGroup: FormGroup, show: any): string[] {
-  //   const startTimeArray = this.getStartTime(show);
-  //   return startTimeArray.controls
-  //     .filter(g => g !== currentGroup)
-  //     .map(g => g.get('sTime')?.value)
-  //     .filter(Boolean);
-  // }
-
-  // handleOnShowTimeChange(group: any, show: any) {
-  //   const startTime = group.get('sTime')?.value;
-  //   const duration = this.eventShowForm.get('runTime')?.value;
-  //   if (!startTime || !duration) return;
-
-  //   // 1️⃣ Check if startTime is in available slots
-  //   const isAvailable = this.availableSlots.some(
-  //     slot => slot.start === startTime
-  //   );
-  //   if (!isAvailable) {
-  //     group.get('sTime')?.setErrors({ invalidSlot: true });
-  //     return;
-  //   }
-
-  //   //  if the startTime is already taken by another slot in the FormArray
-  //   const startTimesInForm = this.getAllStartTimesExcept(group, show);
-  //   if (startTimesInForm.includes(startTime)) {
-  //     group.get('sTime')?.setErrors({ duplicateSlot: true });
-  //     return;
-  //   }
-
-  //   // If valid, calculate and set end time
-  //   const [hours, minutes] = startTime.split(':').map(Number);
-  //   const startDate = new Date();
-  //   startDate.setHours(hours, minutes, 0, 0);
-
-  //   const endDate = new Date(startDate.getTime() + duration * 60000);
-  //   const endHours = String(endDate.getHours()).padStart(2, '0');
-  //   const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
-  //   const endTime = `${endHours}:${endMinutes}`;
-
-  //   group.get('eTime')?.setValue(endTime);
-  //   group.get('sTime')?.setErrors(null); // clear any previous error
-  // }
-
-
-
-
-
-
   get categories(): FormArray {
     return this.eventShowForm.get('categories') as FormArray;
   }
@@ -494,30 +446,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return null;
   }
 
-  // /**
-  // * @description custom validator for start time of show
-  // * @author Inzamam
-  // */
-  // validateStartTime(): ValidatorFn {
-  //   return (control: AbstractControl): ValidationErrors | null => {
-  //     const form = control.parent as FormGroup;
-  //     if (!form) return null; // in case it's not ready yet
-  //     const selectedDate = form.get('date')?.value;
-  //     const selectedTime = control?.value;
-  //     if (!selectedDate || !selectedTime) return null;
-  //     const today = new Date();
-  //     const selectedDateObj = new Date(selectedDate);
-  //     if (selectedDateObj.toDateString() === today.toDateString()) {
-  //       const [hours, minutes] = selectedTime.split(':').map(Number);
-  //       const selectedDateTime = new Date(selectedDateObj);
-  //       selectedDateTime.setHours(hours, minutes, 0, 0);
-  //       if (selectedDateTime < today) {
-  //         return { inValidStartTime: true };
-  //       }
-  //     }
-  //     return null;
-  //   };
-  // }
 
   /**
   * @description function to set minDate for show start date

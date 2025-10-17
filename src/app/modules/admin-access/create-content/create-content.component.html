@@ -288,9 +288,9 @@
                                     {{layout.get('cols')?.value}}
                                 </span>
                             </div>
-                            <div class="d-flex align-items-center justify-content-center   border border-danger gap-2 col-2">
-                                <span class="my-0 fw-semibold  border border-danger w-100 "> Total Seats: </span>
-                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1  border border-success">
+                            <div class="d-flex align-items-center justify-content-center   gap-2 col-2">
+                                <span class="my-0 fw-semibold   w-100 "> Total Seats: </span>
+                                <span class="bg-white text-dark  rounded px-3 py-2 w-75 my-1 ">
                                     {{+layout.get('cols')?.value * +getRows(layout)}}
                                 </span>
                             </div>
@@ -340,7 +340,7 @@
                                         class="text-danger reuired">*</small></span>
                                 <input type="date" class="form-control me-3 w-25 " formControlName="date"
                                     [min]="validateShowStartDate($index)"
-                                    (change)="fetchFreeTimeSlots(screen.get('venueId')?.value,$event,getLayouts(screen).at($index).get('id')?.value)">
+                                    (change)="fetchFreeTimeSlots(screen?.get('venueId')?.value,$event,getLayouts(screen).at($index).get('id')?.value)">
 
                                 <div ngbDropdown [autoClose]="'outside'"
                                     class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
@@ -453,7 +453,7 @@
         <div class="my-2 row d-flex align-items-center p-3 px-4 ">
             <div class="w-75 d-flex align-items-center py-3 gap-5 ">
                 <h4>Price : ₹ <small class="text-danger reuired">*</small></h4>
-                <input type="number" formControlName="price" min="99" max="499" class="form-control px-3 w-25 ms-1 "
+                <input type="number" formControlName="price" min="99" max="4999" class="form-control px-3 w-25 ms-1 "
                     [ngClass]="{'is-invalid':eventShowForm.get('price')?.touched && eventShowForm.get('price')?.invalid }" />
                 @if(eventShowForm.get('price')?.touched && eventShowForm.get('price')?.hasError('required')){
                 <div class="text-danger">

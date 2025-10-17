@@ -368,7 +368,7 @@ export class SeatLayoutComponent {
         yTitleAnchor = first.y - this.blockTitleGap + 4;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#555';
-        ctx.fillText(`${cat.price} ${cat.layoutName}`, canvas.width / this.dpi / 2 - this.offsetX, yTitleAnchor);
+        ctx.fillText(`₹${cat.price} ${cat.layoutName.toUpperCase()}`, canvas.width / this.dpi / 2 - this.offsetX, yTitleAnchor);
       }
 
       const catRows = [...new Set(this.seats.filter(s => s.categoryId === cat.layoutName).map(s => s.row))];
