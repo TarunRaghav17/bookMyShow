@@ -295,7 +295,7 @@
                                 </span>
                             </div>
                             <div class="d-flex align-items-center justify-content-center gap-2 col-4">
-                                <span class="my-0 fw-semibold d-flex" > Price:
+                                <span class="my-0 fw-semibold d-flex"> Price:
                                     <small class="text-danger reuired">*</small>
                                 </span>
 
@@ -340,12 +340,13 @@
                                         class="text-danger reuired">*</small></span>
                                 <input type="date" class="form-control me-3 w-25 " formControlName="date"
                                     [min]="validateShowStartDate($index)"
-                                    (change)="fetchFreeTimeSlots(screen?.get('venueId')?.value,$event,getLayouts(screen).at($index).get('id')?.value)">
+                                    (change)="fetchFreeTimeSlots(screen?.get('venueId')?.value,$event,screen?.get('screenId')?.value)">
 
                                 <div ngbDropdown [autoClose]="'outside'"
                                     class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
                                     <label
-                                        class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold"> Times: 
+                                        class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold">
+                                        Times:
                                         <small class="text-danger reuired"> *</small>
                                     </label>
                                     <button [disabled]="show.get('date')?.invalid"
@@ -359,7 +360,8 @@
                                     @if(availableSlots.length>0){
                                     <div ngbDropdownMenu aria-labelledby="showTimeDropdown" class="w-100 p-2"
                                         style="max-height: 200px; overflow-y: auto;">
-                                        @for(slot of availableSlots; track $index) {
+                                        @for(slots of availableSlots; track $index) {
+                                        @for(slot of slots.data; track $index) {
                                         <div class="dropdown-item">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" [value]="slot | json"
@@ -370,7 +372,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        }
+                                        }}
                                     </div>
                                     }
                                 </div>
@@ -411,7 +413,9 @@
 
                         <div ngbDropdown [autoClose]="'outside'"
                             class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
-                            <label class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold"> Times: 
+                            <label
+                                class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold">
+                                Times:
                                 <small class="text-danger reuired">*</small>
                             </label>
                             <button [disabled]="show.get('date')?.invalid"
@@ -425,7 +429,8 @@
                             @if(availableSlots.length>0){
                             <div ngbDropdownMenu aria-labelledby="showTimeDropdown" class="w-100 p-2"
                                 style="max-height: 200px; overflow-y: auto;">
-                                @for(slot of availableSlots; track $index) {
+                                @for(slots of availableSlots; track $index) {
+                                @for(slot of slots.data; track $index) {
                                 <div class="dropdown-item">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" [value]="slot | json"
@@ -436,7 +441,14 @@
                                         </label>
                                     </div>
                                 </div>
-                                }
+                                }}
+
+
+
+
+
+
+
                             </div>
                             }
                         </div>
