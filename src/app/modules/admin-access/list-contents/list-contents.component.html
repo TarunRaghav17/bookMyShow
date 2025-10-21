@@ -61,11 +61,11 @@
                             </ng-template>
                         </div>
                         <div class="card_body ">
-                            <h5 class="card-title text-muted">{{item.name}}</h5>
-                            <p class="card-text mx-1 my-1">{{content.type}}.</p>
+                            <h5 class="card-title text-muted">{{item?.name}} ({{item?.releasingOn}})</h5>
+                            <p class="card-text mx-1 my-1" [ngClass]="{'text-danger':content.type == 'upcomingMovie'}">{{content.type}}.</p>
                             <p class="card-text mx-1 my-1">{{item.languages?.join(', ')}}</p>
                             <p class="card-text mx-1 my-1">{{item.genres?.join(', ')}}</p>
-                            <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${content.type== 'Movie'? `/movie/noida/${item.eventId}`: 
+                            <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${(content.type== 'Movie'|| content.type== 'upcomingMovie') ? `/movie/${commonService._selectCity()}/${item.eventId}`: 
                     `/${content.type}/${item.name}/${item.eventId}`}`]">More Details</button>
                         </div>
                     </div>

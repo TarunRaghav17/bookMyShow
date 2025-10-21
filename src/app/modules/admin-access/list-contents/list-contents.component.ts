@@ -47,6 +47,7 @@ export class ListContentsComponent implements OnInit {
    */
   fetchContentsList() {
     forkJoin([
+      this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType, false),
       this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType),
       this.contentsService.getContentsList('Plays', this.currentPage, this.itemPerType),
       this.contentsService.getContentsList('Sports', this.currentPage, this.itemPerType),
@@ -55,15 +56,17 @@ export class ListContentsComponent implements OnInit {
     ]
     ).subscribe({
       next: (
-        [Movie, Plays, Sports, Activities, Event]) => {
+        [upcomingMovie, Movie, Plays, Sports, Activities, Event]) => {
         this.isLoading = false;
         this.contentsList = [...this.contentsList,
-        [{ type: 'Movie', data: Movie.data.content, count: Movie.data.count },
-        { type: 'Plays', data: Plays.data.content, count: Plays.data.count },
-        { type: 'Sports', data: Sports.data.content, count: Sports.data.count },
-        { type: 'Activities', data: Activities.data.content, count: Activities.data.count },
-        { type: 'Event', data: Event.data.content, count: Event.data.count }]].flat();
-        this.totalContentCount = Movie.data.count + Plays.data.count + Sports.data.count + Activities.data.count + Event.data.count
+        [
+          { type: 'upcomingMovie', data: upcomingMovie.data.content, count: upcomingMovie.data.count },
+          { type: 'Movie', data: Movie.data.content, count: Movie.data.count },
+          { type: 'Plays', data: Plays.data.content, count: Plays.data.count },
+          { type: 'Sports', data: Sports.data.content, count: Sports.data.count },
+          { type: 'Activities', data: Activities.data.content, count: Activities.data.count },
+          { type: 'Event', data: Event.data.content, count: Event.data.count }]].flat();
+        this.totalContentCount = upcomingMovie.data.count + Movie.data.count + Plays.data.count + Sports.data.count + Activities.data.count + Event.data.count
       },
       error: (err) => {
         this.toaster.error(err.error.message)

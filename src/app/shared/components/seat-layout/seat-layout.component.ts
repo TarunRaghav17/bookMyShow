@@ -107,6 +107,7 @@ export class SeatLayoutComponent {
   }
 
   getReservedSeatsByShowId(showId?: string) {
+    this.reservedSeats=[]
     this.commonService.getReservedSeats(showId).subscribe(
       {
         next: (res) => {

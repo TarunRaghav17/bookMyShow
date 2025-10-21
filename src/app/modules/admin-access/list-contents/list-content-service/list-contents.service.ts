@@ -10,8 +10,8 @@ export class ListContentsService {
   constructor(private http:HttpClient) { }
 baseUrl=environment.baseURl;
 
-  getContentsList(type:string,page:number,size:number){
-    return this.http.post<any>(`${this.baseUrl}/api/events/filter?page=${page-1}&size=${size}`,{
+  getContentsList(type:string,page:number,size:number,upcoming:boolean=true){
+    return this.http.post<any>(`${this.baseUrl}/api/events/filter?page=${page-1}&size=${size}&upcomingMovie=${upcoming}`,{
       type
     })
 
