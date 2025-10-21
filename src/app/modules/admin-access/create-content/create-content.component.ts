@@ -368,7 +368,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 * @params payload:event
 */
   toggleShowTime(event: any, show: AbstractControl) {
-
     let slot = JSON.parse(event.target.value);
     if (event.target.checked) {
       this.getStartTime(show).push(this.fb.control(slot.start));
@@ -376,6 +375,13 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       let index = this.getStartTime(show).controls.findIndex((ctrl) => ctrl.value === slot.start)
       if (index != -1) this.getStartTime(show).removeAt(index);
     }
+
+
+    if (this.getStartTime(show).controls.length == 0) {
+      this.getStartTime(show).setErrors({ required: true });
+    }
+    this.getStartTime(show)?.markAsTouched()
+    this.getStartTime(show)?.updateValueAndValidity();
   }
 
   /**
@@ -423,6 +429,31 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return this.minDate
   }
 
+  onDurationChange() {
+
+    this.eventShowForm.get('endDate')?.setValue('');
+    this.eventShowForm.get('endDate')?.setValue('');
+  }
+
+  durationOrReleasingOnChange() {
+    if (this.eventShowForm.get('eventType')?.value && this.eventShowForm.get('eventType')?.value == 'Movie') {
+      this.screens.controls.forEach((screen: any) => {
+        (screen.get('shows') as FormArray)
+          .controls.forEach(show => {
+            show.get('date')?.setValue('')
+          })
+      })
+    }
+
+    // non movie case
+    if (this.eventShowForm.get('eventType')?.value && this.eventShowForm.get('eventType')?.value != 'Movie') {
+      this.shows.controls.forEach(show => {
+        show.get('date')?.setValue('')
+      })
+    }
+
+    this.availableSlots = []
+  }
   onStartOnChange() {
     this.eventShowForm.get('endDate')?.setValue('');
     this.shows.controls.forEach(show => {
@@ -510,28 +541,31 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return out;
   }
 
-  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0) {
-    this.availableSlots = freeWindows.flatMap(window =>
+  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0, venueId: any, screenId: any, selectedDate: any) {
+    let availableSlots = freeWindows.flatMap(window =>
       this.generateSlots(window.startTime, window.endTime, slotDurationMin, gapMin)
     );
-
+    this.availableSlots = [...this.availableSlots, { venueId: venueId, screenId: screenId, date: selectedDate, data: availableSlots }]
   }
 
-  fetchFreeTimeSlots(venueId: string, event: Event, screenId?: string) {
-    this.availableSlots = []
+  fetchFreeTimeSlots(show: AbstractControl, venueId: string, event: Event, screenId?: string) {
+    this.getStartTime(show).clear()
+    // this.availableSlots = []
     let selectedDate = event.target as HTMLInputElement;
     this.contentService.getAvailableTimeSlots(venueId, selectedDate.value, screenId).subscribe({
       next: (res) => {
         if (res.statusCode == 200) {
-          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value,30);
+          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value);
         }
       },
       error: (err) => {
-        this.generateAllAvailableSlots([{startTime:'12:00', endTime:'15:00'},{startTime:'15:00', endTime:'20:00'}],this.eventShowForm.get('runTime')?.value, 30)
+        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '15:00', endTime: '20:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value)
         this.toaster.error(err.error.message.split(':')[1])
 
       }
     })
+
+
   }
 
 
@@ -614,6 +648,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       show: shows
     };
 
+
     //Validate & Submit
     if (this.eventShowForm.valid) {
       this.showService.createShow(payload, formValue.imageurl, payload.cast, payload.crew).subscribe({
@@ -621,8 +656,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
           this.toaster.success('Show created successfully');
           this.router.navigate(['/admin/list/content'])
         },
-
-
         error: (err) => this.toaster.error(err.error.message)
       });
     } else {
@@ -727,8 +760,12 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     }
     this.eventShowForm.get('city')?.markAsTouched()
     this.eventShowForm.get('city')?.updateValueAndValidity();
-    this.venueName.clear()
+    this.venueName.clear();
+    if (this.eventShowForm.get('eventType')?.value != 'Movie') (this.eventShowForm.get('shows') as FormArray).clear();
+
+
     this.venuesNameList = []
+    this.selectedVenueObj = []
     this.callApiForCities();
   }
 
@@ -770,6 +807,14 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   toggleVenueName(event: any) {
+
+    if (this.eventShowForm.get('eventType')?.value != 'Movie') {
+      this.venueName.clear();
+      (this.eventShowForm.get('shows') as FormArray).clear()
+      this.addEventShow()
+
+    }
+
     if (event.target.checked) {
       this.venueName.push(this.fb.control(event.target.value));
     }

@@ -4,6 +4,7 @@ import { VenuesService } from './venues-services/venues.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   standalone: false,
   selector: 'app-venue-form',
@@ -12,7 +13,7 @@ import { Title } from '@angular/platform-browser';
 export class CreateVenueComponent implements OnInit {
 
   venueForm!: FormGroup;
-  tempAmmenity = new FormControl('', [Validators.required])
+  tempAmmenity = new FormControl('', [])
   venueType: any[] = [];
   citiesArray: any[] = []
   supportedCategoriesArray: any[] | null = null
@@ -85,6 +86,7 @@ export class CreateVenueComponent implements OnInit {
     private toaster: ToastrService,
     private commonService: CommonService,
     private titleService: Title,
+    private cd: ChangeDetectorRef
 
   ) { }
 
@@ -125,17 +127,19 @@ export class CreateVenueComponent implements OnInit {
   */
   nameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value != '') {
+        if (/^\s|\s$/.test(control.value)) {
+          return { invalidSpace: true };
+        }
 
-      if (/^\s|\s$/.test(control.value)) {
-        return { invalidSpace: true };
-      }
+        if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
+          return { invalidCharacter: true };
+        }
 
-      if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
-        return { invalidCharacter: true };
-      }
+        if (/^-|-$/.test(control.value)) {
+          return { invalidHyphen: true };
+        }
 
-      if (/^-|-$/.test(control.value)) {
-        return { invalidHyphen: true };
       }
 
       return null;
@@ -262,8 +266,12 @@ export class CreateVenueComponent implements OnInit {
     * @returnType void
     */
   removeScreen(index: number) {
-    if (this.screens.controls.length <= 1) return;
-    this.screens.removeAt(index)
+
+    const screens = this.screens;
+    screens.removeAt(index);
+    this.venueForm.setControl('screens', this.fb.array(screens.controls));
+
+
   }
   /**
     * @description getter function to get layouts as FormArray
@@ -336,10 +344,17 @@ export class CreateVenueComponent implements OnInit {
   * @returnType void
   */
   removeLayout(screen: AbstractControl, index: number) {
-    if (this.getLayouts(screen).length <= 1) return;
-    this.getLayouts(screen).removeAt(index)
-  }
+    const layouts = this.getLayouts(screen);
 
+    // Remove the layout
+    layouts.removeAt(index);
+
+    // Force a new reference so Angular re-renders even with @for
+    const newLayouts = this.fb.array(layouts.controls);
+    (screen as FormGroup).setControl('layouts', newLayouts);
+    console.log(screen.value)
+     this.cd.detectChanges(); // 
+  }
 
   /**
   * @description Getter for amenities
@@ -356,9 +371,9 @@ export class CreateVenueComponent implements OnInit {
   * @returnType void
   */
   addAmenity(): void {
-    if (this.tempAmmenity.valid) {
+    if (this.tempAmmenity.value != '') {
       this.amenities.push(this.fb.control(this.tempAmmenity.value));
-      this.tempAmmenity.reset()
+      this.tempAmmenity.setValue('')
     }
   }
 
@@ -374,10 +389,10 @@ export class CreateVenueComponent implements OnInit {
 
 
   /**
- * @description function that validates and then  submit the form .
- * @author Inzamam
- * @returnType void
- */
+  * @description function that validates and then  submit the form .
+  * @author Inzamam
+  * @returnType void
+  */
   // Submit
   onSubmit(): void {
     if (this.venueForm.valid) {
@@ -403,11 +418,11 @@ export class CreateVenueComponent implements OnInit {
   }
 
   /**
- * @description function used to handle row change
- * @author Inzamam
- * @params event and layout
- * @returnType void
- */
+  * @description function used to handle row change
+  * @author Inzamam
+  * @params event and layout
+  * @returnType void
+  */
   onCheckboxChange(event: any, layout: AbstractControl): void {
     let rows = layout.get('rows') as FormArray
     if (event.target.checked) {
