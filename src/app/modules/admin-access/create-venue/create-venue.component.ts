@@ -4,7 +4,6 @@ import { VenuesService } from './venues-services/venues.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
-import { ChangeDetectorRef } from '@angular/core';
 @Component({
   standalone: false,
   selector: 'app-venue-form',
@@ -86,7 +85,6 @@ export class CreateVenueComponent implements OnInit {
     private toaster: ToastrService,
     private commonService: CommonService,
     private titleService: Title,
-    private cd: ChangeDetectorRef
 
   ) { }
 
@@ -241,17 +239,6 @@ export class CreateVenueComponent implements OnInit {
     return this.venueForm.get('screens') as FormArray
   }
   /**
-    * @description function that creates form group of screen.
-    * @author Inzamam
-    * @returnType FormGroup
-    */
-  createScreen(): FormGroup {
-    return this.fb.group({
-      screenName: ['', [Validators.required, this.nameValidator()]],
-      layouts: this.fb.array([this.createLayout()])
-    })
-  }
-  /**
     * @description function to add screen.
     * @author Inzamam
     * @returnType void
@@ -289,18 +276,15 @@ export class CreateVenueComponent implements OnInit {
     * @returnType array of strings [a,b,c]
     */
   getUsedRowsInScreen(screen: AbstractControl): string[] {
-    let used: string[] = [];
-    let layouts = this.getLayouts(screen).controls;
+    const used: string[] = [];
+    const layouts = this.getLayouts(screen).controls;
     layouts.forEach(layout => {
-      let rows = layout.get('rows') as FormArray;
-      rows.controls.forEach(ctrl => {
-        if (ctrl.value) {
-          used.push(ctrl.value);
-        }
-      });
+      const rows = layout.get('rows') as FormArray;
+      (rows.value || []).forEach((val: any) => { if (val) used.push(val); });
     });
     return used;
   }
+
   /**
   * @description function to get availabel rows in screen and current category(layout like GOLD | SILVER)  .
   * @author Inzamam
@@ -308,10 +292,22 @@ export class CreateVenueComponent implements OnInit {
   * @returnType array of strings [a,b,c]
   */
   getAvailableRows(screen: AbstractControl, currentLayout: AbstractControl): string[] {
-    let used = this.getUsedRowsInScreen(screen);
-    let currentRows = (currentLayout.get('rows') as FormArray).value;
-    return this.alphabets.filter(letter => !used.includes(letter) || currentRows.includes(letter));
+    const used = this.getUsedRowsInScreen(screen).filter(Boolean); // remove falsy values
+    const currentRows = (currentLayout.get('rows') as FormArray)?.value || [];
+    return this.alphabets.filter(
+      letter => !used.includes(letter) || currentRows.includes(letter)
+    );
   }
+
+  /**
+    * @description utility function that generates unique id
+    * @author Inzamam
+    * @returnType string
+    */
+  generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
   /**
     * @description function that creates form group of Layout(category like GOLD | SILVER)  .
     * @author Inzamam
@@ -319,11 +315,25 @@ export class CreateVenueComponent implements OnInit {
     */
   createLayout(): FormGroup {
     return this.fb.group({
+      id: [this.generateId()],
       layoutName: ['', [Validators.required, this.nameValidator()]],
       rows: this.fb.array([], Validators.required),
       cols: [12, [Validators.required]]
+    });
+  }
+  /**
+    * @description function that creates form group of screen.
+    * @author Inzamam
+    * @returnType FormGroup
+    */
+  createScreen(): FormGroup {
+    return this.fb.group({
+      screenName: ['', [Validators.required, this.nameValidator()]],
+      id: [this.generateId()],
+      layouts: this.fb.array([this.createLayout()])
     })
   }
+
 
 
   /**
@@ -344,16 +354,32 @@ export class CreateVenueComponent implements OnInit {
   * @returnType void
   */
   removeLayout(screen: AbstractControl, index: number) {
-    const layouts = this.getLayouts(screen);
+    const layoutsFA = this.getLayouts(screen);
+    // remove the layout
+    layoutsFA.removeAt(index);
 
-    // Remove the layout
-    layouts.removeAt(index);
+    const newLayouts = this.fb.array(
+      layoutsFA.controls.map(ctrl => {
+        const raw = {
+          id: ctrl.get('id')?.value || this.generateId(),
+          layoutName: ctrl.get('layoutName')?.value || '',
+          rows: ((ctrl.get('rows') as FormArray)?.value || []).slice(),
+          cols: ctrl.get('cols')?.value || 12
+        };
 
-    // Force a new reference so Angular re-renders even with @for
-    const newLayouts = this.fb.array(layouts.controls);
+        return this.fb.group({
+          id: [raw.id],
+          layoutName: [raw.layoutName, [Validators.required, this.nameValidator()]],
+          rows: this.fb.array((raw.rows as string[]).map(r => this.fb.control(r)), Validators.required),
+          cols: [raw.cols, [Validators.required]]
+        });
+      })
+    );
+
     (screen as FormGroup).setControl('layouts', newLayouts);
-    console.log(screen.value)
-     this.cd.detectChanges(); // 
+    this.venueForm.updateValueAndValidity();
+    this.addScreen();
+    this.removeScreen(this.screens.length - 1)
   }
 
   /**
@@ -387,13 +413,31 @@ export class CreateVenueComponent implements OnInit {
     this.amenities.removeAt(index);
   }
 
+  /**
+ * @description utility func that takes obj and filters-out ids key
+ * @author Inzamam
+ * @param obj
+ * @returnType obj
+ */
+  filterIds(obj: any): any {
+    if (Array.isArray(obj)) {
+      return obj.map((item: any) => this.filterIds(item));
+    } else if (obj !== null && typeof obj === 'object') {
+      return Object.keys(obj)
+        .filter(key => key !== 'id')
+        .reduce((acc: any, key) => {
+          acc[key] = this.filterIds(obj[key]);
+          return acc;
+        }, {});
+    }
+    return obj;
+  }
 
   /**
   * @description function that validates and then  submit the form .
   * @author Inzamam
   * @returnType void
   */
-  // Submit
   onSubmit(): void {
     if (this.venueForm.valid) {
       this.venuesService.createVenueService(this.venueForm.value).subscribe({
@@ -403,7 +447,7 @@ export class CreateVenueComponent implements OnInit {
           this.venueForm.reset()
           this.venueForm.get('venueFor')?.setValue('');
           this.venueForm.get('venueType')?.setValue('');
-          this.venueForm.get('cityName')?.setValue('');
+          this.venueForm.get('address.cityName')?.setValue('');
           (this.venueForm.get('supportedCategories') as FormArray).clear();
           (this.venueForm.get('amenities') as FormArray).clear();
         },

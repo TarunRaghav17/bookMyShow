@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ShowsService } from '../modules/admin-access/create-show/shows-services/shows.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +21,9 @@ export class CommonService {
 
   _userLangFormat: any = localStorage.getItem('userLangFormat');
   userLangFormat = signal<any>(JSON.parse(this._userLangFormat));
+
+  _userLikedContents: any[] = localStorage.getItem('userLikedContents') ? JSON.parse(localStorage.getItem('userLikedContents') || '[]') : [];
+  userLikedContents = signal<any>(this._userLikedContents)
 
   filtersSignal = signal<any[]>([])
   showHeader = signal<boolean>(true)
@@ -36,7 +41,9 @@ export class CommonService {
   constructor(
     private http: HttpClient,
     private sanitizer: DomSanitizer,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private showService: ShowsService,
+    private toaster: ToastrService,
   ) {
   }
 
@@ -56,6 +63,58 @@ export class CommonService {
    */
   getUserLangFormat() {
     return this.userLangFormat()
+  }
+  /**
+ * @description add contentId where user liked content
+ * @author Inzamam
+ * @params payload:{contentId}
+ */
+  setUserLikedContents(content: any) {
+    console.log(content)
+    if (this.userLikedContents().includes(content.eventId)) {
+
+
+
+      let payload = {
+        ...content, likes: (Number(content.likes) ?? 0) - 1
+      }
+      console.log(payload)
+      this.showService.updateShow(payload, payload.imageurl, payload.cast, payload.crew).subscribe({
+        next: (res) => {
+          this.toaster.success(res.message)
+          let filteredUserLikedContents = this.userLikedContents().filter((id: string) => id != content.eventId)
+          this.userLikedContents.set(filteredUserLikedContents);
+        },
+        error: (err) => {
+          this.toaster.error(err.error.message)
+        },
+      })
+    }
+    else {
+
+      let payload = {
+        ...content, likes: (Number(content.likes) ?? 0) + 1
+      }
+      console.log(payload)
+      this.showService.updateShow(payload, payload.imageurl, payload.cast, payload.crew).subscribe({
+        next: (res) => {
+          this.userLikedContents.update((prev) => [...prev, content.eventId]);
+          this.toaster.success(res.message)
+        },
+        error: (err) => {
+          this.toaster.error(err.error.message)
+        },
+      })
+    }
+
+    localStorage.setItem('userLikedContents', JSON.stringify(this.userLikedContents()));
+  }
+  /**
+     * @description Get array of where user liked the contents
+     * @author Inzamam
+     */
+  getUserLikedContents() {
+    return this.userLikedContents();
   }
 
   /**

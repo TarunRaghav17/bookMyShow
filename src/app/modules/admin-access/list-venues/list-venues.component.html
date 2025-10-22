@@ -42,16 +42,16 @@
                     <tr>
                         <th>Sr.No</th>
                         <th>Venue-Name</th>
-                        <th>Venue-Type</th>
+                        <th>Venue-For</th>
                         <th>Supported Categories</th>
-                        <!-- <th>Screens</th> -->
                         <th>Venue-Capacity</th>
                         <th>Venue-Address</th>
                         <th>Amenities</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @for (venue of filteredVenuesList || venuesList; track $index) {
+                    @for (venue of visibleData; track $index) {
                     @if(venue.venueName.toLowerCase().includes(searchValue.toLowerCase())){
                     <tr>
                         <td>{{ $index +1}}</td>
@@ -71,14 +71,18 @@
                         <td>{{ transformAddress(venue.address)}}</td>
                         <td>
                             @if(venue.amenities.length>0){
-                            @for(a of venue.amenities;track $index){
-                            {{a}}
-                            }
+                            {{venue.amenities.join(',')}}
                             }
                             @else{
                             N/A
                             }
 
+                        </td>
+                        <td>
+                            <div class=" fs-5 p-0 m-0 text-danger">
+                                <i class="fa fa-trash delete-btn " (click)="openDeleteModal(confirmDeleteModal,venue)"
+                                    aria-hidden="true"></i>
+                            </div>
                         </td>
                     </tr>
                     }
@@ -87,4 +91,33 @@
             </table>
         </div>
     </div>
+    <div class="py-3 d-flex align-items-center justify-content-between w-75 mx-auto mt-auto">
+        <button class="btn btn-sm btn-primary" [disabled]="pageNo==1" [ngClass]="{'btn-secondary':pageNo==1}"
+            (click)="prev()">Prev</button>
+        <span>Page {{pageNo}} of {{totalPages}} </span>
+        <button class="btn btn-sm btn-primary" [disabled]="pageNo==totalPages"
+            [ngClass]="{'btn-secondary':pageNo==totalPages}" (click)="next()">Next</button>
+    </div>
 </div>
+
+<ng-template #confirmDeleteModal let-modal>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 ">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title" id="confirmDeleteModal">Do You Want to Delete?</h4>
+            </div>
+            <div class="modal-body border-0 text-center">
+                <p>Do you really want to Delete
+                    <span class="text-danger">
+                        {{venueToDelete.venueName}}
+                    </span>
+                    ?
+                </p>
+            </div>
+            <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-secondary" (click)="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn btn-danger" (click)="deleteVenueById()">Delete</button>
+            </div>
+        </div>
+    </div>
+</ng-template>

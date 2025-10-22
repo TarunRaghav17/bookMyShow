@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-list-venues',
@@ -19,12 +20,15 @@ export class ListVenuesComponent implements OnInit {
   userSelectedCity: string = "";
   userSelectedVenueType: string = "";
   cityList: any[] = [];
-  searchValue:string='';
+  searchValue: string = '';
+  modalRef?: NgbModalRef | null = null;
+  venueToDelete: any | null = null;
 
   constructor(public venueService: VenuesService,
     private toaster: ToastrService,
     private commonService: CommonService,
     private titleService: Title,
+    private modalService: NgbModal,
   ) { }
 
   /**
@@ -33,9 +37,10 @@ export class ListVenuesComponent implements OnInit {
   * @returnType void
   */
   ngOnInit() {
-    this.titleService.setTitle('Venues List')
-    this.getAllVenuesList()
-    this.getAllCitiesList()
+    this.titleService.setTitle('Venues List');
+    this.getAllVenuesList();
+    this.getAllCitiesList();
+
   }
 
   /**
@@ -47,6 +52,50 @@ export class ListVenuesComponent implements OnInit {
   setUserSelectedVenueType(event: any) {
     this.userSelectedVenueType = event.target.value;
     this.handleFilteredVenuesList()
+  }
+
+  /**
+  * @description function to open delete-venue-confirmation modal
+  * @author Inzamam
+  * @param template reference to open,venueObj clicked 
+  */
+  openDeleteModal(content: TemplateRef<any>, venue: any) {
+    this.venueToDelete = venue
+    this.modalRef = this.modalService.open(content, {
+      centered: false,
+      backdrop: 'static',
+      keyboard: false
+    })
+  }
+
+  /**
+  * @description function to close delete-venue-confirmation modal
+  * @author Inzamam
+  */
+  closeDeleteModal() {
+    if (this.modalRef) {
+      this.modalRef.close();
+      this.modalRef = null;
+    }
+  }
+  /**
+* @description function to hit deleteVenueById api 
+* @author Inzamam
+*/
+  deleteVenueById() {
+    this.venueService.deleteVenueById(this.venueToDelete.id).subscribe({
+      next: (res) => {
+        this.toaster.success(res.message)
+      },
+      error: (err) => {
+        this.toaster.error(err.error.message)
+
+      },
+      complete: () => {
+        this.closeDeleteModal();
+        this.getAllVenuesList();
+      }
+    })
   }
   /**
     * @description function that set user selected city and calls handleFilteredVenuesList .
@@ -64,6 +113,7 @@ export class ListVenuesComponent implements OnInit {
     * @returnType  filtered venues list
     */
   handleFilteredVenuesList() {
+    this.pageNo = 1;
     this.filteredVenuesList = this.venuesList.filter((venue: any) => {
       const matchType = this.userSelectedVenueType
         ? venue.venueType == this.userSelectedVenueType
@@ -73,6 +123,7 @@ export class ListVenuesComponent implements OnInit {
         : true;
       return matchType && matchCity;
     });
+    this.getVisibleCards();
   }
   /**
     * @description function that fetches all cities list from api.
@@ -100,7 +151,8 @@ export class ListVenuesComponent implements OnInit {
   getAllVenuesList() {
     this.venueService.getAllVenues().subscribe({
       next: (res: any) => {
-        this.venuesList = res.data
+        this.venuesList = res.data;
+        this.getVisibleCards();
       },
       error: (err) => {
         this.toaster.error(err.error.message)
@@ -125,5 +177,38 @@ export class ListVenuesComponent implements OnInit {
       }
     });
     return parts.join(", ");
+  }
+
+  itemsPerPage = 20;
+  pageNo = 1;
+  visibleData: any[] = [];
+  totalPages: number = 0
+
+  getVisibleCards() {
+    this.totalPages = Math.ceil(((this.filteredVenuesList || this.venuesList).length / this.itemsPerPage) || 1);
+    const pageNo = this.pageNo - 1;
+    const start = this.itemsPerPage * pageNo;
+    const end = start + this.itemsPerPage;
+    this.visibleData = (this.filteredVenuesList || this.venuesList).slice(start, end);
+  }
+
+  /**
+   * @description validate & increment the pageNo by 1
+   */
+  next() {
+    if (this.pageNo < this.totalPages) {
+      this.pageNo++;
+      this.getVisibleCards()
+    }
+  }
+
+  /**
+   * @description validate & decrement the pageNo by 1
+  */
+  prev() {
+    if (this.pageNo > 1) {
+      this.pageNo--;
+      this.getVisibleCards()
+    }
   }
 }
