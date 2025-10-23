@@ -72,12 +72,9 @@ export class CommonService {
   setUserLikedContents(content: any) {
     console.log(content)
     if (this.userLikedContents().includes(content.eventId)) {
-
-
-
       let payload = {
         ...content, likes: (Number(content.likes) ?? 0) - 1
-      }
+      } 
       console.log(payload)
       this.showService.updateShow(payload, payload.imageurl, payload.cast, payload.crew).subscribe({
         next: (res) => {
@@ -91,7 +88,6 @@ export class CommonService {
       })
     }
     else {
-
       let payload = {
         ...content, likes: (Number(content.likes) ?? 0) + 1
       }

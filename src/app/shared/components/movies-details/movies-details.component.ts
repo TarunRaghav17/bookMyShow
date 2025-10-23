@@ -79,6 +79,16 @@ export class MoviesDetailsComponent {
     })
   }
 
+  handleUserLikedContents(content: any) {
+    console.log(this.authService.getUserFromToken())
+    if (this.authService.getUserFromToken()) this.commonService.setUserLikedContents(content)
+
+    else {
+      this.toaster.error('You must Login to Like this Content')
+    }
+  }
+
+
   handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
     const modalRef = this.modalService.open(confirmDeleteModal, {
       ariaLabelledBy: 'modal-basic-title',

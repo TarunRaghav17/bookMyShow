@@ -38,7 +38,7 @@ export class ListContentsComponent implements OnInit {
    */
   ngOnInit() {
     this.titleService.setTitle('Contents List')
-    this.fetchContentsList()
+    this.fetchContentsList();
   }
   /**
    * @description function that fetch contents list .
@@ -103,19 +103,39 @@ export class ListContentsComponent implements OnInit {
       this.filteredContentList = [];
       return;
     }
-    const requests = this.userSelectedType.map((type: any) =>
-      this.contentsService.getContentsList(
-        type,
-        this.filtersCurrentPage,
-        Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
-      )
+    const requests = this.userSelectedType.flatMap((type: any) => {
+      if (type == 'Movie') {
+        return [
+          this.contentsService.getContentsList(
+            type,
+            this.filtersCurrentPage,
+            Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
+          ),
+          this.contentsService.getContentsList(
+            type,
+            this.filtersCurrentPage,
+            Math.floor(this.totalItemsPerPage / this.userSelectedType.length), false
+          )
+        ]
+
+      }
+      else {
+        return this.contentsService.getContentsList(
+          type,
+          this.filtersCurrentPage,
+          Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
+        )
+      }
+
+    }
+
     );
     this.isLoading = true;
     forkJoin(requests).subscribe({
       next: (responses: any[]) => {
         this.isLoading = false;
         responses.forEach((res, index) => {
-          const type = this.userSelectedType[index];
+          const type = this.userSelectedType[index] ?? "upcomingMovie";
           if (res.data.content.length > 0) {
             const existing = this.filteredContentList.find(c => c.type === type);
             if (existing) {
