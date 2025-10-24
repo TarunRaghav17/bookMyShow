@@ -161,12 +161,11 @@
                 <div ngbDropdownMenu [hidden]="!citiesArray" aria-labelledby="cityDropdown" class="w-100 p-2"
                     style="max-height: 200px; overflow-y: auto;">
                     @for(city of citiesArray; track $index) {
-                    <div class="dropdown-item">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" [value]="city.cityName"
-                                [checked]="eventShowForm.get('city')?.value.includes(city.cityName)"
-                                (change)="toggleCity($event)">
-                            <label class="form-check-label">
+                    <div class="dropdown-item"  (click)="toggleCity(cityInput)">
+                        <div class="form-check"  [ngStyle]="{'cursor':true? 'pointer':''}">
+                            <input type="checkbox" class="form-check-input"  [ngStyle]="{'cursor':true? 'pointer':''}" [value]="city.cityName"
+                                [checked]="eventShowForm.get('city')?.value.includes(city.cityName)" #cityInput>
+                            <label class="form-check-label"  [ngStyle]="{'cursor':true? 'pointer':''}">
                                 {{ city.cityName }}
                             </label>
                         </div>
@@ -184,7 +183,8 @@
                 <label class="form-label">Venue Name:
                     <small class="text-danger reuired">*</small>
                 </label>
-                <button class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between" [disabled]="venuesNameList.length <= 0"
+                <button class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
+                    [disabled]="venuesNameList.length <= 0"
                     [ngClass]="{'is-invalid':eventShowForm.get('venueName')?.touched && eventShowForm.get('venueName')?.invalid }"
                     ngbDropdownToggle>
                     {{ venueName.controls.length > 0 ? eventShowForm.get('venueName')?.value.join(', ') :
@@ -198,12 +198,12 @@
 
                     <!-- onVenueNameChange() -->
                     @for(venue of venuesNameList ;track $index) {
-                    <div class="dropdown-item">
-                        <div class="form-check">
+                    <div class="dropdown-item" [ngStyle]="{'cursor':true? 'pointer':''}" (click)="toggleVenueName(venueNameInput)">
+                        <div class="form-check" >
                             <input type="checkbox" class="form-check-input " [value]="venue?.venueName"
                                 [checked]="eventShowForm.get('venueName')?.value.includes(venue?.venueName)"
-                                (change)="toggleVenueName($event)">
-                            <label class="form-check-label">
+                                #venueNameInput>
+                            <label class="form-check-label ">
                                 {{ venue?.venueName }}
                             </label>
                         </div>
@@ -338,7 +338,7 @@
                         @for(show of getShows(screen).controls ;track $index){
                         <!-- one particualr show =  date & [times] -->
                         <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 "
-                        [ngClass]="{'is-invalid':show.get('date')?.touched&&show.get('date')?.invalid}" >
+                            [ngClass]="{'is-invalid':show.get('date')?.touched&&show.get('date')?.invalid}">
                             <!-- date control -->
                             <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
@@ -392,7 +392,7 @@
                             </div>
                         </div>
                         <div class="invalid-feedback">Invalid Date </div>
-                        
+
                         }
                     </div>
                 </div>
@@ -433,7 +433,7 @@
                             </label>
                             <button [disabled]="show.get('date')?.invalid"
                                 class="btn btn-white border w-100 text-start d-flex align-items-center justify-content-between"
-                                 [ngClass]="{'is-invalid':show.get('startTime')?.hasError('required') && show.get('startTime')?.touched}"
+                                [ngClass]="{'is-invalid':show.get('startTime')?.hasError('required') && show.get('startTime')?.touched}"
                                 ngbDropdownToggle>
                                 {{ this.getStartTime(show).controls.length > 0 ? this.getStartTime(show).value.join(',')
                                 :
@@ -465,9 +465,9 @@
                     </div>
                 </div>
                 @if(show.get('date')?.invalid && show.get('date')?.touched){
-                      <div class="text-danger">Invalid Date </div>
+                <div class="text-danger">Invalid Date </div>
                 }
-                     
+
                 }
             </div>
         </div>}}
@@ -508,7 +508,7 @@
             <h5 class="form-label">● Languages <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(lang of languagesArray; track $index) {
-                <div class="form-check w-25">
+                <div class="form-check w-25" >
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'languages')"
                         [value]="lang.languageId" [ngClass]="{'is-invalid': isInvalid('languages')}">
                     <label class="form-check-label">{{lang.languageName}}</label>
@@ -656,8 +656,8 @@
                     }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button" [disabled]="$index==0"
-                        (click)="castControls.removeAt($index)">✕</button>
+                    <button class="btn btn-outline-danger" type="button" [disabled]="castControls.length==1"
+                        (click)="removeCastControl(castControls,$index)">✕</button>
                 </div>
             </div>
             }
@@ -692,8 +692,8 @@
                     }
                 </div>
                 <div class="col-auto">
-                    <button class="btn btn-outline-danger" type="button" [disabled]="$index==0"
-                        (click)="crewControls.removeAt($index)">✕</button>
+                    <button class="btn btn-outline-danger" type="button" [disabled]="crewControls.length==1"
+                        (click)="removeCrewControl(crewControls,$index)">✕</button>
                 </div>
             </div>
             }

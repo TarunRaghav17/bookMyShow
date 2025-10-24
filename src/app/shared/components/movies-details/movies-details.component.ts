@@ -70,7 +70,6 @@ export class MoviesDetailsComponent {
     this.commonService.getContentDetailsById(contentId).subscribe({
       next: (res) => {
         this.movieDetails = res.data;
-        console.log(this.movieDetails)
         this.titleService.setTitle(this.movieDetails.name)
       },
       error: (err) => {
@@ -80,7 +79,6 @@ export class MoviesDetailsComponent {
   }
 
   handleUserLikedContents(content: any) {
-    console.log(this.authService.getUserFromToken())
     if (this.authService.getUserFromToken()) this.commonService.setUserLikedContents(content)
 
     else {

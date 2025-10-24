@@ -33,6 +33,7 @@ interface Venue {
   venueName: string;
   screens: Screen[];
 }
+
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
@@ -42,7 +43,12 @@ interface Venue {
 })
 export class BuyTicketsComponent implements AfterViewInit {
   venueShowsDetails: any;
-  filteredVenueShowsDetails: any[] = [];
+  filteredVenueShowsDetails: any[] | null = null;
+  logoArray = [
+    './assets/images/movieTimeLogo.png',
+    './assets/images/inoxLogo.png',
+    './assets/images/pvrLogo.png'
+  ]
 
   constructor(public commonService: CommonService, private route: ActivatedRoute, private router: Router,
     private toaster: ToastrService
@@ -79,6 +85,16 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.fetchContentIdByUrl();
   }
 
+  isChecked(payload: any) {
+    let { type, value } = payload;
+    this.selectedFilters.some((filter: any) => {
+      if (filter.type == type) {
+        let res = filter.value == value;
+        return res
+      }
+      return false
+    })
+  }
   handleFilterChange(event: any, payload: any) {
     let { type, value } = payload;
     switch (type) {
@@ -102,15 +118,20 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.getFilteredVenuesShowsList()
   }
   getFilteredVenuesShowsList() {
+    if (this.selectedFilters.length == 0) {
+      this.filteredVenueShowsDetails = null
+    }
     this.selectedFilters.forEach((filter: any) => {
       switch (filter.type) {
         case 'price': {
-          const maxPrice = Number(filter.value.split('-')[1]);
-          this.venueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
+          let price = filter.value.split('₹')[1];
+          const minPrice = Number(price.split('-')[0]);
+          const maxPrice = Number(price.split('-')[1]);
+          this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
             venue.screens.some((screen: any) =>
               screen.showTimes.some((showTime: any) =>
                 showTime.availableCategories.some((category: any) =>
-                  Number(category.categoryPrice) <= maxPrice
+                  Number(category.categoryPrice) <= maxPrice && Number(category.categoryPrice) >= minPrice
                 )
               )
             )
@@ -119,7 +140,7 @@ export class BuyTicketsComponent implements AfterViewInit {
         }
         case 'preferedTime': {
           const [start, end] = filter.value.split(',')[1].split('-');
-          this.venueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
+          this.filteredVenueShowsDetails = this.venueShowsDetails.filter((venue: any) =>
             venue.screens.some((screen: any) =>
               screen.showTimes.some((showTime: any) =>
                 showTime.time >= start && showTime.time <= end
@@ -229,7 +250,7 @@ export class BuyTicketsComponent implements AfterViewInit {
 * @params payload:index,date obj
 */
   onDateChange(index: number, dateObj: any) {
-    if (index < 3) {
+    if (index < 4 && this.commonService.getUserSelectedDate() != dateObj) {
       this.commonService.setUserSelectedDate(dateObj);
       this.fetchVenuesShows(this.contentId);
     }

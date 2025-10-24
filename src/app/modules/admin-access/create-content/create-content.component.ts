@@ -109,7 +109,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
         return { invalidSpace: true };
       }
 
-      if (!/^[A-Za-z0-9-@\s]+$/.test(control.value)) {
+      if (!/^[A-Za-z0-9-@,.\s]+$/.test(control.value)) {
         return { invalidCharacter: true };
       }
 
@@ -171,7 +171,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   */
   onEventTypeChange() {
-    this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
+    this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate', 'cast', 'crew']);
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
     this.eventShowForm.addControl('startDate', this.fb.control('', [Validators.required]))
@@ -179,6 +179,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
     this.eventShowForm.addControl('cast', this.fb.array([this.createCast()]));
     this.eventShowForm.addControl('crew', this.fb.array([this.createCrew()]));
+
 
     this.fetchCities()
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
@@ -648,7 +649,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       show: shows
     };
 
-
     //Validate & Submit
     if (this.eventShowForm.valid) {
       this.showService.createShow(payload, formValue.imageurl, payload.cast, payload.crew).subscribe({
@@ -751,10 +751,11 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @params payload:event
   */
   toggleCity(event: any) {
-    if (event.target.checked) {
-      this.city.push(this.fb.control(event.target.value));
+    let isExisting = this.eventShowForm.get('city')?.value.includes(event.value)
+    if (!isExisting) {
+      this.city.push(this.fb.control(event.value));
     } else {
-      let index = this.city.controls.findIndex((ctrl) => ctrl.value === event.target.value)
+      let index = this.city.controls.findIndex((ctrl) => ctrl.value === event.value)
       if (index != -1) this.city.removeAt(index);
 
     }
@@ -807,19 +808,19 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   toggleVenueName(event: any) {
-
     if (this.eventShowForm.get('eventType')?.value != 'Movie') {
       this.venueName.clear();
       (this.eventShowForm.get('shows') as FormArray).clear()
       this.addEventShow()
-
     }
 
-    if (event.target.checked) {
-      this.venueName.push(this.fb.control(event.target.value));
+    let isExisting = this.venueName?.value.includes(event.value)
+
+    if (!isExisting) {
+      this.venueName.push(this.fb.control(event.value));
     }
     else {
-      let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.target.value)
+      let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.value)
       if (index != -1) this.venueName.removeAt(index);
     }
     this.eventShowForm.get('venueName')?.markAsTouched()
@@ -842,41 +843,55 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   * @params payload:event,path,index
   */
-  handleImageUpload(event: Event, path: string, index?: number): void {
+  handleImageUpload(event: Event, path: string, index: number): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      this.toaster.error('Please upload a valid image file');
-      return;
-    }
-
     const maxSizeMB = 2;
     const maxSizeBytes = maxSizeMB * 1024 * 1024;
     if (file.size > maxSizeBytes) {
       this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
-      return;
-    }
-
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      let base64String = (reader.result as string).split(',')[1];
-      if (index == undefined) {
-        this.eventShowForm.get(path)?.setValue(base64String)
+      input.value = '';
+      if (index >= 0 && path == 'cast') {
+        (this.castControls.at(index) as FormGroup).get('castImg')?.setValue('')
       }
       else {
-        if (index >= 0 && path == 'cast') {
-          (this.castControls.at(index) as FormGroup).get('castImg')?.setValue(base64String)
+        (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue('')
+      }
+      return;
+    }
+    if (file.type.startsWith('image/jpeg') || file.type.startsWith('image/png')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        let base64String = (reader.result as string).split(',')[1];
+        if (index == undefined) {
+          this.eventShowForm.get(path)?.setValue(base64String)
         }
         else {
-          (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue(base64String)
+          if (index >= 0 && path == 'cast') {
+            (this.castControls.at(index) as FormGroup).get('castImg')?.setValue(base64String)
+          }
+          else {
+            (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue(base64String)
+          }
         }
+        this.toaster.success('Image uploaded successfully');
+      };
+      reader.onerror = () => this.toaster.error('Failed to read file');
+      reader.readAsDataURL(file);
+    }
+    else {
+      this.toaster.error('Please upload a valid image file');
+      input.value = '';
+      if (index >= 0 && path == 'cast') {
+        (this.castControls.at(index) as FormGroup).get('castImg')?.setValue('')
       }
-      this.toaster.success('Image uploaded successfully');
-    };
-    reader.onerror = () => this.toaster.error('Failed to read file');
-    reader.readAsDataURL(file);
+      else {
+        (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue('')
+      }
+      this.eventShowForm.get(path)?.setValue('')
+      return;
+    }
   }
 
 
@@ -888,14 +903,25 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   handlePosterImgUpload(event: Event, path: string) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      this.toaster.error('Please upload a valid image file');
+    let file: File | null = input.files[0];
+    const maxSizeMB = 2;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      input.value = '';
+      this.eventShowForm.get(path)?.setValue('')
       return;
     }
-    this.eventShowForm.get(path)?.setValue(file)
-    this.eventShowForm.get(path)?.value
-    this.toaster.success('Image uploaded successfully');
+    if (file.type.startsWith('image/jpeg') || file.type.startsWith('image/png')) {
+      this.eventShowForm.get(path)?.setValue(file)
+      this.toaster.success('Image uploaded successfully');
+    }
+    else {
+      this.toaster.error('Please upload a valid image file');
+      input.value = '';
+      this.eventShowForm.get(path)?.setValue('')
+      return;
+    }
   }
 
   isInvalid(controlName: string): boolean {
@@ -913,4 +939,19 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     }
   }
 
+  removeCastControl(castControls: FormArray, index: number) {
+    if (castControls.length == 1) return;
+    else {
+      castControls.removeAt(index)
+    }
+    this.eventShowForm.setControl('casts', new FormArray([...castControls.controls]));
+  }
+
+  removeCrewControl(crewControls: FormArray, index: number) {
+    if (crewControls.length == 1) return;
+    else {
+      crewControls.removeAt(index)
+    }
+    this.eventShowForm.setControl('crew', new FormArray([...crewControls.controls]));
+  }
 }
