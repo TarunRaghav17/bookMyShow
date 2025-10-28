@@ -7,11 +7,11 @@
                 <img [src]="movieDetails.imageurl?commonService.getImageFromBase64(movieDetails?.imageurl) : 'https://www.payoja.org/wp-content/plugins/tutor/assets/images/placeholder.svg' "
                     alt="" class="bg-custom">
                 <div class="col-10 d-flex gap-3 align-items-start z-1">
-                    <div class="col-3 h-100 poster-img-container">
+                    <div class=" h-100 poster-img-container">
                         <img [src]="commonService.getImageFromBase64(movieDetails?.imageurl)"
                             class="img-fluid rounded-3 h-100" alt="">
                         @if((movieDetails?.eventType?.toLowerCase() ) == 'movie'){
-                        <span class="cinema-badge">In cinemas</span>
+                        <span class="cinema-badge ">{{movieDetails.currentlyPlaying? 'In cinemas':'Coming Soon'}}</span>
                         }
                     </div>
                     <div class="col-9 h-100 text-white p-4 py-5">
@@ -20,12 +20,13 @@
                             <div class="rating-content">
                                 <i class="fa fa-star rating-star" aria-hidden="true"></i>
                                 <span class="rating-score">{{movieDetails?.imdbRating ?? 0}} /10</span>
-                                <span class="rating-votes">({{movieDetails?.votes?? 0 | numberFormat}} Votes)</span>
+                                <span class="rating-votes">({{movieDetails?.likes?? 0 | numberFormat}} Likes)</span>
                                 <i class="fa fa-chevron-right rating-arrow" aria-hidden="true"></i>
-                                <button class="rate-btn">
-                                    <span>Rate Now</span>
+                                <button class="rate-btn col-4" >
+                                    <span>
+                                        {{commonService.getUserLikedContents()?.includes(movieDetails.eventId)?'Liked':'Like Now'}}
+                                    </span>
                                 </button>
-
                             </div>
                         </div>
                         <div class="movie-formats ">
@@ -55,7 +56,6 @@
                             }
                             <span>{{movieDetails?.releasingOn}}</span>
                         </div>
-
                         <div class="d-flex align-items-center  mt-3 gap-5">
                             <button (click)=" open(movieDetails?.ageLimit>18 ? contentWarningModal : langFormatModal)"
                                 class="book_ticket_button ">Book tickets</button>
@@ -65,11 +65,10 @@
                                 (click)="handleDeleteEvent(confirmDeleteModal)">Delete</button>
                             }
                         </div>
-
                     </div>
                 </div>
                 <div class="col-2 d-flex justify-content-start py-4 align-items-start">
-                    <div class="share_btn" >
+                    <div class="share_btn" (click)="openShareModal(shareModal)" >
                         <i class="fa fa-share" aria-hidden="true"></i>
                         <span>Share</span>
                     </div>
@@ -188,10 +187,11 @@
     <div class="modal-header border-bottom-0">
         <div class="col-12 d-flex justify-content-between align-itmes-center">
             <h3>Share</h3>
-            <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+            <button class="btn btn-close" (click)="closemodal()"></button>
         </div>
     </div>
     <div class="modal-body p-0">
+
         <div class="border-bottom">
             <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
                 <p class="m-0">Facebook</p>

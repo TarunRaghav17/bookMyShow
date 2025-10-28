@@ -27,4 +27,8 @@ export class VenuesService {
     return this.http.get(`http://localhost:3000/venues`)
   }
 
+  deleteVenueById(id:string):Observable<any>{
+    return this.http.patch(`${this.baseUrl}/venues/delete/${id}`,{})
+  }
+
 }

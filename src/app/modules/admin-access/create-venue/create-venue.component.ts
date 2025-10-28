@@ -12,7 +12,7 @@ import { Title } from '@angular/platform-browser';
 export class CreateVenueComponent implements OnInit {
 
   venueForm!: FormGroup;
-  tempAmmenity = new FormControl('', [Validators.required])
+  tempAmmenity = new FormControl('', [])
   venueType: any[] = [];
   citiesArray: any[] = []
   supportedCategoriesArray: any[] | null = null
@@ -125,17 +125,19 @@ export class CreateVenueComponent implements OnInit {
   */
   nameValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value != '') {
+        if (/^\s|\s$/.test(control.value)) {
+          return { invalidSpace: true };
+        }
 
-      if (/^\s|\s$/.test(control.value)) {
-        return { invalidSpace: true };
-      }
+        if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
+          return { invalidCharacter: true };
+        }
 
-      if (!/^[A-Za-z0-9-\s]+$/.test(control.value)) {
-        return { invalidCharacter: true };
-      }
+        if (/^-|-$/.test(control.value)) {
+          return { invalidHyphen: true };
+        }
 
-      if (/^-|-$/.test(control.value)) {
-        return { invalidHyphen: true };
       }
 
       return null;
@@ -237,17 +239,6 @@ export class CreateVenueComponent implements OnInit {
     return this.venueForm.get('screens') as FormArray
   }
   /**
-    * @description function that creates form group of screen.
-    * @author Inzamam
-    * @returnType FormGroup
-    */
-  createScreen(): FormGroup {
-    return this.fb.group({
-      screenName: ['', [Validators.required, this.nameValidator()]],
-      layouts: this.fb.array([this.createLayout()])
-    })
-  }
-  /**
     * @description function to add screen.
     * @author Inzamam
     * @returnType void
@@ -262,8 +253,12 @@ export class CreateVenueComponent implements OnInit {
     * @returnType void
     */
   removeScreen(index: number) {
-    if (this.screens.controls.length <= 1) return;
-    this.screens.removeAt(index)
+
+    const screens = this.screens;
+    screens.removeAt(index);
+    this.venueForm.setControl('screens', this.fb.array(screens.controls));
+
+
   }
   /**
     * @description getter function to get layouts as FormArray
@@ -281,18 +276,15 @@ export class CreateVenueComponent implements OnInit {
     * @returnType array of strings [a,b,c]
     */
   getUsedRowsInScreen(screen: AbstractControl): string[] {
-    let used: string[] = [];
-    let layouts = this.getLayouts(screen).controls;
+    const used: string[] = [];
+    const layouts = this.getLayouts(screen).controls;
     layouts.forEach(layout => {
-      let rows = layout.get('rows') as FormArray;
-      rows.controls.forEach(ctrl => {
-        if (ctrl.value) {
-          used.push(ctrl.value);
-        }
-      });
+      const rows = layout.get('rows') as FormArray;
+      (rows.value || []).forEach((val: any) => { if (val) used.push(val); });
     });
     return used;
   }
+
   /**
   * @description function to get availabel rows in screen and current category(layout like GOLD | SILVER)  .
   * @author Inzamam
@@ -300,10 +292,22 @@ export class CreateVenueComponent implements OnInit {
   * @returnType array of strings [a,b,c]
   */
   getAvailableRows(screen: AbstractControl, currentLayout: AbstractControl): string[] {
-    let used = this.getUsedRowsInScreen(screen);
-    let currentRows = (currentLayout.get('rows') as FormArray).value;
-    return this.alphabets.filter(letter => !used.includes(letter) || currentRows.includes(letter));
+    const used = this.getUsedRowsInScreen(screen).filter(Boolean); // remove falsy values
+    const currentRows = (currentLayout.get('rows') as FormArray)?.value || [];
+    return this.alphabets.filter(
+      letter => !used.includes(letter) || currentRows.includes(letter)
+    );
   }
+
+  /**
+    * @description utility function that generates unique id
+    * @author Inzamam
+    * @returnType string
+    */
+  generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
   /**
     * @description function that creates form group of Layout(category like GOLD | SILVER)  .
     * @author Inzamam
@@ -311,11 +315,25 @@ export class CreateVenueComponent implements OnInit {
     */
   createLayout(): FormGroup {
     return this.fb.group({
+      id: [this.generateId()],
       layoutName: ['', [Validators.required, this.nameValidator()]],
       rows: this.fb.array([], Validators.required),
       cols: [12, [Validators.required]]
+    });
+  }
+  /**
+    * @description function that creates form group of screen.
+    * @author Inzamam
+    * @returnType FormGroup
+    */
+  createScreen(): FormGroup {
+    return this.fb.group({
+      screenName: ['', [Validators.required, this.nameValidator()]],
+      id: [this.generateId()],
+      layouts: this.fb.array([this.createLayout()])
     })
   }
+
 
 
   /**
@@ -336,10 +354,33 @@ export class CreateVenueComponent implements OnInit {
   * @returnType void
   */
   removeLayout(screen: AbstractControl, index: number) {
-    if (this.getLayouts(screen).length <= 1) return;
-    this.getLayouts(screen).removeAt(index)
-  }
+    const layoutsFA = this.getLayouts(screen);
+    // remove the layout
+    layoutsFA.removeAt(index);
 
+    const newLayouts = this.fb.array(
+      layoutsFA.controls.map(ctrl => {
+        const raw = {
+          id: ctrl.get('id')?.value || this.generateId(),
+          layoutName: ctrl.get('layoutName')?.value || '',
+          rows: ((ctrl.get('rows') as FormArray)?.value || []).slice(),
+          cols: ctrl.get('cols')?.value || 12
+        };
+
+        return this.fb.group({
+          id: [raw.id],
+          layoutName: [raw.layoutName, [Validators.required, this.nameValidator()]],
+          rows: this.fb.array((raw.rows as string[]).map(r => this.fb.control(r)), Validators.required),
+          cols: [raw.cols, [Validators.required]]
+        });
+      })
+    );
+
+    (screen as FormGroup).setControl('layouts', newLayouts);
+    this.venueForm.updateValueAndValidity();
+    this.addScreen();
+    this.removeScreen(this.screens.length - 1)
+  }
 
   /**
   * @description Getter for amenities
@@ -356,9 +397,9 @@ export class CreateVenueComponent implements OnInit {
   * @returnType void
   */
   addAmenity(): void {
-    if (this.tempAmmenity.valid) {
+    if (this.tempAmmenity.value != '') {
       this.amenities.push(this.fb.control(this.tempAmmenity.value));
-      this.tempAmmenity.reset()
+      this.tempAmmenity.setValue('')
     }
   }
 
@@ -372,13 +413,31 @@ export class CreateVenueComponent implements OnInit {
     this.amenities.removeAt(index);
   }
 
+  /**
+ * @description utility func that takes obj and filters-out ids key
+ * @author Inzamam
+ * @param obj
+ * @returnType obj
+ */
+  filterIds(obj: any): any {
+    if (Array.isArray(obj)) {
+      return obj.map((item: any) => this.filterIds(item));
+    } else if (obj !== null && typeof obj === 'object') {
+      return Object.keys(obj)
+        .filter(key => key !== 'id')
+        .reduce((acc: any, key) => {
+          acc[key] = this.filterIds(obj[key]);
+          return acc;
+        }, {});
+    }
+    return obj;
+  }
 
   /**
- * @description function that validates and then  submit the form .
- * @author Inzamam
- * @returnType void
- */
-  // Submit
+  * @description function that validates and then  submit the form .
+  * @author Inzamam
+  * @returnType void
+  */
   onSubmit(): void {
     if (this.venueForm.valid) {
       this.venuesService.createVenueService(this.venueForm.value).subscribe({
@@ -388,7 +447,7 @@ export class CreateVenueComponent implements OnInit {
           this.venueForm.reset()
           this.venueForm.get('venueFor')?.setValue('');
           this.venueForm.get('venueType')?.setValue('');
-          this.venueForm.get('cityName')?.setValue('');
+          this.venueForm.get('address.cityName')?.setValue('');
           (this.venueForm.get('supportedCategories') as FormArray).clear();
           (this.venueForm.get('amenities') as FormArray).clear();
         },
@@ -403,11 +462,11 @@ export class CreateVenueComponent implements OnInit {
   }
 
   /**
- * @description function used to handle row change
- * @author Inzamam
- * @params event and layout
- * @returnType void
- */
+  * @description function used to handle row change
+  * @author Inzamam
+  * @params event and layout
+  * @returnType void
+  */
   onCheckboxChange(event: any, layout: AbstractControl): void {
     let rows = layout.get('rows') as FormArray
     if (event.target.checked) {
