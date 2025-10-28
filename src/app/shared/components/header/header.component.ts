@@ -231,9 +231,14 @@ export class HeaderComponent implements OnInit {
     this.filteredCities = [];
   }
 
+  /**
+   * @description Set selected category
+   * @author Gurmeet Kumar
+   * @param category 
+   */
   onClickCategory(category: string) {
-    this.commonService.setCategory(category)
-    this.selectedCategory = this.commonService._selectedCategory()
+    this.commonService.setCategory(category);
+    this.selectedCategory = this.commonService._selectedCategory();
   }
   /**
    * @description Convert base64 string to safe image URL for display
