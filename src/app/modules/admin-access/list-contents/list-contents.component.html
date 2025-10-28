@@ -7,8 +7,8 @@
                 <div class=" py-3 d-flex w-50 d-flex align-items-center justify-content-end ">
                     <div class=" d-flex gap-4 align-items-center justify-content-center  w-50">
                         <span>Type </span>
-                        <div ngbDropdown [autoClose]="'outside'" class=" w-50">
-                            <button class="btn btn-outline text-danger overflow-hidden  border w-100 text-start"
+                        <div ngbDropdown [autoClose]="'outside'" class=" w-50 ">
+                            <button class="btn btn-outline text-danger overflow-hidden  border w-100 text-start d-flex align-items-center justify-content-between"
                                 ngbDropdownToggle>
                                 {{userSelectedType.length > 0 ? userSelectedType.join(', ') : 'Select'}}
                             </button>
@@ -61,11 +61,11 @@
                             </ng-template>
                         </div>
                         <div class="card_body ">
-                            <h5 class="card-title text-muted">{{item.name}}</h5>
-                            <p class="card-text mx-1 my-1">{{content.type}}.</p>
+                            <h5 class="card-title text-muted">{{item?.name}} ({{ item?.releasingOn || item?.startDate  }})</h5>
+                            <p class="card-text mx-1 my-1" [ngClass]="{'text-danger':content.type == 'upcomingMovie'}">{{content.type}}.</p>
                             <p class="card-text mx-1 my-1">{{item.languages?.join(', ')}}</p>
                             <p class="card-text mx-1 my-1">{{item.genres?.join(', ')}}</p>
-                            <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${content.type== 'Movie'? `/movie/noida/${item.eventId}`: 
+                            <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${(content.type== 'Movie'|| content.type== 'upcomingMovie') ? `/movie/${commonService._selectCity()}/${item.eventId}`: 
                     `/${content.type}/${item.name}/${item.eventId}`}`]">More Details</button>
                         </div>
                     </div>

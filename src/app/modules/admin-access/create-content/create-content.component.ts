@@ -109,7 +109,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
         return { invalidSpace: true };
       }
 
-      if (!/^[A-Za-z0-9-@\s]+$/.test(control.value)) {
+      if (!/^[A-Za-z0-9-@,.\s]+$/.test(control.value)) {
         return { invalidCharacter: true };
       }
 
@@ -171,7 +171,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   */
   onEventTypeChange() {
-    this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate']);
+    this.removeControls(this.eventShowForm, ['languages', 'releasingOn', 'genres', 'format', 'tag', 'categories', 'moreFilters', 'screens', 'shows', 'price', 'startDate', 'endDate', 'cast', 'crew']);
     this.eventShowForm.addControl('shows', this.fb.array([this.createShow()], [Validators.required]))
     this.eventShowForm.addControl('price', this.fb.control(0, [Validators.required]))
     this.eventShowForm.addControl('startDate', this.fb.control('', [Validators.required]))
@@ -179,6 +179,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
     this.eventShowForm.addControl('cast', this.fb.array([this.createCast()]));
     this.eventShowForm.addControl('crew', this.fb.array([this.createCrew()]));
+
 
     this.fetchCities()
     this.selectedEventType = this.eventShowForm.get('eventType')?.value
@@ -368,7 +369,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 * @params payload:event
 */
   toggleShowTime(event: any, show: AbstractControl) {
-
     let slot = JSON.parse(event.target.value);
     if (event.target.checked) {
       this.getStartTime(show).push(this.fb.control(slot.start));
@@ -376,6 +376,13 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       let index = this.getStartTime(show).controls.findIndex((ctrl) => ctrl.value === slot.start)
       if (index != -1) this.getStartTime(show).removeAt(index);
     }
+
+
+    if (this.getStartTime(show).controls.length == 0) {
+      this.getStartTime(show).setErrors({ required: true });
+    }
+    this.getStartTime(show)?.markAsTouched()
+    this.getStartTime(show)?.updateValueAndValidity();
   }
 
   /**
@@ -423,6 +430,31 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return this.minDate
   }
 
+  onDurationChange() {
+
+    this.eventShowForm.get('endDate')?.setValue('');
+    this.eventShowForm.get('endDate')?.setValue('');
+  }
+
+  durationOrReleasingOnChange() {
+    if (this.eventShowForm.get('eventType')?.value && this.eventShowForm.get('eventType')?.value == 'Movie') {
+      this.screens.controls.forEach((screen: any) => {
+        (screen.get('shows') as FormArray)
+          .controls.forEach(show => {
+            show.get('date')?.setValue('')
+          })
+      })
+    }
+
+    // non movie case
+    if (this.eventShowForm.get('eventType')?.value && this.eventShowForm.get('eventType')?.value != 'Movie') {
+      this.shows.controls.forEach(show => {
+        show.get('date')?.setValue('')
+      })
+    }
+
+    this.availableSlots = []
+  }
   onStartOnChange() {
     this.eventShowForm.get('endDate')?.setValue('');
     this.shows.controls.forEach(show => {
@@ -510,28 +542,31 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return out;
   }
 
-  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0) {
-    this.availableSlots = freeWindows.flatMap(window =>
+  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0, venueId: any, screenId: any, selectedDate: any) {
+    let availableSlots = freeWindows.flatMap(window =>
       this.generateSlots(window.startTime, window.endTime, slotDurationMin, gapMin)
     );
-
+    this.availableSlots = [...this.availableSlots, { venueId: venueId, screenId: screenId, date: selectedDate, data: availableSlots }]
   }
 
-  fetchFreeTimeSlots(venueId: string, event: Event, screenId?: string) {
-    this.availableSlots = []
+  fetchFreeTimeSlots(show: AbstractControl, venueId: string, event: Event, screenId?: string) {
+    this.getStartTime(show).clear()
+    // this.availableSlots = []
     let selectedDate = event.target as HTMLInputElement;
     this.contentService.getAvailableTimeSlots(venueId, selectedDate.value, screenId).subscribe({
       next: (res) => {
         if (res.statusCode == 200) {
-          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value,30);
+          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value);
         }
       },
       error: (err) => {
-        this.generateAllAvailableSlots([{startTime:'12:00', endTime:'15:00'},{startTime:'15:00', endTime:'20:00'}],this.eventShowForm.get('runTime')?.value, 30)
+        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '15:00', endTime: '20:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value)
         this.toaster.error(err.error.message.split(':')[1])
 
       }
     })
+
+
   }
 
 
@@ -621,8 +656,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
           this.toaster.success('Show created successfully');
           this.router.navigate(['/admin/list/content'])
         },
-
-
         error: (err) => this.toaster.error(err.error.message)
       });
     } else {
@@ -642,14 +675,29 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     })
   }
 
-  // Getters for easy access
+  /**
+  * @description getter func. to access form controls of cast
+  * @author Inzamam
+  * @returns FormArray
+  */
   get castControls() {
     return this.eventShowForm.get('cast') as FormArray;
   }
 
+  /**
+* @description getter func. to access form controls of crew
+* @author Inzamam
+* @returns FormArray
+*/
   get crewControls() {
     return this.eventShowForm.get('crew') as FormArray;
   }
+
+  /**
+* @description genric getter func. to access form controls 
+* @author Inzamam
+* @returns FormArray
+*/
   getArrayControl(path: string): FormArray {
     return this.eventShowForm.get(path) as FormArray;
   }
@@ -663,6 +711,11 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getArrayControl(path).removeAt(index);
   }
 
+  /**
+* @description func. that creates form group for cast
+* @author Inzamam
+* @returns FormGroup
+*/
   createCast(): FormGroup {
     return this.fb.group({
       actorName: ['', Validators.required],
@@ -670,18 +723,32 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     })
   }
 
+  /**
+* @description function to add a FormGroup into cast array
+* @author Inzamam
+* @returns FormGroup
+*/
   addCast() {
     this.castControls.push(this.createCast()
     );
   }
 
+  /**
+* @description func. that creates form group for crew
+* @author Inzamam
+* @returns FormGroup
+*/
   createCrew(): FormGroup {
     return this.fb.group({
       memberName: ['', Validators.required],
       crewImg: [''],
     })
   }
-
+  /**
+* @description function to add a FormGroup into cast array
+* @author Inzamam
+* @returns FormGroup
+*/
   addCrew() {
     this.crewControls.push(this.createCrew()
     );
@@ -718,17 +785,22 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @params payload:event
   */
   toggleCity(event: any) {
-    if (event.target.checked) {
-      this.city.push(this.fb.control(event.target.value));
+    let isExisting = this.eventShowForm.get('city')?.value.includes(event.value)
+    if (!isExisting) {
+      this.city.push(this.fb.control(event.value));
     } else {
-      let index = this.city.controls.findIndex((ctrl) => ctrl.value === event.target.value)
+      let index = this.city.controls.findIndex((ctrl) => ctrl.value === event.value)
       if (index != -1) this.city.removeAt(index);
 
     }
     this.eventShowForm.get('city')?.markAsTouched()
     this.eventShowForm.get('city')?.updateValueAndValidity();
-    this.venueName.clear()
+    this.venueName.clear();
+    if (this.eventShowForm.get('eventType')?.value != 'Movie') (this.eventShowForm.get('shows') as FormArray).clear();
+
+
     this.venuesNameList = []
+    this.selectedVenueObj = []
     this.callApiForCities();
   }
 
@@ -770,11 +842,19 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   toggleVenueName(event: any) {
-    if (event.target.checked) {
-      this.venueName.push(this.fb.control(event.target.value));
+    if (this.eventShowForm.get('eventType')?.value != 'Movie') {
+      this.venueName.clear();
+      (this.eventShowForm.get('shows') as FormArray).clear()
+      this.addEventShow()
+    }
+
+    let isExisting = this.venueName?.value.includes(event.value)
+
+    if (!isExisting) {
+      this.venueName.push(this.fb.control(event.value));
     }
     else {
-      let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.target.value)
+      let index = this.venueName.controls.findIndex((ctrl) => ctrl.value === event.value)
       if (index != -1) this.venueName.removeAt(index);
     }
     this.eventShowForm.get('venueName')?.markAsTouched()
@@ -797,41 +877,55 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @author Inzamam
   * @params payload:event,path,index
   */
-  handleImageUpload(event: Event, path: string, index?: number): void {
+  handleImageUpload(event: Event, path: string, index: number): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      this.toaster.error('Please upload a valid image file');
-      return;
-    }
-
     const maxSizeMB = 2;
     const maxSizeBytes = maxSizeMB * 1024 * 1024;
     if (file.size > maxSizeBytes) {
       this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
-      return;
-    }
-
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      let base64String = (reader.result as string).split(',')[1];
-      if (index == undefined) {
-        this.eventShowForm.get(path)?.setValue(base64String)
+      input.value = '';
+      if (index >= 0 && path == 'cast') {
+        (this.castControls.at(index) as FormGroup).get('castImg')?.setValue('')
       }
       else {
-        if (index >= 0 && path == 'cast') {
-          (this.castControls.at(index) as FormGroup).get('castImg')?.setValue(base64String)
+        (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue('')
+      }
+      return;
+    }
+    if (file.type.startsWith('image/jpeg') || file.type.startsWith('image/png')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        let base64String = (reader.result as string).split(',')[1];
+        if (index == undefined) {
+          this.eventShowForm.get(path)?.setValue(base64String)
         }
         else {
-          (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue(base64String)
+          if (index >= 0 && path == 'cast') {
+            (this.castControls.at(index) as FormGroup).get('castImg')?.setValue(base64String)
+          }
+          else {
+            (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue(base64String)
+          }
         }
+        this.toaster.success('Image uploaded successfully');
+      };
+      reader.onerror = () => this.toaster.error('Failed to read file');
+      reader.readAsDataURL(file);
+    }
+    else {
+      this.toaster.error('Please upload a valid image file');
+      input.value = '';
+      if (index >= 0 && path == 'cast') {
+        (this.castControls.at(index) as FormGroup).get('castImg')?.setValue('')
       }
-      this.toaster.success('Image uploaded successfully');
-    };
-    reader.onerror = () => this.toaster.error('Failed to read file');
-    reader.readAsDataURL(file);
+      else {
+        (this.crewControls.at(index) as FormGroup).get('crewImg')?.setValue('')
+      }
+      this.eventShowForm.get(path)?.setValue('')
+      return;
+    }
   }
 
 
@@ -843,14 +937,25 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   handlePosterImgUpload(event: Event, path: string) {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      this.toaster.error('Please upload a valid image file');
+    let file: File | null = input.files[0];
+    const maxSizeMB = 2;
+    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      input.value = '';
+      this.eventShowForm.get(path)?.setValue('')
       return;
     }
-    this.eventShowForm.get(path)?.setValue(file)
-    this.eventShowForm.get(path)?.value
-    this.toaster.success('Image uploaded successfully');
+    if (file.type.startsWith('image/jpeg') || file.type.startsWith('image/png')) {
+      this.eventShowForm.get(path)?.setValue(file)
+      this.toaster.success('Image uploaded successfully');
+    }
+    else {
+      this.toaster.error('Please upload a valid image file');
+      input.value = '';
+      this.eventShowForm.get(path)?.setValue('')
+      return;
+    }
   }
 
   isInvalid(controlName: string): boolean {
@@ -868,4 +973,19 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     }
   }
 
+  removeCastControl(castControls: FormArray, index: number) {
+    if (castControls.length == 1) return;
+    else {
+      castControls.removeAt(index)
+    }
+    this.eventShowForm.setControl('casts', new FormArray([...castControls.controls]));
+  }
+
+  removeCrewControl(crewControls: FormArray, index: number) {
+    if (crewControls.length == 1) return;
+    else {
+      crewControls.removeAt(index)
+    }
+    this.eventShowForm.setControl('crew', new FormArray([...crewControls.controls]));
+  }
 }

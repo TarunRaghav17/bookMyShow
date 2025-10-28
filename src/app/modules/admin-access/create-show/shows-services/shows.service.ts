@@ -25,4 +25,12 @@ export class ShowsService {
     crews?.forEach((file: any) => formData.append('crewImages', file.crewImg));
     return this.http.post<any>(`${this.baseUrl}/api/events/create-event`, formData)
   }
+    updateShow(payload: any, poster: File, casts: File[], crews: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('Event', JSON.stringify(payload));
+    if (poster) formData.append('poster', poster);
+    casts?.forEach((file: any) => formData.append('castImages', file.castImg));
+    crews?.forEach((file: any) => formData.append('crewImages', file.crewImg));
+    return this.http.put<any>(`${this.baseUrl}/api/events/update/${payload.eventId}`, formData)
+  }
 }

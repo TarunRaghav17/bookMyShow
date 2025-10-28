@@ -38,7 +38,10 @@ export class ListContentsComponent implements OnInit {
    */
   ngOnInit() {
     this.titleService.setTitle('Contents List')
-    this.fetchContentsList()
+    this.fetchContentsList();
+  }
+  ngOnDestroy() {
+    this.titleService.setTitle('Book-My-Show');
   }
   /**
    * @description function that fetch contents list .
@@ -47,6 +50,7 @@ export class ListContentsComponent implements OnInit {
    */
   fetchContentsList() {
     forkJoin([
+      this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType, false),
       this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType),
       this.contentsService.getContentsList('Plays', this.currentPage, this.itemPerType),
       this.contentsService.getContentsList('Sports', this.currentPage, this.itemPerType),
@@ -55,15 +59,17 @@ export class ListContentsComponent implements OnInit {
     ]
     ).subscribe({
       next: (
-        [Movie, Plays, Sports, Activities, Event]) => {
+        [upcomingMovie, Movie, Plays, Sports, Activities, Event]) => {
         this.isLoading = false;
         this.contentsList = [...this.contentsList,
-        [{ type: 'Movie', data: Movie.data.content, count: Movie.data.count },
-        { type: 'Plays', data: Plays.data.content, count: Plays.data.count },
-        { type: 'Sports', data: Sports.data.content, count: Sports.data.count },
-        { type: 'Activities', data: Activities.data.content, count: Activities.data.count },
-        { type: 'Event', data: Event.data.content, count: Event.data.count }]].flat();
-        this.totalContentCount = Movie.data.count + Plays.data.count + Sports.data.count + Activities.data.count + Event.data.count
+        [
+          { type: 'upcomingMovie', data: upcomingMovie.data.content, count: upcomingMovie.data.count },
+          { type: 'Movie', data: Movie.data.content, count: Movie.data.count },
+          { type: 'Plays', data: Plays.data.content, count: Plays.data.count },
+          { type: 'Sports', data: Sports.data.content, count: Sports.data.count },
+          { type: 'Activities', data: Activities.data.content, count: Activities.data.count },
+          { type: 'Event', data: Event.data.content, count: Event.data.count }]].flat();
+        this.totalContentCount = upcomingMovie.data.count + Movie.data.count + Plays.data.count + Sports.data.count + Activities.data.count + Event.data.count
       },
       error: (err) => {
         this.toaster.error(err.error.message)
@@ -93,26 +99,45 @@ export class ListContentsComponent implements OnInit {
  * @author Inzamam
  * @returnType void
  */
-
   totalFilteredCounts = 0;
   handleFilteredContentList() {
     if (this.userSelectedType.length === 0) {
       this.filteredContentList = [];
       return;
     }
-    const requests = this.userSelectedType.map((type: any) =>
-      this.contentsService.getContentsList(
-        type,
-        this.filtersCurrentPage,
-        Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
-      )
+    const requests = this.userSelectedType.flatMap((type: any) => {
+      if (type == 'Movie') {
+        return [
+          this.contentsService.getContentsList(
+            type,
+            this.filtersCurrentPage,
+            Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
+          ),
+          this.contentsService.getContentsList(
+            type,
+            this.filtersCurrentPage,
+            Math.floor(this.totalItemsPerPage / this.userSelectedType.length), false
+          )
+        ]
+
+      }
+      else {
+        return this.contentsService.getContentsList(
+          type,
+          this.filtersCurrentPage,
+          Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
+        )
+      }
+
+    }
+
     );
     this.isLoading = true;
     forkJoin(requests).subscribe({
       next: (responses: any[]) => {
         this.isLoading = false;
         responses.forEach((res, index) => {
-          const type = this.userSelectedType[index];
+          const type = this.userSelectedType[index] ?? "upcomingMovie";
           if (res.data.content.length > 0) {
             const existing = this.filteredContentList.find(c => c.type === type);
             if (existing) {
@@ -144,6 +169,12 @@ export class ListContentsComponent implements OnInit {
   }
 
   dataLoadedCount: number = 0
+
+  /**
+* @description function that gets invokes every time WE scroll to bottom of page.
+* @author Inzamam
+* @params scroll event
+*/
   onCardContainerScroll(event: any) {
 
     const element = event.target as HTMLElement;

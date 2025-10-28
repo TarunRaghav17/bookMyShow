@@ -14,7 +14,7 @@ import { DurationPipe } from '../../../core/pipes/duration.pipe';
   standalone: true,
   templateUrl: './events-details.component.html',
   styleUrl: './events-details.component.scss',
-  imports: [ActivitiesRoutingModule, NgbModule, NumberFormatPipe , DurationPipe]
+  imports: [ActivitiesRoutingModule, NgbModule, NumberFormatPipe, DurationPipe]
 })
 export class EventsDetailsComponent implements OnInit {
   id: any;
@@ -65,10 +65,10 @@ export class EventsDetailsComponent implements OnInit {
   closemodal() {
     this.modalService.dismissAll();
   }
-/**
-  * @description open service modal 
-  * @author Manu Shukla
-  */
+  /**
+    * @description open service modal 
+    * @author Manu Shukla
+    */
   openShareModal(serviceModal: TemplateRef<any>) {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
@@ -81,11 +81,11 @@ export class EventsDetailsComponent implements OnInit {
     let url = window.location.href;
     this.copyLink(url);
   }
-  
-/**
-  * @description method for copy the current URL
-  * @author Manu Shukla
-  */
+
+  /**
+    * @description method for copy the current URL
+    * @author Manu Shukla
+    */
   copyLink(link: string) {
     const textarea = document.createElement('textarea');
     textarea.value = link;
@@ -105,84 +105,84 @@ export class EventsDetailsComponent implements OnInit {
     document.body.removeChild(textarea);
   }
 
-/**
-  * @description Opens a confirmation modal before deleting an event.  
-  * @author Manu Shukla
-  */
+  /**
+    * @description Opens a confirmation modal before deleting an event.  
+    * @author Manu Shukla
+    */
   handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
-  const modalRef = this.modalService.open(confirmDeleteModal, {
-    ariaLabelledBy: 'modal-basic-title',
-    modalDialogClass: 'no-border-modal',
-    backdrop:  'static',
-  });
+    const modalRef = this.modalService.open(confirmDeleteModal, {
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'no-border-modal',
+      backdrop: 'static',
+    });
 
-  modalRef.result
-    .then((result) => {
-      if (result === 'confirm') {
-        this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
-          next: (res) => {
-            this.toastr.success(res.message);
-            this.location.back();
-          },
-          error: (err) => {
-            this.toastr.error(err.error.message);
-          },
-        });
-      }
-    })
-    .catch(() => {});
-}
+    modalRef.result
+      .then((result) => {
+        if (result === 'confirm') {
+          this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
+            next: (res) => {
+              this.toastr.success(res.message);
+              this.location.back();
+            },
+            error: (err) => {
+              this.toastr.error(err.error.message);
+            },
+          });
+        }
+      })
+      .catch(() => { });
+  }
 
-/**
-  * @description get Today Date in format of yeaar-month-date  
-  * @author Manu Shukla
-  */
+  /**
+    * @description get Today Date in format of yeaar-month-date  
+    * @author Manu Shukla
+    */
   getToday() {
     const today = new Date();
     const year = today.getUTCFullYear();
-    const month = String(today.getUTCMonth() + 1).padStart(2, '0');  
+    const month = String(today.getUTCMonth() + 1).padStart(2, '0');
     const day = String(today.getUTCDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`; 
+    return `${year}-${month}-${day}`;
   }
 
-/**
-  * @description Opens a confirmation modal before Booking an event.  
-  * @author Manu Shukla
-  */
-openConfirmModal(confirmModal: TemplateRef<any>) {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    const modalRef = this.modalService.open(confirmModal, {
+  /**
+    * @description Opens a confirmation modal before Booking an event.  
+    * @author Manu Shukla
+    */
+  openConfirmModal(confirmModal: TemplateRef<any>) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      const modalRef = this.modalService.open(confirmModal, {
+        ariaLabelledBy: 'modal-basic-title',
+        modalDialogClass: 'no-border-modal',
+        backdrop: 'static'
+      });
+      modalRef.result.then((result) => {
+        if (result === 'login') {
+          const modalOptions: NgbModalOptions = { centered: true };
+          this.modalService.open(UserAuthComponent, modalOptions);
+        }
+      }).catch(() => { });
+      return;
+    }
+    this.router.navigate([
+      '/book-events',
+      this.commonService._selectedCategory(),
+      this.eventDetails.name.split(' ').join('-'),
+      this.eventDetails.eventId,
+      this.eventDetails.startDate,
+    ]);
+  }
+
+  /**
+    * @description Opens a modal if event is Closed  
+    * @author Manu Shukla
+    */
+  eventClosed(closedModal: TemplateRef<any>) {
+    this.modalService.open(closedModal, {
       ariaLabelledBy: 'modal-basic-title',
       modalDialogClass: 'no-border-modal',
-      backdrop:'static'
+      backdrop: 'static',
     });
-    modalRef.result.then((result) => {
-      if (result === 'login') {
-        const modalOptions: NgbModalOptions = { centered: true };
-        this.modalService.open(UserAuthComponent, modalOptions);
-      }
-    }).catch(() => {});
-    return;
   }
-  this.router.navigate([
-    '/book-events',
-    this.commonService._selectedCategory(),
-    this.eventDetails.name.split(' ').join('-'),
-    this.eventDetails.eventId,
-    this.eventDetails.startDate,
-  ]);
-}
-
-/**
-  * @description Opens a modal if event is Closed  
-  * @author Manu Shukla
-  */
-eventClosed(closedModal: TemplateRef<any>) {
-  this.modalService.open(closedModal, {
-    ariaLabelledBy: 'modal-basic-title',
-    modalDialogClass: 'no-border-modal',
-    backdrop: 'static',
-  });
-}
 }

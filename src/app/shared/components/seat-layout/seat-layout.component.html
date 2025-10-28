@@ -24,8 +24,8 @@
         <span class="key booked"></span> Sold
       </div>
     </div>
-    <div class="header px-5 py-1">
-      <div class="times">
+    <div class="header px-5 py-1 d-flex align-items-center w-100">
+      <div class="times col-10">
         @for(show of screenShows;track $index){
         @for( t of show.shows;track $index){
         <button (click)="switchShow(t,show)"
@@ -37,7 +37,7 @@
         }
       </div>
       @if(selectedSeats.length){
-      <div class="summary">
+      <div class="summary col-1 ">
         <button class="confirm" [disabled]="!selectedSeats.length" (click)="confirmBookNow()">Book Now</button>
       </div>
       }
@@ -82,7 +82,7 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 ">
       <div class="modal-header justify-content-center">
-        <h4 class="modal-title" id="loginPopupLabel">Login Required</h4>
+        <h4 class="modal-title" id="confirmModal">Login Required</h4>
       </div>
       <div class="modal-body border-0 text-center">
         <p>Please log in to book this event.</p>

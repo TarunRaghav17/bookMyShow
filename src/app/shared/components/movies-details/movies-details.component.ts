@@ -8,9 +8,10 @@ import { CommonModule, Location } from '@angular/common';
 import { MovieDetailsLoadingSkeltonComponent } from '../movie-details-loading-skelton/movie-details-loading-skelton.component';
 import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
 import { AuthService } from '../../../auth/auth-service.service';
+import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe,],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
@@ -20,13 +21,15 @@ export class MoviesDetailsComponent {
     private route: ActivatedRoute,
     private toaster: ToastrService,
     public authService: AuthService,
-    private location: Location
+    private location: Location,
+    private titleService: Title,
   ) { }
   private modalRef?: NgbModalRef | null = null
 
   movieDetails: any | null = null
   ngOnInit() {
-    this.fetchContentIdByUrl()
+    this.fetchContentIdByUrl();
+
   }
   showHeader = false;
   @HostListener('window:scroll')
@@ -66,13 +69,23 @@ export class MoviesDetailsComponent {
     let contentId: string | null = this.route.snapshot.paramMap.get('id')
     this.commonService.getContentDetailsById(contentId).subscribe({
       next: (res) => {
-        this.movieDetails = res.data
+        this.movieDetails = res.data;
+        this.titleService.setTitle(this.movieDetails.name)
       },
       error: (err) => {
         this.toaster.error(err.error.message)
       }
     })
   }
+
+  handleUserLikedContents(content: any) {
+    if (this.authService.getUserFromToken()) this.commonService.setUserLikedContents(content)
+
+    else {
+      this.toaster.error('You must Login to Like this Content')
+    }
+  }
+
 
   handleDeleteEvent(confirmDeleteModal: TemplateRef<any>) {
     const modalRef = this.modalService.open(confirmDeleteModal, {
@@ -97,14 +110,13 @@ export class MoviesDetailsComponent {
       })
       .catch(() => { });
   }
-    openShareModal(serviceModal: TemplateRef<any>) {
+  openShareModal(serviceModal: TemplateRef<any>) {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
       modalDialogClass: 'share-modal',
-      backdrop: 'static'
     });
   }
-   closemodal() {
+  closemodal() {
     this.modalService.dismissAll();
   }
 
@@ -112,11 +124,11 @@ export class MoviesDetailsComponent {
     let url = window.location.href;
     this.copyLink(url);
   }
-  
-/**
-  * @description method for copy the current URL
-  * @author Manu Shukla
-  */
+
+  /**
+    * @description method for copy the current URL
+    * @author Manu Shukla
+    */
   copyLink(link: string) {
     const textarea = document.createElement('textarea');
     textarea.value = link;

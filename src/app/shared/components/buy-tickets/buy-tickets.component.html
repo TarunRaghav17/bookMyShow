@@ -16,8 +16,9 @@
       @for(date of dateSelectionArray;track $index){
       <div class="text-center px-3 py-1  rounded  fw-bold text-dark date_card " (click)="
         onDateChange($index,date)
-        " [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':'',
-        'not-allowed':'pointer',}" [ngClass]="{'date_disabled':$index>2}">
+        "
+        [ngStyle]="{'backgroundColor':date == commonService.userSelectedDate()?'rgb(235, 78, 98)':''}"
+        [ngClass]="{'date_disabled':$index>3}">
         <div>{{date.day}}</div>
         <div style="font-weight: bold; font-size:18px ;">{{date?.dateNum}}</div>
         <div>{{date.month}}</div>
@@ -50,7 +51,7 @@
             <label class="">
               {{item}}</label>
             <input type="checkbox" class="form-check-input accent-blue"
-              (change)="handleFilterChange($event,{type:'price',value:item})" />
+              (change)="handleFilterChange($event,{type:'price',value:item})" [checked]="isChecked({type:'price',value:item})" />
           </li>
           }
         </ul>
@@ -92,7 +93,7 @@
   <!-- selectd filters array -->
   <div class="d-flex flex-wrap gap-2 align-items-center justify-content-start ">
     @for(filter of selectedFilters;track $index){
-    <div class="d-flex align-items-center gap-2 bg-danger text-light border rounded-pill px-2 py-1">
+    <div class="d-flex align-items-center gap-2 bg-danger text-light border rounded-pill px-2 py-1" (click)="handleFilterChange($event,filter)">
       <span class="fw-thin">{{filter.value.split(',')[0]}} </span>
     </div>
     }
@@ -105,9 +106,7 @@
     <div class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2" style="height:auto;">
       <div class="d-flex flex-column  " style="width:25rem">
         <div class="fw-semibold   d-flex align-items-center justify-content-start gap-3">
-          <img
-            src="https://play-lh.googleusercontent.com/FWnYQ8Bwljw9z1SxBeAJ0ahIB7wJ8A2RrjhITKGwMsy2m28bSNYvuk5xfU_eM_YLcysl=w240-h480-rw"
-            alt="cinema" class="border" style="width:10%; border-radius:20%;" />
+          <img [src]="logoArray[$index%3]" alt="cinema" class="border" style="width:10%; border-radius:20%;" />
           {{venue.venueName}}
         </div>
         <!-- beverages icon -->
