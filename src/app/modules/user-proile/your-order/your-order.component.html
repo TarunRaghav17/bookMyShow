@@ -4,10 +4,10 @@
             <div class="container">
                 <div class="row">
                     @for (booking of getShowsData; track $index) {
-                    <div class="col-container mb-4">
+                    <div class="col-container mb-4" >
                         <div class="card">
                             <a class="img-card">
-                                <img [src]="booking.eventPoster " [alt]=" booking.eventName " />
+                                <img [src]="getImageFromBase64(booking.eventPoster)" [alt]=" booking.eventName " />
                             </a>
                             <div class="card-content p-3">
                                 <h4 class="card-title">{{ booking.eventName | truncate: 15 }}</h4>
@@ -17,12 +17,6 @@
                                 <p class="mb-1">Time: {{ booking.time }}</p>
                                 <p class="mb-1">Seats: {{ booking.seats.join(', ') }}</p>
                                 <p class="mb-1">Total Amount: ₹{{ booking.totalAmount }}</p>
-                                <p>
-                                    <span
-                                        [ngClass]="{'text-success': booking.bookingStatus === 'confirmed','text-danger': booking.bookingStatus === 'cancelled'}">
-                                        Status: {{ booking.bookingStatus | titlecase }}
-                                    </span>
-                                </p>
                             </div>
                         </div>
                     </div>
