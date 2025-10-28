@@ -675,14 +675,29 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     })
   }
 
-  // Getters for easy access
+  /**
+  * @description getter func. to access form controls of cast
+  * @author Inzamam
+  * @returns FormArray
+  */
   get castControls() {
     return this.eventShowForm.get('cast') as FormArray;
   }
 
+  /**
+* @description getter func. to access form controls of crew
+* @author Inzamam
+* @returns FormArray
+*/
   get crewControls() {
     return this.eventShowForm.get('crew') as FormArray;
   }
+
+  /**
+* @description genric getter func. to access form controls 
+* @author Inzamam
+* @returns FormArray
+*/
   getArrayControl(path: string): FormArray {
     return this.eventShowForm.get(path) as FormArray;
   }
@@ -696,6 +711,11 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getArrayControl(path).removeAt(index);
   }
 
+  /**
+* @description func. that creates form group for cast
+* @author Inzamam
+* @returns FormGroup
+*/
   createCast(): FormGroup {
     return this.fb.group({
       actorName: ['', Validators.required],
@@ -703,18 +723,32 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     })
   }
 
+  /**
+* @description function to add a FormGroup into cast array
+* @author Inzamam
+* @returns FormGroup
+*/
   addCast() {
     this.castControls.push(this.createCast()
     );
   }
 
+  /**
+* @description func. that creates form group for crew
+* @author Inzamam
+* @returns FormGroup
+*/
   createCrew(): FormGroup {
     return this.fb.group({
       memberName: ['', Validators.required],
       crewImg: [''],
     })
   }
-
+  /**
+* @description function to add a FormGroup into cast array
+* @author Inzamam
+* @returns FormGroup
+*/
   addCrew() {
     this.crewControls.push(this.createCrew()
     );

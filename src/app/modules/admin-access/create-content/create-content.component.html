@@ -161,19 +161,18 @@
                 <div ngbDropdownMenu [hidden]="!citiesArray" aria-labelledby="cityDropdown" class="w-100 p-2"
                     style="max-height: 200px; overflow-y: auto;">
                     @for(city of citiesArray; track $index) {
-                    <div class="dropdown-item"  (click)="toggleCity(cityInput)">
-                        <div class="form-check"  [ngStyle]="{'cursor':true? 'pointer':''}">
-                            <input type="checkbox" class="form-check-input"  [ngStyle]="{'cursor':true? 'pointer':''}" [value]="city.cityName"
+                    <div class="dropdown-item" (click)="toggleCity(cityInput)">
+                        <div class="form-check" [ngStyle]="{'cursor':true? 'pointer':''}">
+                            <input type="checkbox" class="form-check-input" [ngStyle]="{'cursor':true? 'pointer':''}"
+                                [value]="city.cityName"
                                 [checked]="eventShowForm.get('city')?.value.includes(city.cityName)" #cityInput>
-                            <label class="form-check-label"  [ngStyle]="{'cursor':true? 'pointer':''}">
+                            <label class="form-check-label" [ngStyle]="{'cursor':true? 'pointer':''}">
                                 {{ city.cityName }}
                             </label>
                         </div>
                     </div>
                     }
                 </div>
-
-
             </div>
         </div>
 
@@ -191,15 +190,13 @@
                     'Select Venues' }}
                 </button>
                 <div class="invalid-feedback">Venue Name is required.</div>
-
-
                 <div ngbDropdownMenu [hidden]="venuesNameList.length <= 0" aria-labelledby="cityDropdown"
                     class="w-100 p-2" style="max-height: 200px; overflow-y: auto;">
-
                     <!-- onVenueNameChange() -->
                     @for(venue of venuesNameList ;track $index) {
-                    <div class="dropdown-item" [ngStyle]="{'cursor':true? 'pointer':''}" (click)="toggleVenueName(venueNameInput)">
-                        <div class="form-check" >
+                    <div class="dropdown-item" [ngStyle]="{'cursor':true? 'pointer':''}"
+                        (click)="toggleVenueName(venueNameInput)">
+                        <div class="form-check">
                             <input type="checkbox" class="form-check-input " [value]="venue?.venueName"
                                 [checked]="eventShowForm.get('venueName')?.value.includes(venue?.venueName)"
                                 #venueNameInput>
@@ -210,7 +207,6 @@
                     </div>
                     }
                 </div>
-
             </div>
 
             @if(eventShowForm.get('eventType')?.value=='Movie'){
@@ -392,7 +388,6 @@
                             </div>
                         </div>
                         <div class="invalid-feedback">Invalid Date </div>
-
                         }
                     </div>
                 </div>
@@ -508,7 +503,7 @@
             <h5 class="form-label">● Languages <small class="text-danger reuired">*</small></h5>
             <div class="d-flex flex-wrap">
                 @for(lang of languagesArray; track $index) {
-                <div class="form-check w-25" >
+                <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'languages')"
                         [value]="lang.languageId" [ngClass]="{'is-invalid': isInvalid('languages')}">
                     <label class="form-check-label">{{lang.languageName}}</label>

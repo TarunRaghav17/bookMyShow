@@ -260,7 +260,7 @@ export class BuyTicketsComponent implements AfterViewInit {
   /**
 * @description sets user seleced venue screen and show time and then navigate to seat layout page
 * @author Inzamam
-* @params payload:venue, screen, showTim
+* @params payload:venue, screen, showTime
 */
   navigateToSeatLayout(venue: Venue, screen: Screen, showTime: TimeSlot) {
     this.commonService.setUserSelectedShow({ ...showTime, screenId: screen.screenId });
@@ -281,7 +281,6 @@ export class BuyTicketsComponent implements AfterViewInit {
   /**
 * @description function that initializes dateSelectionArray
 * @author Inzamam
-* @params payload:event,path
 */
   initializeDateSelectionArray() {
     let today = new Date();

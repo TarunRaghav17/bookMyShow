@@ -96,7 +96,6 @@ export class ListContentsComponent implements OnInit {
  * @author Inzamam
  * @returnType void
  */
-
   totalFilteredCounts = 0;
   handleFilteredContentList() {
     if (this.userSelectedType.length === 0) {
@@ -167,6 +166,12 @@ export class ListContentsComponent implements OnInit {
   }
 
   dataLoadedCount: number = 0
+
+  /**
+* @description function that gets invokes every time WE scroll to bottom of page.
+* @author Inzamam
+* @params scroll event
+*/
   onCardContainerScroll(event: any) {
 
     const element = event.target as HTMLElement;
