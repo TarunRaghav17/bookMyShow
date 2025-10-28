@@ -11,7 +11,7 @@ import { AuthService } from '../../../auth/auth-service.service';
 import { Title } from '@angular/platform-browser';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe,],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
@@ -114,7 +114,6 @@ export class MoviesDetailsComponent {
     this.modalService.open(serviceModal, {
       ariaLabelledBy: 'modal-basic-title',
       modalDialogClass: 'share-modal',
-      backdrop: 'static'
     });
   }
   closemodal() {

@@ -22,9 +22,9 @@
                                 <span class="rating-score">{{movieDetails?.imdbRating ?? 0}} /10</span>
                                 <span class="rating-votes">({{movieDetails?.likes?? 0 | numberFormat}} Likes)</span>
                                 <i class="fa fa-chevron-right rating-arrow" aria-hidden="true"></i>
-                                <button class="rate-btn col-4" (click)="handleUserLikedContents(movieDetails)">
+                                <button class="rate-btn col-4" >
                                     <span>
-                                        {{commonService.getUserLikedContents()?.includes(movieDetails.eventId)?'Liked':'LikeNow'}}
+                                        {{commonService.getUserLikedContents()?.includes(movieDetails.eventId)?'Liked':'Like Now'}}
                                     </span>
                                 </button>
                             </div>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="col-2 d-flex justify-content-start py-4 align-items-start">
-                    <div class="share_btn" >
+                    <div class="share_btn" (click)="openShareModal(shareModal)" >
                         <i class="fa fa-share" aria-hidden="true"></i>
                         <span>Share</span>
                     </div>
@@ -187,10 +187,11 @@
     <div class="modal-header border-bottom-0">
         <div class="col-12 d-flex justify-content-between align-itmes-center">
             <h3>Share</h3>
-            <i class="fs-4 fa fa-times-circle-o p-2" aria-hidden="true" (click)="closemodal()"></i>
+            <button class="btn btn-close" (click)="closemodal()"></button>
         </div>
     </div>
     <div class="modal-body p-0">
+
         <div class="border-bottom">
             <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
                 <p class="m-0">Facebook</p>

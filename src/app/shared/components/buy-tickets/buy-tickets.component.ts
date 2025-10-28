@@ -274,7 +274,7 @@ export class BuyTicketsComponent implements AfterViewInit {
       }))
     }));
 
-    let screenShows = this.venueShowsDetails[0]?.screens
+    let screenShows = this.venueShowsDetails.filter((venueShow: any) => venueShow.venueId == venue.venueId)[0].screens
     this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { showData: showData, screenShows: screenShows } });
   }
 

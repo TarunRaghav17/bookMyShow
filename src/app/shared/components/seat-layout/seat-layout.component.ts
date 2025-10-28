@@ -107,7 +107,7 @@ export class SeatLayoutComponent {
   }
 
   getReservedSeatsByShowId(showId?: string) {
-    this.reservedSeats=[]
+    this.reservedSeats = []
     this.commonService.getReservedSeats(showId).subscribe(
       {
         next: (res) => {
@@ -220,7 +220,8 @@ export class SeatLayoutComponent {
     this.draw();
   }
   switchShow(t: any, show: any) {
-    this.activeShow = { ...t, screenId: show.screenId };
+    let activeShow = { ...t, screenId: show.screenId };
+    this.activeShow = activeShow
     this.commonService.setUserSelectedShow(this.activeShow);
     this.fetchVenueById()
     this.getReservedSeatsByShowId(this.activeShow.showIds[0])
