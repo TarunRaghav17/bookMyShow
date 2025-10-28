@@ -86,11 +86,17 @@
                         </td>
                     </tr>
                     }
+                    
+                    }
+                    @empty{
+                        <div class="text-center text-danger">No results found</div>
                     }
                 </tbody>
             </table>
         </div>
     </div>
+
+    @if(!searchValue){
     <div class="py-3 d-flex align-items-center justify-content-between w-75 mx-auto mt-auto">
         <button class="btn btn-sm btn-primary" [disabled]="pageNo==1" [ngClass]="{'btn-secondary':pageNo==1}"
             (click)="prev()">Prev</button>
@@ -98,6 +104,8 @@
         <button class="btn btn-sm btn-primary" [disabled]="pageNo==totalPages"
             [ngClass]="{'btn-secondary':pageNo==totalPages}" (click)="next()">Next</button>
     </div>
+    }
+
 </div>
 
 <ng-template #confirmDeleteModal let-modal>

@@ -190,7 +190,7 @@
                     'Select Venues' }}
                 </button>
                 <div class="invalid-feedback">Venue Name is required.</div>
-                <div ngbDropdownMenu [hidden]="venuesNameList.length <= 0" aria-labelledby="cityDropdown"
+                <div ngbDropdownMenu [hidden]="venuesNameList.length <= 0" aria-labelledby="venuesDropdown"
                     class="w-100 p-2" style="max-height: 200px; overflow-y: auto;">
                     <!-- onVenueNameChange() -->
                     @for(venue of venuesNameList ;track $index) {
