@@ -40,6 +40,9 @@ export class ListContentsComponent implements OnInit {
     this.titleService.setTitle('Contents List')
     this.fetchContentsList();
   }
+  ngOnDestroy() {
+    this.titleService.setTitle('Book-My-Show');
+  }
   /**
    * @description function that fetch contents list .
    * @author Inzamam

@@ -43,6 +43,10 @@ export class ListVenuesComponent implements OnInit {
 
   }
 
+  ngOnDestroy(){
+    this.titleService.setTitle("Book-My-Show");
+  }
+
   /**
   * @description function that set user selected venue type and calls handleFilteredVenuesList .
   * @author Inzamam

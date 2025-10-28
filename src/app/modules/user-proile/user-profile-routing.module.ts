@@ -10,10 +10,7 @@ const routes: Routes = [
     path: 'edit',
     component: ProfileComponent,
   },
-  {
-    canActivate: [AuthGuard],
-    data: { role: 'USER' },
-    path: 'your-order',
+  {    path: 'your-order',
     component: YourOrderComponent,
   },
   {
