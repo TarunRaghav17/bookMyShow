@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -49,15 +49,16 @@ export class SeatLayoutComponent {
   private ctx!: CanvasRenderingContext2D;
 
   screenShows: any[] = [];
+  // showData:any[]=[]
   activeShow: any = [];
   movieDetails: any;
   venueDetails: any;
   userSelectedVenueScreen!: any[];
-  reservedSeats: any[] = []
+  reservedSeats: any[] = [];
+  venueId!: string
 
   constructor(public commonService: CommonService,
     private modalService: NgbModal,
-    private location: Location,
     private authService: AuthService,
     private toaster: ToastrService,
     private route: ActivatedRoute,
@@ -66,8 +67,9 @@ export class SeatLayoutComponent {
     const navigation = this.router.getCurrentNavigation();
     this.screenShows = navigation?.extras?.state?.['screenShows'].map((screen: any) => ({
       screenId: screen.screenId,
-      shows: screen.showTimes
+      showTimes: screen.showTimes
     }));
+    this.venueId = navigation?.extras?.state?.['venueId'];
   }
   private modalRef?: NgbModalRef | null = null;
   layouts: Category[] = [];
@@ -182,7 +184,7 @@ export class SeatLayoutComponent {
   }
 
   goBack() {
-    this.location.back()
+    this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.eventId}/buytickets/${this.movieDetails.eventId}`]);
   }
 
   // ---- Drag/Pan state ----
@@ -226,6 +228,7 @@ export class SeatLayoutComponent {
     else {
       this.activeShow = activeShow
       this.commonService.setUserSelectedShow(this.activeShow);
+      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { screenShows: this.screenShows, venueId: this.venueId } });
       this.fetchVenueById()
       this.getReservedSeatsByShowId(this.activeShow.showIds[0])
       this.clearSelection();
@@ -627,6 +630,7 @@ export class SeatLayoutComponent {
     let user = this.authService.getUserFromToken()
     let payload = [
       {
+
         "userId": user?.userId,
         "eventId": this.movieDetails?.eventId,
         "venueId": this.venueDetails?.id,
@@ -634,14 +638,15 @@ export class SeatLayoutComponent {
         "showId": Number(this.activeShow?.showIds?.[0]),
         "date": this.commonService?.getUserSelectedDate()?.today,
         "time": this.activeShow?.time,
-        "reservedSeats": this.selectedSeats
+        "reservedSeats": this.selectedSeats,
+        "totalPrice": this.totalPrice,
       }
     ]
     this.commonService.bookUserSeats(payload).subscribe({
       next: (res) => {
         this.toaster.success(`${this.selectedSeats.join(', ')} ${res.message}`);
         this.close()
-        this.location.back()
+        this.goBack()
       },
       error: (err) => {
         this.toaster.error(err.error.message)

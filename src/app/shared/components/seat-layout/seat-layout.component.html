@@ -27,7 +27,7 @@
     <div class="header px-5 py-1 d-flex align-items-center w-100">
       <div class="times col-10">
         @for(show of screenShows;track $index){
-        @for( t of show.shows;track $index){
+        @for( t of show.showTimes;track $index){
         <button (click)="switchShow(t,show)"
           [class.active]="t?.time == activeShow?.time && t?.showIds[0] == activeShow?.showIds?.[0]" class="time 
    d-flex text-muted flex-column justify-content-start align-items-center"

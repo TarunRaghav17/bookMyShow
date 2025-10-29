@@ -264,18 +264,8 @@ export class BuyTicketsComponent implements AfterViewInit {
 */
   navigateToSeatLayout(venue: Venue, screen: Screen, showTime: TimeSlot) {
     this.commonService.setUserSelectedShow({ ...showTime, screenId: screen.screenId });
-    let showData = venue.screens.map((screen: any) => ({
-      screenId: screen.screenId,
-      screenName: screen.screenName,
-      shows: screen.showTimes.map((showTime: any) => ({
-        showId: showTime.showIds[0],
-        time: showTime.time,
-        availableCategories: showTime.availableCategories,
-      }))
-    }));
-
     let screenShows = this.venueShowsDetails.filter((venueShow: any) => venueShow.venueId == venue.venueId)[0].screens
-    this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { showData: showData, screenShows: screenShows } });
+    this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: {screenShows: screenShows, venueId: venue.venueId }});
   }
 
   /**
