@@ -71,6 +71,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getData()
   }
 
+    ngOnDestroy() {
+    this.titleService.setTitle('Book-My-Show');
+  }
 
   /**
   * @description custom validator that validates venueName
