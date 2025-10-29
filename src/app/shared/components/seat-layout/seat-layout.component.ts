@@ -628,7 +628,6 @@ export class SeatLayoutComponent {
 
   handleBookNow(): void {
     let user = this.authService.getUserFromToken()
-    console.log(this.totalPrice)
     let payload = [
       {
 
