@@ -440,7 +440,7 @@ export class CreateVenueComponent implements OnInit {
   */
   onSubmit(): void {
     if (this.venueForm.valid) {
-      this.venuesService.createVenueService(this.venueForm.value).subscribe({
+      this.venuesService.createVenueService(this.filterIds(this.venueForm.value)).subscribe({
         next: () => {
           this.toaster.success('Venue created successfully')
           this.venueForm.removeControl('screens')

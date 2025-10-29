@@ -4,10 +4,13 @@ import { ContentService } from './content-services/content.service';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, concatMap, forkJoin, from, map, toArray } from 'rxjs';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
-import { ShowsService } from '../create-show/shows-services/shows.service';
+// import { ShowsService } from '../create-show/shows-services/shows.service';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ShowsService } from '../create-show/shows-services/shows.service';
+import { AuthService } from '../../../auth/auth-service.service';
+// import { Router } from '@angular/router';
 
 
 type Slot = { start: string; end: string };
@@ -46,6 +49,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     private commonService: CommonService,
     private titleService: Title,
     private router: Router,
+    private routes: ActivatedRoute,
+    private authService:AuthService
   ) { }
 
   ngOnInit(): void {
@@ -217,12 +222,14 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       case 'Sports': {
         this.removeControls(this.eventShowForm, ['cast', 'crew'])
 
+        this.eventShowForm.addControl('languages', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
         break;
       }
 
       case 'Activities': {
+        this.eventShowForm.addControl('languages', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
         break;
@@ -619,7 +626,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       .map((city: any) => city.cityId);
     const toNumericArray = (arr: any[]) =>
       arr?.map((item: any) => (typeof item === 'object' ? item.id || item.value : Number(item))) || [];
+    
+    let adminId=this.authService.userDetailsSignal().userId
     const payload = {
+      adminId: adminId, 
       name: formValue?.name,
       description: formValue?.description,
       runTime: formValue?.runTime,
@@ -652,6 +662,8 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       show: shows
     };
 
+    console.log(payload);
+    // return;?
     //Validate & Submit
     if (this.eventShowForm.valid) {
       this.showService.createShow(payload, formValue.imageurl, payload.cast, payload.crew).subscribe({
@@ -981,7 +993,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     else {
       castControls.removeAt(index)
     }
-    this.eventShowForm.setControl('casts', new FormArray([...castControls.controls]));
+    this.eventShowForm.setControl('cast', new FormArray([...castControls.controls]));
   }
 
   removeCrewControl(crewControls: FormArray, index: number) {

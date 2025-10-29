@@ -194,22 +194,25 @@ export class BuyTicketsComponent implements AfterViewInit {
       }
       item.shows.forEach((show: any) => {
         const showId = item.showId;
-        show.availableCategories.forEach((timeSlot: any) => {
-          const time = show.time;
+        const time = show.time;
+        (show.availableCategories.length>0? show.availableCategories:[1,2,3] ).forEach((timeSlot: any) => {
+
           if (!screen!.showTimesMap.has(time)) {
             screen!.showTimesMap.set(time, { showIds: new Set(), categoryMap: new Map() });
           }
           const slot = screen!.showTimesMap.get(time)!;
           slot.showIds.add(showId);
-          [timeSlot].forEach((cat: Category) => {
-            if (!slot.categoryMap.has(cat.categoryName)) {
-              slot.categoryMap.set(cat.categoryName, { ...cat });
+          [timeSlot].forEach((cat: any) => {
+            if (!slot.categoryMap.has(cat)) {
+              slot.categoryMap.set(cat, timeSlot);
             }
           });
         });
       });
     });
-    const venues: any[] = Array.from(venueMap.values()).map((venue) => ({
+    console.log(Array.from(venueMap.values()))
+    const venues: any[] = Array.from(venueMap.values()).map((venue) => (
+      {
       ...venue,
       screens: venue.screens.map((screen) => ({
         screenId: screen.screenId,
@@ -236,6 +239,7 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
       next: (res) => {
         this.venueShowsDetails = this.mergeCategoriesWithShowIds(res.data);
+        console.log(this.venueShowsDetails)
 
       },
       error: (err) => {
