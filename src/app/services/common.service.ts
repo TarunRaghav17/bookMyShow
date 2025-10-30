@@ -303,9 +303,10 @@ export class CommonService {
    * @author Inzamam
    * @return Observable<any>
    */
-  deleteContentById(contentId: string | null): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`, {
-      id: contentId
+  deleteContentById(contentId: string | null , adminId?:number): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}/${adminId}`, {
+      id: contentId,
+      adminId:adminId
     });
   }
 

@@ -33,6 +33,7 @@ export class BookingEventsComponent implements OnInit {
   dateSelectionArray: any[] = [];
   selectedTime: string = '';
   venueTitle:string=''
+  allSelectedSeats: string[] = [];
   activeTab: 'step1' | 'step2' = 'step1';
 
   ngOnInit(): void {
@@ -153,6 +154,8 @@ export class BookingEventsComponent implements OnInit {
           next: () => {
              this.toastr.success(`ticket booked successfully for ${this.title}`)
              this.router.navigate(['/'])
+             localStorage.removeItem('selectedSeatsByEvent');
+
           },
           error: (err) => {
             this.toastr.error(err.message);
@@ -174,6 +177,7 @@ export class BookingEventsComponent implements OnInit {
  * @returnType void
  */
   generateRandomCode() {
+     this.allSelectedSeats = this.getSelectedSeats(this.eventId);
     let newSeat;
     do {
       const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)];
