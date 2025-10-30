@@ -90,7 +90,7 @@ export class SeatLayoutComponent {
     this.fetchContentIdByUrl();
     this.fetchVenueById();
     this.activeShow = this.commonService.getUserSelectedShow();
-    this.getReservedSeatsByShowId(this.activeShow.showIds?.[0]);
+    this.getReservedSeatsByShowId(this.activeShow.showDateId, this.activeShow.showTimeId);
   }
 
   ngAfterViewInit() {
@@ -108,9 +108,9 @@ export class SeatLayoutComponent {
       .reduce((sum, s) => sum + s.price, 0);
   }
 
-  getReservedSeatsByShowId(showId?: string) {
+  getReservedSeatsByShowId(showTimeDateId: string | undefined, showTimeId: string | undefined) {
     this.reservedSeats = []
-    this.commonService.getReservedSeats(showId).subscribe(
+    this.commonService.getReservedSeats(showTimeDateId, showTimeId).subscribe(
       {
         next: (res) => {
           this.reservedSeats = res.data || [];
@@ -228,9 +228,9 @@ export class SeatLayoutComponent {
     else {
       this.activeShow = activeShow
       this.commonService.setUserSelectedShow(this.activeShow);
-      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: { screenShows: this.screenShows, venueId: this.venueId } });
+      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/showDateId-${this.commonService.userSelectedShow()?.showDateId}/showTimeId-${this.commonService.userSelectedShow()?.showTimeId}/date-${this.commonService.userSelectedDate()?.today}`], { state: { screenShows: this.screenShows, venueId: this.venueId } });
       this.fetchVenueById()
-      this.getReservedSeatsByShowId(this.activeShow.showIds[0])
+      this.getReservedSeatsByShowId(this.activeShow.showDateId, this.activeShow.showTimeId);
       this.clearSelection();
       this.draw();
     }

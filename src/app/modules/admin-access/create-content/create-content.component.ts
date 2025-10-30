@@ -4,14 +4,11 @@ import { ContentService } from './content-services/content.service';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, concatMap, forkJoin, from, map, toArray } from 'rxjs';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
-// import { ShowsService } from '../create-show/shows-services/shows.service';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ShowsService } from '../create-show/shows-services/shows.service';
 import { AuthService } from '../../../auth/auth-service.service';
-// import { Router } from '@angular/router';
-
 
 type Slot = { start: string; end: string };
 @Component({
@@ -38,6 +35,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   formatsArray: any[] = [];
   screensArray: any[] = [];
   citiesArray: any[] | null = null;
+  availableSlotsMap: Map<any, any> = new Map()
   availableSlots: any[] = []
 
 
@@ -49,8 +47,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     private commonService: CommonService,
     private titleService: Title,
     private router: Router,
-    private routes: ActivatedRoute,
-    private authService:AuthService
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -439,13 +436,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.minDate = today.toISOString().split('T')[0];
     return this.minDate
   }
-
-  onDurationChange() {
-
-    this.eventShowForm.get('endDate')?.setValue('');
-    this.eventShowForm.get('endDate')?.setValue('');
-  }
-
   durationOrReleasingOnChange() {
     if (this.eventShowForm.get('eventType')?.value && this.eventShowForm.get('eventType')?.value == 'Movie') {
       this.screens.controls.forEach((screen: any) => {
@@ -463,7 +453,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       })
     }
 
-    this.availableSlots = []
+    this.availableSlotsMap.clear()
   }
   onStartOnChange() {
     this.eventShowForm.get('endDate')?.setValue('');
@@ -552,25 +542,32 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return out;
   }
 
-  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0, venueId: any, screenId: any, selectedDate: any) {
-    let availableSlots = freeWindows.flatMap(window =>
+  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0, venueId: any, selectedDate: any, screenId?: any) {
+    let res = freeWindows.flatMap(window =>
       this.generateSlots(window.startTime, window.endTime, slotDurationMin, gapMin)
     );
-    this.availableSlots = [...this.availableSlots, { venueId: venueId, screenId: screenId, date: selectedDate, data: availableSlots }]
+    let sId = screenId ?? ''
+    if (this.availableSlotsMap.has(`${venueId}${sId}${selectedDate}`)) {
+      this.availableSlotsMap.delete(`${venueId}${sId}${selectedDate}`);
+      this.availableSlotsMap.set(`${venueId}${sId}${selectedDate}`, res);
+    }
+    this.availableSlotsMap.set(`${venueId}${sId}${selectedDate}`, res);
+    this.availableSlots = Array.from(this.availableSlotsMap, ([key, value]) => ({ key, value }));
+
   }
 
   fetchFreeTimeSlots(show: AbstractControl, venueId: string, event: Event, screenId?: string) {
     this.getStartTime(show).clear()
-    // this.availableSlots = []
     let selectedDate = event.target as HTMLInputElement;
     this.contentService.getAvailableTimeSlots(venueId, selectedDate.value, screenId).subscribe({
       next: (res) => {
         if (res.statusCode == 200) {
-          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value);
+          this.toaster.success(res.message)
+          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value, 30, venueId, selectedDate.value, screenId);
         }
       },
       error: (err) => {
-        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '15:00', endTime: '20:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value)
+        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '18:00', endTime: '23:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, selectedDate.value, screenId)
         this.toaster.error(err.error.message.split(':')[1])
 
       }
@@ -626,10 +623,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       .map((city: any) => city.cityId);
     const toNumericArray = (arr: any[]) =>
       arr?.map((item: any) => (typeof item === 'object' ? item.id || item.value : Number(item))) || [];
-    
-    let adminId=this.authService.userDetailsSignal().userId
+
+    let adminId = this.authService.userDetailsSignal().userId
     const payload = {
-      adminId: adminId, 
+      adminId: adminId,
       name: formValue?.name,
       description: formValue?.description,
       runTime: formValue?.runTime,
@@ -662,8 +659,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       show: shows
     };
 
-    console.log(payload);
-    // return;?
     //Validate & Submit
     if (this.eventShowForm.valid) {
       this.showService.createShow(payload, formValue.imageurl, payload.cast, payload.crew).subscribe({

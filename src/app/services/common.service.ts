@@ -241,14 +241,13 @@ export class CommonService {
 * @params showId
 * @return Observable
 */
-  getReservedSeats(showId: string | undefined): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api/bookings/booked-seats?showId=${showId}`,
+  getReservedSeats(showTimeDateId: string | undefined,showTimeId: string | undefined): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api/bookings/booked-seats?showTimeDateId=${showTimeDateId}&showTimeId=${showTimeId}`,
       {
         context: new HttpContext().set(this.IS_PUBLIC_API, true),
       }
     );
   }
-
 
   /**
 * @description book user selected seats

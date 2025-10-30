@@ -28,18 +28,10 @@
     <!-- Filters -->
     <div class="d-flex   h-100">
       <div class="dropdown  border-start ">
-        <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
-          data-bs-toggle="dropdown">{{commonService.userLangFormat().lang}} -
-          {{commonService.userLangFormat().format}}</button>
-        <ul class="dropdown-menu">
-          @for(lang of movieDetails?.languages;track $index ){
-          @for(format of movieDetails?.format;track $index){
-          <li class="dropdown-item on_hover">
-            {{lang}} - {{format}}
-          </li>
-          }
-          }
-        </ul>
+        <div class="border-white border d-flex align-items-center bg-white  w-100 h-100 px-1"
+         >{{commonService.userLangFormat().lang}} -
+          {{commonService.userLangFormat().format}}</div>
+
       </div>
       <div class="dropdown  border-start">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
@@ -57,12 +49,9 @@
         </ul>
       </div>
       <div class="dropdown  border-start">
-        <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
-          data-bs-toggle="dropdown">Special Formats</button>
-        <ul class="dropdown-menu">
-          <li class="dropdown-item">IMAX</li>
-          <li class="dropdown-item">4DX</li>
-        </ul>
+        <div class="border-white border bg-white  w-100 h-100 px-1 d-flex align-items-center"
+         >Special Formats</div>
+       
       </div>
       <div class="dropdown border-start ">
         <button class="border-white border btn-light bg-white dropdown-toggle w-100 h-100"
@@ -104,8 +93,7 @@
     <!-- Theatres-->
     @for(venue of selectedFilters.length>0 ? filteredVenueShowsDetails : venueShowsDetails;track $index){
     @if(venue.venueName?.toLowerCase().includes(searchValue.toLowerCase())){
-    <div
-      class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2 col-12 "
+    <div class=" border-bottom d-flex align-items-start justify-content-start gap-5 py-3 px-2 col-12 "
       style="height:auto;">
 
       <div class="d-flex flex-column  w-100 ">
@@ -134,9 +122,9 @@
             <div class="d-flex flex-column mx-1">
               <span>₹{{cat.categoryPrice}}</span>
               <span class="p-0 m-0 ">
-                {{cat}}
+                {{cat.categoryName | uppercase}}
               </span>
-              <span class="p-0 m-0 text-success">{{cat}}</span>
+              <span class="p-0 m-0 text-success">{{cat.categoryStatus}}</span>
             </div>
             }
           </div>

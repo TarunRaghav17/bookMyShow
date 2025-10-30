@@ -194,15 +194,36 @@ export class CreateVenueComponent implements OnInit {
     let venueType = this.venueForm.get('venueType')?.value as keyof typeof this.supportedCategoriesMapping
     this.categories.clear()
     this.supportedCategoriesArray = this.supportedCategoriesMapping[venueType]
+    this.venueForm.get('venueCapacity')?.setValue(5);
     if (venueType == 'Movie') {
+      this.venueForm.get('venueCapacity')?.disable();
       this.venueForm.addControl('screens',
         this.fb.array([this.createScreen()]))
     }
     else {
+      this.venueForm.get('venueCapacity')?.enable();
       this.venueForm.removeControl('screens')
     }
   }
 
+  /**
+* @description  function to automatically calculate venue capacity
+* @author Inzamam
+*/
+  calculateCapacity() {
+    if (this.venueForm.get('venueType')?.value !== 'Movie') return;
+
+
+    const screens = this.venueForm.get('screens')?.value || [];
+    const totalCapacity = screens.reduce((acc: number, screen: any) => {
+      const screenCapacity = screen.layouts.reduce((layoutAcc: number, layout: any) => {
+        return layoutAcc + Number(layout.cols) * (layout.rows?.length || 0);
+      }, 0);
+      return acc + screenCapacity;
+    }, 0);
+
+    this.venueForm.get('venueCapacity')?.setValue(totalCapacity);
+  }
 
   /**
   * @description getter function to get categories as FormArray.
@@ -253,12 +274,10 @@ export class CreateVenueComponent implements OnInit {
     * @returnType void
     */
   removeScreen(index: number) {
-
     const screens = this.screens;
     screens.removeAt(index);
     this.venueForm.setControl('screens', this.fb.array(screens.controls));
-
-
+    this.calculateCapacity()
   }
   /**
     * @description getter function to get layouts as FormArray
@@ -378,6 +397,7 @@ export class CreateVenueComponent implements OnInit {
 
     (screen as FormGroup).setControl('layouts', newLayouts);
     this.venueForm.updateValueAndValidity();
+    this.calculateCapacity()
     this.addScreen();
     this.removeScreen(this.screens.length - 1)
   }
@@ -440,7 +460,7 @@ export class CreateVenueComponent implements OnInit {
   */
   onSubmit(): void {
     if (this.venueForm.valid) {
-      this.venuesService.createVenueService(this.filterIds(this.venueForm.value)).subscribe({
+      this.venuesService.createVenueService(this.filterIds(this.venueForm.getRawValue())).subscribe({
         next: () => {
           this.toaster.success('Venue created successfully')
           this.venueForm.removeControl('screens')
@@ -478,7 +498,8 @@ export class CreateVenueComponent implements OnInit {
     }
     layout.get('rows')?.markAsTouched()
     layout.get('rows')?.updateValueAndValidity();
-  }
 
+    this.calculateCapacity()
+  }
 }
 

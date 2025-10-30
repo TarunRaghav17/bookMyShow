@@ -15,11 +15,15 @@ interface Category {
 interface TimeSlot {
   time: string;
   showIds: string[];
+  showDateId: string,
+  showTimeId: string,
   availableCategories: Category[];
 }
 
 interface ShowMapSlot {
   showIds: Set<string>;
+  showDateId: string,
+  showTimeId: string,
   categoryMap: Map<string, Category>;
 }
 
@@ -195,37 +199,36 @@ export class BuyTicketsComponent implements AfterViewInit {
       item.shows.forEach((show: any) => {
         const showId = item.showId;
         const time = show.time;
-        (show.availableCategories.length>0? show.availableCategories:[1,2,3] ).forEach((timeSlot: any) => {
-
+        (show.availableCategories).forEach((timeSlot: any) => {
           if (!screen!.showTimesMap.has(time)) {
-            screen!.showTimesMap.set(time, { showIds: new Set(), categoryMap: new Map() });
+            screen!.showTimesMap.set(time, { showIds: new Set(), categoryMap: new Map(), showDateId: show.showDateId, showTimeId: show.showTimeId });
           }
           const slot = screen!.showTimesMap.get(time)!;
           slot.showIds.add(showId);
-          [timeSlot].forEach((cat: any) => {
-            if (!slot.categoryMap.has(cat)) {
-              slot.categoryMap.set(cat, timeSlot);
+          [timeSlot].forEach((cat: Category) => {
+            if (!slot.categoryMap.has(cat.categoryName)) {
+              slot.categoryMap.set(cat.categoryName, { ...cat });
             }
           });
         });
       });
     });
-    console.log(Array.from(venueMap.values()))
     const venues: any[] = Array.from(venueMap.values()).map((venue) => (
       {
-      ...venue,
-      screens: venue.screens.map((screen) => ({
-        screenId: screen.screenId,
-        showTimes: Array.from(screen.showTimesMap.entries()).map(
-          ([time, slot]: [string, ShowMapSlot]): TimeSlot => ({
-            time,
-            showIds: Array.from(slot.showIds),
-            availableCategories: Array.from(slot.categoryMap.values()),
-          })
-        ),
-      })),
-    }));
-
+        ...venue,
+        screens: venue.screens.map((screen) => ({
+          screenId: screen.screenId,
+          showTimes: Array.from(screen.showTimesMap.entries()).map(
+            ([time, slot]: [string, ShowMapSlot,]): TimeSlot => ({
+              time,
+              showIds: Array.from(slot.showIds),
+              availableCategories: Array.from(slot.categoryMap.values()),
+              showDateId: slot.showDateId,
+              showTimeId: slot.showTimeId
+            })
+          )
+        })),
+      }));
     return venues;
   }
 
@@ -239,8 +242,6 @@ export class BuyTicketsComponent implements AfterViewInit {
     this.commonService.getVenuesShowsByContentId(contentId, this.userSelectedDate?.today).subscribe({
       next: (res) => {
         this.venueShowsDetails = this.mergeCategoriesWithShowIds(res.data);
-        console.log(this.venueShowsDetails)
-
       },
       error: (err) => {
         this.toaster.error(err.error.message)
@@ -269,7 +270,7 @@ export class BuyTicketsComponent implements AfterViewInit {
   navigateToSeatLayout(venue: Venue, screen: Screen, showTime: TimeSlot) {
     this.commonService.setUserSelectedShow({ ...showTime, screenId: screen.screenId });
     let screenShows = this.venueShowsDetails.filter((venueShow: any) => venueShow.venueId == venue.venueId)[0].screens
-    this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/date-${this.commonService.userSelectedDate()?.today}`], { state: {screenShows: screenShows, venueId: venue.venueId }});
+    this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${venue.venueId}/screenId-${screen.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/showDateId-${this.commonService.userSelectedShow()?.showDateId}/showTimeId-${this.commonService.userSelectedShow()?.showTimeId}/date-${this.commonService.userSelectedDate()?.today}`], { state: { screenShows: screenShows, venueId: venue.venueId } });
   }
 
   /**
