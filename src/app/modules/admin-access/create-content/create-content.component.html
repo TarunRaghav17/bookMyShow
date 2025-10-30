@@ -363,9 +363,12 @@
                                     <div ngbDropdownMenu aria-labelledby="showTimeDropdown" class="w-100 p-2"
                                         style="max-height: 200px; overflow-y: auto;">
                                         @for(slots of availableSlots; track $index) {
-                                        @if(slots.screenId == screen?.get('screenId')?.value && slots.venueId ==
-                                        screen?.get('venueId')?.value && slots.date == show.get('date')?.value ){
-                                        @for(slot of slots.data; track $index) {
+                                        @if(
+                                        slots.key == (screen?.get('venueId')?.value.toString() + screen?.get('screenId')?.value.toString() +
+                                        show.get('date')?.value.toString())
+                                        )
+                                        {
+                                        @for(slot of slots.value; track $index) {
                                         <div class="dropdown-item">
                                             <div class="form-check">
                                                 <input type="checkbox" class="form-check-input" [value]="slot | json"
@@ -439,8 +442,8 @@
                             <div ngbDropdownMenu aria-labelledby="showTimeDropdown" class="w-100 p-2"
                                 style="max-height: 200px; overflow-y: auto;">
                                 @for(slots of availableSlots; track $index) {
-                                @if(slots.venueId == venue.id && slots.date == show.get('date')?.value ){
-                                @for(slot of slots.data; track $index) {
+                                @if(slots.key == (venue?.id?.toString() + show.get('date')?.value.toString())){
+                                @for(slot of slots.value; track $index) {
                                 <div class="dropdown-item">
                                     <div class="form-check">
                                         <input type="checkbox" class="form-check-input" [value]="slot | json"
@@ -505,7 +508,7 @@
                 @for(lang of languagesArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'languages')"
-                        [value]="lang.languageId" [ngClass]="{'is-invalid': isInvalid('languages')}">
+                        [value]="lang.languageId" [ngClass]="{'is-invalid': isInvalid('languages')}" [checked]="eventShowForm.get('languages')?.value.includes(lang.languageId)">
                     <label class="form-check-label">{{lang.languageName}}</label>
                 </div>
                 }
@@ -525,7 +528,7 @@
                 @for(genre of genresArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
-                        [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}">
+                        [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}" [checked]="eventShowForm.get('genres')?.value.includes(genre.genresId)">
                     <label class="form-check-label">{{genre.genresName}}</label>
                 </div>
                 }
@@ -545,7 +548,7 @@
                 @for(format of formatsArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
-                        [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}">
+                        [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}" [checked]="eventShowForm.get('format')?.value.includes(format.formatId)">
                     <label class="form-check-label">{{format.formatName}}</label>
                 </div>
                 }
@@ -566,7 +569,7 @@
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" [value]="tag.tagId"
                         (change)="handleInputBoxChange($event,'tag')" [value]="tag.tagId"
-                        [ngClass]="{'is-invalid': isInvalid('tag')}">
+                        [ngClass]="{'is-invalid': isInvalid('tag')}" [checked]="eventShowForm.get('tag')?.value.includes(tag.tagId)">
                     <label class="form-check-label">{{tag.tagName}}</label>
                 </div>
                 }
@@ -586,7 +589,7 @@
                 @for(category of categoriesArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'categories')"
-                        [value]="category.categoryId" [ngClass]="{'is-invalid': isInvalid('categories')}">
+                        [value]="category.categoryId" [ngClass]="{'is-invalid': isInvalid('categories')}" [checked]="eventShowForm.get('categories')?.value.includes(category.categoryId)">
                     <label class="form-check-label">{{category.categoryName}}</label>
                 </div>
                 }
@@ -607,7 +610,7 @@
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input"
                         (change)="handleInputBoxChange($event,'moreFilters')" [value]="moreFilter.moreFilterId"
-                        [ngClass]="{'is-invalid': isInvalid('moreFilters')}">
+                        [ngClass]="{'is-invalid': isInvalid('moreFilters')}" [checked]="eventShowForm.get('moreFilters')?.value.includes(moreFilter.moreFilterId)">
                     <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
                 </div>
                 }
