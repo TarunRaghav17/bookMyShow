@@ -73,7 +73,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getData()
   }
 
-    ngOnDestroy() {
+  ngOnDestroy() {
     this.titleService.setTitle('Book-My-Show');
   }
 
@@ -891,10 +891,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-    const maxSizeMB = 2;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const maxSizeBytes = 400 * 1024
     if (file.size > maxSizeBytes) {
-      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      this.toaster.error(`File size exceeds ${400} KB limit`);
       input.value = '';
       if (index >= 0 && path == 'cast') {
         (this.castControls.at(index) as FormGroup).get('castImg')?.setValue('')
@@ -948,10 +947,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     let file: File | null = input.files[0];
-    const maxSizeMB = 2;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const maxSizeBytes = 400 * 1024
     if (file.size > maxSizeBytes) {
-      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      this.toaster.error(`File size exceeds ${400} KB limit`);
       input.value = '';
       this.eventShowForm.get(path)?.setValue('')
       return;

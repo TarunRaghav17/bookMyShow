@@ -194,7 +194,7 @@ export class CreateVenueComponent implements OnInit {
     let venueType = this.venueForm.get('venueType')?.value as keyof typeof this.supportedCategoriesMapping
     this.categories.clear()
     this.supportedCategoriesArray = this.supportedCategoriesMapping[venueType]
-    this.venueForm.get('venueCapacity')?.setValue(5);
+    this.venueForm.get('venueCapacity')?.setValue(0);
     if (venueType == 'Movie') {
       this.venueForm.get('venueCapacity')?.disable();
       this.venueForm.addControl('screens',
