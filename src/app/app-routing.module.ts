@@ -40,7 +40,7 @@ const routes: Routes = [
     path: 'movies/:city/:name/buytickets/:id', component: BuyTicketsComponent
   },
   {
-    path: 'movies/:city/seat-layout/:movieId/:theatreId/:screenId/:showId/:date',
+    path: 'movies/:city/seat-layout/:movieId/:theatreId/:screenId/:showId/:showDateId/:showTimeId/:date',
     component: SeatLayoutComponent
   },
   {

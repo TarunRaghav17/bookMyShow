@@ -31,7 +31,7 @@
             </label>
 
             <input type="number" formControlName="venueCapacity" class="form-control" min="5" max="5000"
-                placeholder="Enter venue capacity"
+                placeholder="Enter venue capacity" [value]="venueForm.get('capacity')?.value"
                 [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
             @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.hasError('required')){
             <div class="invalid-feedback">Capacity is required</div>
@@ -228,7 +228,7 @@
                         </label>
 
                         <input type="number" class="form-control" placeholder="12" min="12" max="25"
-                            formControlName="cols"
+                            formControlName="cols" (change)="calculateCapacity()"
                             [ngClass]="{'is-invalid': layout.get('cols')?.touched && layout.get('cols')?.invalid }">
                         @if(layout.get('cols')?.touched && layout.get('cols')?.hasError('required')){
                         <div class="invalid-feedback">Cols are required.</div>

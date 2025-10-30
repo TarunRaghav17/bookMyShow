@@ -4,11 +4,11 @@ import { ContentService } from './content-services/content.service';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, concatMap, forkJoin, from, map, toArray } from 'rxjs';
 import { VenuesService } from '../create-venue/venues-services/venues.service';
-import { ShowsService } from '../create-show/shows-services/shows.service';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-
+import { ShowsService } from '../create-show/shows-services/shows.service';
+import { AuthService } from '../../../auth/auth-service.service';
 
 type Slot = { start: string; end: string };
 @Component({
@@ -35,6 +35,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   formatsArray: any[] = [];
   screensArray: any[] = [];
   citiesArray: any[] | null = null;
+  availableSlotsMap: Map<any, any> = new Map()
   availableSlots: any[] = []
 
 
@@ -46,6 +47,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     private commonService: CommonService,
     private titleService: Title,
     private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -71,7 +73,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.getData()
   }
 
-    ngOnDestroy() {
+  ngOnDestroy() {
     this.titleService.setTitle('Book-My-Show');
   }
 
@@ -217,12 +219,14 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       case 'Sports': {
         this.removeControls(this.eventShowForm, ['cast', 'crew'])
 
+        this.eventShowForm.addControl('languages', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
         break;
       }
 
       case 'Activities': {
+        this.eventShowForm.addControl('languages', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('categories', this.fb.array([], [Validators.required]));
         this.eventShowForm.addControl('moreFilters', this.fb.array([], [Validators.required]));
         break;
@@ -432,13 +436,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     this.minDate = today.toISOString().split('T')[0];
     return this.minDate
   }
-
-  onDurationChange() {
-
-    this.eventShowForm.get('endDate')?.setValue('');
-    this.eventShowForm.get('endDate')?.setValue('');
-  }
-
   durationOrReleasingOnChange() {
     if (this.eventShowForm.get('eventType')?.value && this.eventShowForm.get('eventType')?.value == 'Movie') {
       this.screens.controls.forEach((screen: any) => {
@@ -456,7 +453,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       })
     }
 
-    this.availableSlots = []
+    this.availableSlotsMap.clear()
   }
   onStartOnChange() {
     this.eventShowForm.get('endDate')?.setValue('');
@@ -545,25 +542,32 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     return out;
   }
 
-  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0, venueId: any, screenId: any, selectedDate: any) {
-    let availableSlots = freeWindows.flatMap(window =>
+  generateAllAvailableSlots(freeWindows: { startTime: string; endTime: string }[], slotDurationMin: number, gapMin = 0, venueId: any, selectedDate: any, screenId?: any) {
+    let res = freeWindows.flatMap(window =>
       this.generateSlots(window.startTime, window.endTime, slotDurationMin, gapMin)
     );
-    this.availableSlots = [...this.availableSlots, { venueId: venueId, screenId: screenId, date: selectedDate, data: availableSlots }]
+    let sId = screenId ?? ''
+    if (this.availableSlotsMap.has(`${venueId}${sId}${selectedDate}`)) {
+      this.availableSlotsMap.delete(`${venueId}${sId}${selectedDate}`);
+      this.availableSlotsMap.set(`${venueId}${sId}${selectedDate}`, res);
+    }
+    this.availableSlotsMap.set(`${venueId}${sId}${selectedDate}`, res);
+    this.availableSlots = Array.from(this.availableSlotsMap, ([key, value]) => ({ key, value }));
+
   }
 
   fetchFreeTimeSlots(show: AbstractControl, venueId: string, event: Event, screenId?: string) {
     this.getStartTime(show).clear()
-    // this.availableSlots = []
     let selectedDate = event.target as HTMLInputElement;
     this.contentService.getAvailableTimeSlots(venueId, selectedDate.value, screenId).subscribe({
       next: (res) => {
         if (res.statusCode == 200) {
-          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value);
+          this.toaster.success(res.message)
+          this.generateAllAvailableSlots(res.data, this.eventShowForm.get('runTime')?.value, 30, venueId, selectedDate.value, screenId);
         }
       },
       error: (err) => {
-        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '15:00', endTime: '20:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, screenId, selectedDate.value)
+        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '18:00', endTime: '23:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, selectedDate.value, screenId)
         this.toaster.error(err.error.message.split(':')[1])
 
       }
@@ -619,7 +623,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
       .map((city: any) => city.cityId);
     const toNumericArray = (arr: any[]) =>
       arr?.map((item: any) => (typeof item === 'object' ? item.id || item.value : Number(item))) || [];
+
+    let adminId = this.authService.userDetailsSignal().userId
     const payload = {
+      adminId: adminId,
       name: formValue?.name,
       description: formValue?.description,
       runTime: formValue?.runTime,
@@ -884,10 +891,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
-    const maxSizeMB = 2;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const maxSizeBytes = 400 * 1024
     if (file.size > maxSizeBytes) {
-      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      this.toaster.error(`File size exceeds ${400} KB limit`);
       input.value = '';
       if (index >= 0 && path == 'cast') {
         (this.castControls.at(index) as FormGroup).get('castImg')?.setValue('')
@@ -941,10 +947,9 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     let file: File | null = input.files[0];
-    const maxSizeMB = 2;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
+    const maxSizeBytes = 400 * 1024
     if (file.size > maxSizeBytes) {
-      this.toaster.error(`File size exceeds ${maxSizeMB} MB limit`);
+      this.toaster.error(`File size exceeds ${400} KB limit`);
       input.value = '';
       this.eventShowForm.get(path)?.setValue('')
       return;
@@ -981,7 +986,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     else {
       castControls.removeAt(index)
     }
-    this.eventShowForm.setControl('casts', new FormArray([...castControls.controls]));
+    this.eventShowForm.setControl('cast', new FormArray([...castControls.controls]));
   }
 
   removeCrewControl(crewControls: FormArray, index: number) {
