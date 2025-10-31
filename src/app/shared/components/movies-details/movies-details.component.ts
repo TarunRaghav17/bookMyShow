@@ -16,6 +16,9 @@ import { Title } from '@angular/platform-browser';
   styleUrl: './movies-details.component.scss'
 })
 export class MoviesDetailsComponent {
+
+loggedInUserId:string | null=null
+
   constructor(private modalService: NgbModal, public commonService: CommonService,
     private router: Router,
     private route: ActivatedRoute,
@@ -29,6 +32,7 @@ export class MoviesDetailsComponent {
   movieDetails: any | null = null
   ngOnInit() {
     this.fetchContentIdByUrl();
+    this.loggedInUserId = this.authService.userDetailsSignal().userId
 
   }
   showHeader = false;
@@ -97,7 +101,7 @@ export class MoviesDetailsComponent {
     modalRef.result
       .then((result) => {
         if (result === 'confirm') {
-          this.commonService.deleteContentById(this.movieDetails.eventId).subscribe({
+          this.commonService.deleteContentById(this.movieDetails.eventId,this.loggedInUserId).subscribe({
             next: (res) => {
               this.toaster.success(res.message);
               this.location.back()
