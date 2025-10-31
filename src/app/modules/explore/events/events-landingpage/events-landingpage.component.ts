@@ -27,6 +27,7 @@ export class EventsLandingPageComponent {
     "categories": [],
     "morefilter": [],
     "price": [],
+    "cityid":0
   }
 
   constructor(public commonService: CommonService, private eventService: EventService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -43,6 +44,7 @@ export class EventsLandingPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Event'
+     this.sendPayload.cityid = Number(sessionStorage.getItem('selectedCityId'))
     this.getAllEvents()
 
   }
@@ -242,6 +244,7 @@ export class EventsLandingPageComponent {
       "categories": [],
       "morefilter": [],
       "price": [],
+      "cityid": Number(sessionStorage.getItem('selectedCityId'))
     }
     this.getAllEvents()
   }

@@ -15,7 +15,7 @@ export class CommonService {
   IS_PUBLIC_API = new HttpContextToken<boolean>(() => false);
   city = sessionStorage.getItem('selectedCity');
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
-  _profileHeader = signal<any>(false);
+   _profileHeader = signal<any>(false);
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 

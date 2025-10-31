@@ -27,6 +27,7 @@ export class PlaysLandingPageComponent {
     "categories": [],
     "morefilter": [],
     "price": [],
+    "cityid":0
   }
 
   constructor(public commonService: CommonService, private playService: PlaysService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -43,6 +44,7 @@ export class PlaysLandingPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Plays'
+    this.sendPayload.cityid = Number(sessionStorage.getItem('selectedCityId'))
     this.getAllPlays()
   }
 
@@ -257,6 +259,7 @@ export class PlaysLandingPageComponent {
       "categories": [],
       "morefilter": [],
       "price": [],
+      "cityid": Number(sessionStorage.getItem('selectedCityId'))
     }
     this.getAllPlays()
   }

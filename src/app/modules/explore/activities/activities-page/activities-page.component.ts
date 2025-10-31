@@ -25,7 +25,8 @@ export class ActivitiesPageComponent {
     "categories": [],
     "price": [],
     "morefilter": [],
-    "dateFilters": []
+    "dateFilters": [],
+    "cityid": 0
   }
   constructor(public commonService: CommonService, private activitiesService: ActivitiesService, private toastr: ToastrService, public loaderService: LoaderService) {
     this.commonService._selectedCategory.set('Activities');
@@ -39,6 +40,7 @@ export class ActivitiesPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Activities'
+    this.sendPayload.cityid = Number(sessionStorage.getItem('selectedCityId'))
     this.getAllActivities()
   }
   /**
@@ -77,6 +79,7 @@ export class ActivitiesPageComponent {
   getAllActivities() {
     this.activitiesService.getAllActivities(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
+        console.log(this.sendPayload);
         this.totalCount = res.data.count;
         let resData = res.data.content;
         this.dummyMoviesdata.push(...resData);
@@ -213,7 +216,8 @@ export class ActivitiesPageComponent {
         "categories": [],
         "price": [],
         "morefilter": [],
-        "dateFilters": []
+        "dateFilters": [],
+        "cityid": Number(sessionStorage.getItem('selectedCityId'))
       }
       this.getAllActivities()
   }
