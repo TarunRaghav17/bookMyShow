@@ -79,7 +79,6 @@ export class ActivitiesPageComponent {
   getAllActivities() {
     this.activitiesService.getAllActivities(this.sendPayload, this.page, this.size).subscribe({
       next: (res) => {
-        console.log(this.sendPayload);
         this.totalCount = res.data.count;
         let resData = res.data.content;
         this.dummyMoviesdata.push(...resData);
