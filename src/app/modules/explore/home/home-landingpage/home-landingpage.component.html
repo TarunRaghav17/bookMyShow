@@ -341,7 +341,7 @@
 
               <!-- Carousel Content -->
               <div class="main_filter_card ">
-                <div class=" d-flex justify-content-around gap-3">
+                <div class=" d-flex justify-content-start gap-3">
                   @for (item of visibleData['Event']; track $index) {
                   <div class=" card_section">
                     <div class="col" [routerLink]="`/events/${item.name.split(' ').join('-')}/${item.eventId}`">

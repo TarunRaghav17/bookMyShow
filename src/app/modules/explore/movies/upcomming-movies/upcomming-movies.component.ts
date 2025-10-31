@@ -29,7 +29,8 @@ export class UpcommingMoviesComponent {
     "formats": [],
     "tags": [],
     "releaseMonths": [],
-    "dateFilters": []
+    "dateFilters": [],
+    "cityid":0
   }
 
   constructor(public commonService: CommonService, private movieService: MovieService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -39,6 +40,7 @@ export class UpcommingMoviesComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Movie'
+    this.sendPayload.cityid = Number(sessionStorage.getItem('selectedCityId'))
     this.getAllUpcomingMovies()
 
   }
@@ -242,7 +244,8 @@ export class UpcommingMoviesComponent {
       "formats": [],
       "tags": [],
       "releaseMonths": [],
-      "dateFilters": []
+      "dateFilters": [],
+      "cityid": Number(sessionStorage.getItem('selectedCityId'))
     }
     this.getAllUpcomingMovies()
   }

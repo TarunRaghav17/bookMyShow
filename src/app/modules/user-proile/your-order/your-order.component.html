@@ -3,16 +3,18 @@
         <div class="content">
             <div class="container">
                 <div class="row">
-                    @for (booking of getShowsData; track $index) {
-                    <div class="col-container mb-4" >
+                   @for (booking of getShowsData; track $index) {
+                    <div class="col-container mb-4">
                         <div class="card">
                             <a class="img-card">
                                 <img [src]="getImageFromBase64(booking.eventPoster)" [alt]=" booking.eventName " />
                             </a>
                             <div class="card-content p-3">
                                 <h4 class="card-title">{{ booking.eventName | truncate: 15 }}</h4>
-                                <p class="mb-1">Cinema: {{ booking.venue }}</p>
+                                @if (booking.screen !== 'N/A') {
                                 <p class="mb-1">Screen: {{ booking.screen }}</p>
+                                }
+                                <p class="mb-1">Venues: {{ booking.venue }}</p>
                                 <p class="mb-1">Date: {{ booking.date }}</p>
                                 <p class="mb-1">Time: {{ booking.time }}</p>
                                 <p class="mb-1">Seats: {{ booking.seats.join(', ') }}</p>
@@ -20,7 +22,8 @@
                             </div>
                         </div>
                     </div>
-                    } @if(getShowsData.length ===0){
+                    }
+                     @if(getShowsData.length ===0){
                     <div class="no_bookings">
                         <h3>No bookings found</h3>
                         <p>You have not made any bookings yet. Start exploring and book your favorite movies now!</p>

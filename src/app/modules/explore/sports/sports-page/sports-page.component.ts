@@ -23,6 +23,7 @@ export class SportsPageComponent {
     "categories": [],
     "morefilter": [],
     "price": [],
+    "cityid":0
   }
 
   constructor(public commonService: CommonService, private sportService: SportsService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -38,6 +39,7 @@ export class SportsPageComponent {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Sports'
+    this.sendPayload.cityid = Number(sessionStorage.getItem('selectedCityId'))
     this.getAllSports()
   }
 
@@ -219,6 +221,7 @@ export class SportsPageComponent {
       "categories": [],
       "morefilter": [],
       "prices": [],
+      "cityid": Number(sessionStorage.getItem('selectedCityId'))
     }
     this.getAllSports()
   }

@@ -273,7 +273,7 @@
         <div class="city_search_list">
             <ul>
                 @for (city of filteredCities; track $index) {
-                <li (click)="selectCity(city.cityName, modal)">
+                <li (click)="selectCity(city.cityName,city.cityId, modal)">
                     {{ city.cityName }}
                 </li>
                 }
@@ -293,7 +293,7 @@
         <p class="text-center mt-1">Popular Cities</p>
         <div class="py-2 d-flex gap-2 px-3 justify-content-around">
             @for (item of cityData; track $index) {
-            <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,modal)"
+            <div class="main-view-city-container d-flex " (click)=" selectCity(item.cityName,item.cityId,modal)"
                 [ngClass]="{'selected-popular-city': item.cityName === selectedCity}">
                 <div class=" d-flex flex-column justify-content-center align-items-center">
                     <img [src]="getImageFromBase64(item.imageUrl)" alt="" class="img-fluid city_section">
@@ -310,7 +310,7 @@
             <div class="other_cities_list px-3" [ngClass]="{'other_cities_list': citiesJson}">
                 <div class="list_cities py-2">
                     @for (item of citiesJson; track $index) {
-                    <p class="m-0" (click)="selectCity(item.cityName,modal)"
+                    <p class="m-0" (click)="selectCity(item.cityName,item.cityId,modal)"
                         [ngClass]="{'selected-other-city': item.cityName === selectedCity}"> {{item.cityName}}</p>
                     }
                 </div>

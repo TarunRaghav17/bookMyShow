@@ -22,7 +22,10 @@ export class EventsDetailsComponent implements OnInit {
   showHeader: boolean = false;
   allShows: any
   today!: Date
+  adminId: number;
+  
   constructor(private route: ActivatedRoute, private router: Router, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal, public authService: AuthService, private location: Location) {
+    this.adminId = this.authService.userDetailsSignal().userId
   }
 
 
@@ -119,7 +122,7 @@ export class EventsDetailsComponent implements OnInit {
     modalRef.result
       .then((result) => {
         if (result === 'confirm') {
-          this.commonService.deleteContentById(this.eventDetails.eventId).subscribe({
+          this.commonService.deleteContentById(this.eventDetails.eventId,this.adminId).subscribe({
             next: (res) => {
               this.toastr.success(res.message);
               this.location.back();

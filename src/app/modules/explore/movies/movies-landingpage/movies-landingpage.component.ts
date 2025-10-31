@@ -29,6 +29,7 @@ export class MovieLandingPageComponent implements OnDestroy {
     "languages": [],
     "genres": [],
     "formats": [],
+    "cityid":0
   }
 
   constructor(public commonService: CommonService, public router: Router, private movieService: MovieService, private toastr: ToastrService, public loaderService: LoaderService) {
@@ -47,6 +48,7 @@ export class MovieLandingPageComponent implements OnDestroy {
   ngOnInit(): void {
     this.setFilter()
     this.sendPayload.type = 'Movie'
+    this.sendPayload.cityid = Number(sessionStorage.getItem('selectedCityId'))
     this.getAllMovies()
   }
 
@@ -215,6 +217,7 @@ export class MovieLandingPageComponent implements OnDestroy {
       "languages": [],
       "genres": [],
       "formats": [],
+      "cityid": Number(sessionStorage.getItem('selectedCityId'))
     }
     this.getAllMovies()
   }

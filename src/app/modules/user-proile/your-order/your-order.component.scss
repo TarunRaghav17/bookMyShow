@@ -109,3 +109,12 @@ h1.heading {
         margin: 0 0 0.3em;
     }
 }
+.card {
+    display: block;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border-radius: 2px;
+    transition: box-shadow .25s;
+    min-height: 400px;
+}
