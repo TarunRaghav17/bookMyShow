@@ -41,8 +41,8 @@
                                 }
                             </div>
                         </div>
-                        <div class="movie-meta">
-                            {{movieDetails.runTime}}
+                        <div class="movie-meta ">
+                            {{movieDetails.runTime | duration}}
                             <span class="dot-separator"><i class="fa fa-circle" aria-hidden="true"></i></span>
                             @for(genre of movieDetails?.genres;track $index){
                             <span>{{genre}}</span>

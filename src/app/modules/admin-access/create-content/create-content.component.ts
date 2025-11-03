@@ -336,9 +336,13 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @params Screen obj
   */
   // for movies
-  removeShow(screen: AbstractControl, index: number) {
-    if (this.getShows(screen).length <= 1) return;
-    this.getShows(screen).removeAt(index)
+  removeShow(screen: AbstractControl | FormGroup, index: number) {
+    const shows = this.getShows(screen);
+    if (!shows || shows.length <= 1) return;
+
+    shows.removeAt(index);
+    const newShowsArray = this.fb.array(shows.controls);
+    (screen as FormGroup).setControl('shows', newShowsArray);
   }
 
   /**
@@ -418,9 +422,12 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   removeEventShow(index: number) {
-    if (this.shows.length <= 1) return
-    this.shows.removeAt(index)
+    const shows = this.shows;
+    if (!shows || shows.length <= 1) return;
 
+    shows.removeAt(index);
+    const newShowsArray = this.fb.array(shows.controls);
+    this.eventShowForm.setControl('shows', newShowsArray);
   }
 
   removeControls(form: FormGroup, controls: string[]) {
@@ -576,8 +583,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
 
   }
-
-
   /**
   * @description function to submit the form 
   * @author Inzamam
@@ -729,6 +734,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   createCast(): FormGroup {
     return this.fb.group({
+      id: [crypto.randomUUID()],
       actorName: ['', Validators.required],
       castImg: [''],
     })
@@ -751,6 +757,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   createCrew(): FormGroup {
     return this.fb.group({
+      id: [crypto.randomUUID()],
       memberName: ['', Validators.required],
       crewImg: [''],
     })
@@ -985,8 +992,10 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   removeCastControl(castControls: FormArray, index: number) {
     if (castControls.length == 1) return;
     else {
+      castControls.at(index).get('castImg')?.setValue('')
       castControls.removeAt(index)
     }
+
     this.eventShowForm.setControl('cast', new FormArray([...castControls.controls]));
   }
 

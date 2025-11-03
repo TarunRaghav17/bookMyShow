@@ -9,9 +9,10 @@ import { MovieDetailsLoadingSkeltonComponent } from '../movie-details-loading-sk
 import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
 import { AuthService } from '../../../auth/auth-service.service';
 import { Title } from '@angular/platform-browser';
+import { DurationPipe } from '../../../core/pipes/duration.pipe';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe,],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe,DurationPipe],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })

@@ -333,10 +333,12 @@
                     <div class="" formArrayName="shows">
                         @for(show of getShows(screen).controls ;track $index){
                         <!-- one particualr show =  date & [times] -->
-                        <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 "
-                            [ngClass]="{'is-invalid':show.get('date')?.touched&&show.get('date')?.invalid}">
+                        <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
                             <!-- date control -->
-                            <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
+                            <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 "
+                                [ngClass]="{'is-invalid':show.get('date')?.touched&&show.get('date')?.invalid}">
+
+
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
                                         class="text-danger reuired">*</small></span>
                                 <input type="date" class="form-control me-3 w-25 " formControlName="date"
@@ -344,7 +346,7 @@
                                     (change)="fetchFreeTimeSlots(show,screen?.get('venueId')?.value,$event,screen?.get('screenId')?.value)">
 
                                 <div ngbDropdown [autoClose]="'outside'"
-                                    class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
+                                    class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50">
                                     <label
                                         class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold">
                                         Times:
@@ -364,7 +366,8 @@
                                         style="max-height: 200px; overflow-y: auto;">
                                         @for(slots of availableSlots; track $index) {
                                         @if(
-                                        slots.key == (screen?.get('venueId')?.value.toString() + screen?.get('screenId')?.value.toString() +
+                                        slots.key == (screen?.get('venueId')?.value.toString() +
+                                        screen?.get('screenId')?.value.toString() +
                                         show.get('date')?.value.toString())
                                         )
                                         {
@@ -389,8 +392,9 @@
                                     [disabled]="this.getShows(screen).length <= 1"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
+                            <div class="invalid-feedback">Invalid Date </div>
                         </div>
-                        <div class="invalid-feedback">Invalid Date </div>
+
                         }
                     </div>
                 </div>
@@ -639,7 +643,7 @@
                 <h5 class="card-title mb-0">🎭 Cast <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">Add Cast</button>
             </div>
-            @for(c of castControls.controls;track $index ){
+            @for(c of castControls.controls;track c.get('id')?.value){
             <div formGroupName="{{$index}}" class="row mb-2">
                 <div class="col">
                     <input class="form-control" placeholder="Actor Name" formControlName="actorName"
@@ -674,7 +678,7 @@
                 <h5 class="card-title">🎬 Crew <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">Add Crew</button>
             </div>
-            @for(m of crewControls.controls;track $index){
+            @for(m of crewControls.controls;track m.get('id')?.value){
             <div formGroupName="{{$index}}" class="row mb-2">
                 <div class="col">
                     <input class="form-control" placeholder="Member Name" formControlName="memberName"

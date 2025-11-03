@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from '../../../auth/auth-service.service';
@@ -13,8 +13,8 @@ import { AuthService } from '../../../auth/auth-service.service';
   styleUrl: './booking-events.component.scss'
 })
 export class BookingEventsComponent implements OnInit {
-  
-  constructor(private authService: AuthService, public commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private location: Location, private modalService: NgbModal , private router:Router ) {
+
+  constructor(private authService: AuthService, public commonService: CommonService, private toastr: ToastrService, private route: ActivatedRoute, private location: Location, private modalService: NgbModal, private router: Router) {
     this.user = this.authService.getUserFromToken()
   }
 
@@ -32,10 +32,11 @@ export class BookingEventsComponent implements OnInit {
   selectedDate: any;
   dateSelectionArray: any[] = [];
   selectedTime: string = '';
-  venueTitle:string=''
+  venueTitle: string = ''
   activeTab: 'step1' | 'step2' = 'step1';
 
   ngOnInit(): void {
+    this.commonService.setUserSelectedDate(null)
     this.title = this.route.snapshot.paramMap.get('eventname');
     this.date = this.route.snapshot.paramMap.get('date');
     this.eventId = this.route.snapshot.paramMap.get('id');
@@ -76,7 +77,7 @@ export class BookingEventsComponent implements OnInit {
     this.commonService.getShowsById(this.eventId, this.date).subscribe({
       next: (res) => {
         this.allShows = res.data
-          this.venueTitle = this.allShows[0]?.venueName; 
+       this.venueTitle = this.allShows[0]?.venueName;
         this.money = this.allShows[0]?.shows[0]?.availableCategories[0]?.categoryPrice
       },
       error: (err) => {
@@ -111,14 +112,14 @@ export class BookingEventsComponent implements OnInit {
             "showId": this.allShows[0]?.showId,
             "date": this.selectedDate.today,
             "time": this.selectedTime,
-            "eventSeats":this.selectedSeats
+            "eventSeats": this.selectedSeats
           }
         ]
 
         this.commonService.bookUserSeats(sendPayLoad).subscribe({
           next: () => {
-             this.toastr.success(`ticket booked successfully for ${this.title}`)
-             this.router.navigate(['/'])
+            this.toastr.success(`ticket booked successfully for ${this.title}`)
+            this.router.navigate(['/'])
           },
           error: (err) => {
             this.toastr.error(err.message);
@@ -169,8 +170,8 @@ export class BookingEventsComponent implements OnInit {
 
 
   onDateChange(index: number, dateObj: any) {
-    if (index < 6) { 
-      this.selectedTime=""
+    if (index < 6 && this.commonService.getUserSelectedDate() != dateObj) {
+      this.selectedTime = ""
       this.selectedDate = dateObj;
       this.commonService.setUserSelectedDate(dateObj);
       this.getShows();

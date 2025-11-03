@@ -195,7 +195,7 @@ export class ListVenuesComponent implements OnInit {
   getAllVenuesList() {
     this.venueService.getAllVenues().subscribe({
       next: (res: any) => {
-        this.venuesList = res.data;
+        this.venuesList = res.data.reverse();
         this.getVisibleCards();
       },
       error: (err) => {

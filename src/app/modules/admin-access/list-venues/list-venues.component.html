@@ -40,9 +40,9 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>
+                        <th class="col-1 text-danger">
                             @if(bulkDeleteVenuesList.length>1){
-                            <div class=" fs-5 p-0 m-0 text-danger ">
+                            <div class="fs-5 h-100 d-flex justify-content-center align-items-center ">
                                 <i class="fa fa-trash delete-btn " (click)="deleteMultipleVenues()"
                                     aria-hidden="true"></i>
                             </div>
@@ -63,7 +63,7 @@
                     @if(venue.venueName.toLowerCase().includes(searchValue.toLowerCase())){
                     <tr>
                         <td>
-                            <input type="checkbox" class="form-check-input" (change)="toggleVenueList($event,venue)"
+                            <input type="checkbox" (change)="toggleVenueList($event,venue)"
                                 [checked]="bulkDeleteVenuesList.includes(venue.id)">
                         </td>
                         <td>{{ $index +1}}</td>

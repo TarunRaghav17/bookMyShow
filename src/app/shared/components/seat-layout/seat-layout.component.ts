@@ -100,7 +100,7 @@ export class SeatLayoutComponent {
 
   ngOnDestroy() {
     this.commonService.showHeader.set(true);
-    this.close()
+    this.close();
   }
   get totalPrice() {
     return this.seats
@@ -228,7 +228,7 @@ export class SeatLayoutComponent {
     else {
       this.activeShow = activeShow
       this.commonService.setUserSelectedShow(this.activeShow);
-      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/showDateId-${this.commonService.userSelectedShow()?.showDateId}/showTimeId-${this.commonService.userSelectedShow()?.showTimeId}/date-${this.commonService.userSelectedDate()?.today}`], { replaceUrl:true,state: { screenShows: this.screenShows, venueId: this.venueId } });
+      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/showDateId-${this.commonService.userSelectedShow()?.showDateId}/showTimeId-${this.commonService.userSelectedShow()?.showTimeId}/date-${this.commonService.userSelectedDate()?.today}`], { replaceUrl: true, state: { screenShows: this.screenShows, venueId: this.venueId } });
       this.fetchVenueById()
       this.getReservedSeatsByShowId(this.activeShow.showDateId, this.activeShow.showTimeId);
       this.clearSelection();

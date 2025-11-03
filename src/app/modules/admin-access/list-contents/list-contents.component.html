@@ -3,12 +3,12 @@
         <div class="col-10 card_container px-0 py-2" (scroll)="onCardContainerScroll($event)">
             <div class="w-100 d-flex justify-content-between align-items-center py-3 ">
                 <h4> Contents List</h4>
-               
                 <div class=" py-3 d-flex w-50 d-flex align-items-center justify-content-end ">
                     <div class=" d-flex gap-4 align-items-center justify-content-center  w-50">
                         <span>Type </span>
                         <div ngbDropdown [autoClose]="'outside'" class=" w-50 ">
-                            <button class="btn btn-outline text-danger overflow-hidden  border w-100 text-start d-flex align-items-center justify-content-between"
+                            <button
+                                class="btn btn-outline text-danger overflow-hidden  border w-100 text-start d-flex align-items-center justify-content-between"
                                 ngbDropdownToggle>
                                 {{userSelectedType.length > 0 ? userSelectedType.join(', ') : 'Select'}}
                             </button>
@@ -61,17 +61,34 @@
                             </ng-template>
                         </div>
                         <div class="card_body ">
-                            <h5 class="card-title text-muted">{{item?.name}} ({{ item?.releasingOn || item?.startDate  }})</h5>
-                            <p class="card-text mx-1 my-1" [ngClass]="{'text-danger':content.type == 'upcomingMovie'}">{{content.type}}.</p>
-                            <p class="card-text mx-1 my-1">{{item.languages?.join(', ')}}</p>
-                            <p class="card-text mx-1 my-1">{{item.genres?.join(', ')}}</p>
+                            <h5 class="card-title text-muted">{{item?.name | truncate:28}} ({{ item?.releasingOn ||
+                                item?.startDate
+                                }})</h5>
+                            <p class="card-text mx-1 my-1" [ngClass]="{'text-danger':content.type == 'upcomingMovie'}">
+                                {{content.type}}.</p>
+                            <p class="card-text mx-1 my-1">{{item.languages?.join(', ') | truncate:25 }} </p>
+                            <p class="card-text mx-1 my-1">{{item.genres?.join(', ') | truncate:25}}</p>
                             <button class=" btn btn-outline-primary  mt-auto" [routerLink]="[`${(content.type== 'Movie'|| content.type== 'upcomingMovie') ? `/movie/${commonService._selectCity()}/${item.eventId}`: 
                     `/${content.type}/${item.name}/${item.eventId}`}`]">More Details</button>
                         </div>
                     </div>
                     }}
+
+                    @if((userSelectedType.length > 0 ? filteredContentList: contentsList).length <= 0 && !isLoading){
+                        <div class="filter_text d-flex flex-wrap gap-3 py-5 justify-content-start align-items-start">
+                        <div
+                            class="d-flex flex-column gap-3 justify-content-center align-items-center w-100 no_data_found">
+                            <img src="assets/images/No_result_found.png">
+                            <p class="text-danger">No Results Found!
+                                <span class="text-secondary">Start Creating Content</span>
+                            </p>
+                            <button class="btn btn-outline-primary w-25" click
+                                [routerLink]="[`/admin/create/content`]">Add Now</button>
+                        </div>
                 </div>
+                }
             </div>
         </div>
     </div>
+</div>
 </div>
