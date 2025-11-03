@@ -643,8 +643,8 @@
                 <h5 class="card-title mb-0">🎭 Cast <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">Add Cast</button>
             </div>
-            @for(c of castControls.controls;track c.get('id')?.value){
-            <div formGroupName="{{$index}}" class="row mb-2">
+            @for(c of castControls.controls;track c.get('id')?.value ?? $index){
+            <div [formGroupName]="$index" class="row mb-2">
                 <div class="col">
                     <input class="form-control" placeholder="Actor Name" formControlName="actorName"
                         [ngClass]="{'is-invalid': c.get('actorName')?.invalid && (c.get('actorName')?.touched || c.get('actorName')?.dirty)}" />
@@ -665,7 +665,7 @@
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-outline-danger" type="button" [disabled]="castControls.length==1"
-                        (click)="removeCastControl(castControls,$index)">✕</button>
+                        (click)="removeCastControl(castControls,c.get('id')?.value)">✕</button>
                 </div>
             </div>
             }
@@ -678,7 +678,7 @@
                 <h5 class="card-title">🎬 Crew <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">Add Crew</button>
             </div>
-            @for(m of crewControls.controls;track m.get('id')?.value){
+            @for(m of crewControls.controls;track m.get('id')?.value ?? $index){
             <div formGroupName="{{$index}}" class="row mb-2">
                 <div class="col">
                     <input class="form-control" placeholder="Member Name" formControlName="memberName"
@@ -701,7 +701,7 @@
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-outline-danger" type="button" [disabled]="crewControls.length==1"
-                        (click)="removeCrewControl(crewControls,$index)">✕</button>
+                        (click)="removeCrewControl(crewControls,m.get('id')?.value)">✕</button>
                 </div>
             </div>
             }
