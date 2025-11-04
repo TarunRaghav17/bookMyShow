@@ -15,7 +15,7 @@ export class CommonService {
   IS_PUBLIC_API = new HttpContextToken<boolean>(() => false);
   city = sessionStorage.getItem('selectedCity');
   _selectCity = signal<any>(this.city ? JSON.parse(this.city) : null);
-  _profileHeader = signal<any>(false);
+   _profileHeader = signal<any>(false);
   selectedCategory: any = localStorage.getItem('category');
   _selectedCategory = signal<any>(JSON.parse(this.selectedCategory));
 
@@ -302,9 +302,10 @@ export class CommonService {
    * @author Inzamam
    * @return Observable<any>
    */
-  deleteContentById(contentId: string | null,loggedInUserId?:string | null): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}/${loggedInUserId}`, {
-      id: contentId
+  deleteContentById(contentId: string | null , adminId?:number): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}/${adminId}`, {
+      id: contentId,
+      adminId:adminId
     });
   }
 
@@ -569,7 +570,7 @@ export class CommonService {
   * @author  Manu 
   * @return Observable<any>
   */
-  getAllVenuesBYcity(city: String): Observable<any> {
+  getAllVenuesByCity(city: String): Observable<any> {
     return this.http.get(`${this.baseUrl}/venues/city/${city}`, {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
     })

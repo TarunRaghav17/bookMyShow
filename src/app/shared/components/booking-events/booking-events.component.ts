@@ -32,7 +32,8 @@ export class BookingEventsComponent implements OnInit {
   selectedDate: any;
   dateSelectionArray: any[] = [];
   selectedTime: string = '';
-  venueTitle: string = ''
+  venueTitle:string=''
+  allSelectedSeats: string[] = [];
   activeTab: 'step1' | 'step2' = 'step1';
 
   ngOnInit(): void {
@@ -46,11 +47,21 @@ export class BookingEventsComponent implements OnInit {
     this.initializeDateSelectionArray()
 
   }
+ /**
+ * @description initialize Top Filters
+ * @author Manu Shukla
+ * @returnType void
+ */
   addMember() {
     this.add = true;
     this.updateTotalMoney();
   }
 
+ /**
+ * @description  increase counter for number of seats
+ * @author Manu Shukla
+ * @returnType void
+ */
   increaseCounter() {
     if (this.value < 10) {
       this.value++;
@@ -58,6 +69,11 @@ export class BookingEventsComponent implements OnInit {
     }
   }
 
+ /**
+ * @description decrease counter for number of seats
+ * @author Manu Shukla
+ * @returnType void
+ */
   decreaseCounter() {
     if (this.value > 1) {
       this.value--;
@@ -67,10 +83,20 @@ export class BookingEventsComponent implements OnInit {
     }
   }
 
+/**
+ * @description update total price according to number of setas
+ * @author Manu Shukla
+ * @returnType void
+ */
   updateTotalMoney() {
     this.totalMoney = this.value * this.money;
   }
 
+  /**
+ * @description  get all shows of particular event on selected date
+ * @author Manu Shukla
+ * @returnType void
+ */
   getShows(_selectedDate?: any) {
     this.eventId = this.route.snapshot.paramMap.get('id')
     this.date = this.commonService.getUserSelectedDate()?.today ?? this.route.snapshot.paramMap.get('date')
@@ -85,11 +111,20 @@ export class BookingEventsComponent implements OnInit {
       }
     })
   }
-
+/**
+ * @description go back to previous page
+ * @author Manu Shukla
+ * @returnType void
+ */
   goBack() {
     this.location.back()
   }
-  vaneNameTitle: string = ''
+
+  /**
+ * @description open booking confirmation modal
+ * @author Manu Shukla
+ * @returnType void
+ */
   bookingConfirmation(confirmModal: TemplateRef<any>) {
     const seatsToGenerate = this.value - this.selectedSeats.length;
     for (let i = 0; i < seatsToGenerate; i++) {
@@ -112,14 +147,17 @@ export class BookingEventsComponent implements OnInit {
             "showId": this.allShows[0]?.showId,
             "date": this.selectedDate.today,
             "time": this.selectedTime,
-            "eventSeats": this.selectedSeats
+            "eventSeats":this.selectedSeats,
+            "totalPrice": this.totalMoney
           }
         ]
 
         this.commonService.bookUserSeats(sendPayLoad).subscribe({
           next: () => {
-            this.toastr.success(`ticket booked successfully for ${this.title}`)
-            this.router.navigate(['/'])
+             this.toastr.success(`Ticket booked successfully for ${this.title}`)
+             this.router.navigate(['/'])
+             localStorage.removeItem('selectedSeatsByEvent');
+
           },
           error: (err) => {
             this.toastr.error(err.message);
@@ -134,7 +172,14 @@ export class BookingEventsComponent implements OnInit {
     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
     "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
   ]
+
+ /**
+ * @description  genreate random seat with alphabet and number
+ * @author Manu Shukla
+ * @returnType void
+ */
   generateRandomCode() {
+     this.allSelectedSeats = this.getSelectedSeats(this.eventId);
     let newSeat;
     do {
       const randomLetter = this.alphabets[Math.floor(Math.random() * this.alphabets.length)];
@@ -145,6 +190,11 @@ export class BookingEventsComponent implements OnInit {
     this.setSelectedSeats(this.eventId, this.selectedSeats);
   }
 
+ /**
+ * @description  get selected seats from Local storage 
+ * @author Manu Shukla
+ * @returnType string[]
+ */
   getSelectedSeats(eventId: string | number): string[] {
     const allEvents: { eventId: string | number, selectedSeats: string[] }[] =
       JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
@@ -152,6 +202,11 @@ export class BookingEventsComponent implements OnInit {
     return event ? event.selectedSeats : [];
   }
 
+  /**
+ * @description save selected seats to local storage
+ * @author Manu Shukla
+ * @returnType string[]
+ */
   setSelectedSeats(eventId: string | number, seats: string[]) {
     let allEvents: { eventId: string | number, selectedSeats: string[] }[] =
       JSON.parse(localStorage.getItem('selectedSeatsByEvent') || '[]');
@@ -177,6 +232,12 @@ export class BookingEventsComponent implements OnInit {
       this.getShows();
     }
   }
+
+/**
+* @description function that initializes dateSelectionArray
+* @author Manu Shukla
+* @returnType void
+*/
   initializeDateSelectionArray() {
     let today = new Date();
     for (let i = 0; i < 9; i++) {

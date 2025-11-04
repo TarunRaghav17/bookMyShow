@@ -58,7 +58,7 @@ export class UsersComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
         this.loading = false;
       },
     });
@@ -91,7 +91,7 @@ export class UsersComponent implements OnInit {
           }
         },
         error: (err) => {
-          this.toastr.error(err.message);
+          this.toastr.error(err.error.message);
           this.rowData = [];
         },
       });
@@ -113,7 +113,7 @@ export class UsersComponent implements OnInit {
         }
       },
       error: (err) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       },
     });
   }

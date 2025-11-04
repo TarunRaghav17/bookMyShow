@@ -99,7 +99,7 @@ export class HomeLandingPageComponent implements OnInit {
         this.getVisibleCards('Event', this.eventsData);
       },
       error: (err) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       },
     });
   }

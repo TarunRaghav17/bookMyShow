@@ -86,7 +86,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.states = res.data.stateDto;
       },
       error: (err: any) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       },
     });
   }
@@ -197,7 +197,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
             this.router.navigate(['/']);
           },
           error: (err: any) => {
-            this.toastr.error(err.message);
+            this.toastr.error(err.error.message);
           },
         });
     }
@@ -226,7 +226,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.closeEditProfileModal();
           this.getProfileUser();
         },
-        error: (err: any) => this.toastr.error(err.message),
+        error: (err: any) => this.toastr.error(err.error.message),
       });
   }
 
@@ -258,6 +258,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (this.userDetails?.dob) {
           this.editProfileForm.get('dob')?.disable();
         }
+        if (this.userDetails?.username) {
+          this.editProfileForm.get('username')?.disable();
+        }
         if (this.userDetails?.name) {
           this.editProfileForm.get('name')?.disable();
         } if (this.userDetails?.identity) {
@@ -270,7 +273,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         }
       },
       error: (err: any) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       },
     });
   }

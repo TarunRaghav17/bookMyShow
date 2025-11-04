@@ -18,7 +18,7 @@ import { DurationPipe } from '../../../core/pipes/duration.pipe';
 })
 export class MoviesDetailsComponent {
 
-loggedInUserId:string | null=null
+loggedInUserId!: number
 
   constructor(private modalService: NgbModal, public commonService: CommonService,
     private router: Router,

@@ -29,6 +29,12 @@ export class TheatreListComponent implements OnInit{
    this.getVenues()
  }
 
+ /**
+ * @description venue search filter by 
+ * @author Manu Shukla
+ * @param -input event from search box
+ * @returnType void
+ */
   onVenueSearch(event: any) {
     const searchText = event.target.value.toLowerCase();
    if (searchText) {
@@ -43,9 +49,13 @@ export class TheatreListComponent implements OnInit{
   toggleBtn() {
     this.toggleButton = !this.toggleButton
   }
-
+/**
+ * @description get all venues by city and category
+ * @author Manu Shukla
+ * @returnType void
+ */
   getVenues(){
-    this.commonService.getAllVenuesBYcity(this.commonService._selectCity()).subscribe({
+    this.commonService.getAllVenuesByCity(this.commonService._selectCity()).subscribe({
       next:(res)=>{
         this.originalVenueListArray = res.data.filter((venue:any)=>venue.venueType == this.commonService._selectedCategory())
          this.venueListArray = [...this.originalVenueListArray]; 
@@ -57,7 +67,7 @@ export class TheatreListComponent implements OnInit{
   }
 
 setType(type: string) {
-   this.commonService._selectedCategory.set(type);
+  this.commonService._selectedCategory.set(type);
   this.selectedType = type;
   this.getVenues()
   this.toggleButton = false;
