@@ -4,6 +4,7 @@ import { ListContentsService } from './list-content-service/list-contents.servic
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../services/common.service';
+import { AuthService } from '../../../auth/auth-service.service';
 
 @Component({
   selector: 'app-list-contents',
@@ -24,11 +25,13 @@ export class ListContentsComponent implements OnInit {
   isEnd: boolean = false;
   isLoading = false;
   loadedFilteredCounts: any;
+  adminId: number | null = null;
 
   constructor(private titleService: Title,
     private contentsService: ListContentsService,
     private toaster: ToastrService,
     public commonService: CommonService,
+    private authService: AuthService
   ) { }
   /**
    * @description life cycle hook  that sets title of page ,calls fetchContentsList 
@@ -37,6 +40,7 @@ export class ListContentsComponent implements OnInit {
    * @returnType void
    */
   ngOnInit() {
+    this.adminId = this.authService.userDetailsSignal().userId;
     this.titleService.setTitle('Contents List')
     this.fetchContentsList();
   }
@@ -49,13 +53,14 @@ export class ListContentsComponent implements OnInit {
    * @returnType void
    */
   fetchContentsList() {
+    this.isLoading=true
     forkJoin([
-      this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType, false),
-      this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType),
-      this.contentsService.getContentsList('Plays', this.currentPage, this.itemPerType),
-      this.contentsService.getContentsList('Sports', this.currentPage, this.itemPerType),
-      this.contentsService.getContentsList('Activities', this.currentPage, this.itemPerType),
-      this.contentsService.getContentsList('Event', this.currentPage, this.itemPerType),
+      this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType, false,this.adminId),
+      this.contentsService.getContentsList('Movie', this.currentPage, this.itemPerType,true,this.adminId),
+      this.contentsService.getContentsList('Plays', this.currentPage, this.itemPerType,true,this.adminId),
+      this.contentsService.getContentsList('Sports', this.currentPage, this.itemPerType,true,this.adminId),
+      this.contentsService.getContentsList('Activities', this.currentPage, this.itemPerType,true,this.adminId),
+      this.contentsService.getContentsList('Event', this.currentPage, this.itemPerType,true,this.adminId),
     ]
     ).subscribe({
       next: (
@@ -112,11 +117,13 @@ export class ListContentsComponent implements OnInit {
             type,
             this.filtersCurrentPage,
             Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
+            ,true,this.adminId
           ),
           this.contentsService.getContentsList(
             type,
             this.filtersCurrentPage,
             Math.floor(this.totalItemsPerPage / this.userSelectedType.length), false
+            ,this.adminId
           )
         ]
 
@@ -126,6 +133,7 @@ export class ListContentsComponent implements OnInit {
           type,
           this.filtersCurrentPage,
           Math.floor(this.totalItemsPerPage / this.userSelectedType.length)
+          ,true,this.adminId
         )
       }
 

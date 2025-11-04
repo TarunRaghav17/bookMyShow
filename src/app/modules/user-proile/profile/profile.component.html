@@ -260,7 +260,8 @@
                             </div>
                         </div>
                         <div class="button_section mt-3 mb-4">
-                            <button type="button" class="btn btn-primary w-100" [disabled]="editProfileForm.invalid"
+                            <button type="button" class="btn btn-primary w-100"
+                                [disabled]="editProfileForm.invalid || !editProfileForm.dirty"
                                 (click)="onSubmitProfile()">Save
                                 Changes</button>
                         </div>

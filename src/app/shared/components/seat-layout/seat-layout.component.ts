@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
@@ -63,6 +63,7 @@ export class SeatLayoutComponent {
     private toaster: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.screenShows = navigation?.extras?.state?.['screenShows'].map((screen: any) => ({
@@ -100,7 +101,7 @@ export class SeatLayoutComponent {
 
   ngOnDestroy() {
     this.commonService.showHeader.set(true);
-    this.close()
+    this.close();
   }
   get totalPrice() {
     return this.seats
@@ -184,7 +185,7 @@ export class SeatLayoutComponent {
   }
 
   goBack() {
-    this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.eventId}/buytickets/${this.movieDetails.eventId}`]);
+    this.location.back();
   }
 
   // ---- Drag/Pan state ----
@@ -195,6 +196,7 @@ export class SeatLayoutComponent {
   private isDragging = false;
 
   initializeCanvas() {
+
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     this.rebuildLayout();
     this.draw();
@@ -216,11 +218,7 @@ export class SeatLayoutComponent {
     canvas.addEventListener('touchend', this.endDrag.bind(this));
   }
 
-  @HostListener('window:resize')
-  onResize() {
-    this.rebuildLayout();
-    this.draw();
-  }
+
   switchShow(t: any, show: any) {
     let activeShow = { ...t, screenId: show.screenId };
     if (activeShow.screenId == this.activeShow.screenId && this.activeShow.showIds[0] == activeShow.showIds[0] && this.activeShow.time == activeShow.time) return;
@@ -228,7 +226,7 @@ export class SeatLayoutComponent {
     else {
       this.activeShow = activeShow
       this.commonService.setUserSelectedShow(this.activeShow);
-      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/showDateId-${this.commonService.userSelectedShow()?.showDateId}/showTimeId-${this.commonService.userSelectedShow()?.showTimeId}/date-${this.commonService.userSelectedDate()?.today}`], { state: { screenShows: this.screenShows, venueId: this.venueId } });
+      this.router.navigate([`/movies/city-${this.commonService._selectCity()?.toLowerCase()}/seat-layout/eventId-${this.movieDetails?.eventId}/venueId-${this.venueId}/screenId-${this.activeShow.screenId}/showId-${this.commonService.userSelectedShow()?.showIds[0]}/showDateId-${this.commonService.userSelectedShow()?.showDateId}/showTimeId-${this.commonService.userSelectedShow()?.showTimeId}/date-${this.commonService.userSelectedDate()?.today}`], { replaceUrl: true, state: { screenShows: this.screenShows, venueId: this.venueId } });
       this.fetchVenueById()
       this.getReservedSeatsByShowId(this.activeShow.showDateId, this.activeShow.showTimeId);
       this.clearSelection();

@@ -125,3 +125,9 @@ td button:hover {
 tbody tr:last-child .dropdown {
   top: -125px;
 }
+
+input[type="checkbox"] {
+  accent-color: #fd0d0d !important;
+  -webkit-appearance: checkbox;
+  appearance: checkbox;
+}

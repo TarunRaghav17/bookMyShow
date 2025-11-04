@@ -302,8 +302,8 @@ export class CommonService {
    * @author Inzamam
    * @return Observable<any>
    */
-  deleteContentById(contentId: string | null): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}`, {
+  deleteContentById(contentId: string | null,loggedInUserId?:string | null): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/api/events/delete/${contentId}/${loggedInUserId}`, {
       id: contentId
     });
   }

@@ -9,13 +9,17 @@ import { MovieDetailsLoadingSkeltonComponent } from '../movie-details-loading-sk
 import { NumberFormatPipe } from '../../../core/pipes/number-format.pipe';
 import { AuthService } from '../../../auth/auth-service.service';
 import { Title } from '@angular/platform-browser';
+import { DurationPipe } from '../../../core/pipes/duration.pipe';
 @Component({
   selector: 'app-movies-details',
-  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe,],
+  imports: [NgbModule, CommonModule, MovieDetailsLoadingSkeltonComponent, NumberFormatPipe,DurationPipe],
   templateUrl: './movies-details.component.html',
   styleUrl: './movies-details.component.scss'
 })
 export class MoviesDetailsComponent {
+
+loggedInUserId:string | null=null
+
   constructor(private modalService: NgbModal, public commonService: CommonService,
     private router: Router,
     private route: ActivatedRoute,
@@ -29,6 +33,7 @@ export class MoviesDetailsComponent {
   movieDetails: any | null = null
   ngOnInit() {
     this.fetchContentIdByUrl();
+    this.loggedInUserId = this.authService?.userDetailsSignal()?.userId
 
   }
   showHeader = false;
@@ -97,7 +102,7 @@ export class MoviesDetailsComponent {
     modalRef.result
       .then((result) => {
         if (result === 'confirm') {
-          this.commonService.deleteContentById(this.movieDetails.eventId).subscribe({
+          this.commonService.deleteContentById(this.movieDetails.eventId,this.loggedInUserId).subscribe({
             next: (res) => {
               this.toaster.success(res.message);
               this.location.back()

@@ -41,8 +41,8 @@
                                 }
                             </div>
                         </div>
-                        <div class="movie-meta">
-                            {{movieDetails.runTime}}
+                        <div class="movie-meta ">
+                            {{movieDetails.runTime | duration}}
                             <span class="dot-separator"><i class="fa fa-circle" aria-hidden="true"></i></span>
                             @for(genre of movieDetails?.genres;track $index){
                             <span>{{genre}}</span>
@@ -179,7 +179,7 @@
     </div>
 
     <div class="modal-footer border-0 justify-content-center">
-        <button type="button" class="btn btn-light" (click)="modal.dismiss()">Cancel</button>
+        <button type="button" class="btn btn-light border" (click)="modal.dismiss()">Cancel</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('confirm')">Delete</button>
     </div>
 </ng-template>
@@ -207,7 +207,9 @@
         <div class="border-bottom">
             <div class="box_container px-3 d-flex justify-content-between align-items-center py-3 px-3">
                 <p class="m-0">Copy Link</p>
-                <i class="fa fa-clipboard" aria-hidden="true" (click)="getCurrentPath()"></i>
+        <button class="btn border" (click)="getCurrentPath()">
+                    <i class="fa fa-clipboard" aria-hidden="true" ></i>
+        </button>
             </div>
         </div>
     </div>

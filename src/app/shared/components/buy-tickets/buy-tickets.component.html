@@ -3,7 +3,7 @@
   <!-- Movie Title -->
   <div class=" bg-white  border-bottom py-3">
     <h4 class="fs-1">{{movieDetails?.name}} - ({{commonService.userLangFormat().lang}})</h4>
-    <span class="text-muted small border rounded-pill px-3 py-1">Movie runtime: {{movieDetails?.runTime}}</span>
+    <span class="text-muted small border rounded-pill px-3 py-1">Movie runtime: {{movieDetails?.runTime | duration}}</span>
     <span class="text-muted small border rounded-pill px-3  ms-2 py-1">A</span>
     @for(genre of movieDetails?.genres;track $index){
     <span class="text-muted small bg-light text-dark  rounded-pill px-2 border ms-2 py-1">{{genre}}</span>
@@ -83,7 +83,7 @@
   <div class="d-flex flex-wrap gap-2 align-items-center justify-content-start ">
     @for(filter of selectedFilters;track $index){
     <div class="d-flex align-items-center gap-2 bg-danger text-light border rounded-pill px-2 py-1"
-      (click)="handleFilterChange($event,filter)">
+      >
       <span class="fw-thin">{{filter.value.split(',')[0]}} </span>
     </div>
     }

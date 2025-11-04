@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
+import { DurationPipe } from '../../../core/pipes/duration.pipe';
 
 
 interface Category {
@@ -41,7 +42,7 @@ interface Venue {
 @Component({
   selector: 'app-buy-tickets',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,DurationPipe],
   templateUrl: './buy-tickets.component.html',
   styleUrl: './buy-tickets.component.scss'
 })
