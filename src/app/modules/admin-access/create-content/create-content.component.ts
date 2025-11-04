@@ -336,9 +336,13 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   * @params Screen obj
   */
   // for movies
-  removeShow(screen: AbstractControl, index: number) {
-    if (this.getShows(screen).length <= 1) return;
-    this.getShows(screen).removeAt(index)
+  removeShow(screen: AbstractControl | FormGroup, index: number) {
+    const shows = this.getShows(screen);
+    if (!shows || shows.length <= 1) return;
+
+    shows.removeAt(index);
+    const newShowsArray = this.fb.array(shows.controls);
+    (screen as FormGroup).setControl('shows', newShowsArray);
   }
 
   /**
@@ -418,9 +422,12 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
   }
 
   removeEventShow(index: number) {
-    if (this.shows.length <= 1) return
-    this.shows.removeAt(index)
+    const shows = this.shows;
+    if (!shows || shows.length <= 1) return;
 
+    shows.removeAt(index);
+    const newShowsArray = this.fb.array(shows.controls);
+    this.eventShowForm.setControl('shows', newShowsArray);
   }
 
   removeControls(form: FormGroup, controls: string[]) {
@@ -433,6 +440,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
   setToday() {
     let today = new Date();
+    today.setDate(today.getDate() + 1);
     this.minDate = today.toISOString().split('T')[0];
     return this.minDate
   }
@@ -567,7 +575,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err) => {
-        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '18:00', endTime: '23:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, selectedDate.value, screenId)
         this.toaster.error(err.error.message.split(':')[1])
 
       }
@@ -575,8 +582,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 
 
   }
-
-
   /**
   * @description function to submit the form 
   * @author Inzamam
@@ -728,6 +733,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   createCast(): FormGroup {
     return this.fb.group({
+      id: [crypto.randomUUID()],
       actorName: ['', Validators.required],
       castImg: [''],
     })
@@ -750,6 +756,7 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   createCrew(): FormGroup {
     return this.fb.group({
+      id: [crypto.randomUUID()],
       memberName: ['', Validators.required],
       crewImg: [''],
     })
@@ -981,19 +988,24 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
     }
   }
 
-  removeCastControl(castControls: FormArray, index: number) {
+  removeCastControl(_castControls: FormArray, controlId: number) {
+    let castControls = (this.eventShowForm.get('cast') as FormArray);
     if (castControls.length == 1) return;
     else {
+      let index = castControls?.controls.findIndex((ctrl: any) => ctrl.get('id')?.value == controlId)
       castControls.removeAt(index)
     }
-    this.eventShowForm.setControl('cast', new FormArray([...castControls.controls]));
   }
 
-  removeCrewControl(crewControls: FormArray, index: number) {
+  removeCrewControl(_crewControls: FormArray, controlId: number) {
+
+    let crewControls = (this.eventShowForm.get('crew') as FormArray);
     if (crewControls.length == 1) return;
     else {
+      let index = crewControls?.controls.findIndex((ctrl: any) => ctrl.get('id')?.value == controlId)
       crewControls.removeAt(index)
     }
-    this.eventShowForm.setControl('crew', new FormArray([...crewControls.controls]));
   }
+
+
 }

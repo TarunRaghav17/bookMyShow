@@ -158,6 +158,7 @@
 /* Meta Info */
 .movie-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   margin-top: 16px;
   line-height: 24px;

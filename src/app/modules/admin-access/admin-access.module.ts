@@ -14,18 +14,19 @@ import { ListVenuesComponent } from './list-venues/list-venues.component';
 import { ListContentsComponent } from './list-contents/list-contents.component';
 import { NumberFormatPipe } from '../../core/pipes/number-format.pipe';
 import { SortPipe } from '../../core/pipes/sort.pipe';
+import { TruncatePipe } from '../../core/pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
     UsersComponent,
-    ListYourShowComponent, CreateVenueComponent, CreateShowComponent,CreateContentComponent,ListVenuesComponent, ListContentsComponent
+    ListYourShowComponent, CreateVenueComponent, CreateShowComponent, CreateContentComponent, ListVenuesComponent, ListContentsComponent
   ],
-  imports: [NgbModule,NumberFormatPipe,
-          SortPipe,
+  imports: [NgbModule, NumberFormatPipe,
+    SortPipe,
     ReactiveFormsModule, CommonModule,
     ClickOutsideDirective,
     CommonModule,
-    AdminAccessRoutingModule, CarouselModule, ReactiveFormsModule, FormsModule,
+    AdminAccessRoutingModule, CarouselModule, ReactiveFormsModule, FormsModule, TruncatePipe
   ]
 })
 export class AdminAccessModule { }

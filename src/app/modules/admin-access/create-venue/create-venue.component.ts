@@ -12,7 +12,7 @@ import { Title } from '@angular/platform-browser';
 export class CreateVenueComponent implements OnInit {
 
   venueForm!: FormGroup;
-  tempAmmenity = new FormControl('', [])
+  tempAmmenity = new FormControl(null, [this.nameValidator()])
   venueType: any[] = [];
   citiesArray: any[] = []
   supportedCategoriesArray: any[] | null = null
@@ -108,7 +108,7 @@ export class CreateVenueComponent implements OnInit {
       venueCapacity: ['', [Validators.required, Validators.min(5), Validators.pattern(/^[0-9]+$/)]],
       venueType: ['', Validators.required],
       supportedCategories: this.fb.array([], Validators.required),
-      amenities: this.fb.array([], [this.nameValidator()]),
+      amenities: this.fb.array([]),
 
     });
 
@@ -417,9 +417,9 @@ export class CreateVenueComponent implements OnInit {
   * @returnType void
   */
   addAmenity(): void {
-    if (this.tempAmmenity.value != '') {
+    if (this.tempAmmenity.value != null && this.tempAmmenity.valid && this.tempAmmenity.value != '') {
       this.amenities.push(this.fb.control(this.tempAmmenity.value));
-      this.tempAmmenity.setValue('')
+      this.tempAmmenity.setValue(null)
     }
   }
 

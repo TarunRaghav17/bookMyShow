@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CommonService } from '../../../services/common.service';
 import { Title } from '@angular/platform-browser';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { concatMap, finalize, from } from 'rxjs';
 
 @Component({
   selector: 'app-list-venues',
@@ -23,6 +24,7 @@ export class ListVenuesComponent implements OnInit {
   searchValue: string = '';
   modalRef?: NgbModalRef | null = null;
   venueToDelete: any | null = null;
+  bulkDeleteVenuesList: any[] = [];
 
   constructor(public venueService: VenuesService,
     private toaster: ToastrService,
@@ -43,7 +45,7 @@ export class ListVenuesComponent implements OnInit {
 
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.titleService.setTitle("Book-My-Show");
   }
 
@@ -64,6 +66,7 @@ export class ListVenuesComponent implements OnInit {
   * @param template reference to open,venueObj clicked 
   */
   openDeleteModal(content: TemplateRef<any>, venue: any) {
+    if (this.bulkDeleteVenuesList.length > 1) return
     this.venueToDelete = venue
     this.modalRef = this.modalService.open(content, {
       centered: false,
@@ -93,14 +96,51 @@ export class ListVenuesComponent implements OnInit {
       },
       error: (err) => {
         this.toaster.error(err.error.message)
-
       },
       complete: () => {
         this.closeDeleteModal();
+        this.userSelectedCity = "";
+        this.userSelectedVenueType = "";
+        this.filteredVenuesList = null
         this.getAllVenuesList();
       }
     })
   }
+
+  toggleVenueList(event: any, venue: any) {
+    if (event.target.checked) {
+      this.bulkDeleteVenuesList.push(venue.id)
+    }
+    else {
+      this.bulkDeleteVenuesList = this.bulkDeleteVenuesList.filter((id: any) => id != venue.id)
+    }
+  }
+
+  deleteMultipleVenues() {
+    if (!this.bulkDeleteVenuesList?.length) return;
+
+    from(this.bulkDeleteVenuesList)
+      .pipe(
+        concatMap((venueId: string) =>
+          this.venueService.deleteVenueById(venueId)
+        ),
+        finalize(() => {
+          this.userSelectedCity = "";
+          this.userSelectedVenueType = "";
+          this.filteredVenuesList = null;
+          this.bulkDeleteVenuesList = [];
+          this.pageNo = 1;
+          this.getAllVenuesList();
+
+          this.toaster.success('All selected venues deleted successfully!');
+        })
+      )
+      .subscribe({
+        next: (res: any) => this.toaster.success(res.message),
+        error: (err) => this.toaster.error(err.error?.message || 'Error deleting venue')
+      });
+  }
+
   /**
     * @description function that set user selected city and calls handleFilteredVenuesList .
     * @author Inzamam
@@ -155,7 +195,7 @@ export class ListVenuesComponent implements OnInit {
   getAllVenuesList() {
     this.venueService.getAllVenues().subscribe({
       next: (res: any) => {
-        this.venuesList = res.data;
+        this.venuesList = res.data.reverse();
         this.getVisibleCards();
       },
       error: (err) => {

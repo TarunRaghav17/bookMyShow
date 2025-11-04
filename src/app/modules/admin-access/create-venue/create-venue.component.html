@@ -31,7 +31,7 @@
             </label>
 
             <input type="number" formControlName="venueCapacity" class="form-control" min="5" max="5000"
-                placeholder="Enter venue capacity" [value]="venueForm.get('capacity')?.value"
+                placeholder="Enter venue capacity" [value]="venueForm.get('capacity')?.value" [ngStyle]="{'cursor':venueForm.get('venueCapacity')?.disabled?'not-allowed':''}"
                 [ngClass]="{'is-invalid': venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.invalid}" />
             @if(venueForm.get('venueCapacity')?.touched && venueForm.get('venueCapacity')?.hasError('required')){
             <div class="invalid-feedback">Capacity is required</div>
@@ -270,9 +270,21 @@
             </li>
             }
         </ul>
-        <div class="d-flex my-2 gap-3 justify-content-end">
-            <input type="text" class="form-control w-75" placeholder="Enter amenity" [formControl]="tempAmmenity">
-            <button type="button" class="btn btn-primary w-25" (click)="addAmenity()">Add</button>
+        <div class="d-flex my-2 gap-3 justify-content-end align-items-center ">
+            <div class="d-flex flex-column w-75 justify-content-start ">
+                <input type="text" class="form-control w-75" placeholder="Enter amenity" [formControl]="tempAmmenity"
+                    [ngClass]="{'is-invalid': tempAmmenity.touched && tempAmmenity.invalid}" />
+                @if( tempAmmenity.touched && tempAmmenity.hasError('invalidSpace')){
+                <div class="invalid-feedback">Cannot start or end with spaces</div>}
+
+                @if( tempAmmenity.touched && tempAmmenity.hasError('invalidCharacter')){
+                <div class="invalid-feedback">Only alphanumeric characters and hyphens are allowed </div>}
+
+                @if( tempAmmenity.touched && tempAmmenity.hasError('invalidHyphen')){
+                <div class="invalid-feedback">Cannot start or end with a hyphen</div>}
+
+            </div>
+            <button type="button" class="btn btn-primary w-25 h-25" (click)="addAmenity()">Add</button>
         </div>
     </div>
     <div class="w-100 d-flex justify-content-end">

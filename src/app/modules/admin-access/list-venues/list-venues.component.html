@@ -13,7 +13,7 @@
                             City
                         </span>
                         <select class="form-select w-50" aria-label="Default select example"
-                            (change)="setUserSelectedCity($event)">
+                            [(ngModel)]="userSelectedCity" (change)="setUserSelectedCity($event)">
                             <!-- (change)="selectRoleByList($event)" -->
                             <option value="" selected>All</option>
                             @for(city of cityList;track $index){
@@ -26,7 +26,7 @@
                             Type
                         </span>
                         <select class="form-select w-50" aria-label="Default select example"
-                            (change)="setUserSelectedVenueType($event)">
+                            [(ngModel)]="userSelectedVenueType" (change)="setUserSelectedVenueType($event)">
                             <option value="" selected>All</option>
                             @for(venueType of venueTypeList;track $index){
                             <option value="{{venueType}}">{{venueType}}</option>
@@ -40,6 +40,14 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th class="col-1 text-danger">
+                            @if(bulkDeleteVenuesList.length>1){
+                            <div class="fs-5 h-100 d-flex justify-content-center align-items-center ">
+                                <i class="fa fa-trash delete-btn " (click)="deleteMultipleVenues()"
+                                    aria-hidden="true"></i>
+                            </div>
+                            }
+                        </th>
                         <th>Sr.No</th>
                         <th>Venue-Name</th>
                         <th>Venue-For</th>
@@ -54,6 +62,10 @@
                     @for (venue of visibleData; track $index) {
                     @if(venue.venueName.toLowerCase().includes(searchValue.toLowerCase())){
                     <tr>
+                        <td>
+                            <input type="checkbox" (change)="toggleVenueList($event,venue)"
+                                [checked]="bulkDeleteVenuesList.includes(venue.id)">
+                        </td>
                         <td>{{ $index +1}}</td>
                         <td>{{ venue.venueName }}</td>
                         <td>{{ venue.venueType ?? 'N/A' }}</td>
@@ -79,20 +91,20 @@
 
                         </td>
                         <td>
-                            <div class=" fs-5 p-0 m-0 text-danger">
+                            <div class=" fs-5 p-0 m-0">
                                 <i class="fa fa-trash delete-btn " (click)="openDeleteModal(confirmDeleteModal,venue)"
+                                    [ngStyle]="{'color':bulkDeleteVenuesList.length>1?'grey':'red','cursor':bulkDeleteVenuesList.length>1?'not-allowed':'pointer'}"
                                     aria-hidden="true"></i>
                             </div>
                         </td>
                     </tr>
                     }
-                    
-                    }
-                    @empty{
-                        <div class="text-center text-danger">No results found</div>
                     }
                 </tbody>
             </table>
+            @if(visibleData.length==0){
+            <div class="text-center text-danger">No results found</div>
+            }
         </div>
     </div>
 

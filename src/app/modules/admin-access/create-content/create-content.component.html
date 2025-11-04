@@ -333,10 +333,12 @@
                     <div class="" formArrayName="shows">
                         @for(show of getShows(screen).controls ;track $index){
                         <!-- one particualr show =  date & [times] -->
-                        <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 "
-                            [ngClass]="{'is-invalid':show.get('date')?.touched&&show.get('date')?.invalid}">
+                        <div [formGroupName]="$index" class="row my-3 d-flex card gap-2 py-3 mx-auto  w-100 ">
                             <!-- date control -->
-                            <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 ">
+                            <div class="d-flex align-items-center fs-5 justify-content-start gap-0 w-100 "
+                                [ngClass]="{'is-invalid':show.get('date')?.touched&&show.get('date')?.invalid}">
+
+
                                 <span class="my-0 fw-semibold me-2 p-0   "> Date: <small
                                         class="text-danger reuired">*</small></span>
                                 <input type="date" class="form-control me-3 w-25 " formControlName="date"
@@ -344,7 +346,7 @@
                                     (change)="fetchFreeTimeSlots(show,screen?.get('venueId')?.value,$event,screen?.get('screenId')?.value)">
 
                                 <div ngbDropdown [autoClose]="'outside'"
-                                    class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50 ">
+                                    class="d-flex align-items-center fs-5 justify-content-start gap-3 w-50">
                                     <label
                                         class="form-label  d-flex align-items-center my-0 justify-content-center fw-semibold">
                                         Times:
@@ -364,7 +366,8 @@
                                         style="max-height: 200px; overflow-y: auto;">
                                         @for(slots of availableSlots; track $index) {
                                         @if(
-                                        slots.key == (screen?.get('venueId')?.value.toString() + screen?.get('screenId')?.value.toString() +
+                                        slots.key == (screen?.get('venueId')?.value.toString() +
+                                        screen?.get('screenId')?.value.toString() +
                                         show.get('date')?.value.toString())
                                         )
                                         {
@@ -389,8 +392,9 @@
                                     [disabled]="this.getShows(screen).length <= 1"
                                     (click)="removeShow(screen,$index)">Remove</button>
                             </div>
+                            <div class="invalid-feedback">Invalid Date </div>
                         </div>
-                        <div class="invalid-feedback">Invalid Date </div>
+
                         }
                     </div>
                 </div>
@@ -508,7 +512,8 @@
                 @for(lang of languagesArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'languages')"
-                        [value]="lang.languageId" [ngClass]="{'is-invalid': isInvalid('languages')}" [checked]="eventShowForm.get('languages')?.value.includes(lang.languageId)">
+                        [value]="lang.languageId" [ngClass]="{'is-invalid': isInvalid('languages')}"
+                        [checked]="eventShowForm.get('languages')?.value.includes(lang.languageId)">
                     <label class="form-check-label">{{lang.languageName}}</label>
                 </div>
                 }
@@ -528,7 +533,8 @@
                 @for(genre of genresArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'genres')"
-                        [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}" [checked]="eventShowForm.get('genres')?.value.includes(genre.genresId)">
+                        [value]="genre.genresId" [ngClass]="{'is-invalid': isInvalid('genres')}"
+                        [checked]="eventShowForm.get('genres')?.value.includes(genre.genresId)">
                     <label class="form-check-label">{{genre.genresName}}</label>
                 </div>
                 }
@@ -548,7 +554,8 @@
                 @for(format of formatsArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'format')"
-                        [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}" [checked]="eventShowForm.get('format')?.value.includes(format.formatId)">
+                        [value]="format.formatId" [ngClass]="{'is-invalid': isInvalid('format')}"
+                        [checked]="eventShowForm.get('format')?.value.includes(format.formatId)">
                     <label class="form-check-label">{{format.formatName}}</label>
                 </div>
                 }
@@ -569,7 +576,8 @@
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" [value]="tag.tagId"
                         (change)="handleInputBoxChange($event,'tag')" [value]="tag.tagId"
-                        [ngClass]="{'is-invalid': isInvalid('tag')}" [checked]="eventShowForm.get('tag')?.value.includes(tag.tagId)">
+                        [ngClass]="{'is-invalid': isInvalid('tag')}"
+                        [checked]="eventShowForm.get('tag')?.value.includes(tag.tagId)">
                     <label class="form-check-label">{{tag.tagName}}</label>
                 </div>
                 }
@@ -589,7 +597,8 @@
                 @for(category of categoriesArray; track $index) {
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input" (change)="handleInputBoxChange($event,'categories')"
-                        [value]="category.categoryId" [ngClass]="{'is-invalid': isInvalid('categories')}" [checked]="eventShowForm.get('categories')?.value.includes(category.categoryId)">
+                        [value]="category.categoryId" [ngClass]="{'is-invalid': isInvalid('categories')}"
+                        [checked]="eventShowForm.get('categories')?.value.includes(category.categoryId)">
                     <label class="form-check-label">{{category.categoryName}}</label>
                 </div>
                 }
@@ -610,7 +619,8 @@
                 <div class="form-check w-25">
                     <input type="checkbox" class="form-check-input"
                         (change)="handleInputBoxChange($event,'moreFilters')" [value]="moreFilter.moreFilterId"
-                        [ngClass]="{'is-invalid': isInvalid('moreFilters')}" [checked]="eventShowForm.get('moreFilters')?.value.includes(moreFilter.moreFilterId)">
+                        [ngClass]="{'is-invalid': isInvalid('moreFilters')}"
+                        [checked]="eventShowForm.get('moreFilters')?.value.includes(moreFilter.moreFilterId)">
                     <label class="form-check-label">{{moreFilter.moreFilterName}}</label>
                 </div>
                 }
@@ -633,8 +643,8 @@
                 <h5 class="card-title mb-0">🎭 Cast <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCast()">Add Cast</button>
             </div>
-            @for(c of castControls.controls;track $index ){
-            <div formGroupName="{{$index}}" class="row mb-2">
+            @for(c of castControls.controls;track c.get('id')?.value ?? $index){
+            <div [formGroupName]="$index" class="row mb-2">
                 <div class="col">
                     <input class="form-control" placeholder="Actor Name" formControlName="actorName"
                         [ngClass]="{'is-invalid': c.get('actorName')?.invalid && (c.get('actorName')?.touched || c.get('actorName')?.dirty)}" />
@@ -655,7 +665,7 @@
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-outline-danger" type="button" [disabled]="castControls.length==1"
-                        (click)="removeCastControl(castControls,$index)">✕</button>
+                        (click)="removeCastControl(castControls,c.get('id')?.value)">✕</button>
                 </div>
             </div>
             }
@@ -668,7 +678,7 @@
                 <h5 class="card-title">🎬 Crew <small class="text-danger reuired">*</small></h5>
                 <button class="btn btn-outline-primary btn-sm" type="button" (click)="addCrew()">Add Crew</button>
             </div>
-            @for(m of crewControls.controls;track $index){
+            @for(m of crewControls.controls;track m.get('id')?.value ?? $index){
             <div formGroupName="{{$index}}" class="row mb-2">
                 <div class="col">
                     <input class="form-control" placeholder="Member Name" formControlName="memberName"
@@ -691,7 +701,7 @@
                 </div>
                 <div class="col-auto">
                     <button class="btn btn-outline-danger" type="button" [disabled]="crewControls.length==1"
-                        (click)="removeCrewControl(crewControls,$index)">✕</button>
+                        (click)="removeCrewControl(crewControls,m.get('id')?.value)">✕</button>
                 </div>
             </div>
             }
