@@ -60,7 +60,7 @@
                 </thead>
                 <tbody>
                     @for (venue of visibleData; track $index) {
-                    @if(venue.venueName.toLowerCase().includes(searchValue.toLowerCase())){
+                    @if(venue.venueName?.toLowerCase()?.includes(searchValue.toLowerCase())){
                     <tr>
                         <td>
                             <input type="checkbox" (change)="toggleVenueList($event,venue)"

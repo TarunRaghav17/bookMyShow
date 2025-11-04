@@ -25,6 +25,10 @@ export class ListVenuesComponent implements OnInit {
   modalRef?: NgbModalRef | null = null;
   venueToDelete: any | null = null;
   bulkDeleteVenuesList: any[] = [];
+  itemsPerPage = 20;
+  pageNo = 1;
+  visibleData: any[] = [];
+  totalPages: number = 0
 
   constructor(public venueService: VenuesService,
     private toaster: ToastrService,
@@ -195,7 +199,8 @@ export class ListVenuesComponent implements OnInit {
   getAllVenuesList() {
     this.venueService.getAllVenues().subscribe({
       next: (res: any) => {
-        this.venuesList = res.data.reverse();
+        this.venuesList = res.data;
+        this.visibleData = this.venuesList;
         this.getVisibleCards();
       },
       error: (err) => {
@@ -223,10 +228,7 @@ export class ListVenuesComponent implements OnInit {
     return parts.join(", ");
   }
 
-  itemsPerPage = 20;
-  pageNo = 1;
-  visibleData: any[] = [];
-  totalPages: number = 0
+
 
   getVisibleCards() {
     this.totalPages = Math.ceil(((this.filteredVenuesList || this.venuesList).length / this.itemsPerPage) || 1);
@@ -234,6 +236,7 @@ export class ListVenuesComponent implements OnInit {
     const start = this.itemsPerPage * pageNo;
     const end = start + this.itemsPerPage;
     this.visibleData = (this.filteredVenuesList || this.venuesList).slice(start, end);
+
   }
 
   /**
@@ -242,7 +245,8 @@ export class ListVenuesComponent implements OnInit {
   next() {
     if (this.pageNo < this.totalPages) {
       this.pageNo++;
-      this.getVisibleCards()
+      this.getAllVenuesList()
+      // this.getVisibleCards()
     }
   }
 
@@ -252,7 +256,8 @@ export class ListVenuesComponent implements OnInit {
   prev() {
     if (this.pageNo > 1) {
       this.pageNo--;
-      this.getVisibleCards()
+      this.getAllVenuesList()
+      // this.getVisibleCards()
     }
   }
 }
