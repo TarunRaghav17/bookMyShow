@@ -121,7 +121,7 @@ export class SearchBoxComponent implements OnInit {
         this.movieName = res.data || [];
       },
       error: (err: any) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       },
     });
   }
