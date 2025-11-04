@@ -25,7 +25,7 @@ export class EventsDetailsComponent implements OnInit {
   adminId: number;
   
   constructor(private route: ActivatedRoute, private router: Router, public commonService: CommonService, private toastr: ToastrService, private modalService: NgbModal, public authService: AuthService, private location: Location) {
-    this.adminId = this.authService.userDetailsSignal().userId
+    this.adminId = this.authService?.userDetailsSignal()?.userId
   }
 
 
