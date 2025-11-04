@@ -575,7 +575,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
         }
       },
       error: (err) => {
-        this.generateAllAvailableSlots([{ startTime: '12:00', endTime: '15:00' }, { startTime: '18:00', endTime: '23:00' }], this.eventShowForm.get('runTime')?.value, 30, venueId, selectedDate.value, screenId)
         this.toaster.error(err.error.message.split(':')[1])
 
       }

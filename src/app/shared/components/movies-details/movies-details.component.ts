@@ -33,7 +33,7 @@ loggedInUserId:string | null=null
   movieDetails: any | null = null
   ngOnInit() {
     this.fetchContentIdByUrl();
-    this.loggedInUserId = this.authService.userDetailsSignal().userId
+    this.loggedInUserId = this.authService?.userDetailsSignal()?.userId
 
   }
   showHeader = false;

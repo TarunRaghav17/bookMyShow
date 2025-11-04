@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -63,6 +63,7 @@ export class SeatLayoutComponent {
     private toaster: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.screenShows = navigation?.extras?.state?.['screenShows'].map((screen: any) => ({
@@ -184,7 +185,7 @@ export class SeatLayoutComponent {
   }
 
   goBack() {
-    this.router.navigate([`/movies/${this.commonService._selectCity()?.toLowerCase()}/${this.movieDetails.eventId}/buytickets/${this.movieDetails.eventId}`]);
+    this.location.back();
   }
 
   // ---- Drag/Pan state ----
