@@ -154,7 +154,7 @@ export class BookingEventsComponent implements OnInit {
 
         this.commonService.bookUserSeats(sendPayLoad).subscribe({
           next: () => {
-             this.toastr.success(`ticket booked successfully for ${this.title}`)
+             this.toastr.success(`Ticket booked successfully for ${this.title}`)
              this.router.navigate(['/'])
              localStorage.removeItem('selectedSeatsByEvent');
 

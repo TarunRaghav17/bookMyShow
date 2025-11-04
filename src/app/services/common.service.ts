@@ -570,7 +570,7 @@ export class CommonService {
   * @author  Manu 
   * @return Observable<any>
   */
-  getAllVenuesBYcity(city: String): Observable<any> {
+  getAllVenuesByCity(city: String): Observable<any> {
     return this.http.get(`${this.baseUrl}/venues/city/${city}`, {
       context: new HttpContext().set(this.IS_PUBLIC_API, true)
     })
