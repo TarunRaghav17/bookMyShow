@@ -63,7 +63,7 @@
               </div>
               <!-- Carousel Content -->
               <div class="main_filter_card ">
-                <div class="d-flex justify-content-around gap-3">
+                <div class="d-flex justify-content-start gap-3">
                   @for (item of visibleData['Movie']; track $index) {
                   <div class="card_section">
                     <div class="col" [routerLink]="['/movie',commonService._selectCity(),item.eventId]">
@@ -133,7 +133,7 @@
               </div>
               <!-- Carousel Content -->
               <div class="main_filter_card ">
-                <div class=" d-flex justify-content-around gap-3">
+                <div class=" d-flex justify-content-start gap-3">
                   @for (item of visibleData['Plays']; track $index) {
                   <div class=" card_section">
                     <div class="col" [routerLink]="`/plays/${item.name.split(' ').join('-')}/${item.eventId}`">
@@ -201,7 +201,7 @@
               </div>
               <!-- Carousel Content -->
               <div class="main_filter_card ">
-                <div class=" d-flex justify-content-around gap-3">
+                <div class=" d-flex justify-content-start gap-3">
                   @for (item of visibleData['Sports']; track $index) {
                   <div class=" card_section">
                     <div class="col" [routerLink]="`/sports/${item.name.split(' ').join('-')}/${item.eventId}`">
@@ -269,7 +269,7 @@
               </div>
               <!-- Carousel Content -->
               <div class="main_filter_card ">
-                <div class=" d-flex justify-content-around gap-3">
+                <div class=" d-flex justify-content-start gap-3">
                   @for (item of visibleData['Activities']; track $index) {
                   <div class=" card_section">
                     <div class="col" [routerLink]="`/activities/${item.name.split(' ').join('-')}/${item.eventId}`">
@@ -341,7 +341,7 @@
 
               <!-- Carousel Content -->
               <div class="main_filter_card ">
-                <div class=" d-flex justify-content-around gap-3">
+                <div class=" d-flex justify-content-start gap-3">
                   @for (item of visibleData['Event']; track $index) {
                   <div class=" card_section">
                     <div class="col" [routerLink]="`/events/${item.name.split(' ').join('-')}/${item.eventId}`">

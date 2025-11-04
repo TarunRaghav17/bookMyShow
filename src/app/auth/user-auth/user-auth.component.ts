@@ -75,7 +75,7 @@ export class UserAuthComponent implements OnInit {
           this.activeModal.close(UserAuthComponent);
         },
         error: (err) =>
-          this.toastr.error(err.message)
+          this.toastr.error(err.error.message)
       });
     }
   }
@@ -153,7 +153,7 @@ export class UserAuthComponent implements OnInit {
         this.showMessageFlag = res.success
       },
       error: (err) => {
-        this.toastr.error(err.message || 'Validation failed');
+        this.toastr.error(err.error.message || 'Validation failed');
       }
     });
   }
