@@ -28,7 +28,7 @@ export class ListVenuesComponent implements OnInit {
   itemsPerPage = 20;
   pageNo = 1;
   visibleData: any[] = [];
-  totalPages: number = 0
+  totalPages: number = 1
 
   constructor(public venueService: VenuesService,
     private toaster: ToastrService,
@@ -141,7 +141,7 @@ export class ListVenuesComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => this.toaster.success(res.message),
-        error: (err) => this.toaster.error(err.error?.message || 'Error deleting venue')
+        error: (err) => this.toaster.error(err.error?.message)
       });
   }
 
@@ -197,11 +197,11 @@ export class ListVenuesComponent implements OnInit {
     * @returnType void
     */
   getAllVenuesList() {
-    this.venueService.getAllVenues().subscribe({
+    this.venueService.getAllVenues(this.pageNo - 1).subscribe({
       next: (res: any) => {
-        this.venuesList = res.data;
+        this.totalPages = Math.ceil((res.data.totalCount / this.itemsPerPage) || 1);
+        this.venuesList = res.data.venues;
         this.visibleData = this.venuesList;
-        this.getVisibleCards();
       },
       error: (err) => {
         this.toaster.error(err.error.message)
@@ -246,7 +246,6 @@ export class ListVenuesComponent implements OnInit {
     if (this.pageNo < this.totalPages) {
       this.pageNo++;
       this.getAllVenuesList()
-      // this.getVisibleCards()
     }
   }
 
@@ -257,7 +256,6 @@ export class ListVenuesComponent implements OnInit {
     if (this.pageNo > 1) {
       this.pageNo--;
       this.getAllVenuesList()
-      // this.getVisibleCards()
     }
   }
 }

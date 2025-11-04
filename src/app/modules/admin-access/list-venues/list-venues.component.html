@@ -3,36 +3,7 @@
         <div class="col-10 ">
             <div class="w-100 d-flex justify-content-between align-items-center">
                 <h4> Venues List</h4>
-                <div class="w-25  me-auto ms-2">
-                    <input type="text" class="d-flex align-items-center   form-control w-100"
-                        placeholder="Search by Name" [(ngModel)]="searchValue">
-                </div>
-                <div class=" py-3 d-flex w-50  d-flex align-items-center justify-content-start ">
-                    <div class=" d-flex gap-4 align-items-center justify-content-center w-50 px-1">
-                        <span>
-                            City
-                        </span>
-                        <select class="form-select w-50" aria-label="Default select example"
-                            [(ngModel)]="userSelectedCity" (change)="setUserSelectedCity($event)">
-                            <!-- (change)="selectRoleByList($event)" -->
-                            <option value="" selected>All</option>
-                            @for(city of cityList;track $index){
-                            <option value="{{city.cityName}}">{{city.cityName | titlecase}}</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="d-flex  gap-4 align-items-center justify-content-center w-50 px-1">
-                        <span>
-                            Type
-                        </span>
-                        <select class="form-select w-50" aria-label="Default select example"
-                            [(ngModel)]="userSelectedVenueType" (change)="setUserSelectedVenueType($event)">
-                            <option value="" selected>All</option>
-                            @for(venueType of venueTypeList;track $index){
-                            <option value="{{venueType}}">{{venueType}}</option>
-                            }
-                        </select>
-                    </div>
+                <div class=" py-3 d-flex w-50  d-flex align-items-center justify-content-end ">
                     <button class="btn btn-outline-primary w-25" [routerLink]="['/admin/create/venue']">Add New</button>
                 </div>
             </div>
@@ -48,7 +19,7 @@
                             </div>
                             }
                         </th>
-                        <th>Sr.No</th>
+                        <th>Venue-Id</th>
                         <th>Venue-Name</th>
                         <th>Venue-For</th>
                         <th>Supported Categories</th>
@@ -66,7 +37,7 @@
                             <input type="checkbox" (change)="toggleVenueList($event,venue)"
                                 [checked]="bulkDeleteVenuesList.includes(venue.id)">
                         </td>
-                        <td>{{ $index +1}}</td>
+                        <td>{{ venue?.id}}</td>
                         <td>{{ venue.venueName }}</td>
                         <td>{{ venue.venueType ?? 'N/A' }}</td>
                         <td>
