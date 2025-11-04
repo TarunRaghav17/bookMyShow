@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
 import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ActivitiesRoutingModule } from "../../../modules/explore/activities/activities-routing.module";
@@ -195,6 +195,7 @@ export class SeatLayoutComponent {
   private isDragging = false;
 
   initializeCanvas() {
+
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     this.rebuildLayout();
     this.draw();
@@ -216,11 +217,7 @@ export class SeatLayoutComponent {
     canvas.addEventListener('touchend', this.endDrag.bind(this));
   }
 
-  @HostListener('window:resize')
-  onResize() {
-    this.rebuildLayout();
-    this.draw();
-  }
+
   switchShow(t: any, show: any) {
     let activeShow = { ...t, screenId: show.screenId };
     if (activeShow.screenId == this.activeShow.screenId && this.activeShow.showIds[0] == activeShow.showIds[0] && this.activeShow.time == activeShow.time) return;
