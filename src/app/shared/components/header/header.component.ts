@@ -31,6 +31,7 @@ export class HeaderComponent implements OnInit {
   citiesJson: any = null;
   showCities = false;
   selectedCity: any;
+  selectedCityId: string = '';
   searchText: string = '';
   searchControl: FormControl = new FormControl()
   filteredCities: any[] = [];
@@ -131,12 +132,15 @@ export class HeaderComponent implements OnInit {
    * @author Gurmeet Kumar
    * @return void
    */
-  selectCity(city: any, modalRef: NgbModalRef): void {
+  selectCity(city: any, cityId: string, modalRef: NgbModalRef): void {
     this.commonService._selectCity.set(city);
     this.selectedCity = this.commonService._selectCity();
     this.showCities = false
     this.route.navigate(['/explore/home/', city])
     sessionStorage.setItem('selectedCity', JSON.stringify(this.selectedCity));
+    sessionStorage.setItem('selectedCityId', cityId);
+
+
     if (modalRef) {
       modalRef.close();
       this.searchControl.setValue('');

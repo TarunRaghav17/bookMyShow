@@ -258,6 +258,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         if (this.userDetails?.dob) {
           this.editProfileForm.get('dob')?.disable();
         }
+        if (this.userDetails?.username) {
+          this.editProfileForm.get('username')?.disable();
+        }
         if (this.userDetails?.name) {
           this.editProfileForm.get('name')?.disable();
         } if (this.userDetails?.identity) {
