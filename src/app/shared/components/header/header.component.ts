@@ -161,7 +161,7 @@ export class HeaderComponent implements OnInit {
           this.toastr.success(res.message);
         },
         error: (err: any) => {
-          this.toastr.error(err.message);
+          this.toastr.error(err.error.message);
         }
       });
     } else {
@@ -187,7 +187,7 @@ export class HeaderComponent implements OnInit {
         this.citiesJson = res.data;
       },
       error: (err) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       }
     });
   }
@@ -297,7 +297,7 @@ export class HeaderComponent implements OnInit {
           this.showNotificationData = [...this.showNotificationData, ...newData];
         }
       },
-      error: (err) => this.toastr.error(err.message)
+      error: (err) => this.toastr.error(err.error.message)
     });
     this.unreadNotifications();
   }
@@ -317,7 +317,7 @@ export class HeaderComponent implements OnInit {
         );
       },
       error: (err) => {
-        this.toastr.error(err.message);
+        this.toastr.error(err.error.message);
       }
     });
   }

@@ -38,7 +38,7 @@ export class YourOrderComponent {
       next: (res: any) => {
         this.getShowsData = res.data.content;
       }, error: (err: any) => {
-        this.toastr.error(err.message)
+        this.toastr.error(err.error.message)
       }
     })
   }
