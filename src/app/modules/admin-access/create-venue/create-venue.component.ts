@@ -69,9 +69,6 @@ export class CreateVenueComponent implements OnInit {
       [
         { "value": "tragedy", "label": "Tragedy" },
         { "value": "comedy", "label": "Comedy" },
-        { "value": "musical", "label": "Musical" },
-        { "value": "comedy", "label": "Comedy" },
-        { "value": "musical", "label": "Musical" },
         { "value": "experimental", "label": "Experimental" },
         { "value": "interactive", "label": "Interactive" },
         { "value": "musical", "label": "Musical" },
