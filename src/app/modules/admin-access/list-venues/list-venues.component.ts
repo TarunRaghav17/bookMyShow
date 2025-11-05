@@ -25,6 +25,10 @@ export class ListVenuesComponent implements OnInit {
   modalRef?: NgbModalRef | null = null;
   venueToDelete: any | null = null;
   bulkDeleteVenuesList: any[] = [];
+  itemsPerPage = 20;
+  pageNo = 1;
+  visibleData: any[] = [];
+  totalPages: number = 1
 
   constructor(public venueService: VenuesService,
     private toaster: ToastrService,
@@ -137,7 +141,7 @@ export class ListVenuesComponent implements OnInit {
       )
       .subscribe({
         next: (res: any) => this.toaster.success(res.message),
-        error: (err) => this.toaster.error(err.error?.message || 'Error deleting venue')
+        error: (err) => this.toaster.error(err.error?.message)
       });
   }
 
@@ -193,10 +197,11 @@ export class ListVenuesComponent implements OnInit {
     * @returnType void
     */
   getAllVenuesList() {
-    this.venueService.getAllVenues().subscribe({
+    this.venueService.getAllVenues(this.pageNo - 1).subscribe({
       next: (res: any) => {
-        this.venuesList = res.data.reverse();
-        this.getVisibleCards();
+        this.totalPages = Math.ceil((res.data.totalCount / this.itemsPerPage) || 1);
+        this.venuesList = res.data.venues;
+        this.visibleData = this.venuesList;
       },
       error: (err) => {
         this.toaster.error(err.error.message)
@@ -223,10 +228,7 @@ export class ListVenuesComponent implements OnInit {
     return parts.join(", ");
   }
 
-  itemsPerPage = 20;
-  pageNo = 1;
-  visibleData: any[] = [];
-  totalPages: number = 0
+
 
   getVisibleCards() {
     this.totalPages = Math.ceil(((this.filteredVenuesList || this.venuesList).length / this.itemsPerPage) || 1);
@@ -234,6 +236,7 @@ export class ListVenuesComponent implements OnInit {
     const start = this.itemsPerPage * pageNo;
     const end = start + this.itemsPerPage;
     this.visibleData = (this.filteredVenuesList || this.venuesList).slice(start, end);
+
   }
 
   /**
@@ -242,7 +245,7 @@ export class ListVenuesComponent implements OnInit {
   next() {
     if (this.pageNo < this.totalPages) {
       this.pageNo++;
-      this.getVisibleCards()
+      this.getAllVenuesList()
     }
   }
 
@@ -252,7 +255,7 @@ export class ListVenuesComponent implements OnInit {
   prev() {
     if (this.pageNo > 1) {
       this.pageNo--;
-      this.getVisibleCards()
+      this.getAllVenuesList()
     }
   }
 }
