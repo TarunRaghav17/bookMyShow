@@ -733,7 +733,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   createCast(): FormGroup {
     return this.fb.group({
-      id: [crypto.randomUUID()],
       actorName: ['', Validators.required],
       castImg: [''],
     })
@@ -756,7 +755,6 @@ export class CreateContentComponent implements OnInit, AfterViewInit {
 */
   createCrew(): FormGroup {
     return this.fb.group({
-      id: [crypto.randomUUID()],
       memberName: ['', Validators.required],
       crewImg: [''],
     })
